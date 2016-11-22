@@ -1,0 +1,30 @@
+%!TEX root = paper.tex
+
+% Kernel / Sensitivty Parameter / Window Width
+Contrary to \citeauthor{ferdosi2011comparison} we will use a Gaussian kernels, since those can be simply reshaped by using a different covariance matrix. However we do use the method introduced by \citeauthor{ferdosi2011comparison} to estimate the window width. In short the procedure works as follows. First a window size is computed for each dimension of the data:
+\begin{equation}
+	\varBandwidth_l = \frac{\varPercentile{80}{l} - \varPercentile{20}{l}}{\log \varNumPatterns},\, l = 1, \dotsc, \varDim
+\end{equation}
+where \varPercentile{x}{l} denotes the $x$th percentile of the data point in dimension $l$. To avoid over smoothing the final pilot window \varBandwidth is chosen as
+\begin{equation}
+	\varBandwidth = \min\left\{\sigma_1, \dotsc, \sigma_\varDim \right\}.
+\end{equation}
+
+In the literature there is some discussion on the value of the sensitivity parameter \varMBESensitivityParam. \citeauthor{breiman1977variable} propose a value of $\rfrac{1}{\varDim}$, whereas \citeauthor{silverman1986density} prefers a value of \rfrac{1}{2} regardless of the dimensionality of the data. We have emperically determined that \todo{Empirisch vaststellen}.
+
+\subsection{Kernel Shape}
+	% KNN
+	We use the \KNNK-nearest neighours algorithm (\KNN) to find \varNeighbourhood{\KNNK}{\varPattern}, the set with \KNNK neighbours of data point \varPattern.
+
+	\KNN ensures, assuming a reasonable value of \KNNK, that we have enough points to base the shape of the kernel on. Note that we include the pattern itself in the set of its \KNNK neighbours. We have followed \citeauthor{silverman1986density}'s recommendation of choosing $\KNNK = \sqrt{\varNumPatterns}$. 
+
+	% Covariance
+	The basic shape of the kernel used for \varPattern is determined by the covariance matrix \varCovarianceMatrix of \varNeighbourhood{\KNNK}{\varPattern}, which results in a kernel which has the same shape as the data points in \varNeighbourhood{\KNNK}{\varPattern}. However kernels computed in this way differ in area from each other, to ensure that the density estimation for each point takes an equal area of data points into account \todo{Anders formuleren, in feite is de Gaussian oneindig.} we have to scale the covariance matrix. To do this we compute a scaling factor for the covariance matrix as
+	\begin{equation}
+		\varScalingFactor = \frac{\varBandwidth^2}{\sqrt[\varDim]{\prod_{l = 1}^{\varDim} \sqrt{\varEigenValue_l}}}
+	\end{equation}
+	 where $\varEigenValue_l$ for $l = 1, \dotsc, \varDim$ represent the eigenvalues of the covariance matrix of \varNeighbourhood{\KNNK}{\varPattern}. Note that since we compute the eigenvalues of  this matrix it may not be singular and \KNNK should thus be greater than $\varDim + 1$. The scaling factor $S$ ensures that the area of all kernels at a fixed isoline are equal. We have taken the area at that isoline of the kernel with as covariance matrix the matrix with \varBandwidth on the diagonal as our guideline.
+	
+\subsection{Steering the Kernel Shape}
+
+

@@ -1,0 +1,34 @@
+\documentclass[a4paper]{article}
+
+
+\usepackage{geometry}
+\usepackage{tikz}
+
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\begin{document}
+
+\foreach \dataset in {1,2, 3, 4, 5}
+{	
+	\begin{figure}
+		\centering
+		\begin{subfigure}{0.4\textwidth}
+				\centering
+		\includegraphics[width=\textwidth, height=0.34\textheight, keepaspectratio=true]{datasetplot_ferdosi_\dataset.pdf}
+		\caption{Dataset \dataset}		
+			\end{subfigure}					
+		\foreach \method in {MBE, AMBE, SAMBE-CON, SAMBE-LIN, SAMBE-LOG}	
+		{
+			\begin{subfigure}{0.4\textwidth}
+				\centering
+				\includegraphics[width=\textwidth, height=0.34\textheight, keepaspectratio=true]{results_\method ferdosi_\dataset_60000.pdf}
+				\caption{Dataset \dataset\ with \method}
+			\end{subfigure}			
+		}
+	\end{figure}
+	\clearpage
+}
+
+\end{document}

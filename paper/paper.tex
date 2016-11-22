@@ -1,0 +1,117 @@
+\documentclass[10pt, a4paper, twocolumn]{article}
+
+\usepackage{a4wide}
+\usepackage[english]{babel}
+
+% Spacing
+\usepackage{xspace}
+
+% Images
+\usepackage{graphicx}
+\usepackage[hang, small,labelfont=bf,up,textfont=it,up]{caption}
+\usepackage{subcaption}
+
+% TEMP
+\usepackage{todonotes}
+\usepackage{showlabels}
+\usepackage{layouts} % \printinunitsof{cm}\prntlen{\textwidth}
+
+% Fonts
+\usepackage[T1]{fontenc}
+
+%Wiskunde
+\usepackage{mathptmx}
+\usepackage{siunitx}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+% References
+\usepackage{varioref}
+\usepackage{hyperref}
+\usepackage[noabbrev, capitalise]{cleveref}
+
+% Citations
+% References
+\usepackage[backend=bibtex]{biblatex}
+\usepackage{csquotes}
+\bibliography{biblio}
+
+% Short cuts
+\makeatletter
+\newcommand\ie{i.e\@ifnextchar.{}{.\@}\xspace}
+\newcommand\eg{e.g\@ifnextchar.{}{.\@}\xspace}
+\makeatother
+
+% Other commands
+\renewcommand{\t}[1]{\texttt{#1}}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand*\rfrac[2]{\ensuremath{{}^{#1}\!/_{#2}}}
+
+% Text commands
+\newcommand{\KNNK}{k\xspace}
+\newcommand{\KNN}{\KNNK-NN\xspace}
+
+
+% VARIABLES
+\newcommand{\varBandwidth}{\ensuremath{\sigma}\xspace}
+\newcommand{\varBMLconstant}{\ensuremath{\alpha}\xspace}
+\newcommand{\varCovarianceMatrix}{\ensuremath{\Sigma}\xspace}
+
+\newcommand{\varDensityFunction}[1]{\ensuremath{f\left( #1 \right)}\xspace}
+
+\newcommand{\varDim}{\ensuremath{d}\xspace}
+\newcommand{\varEigenValue}{\ensuremath{\lambda}\xspace}
+\newcommand{\varEpan}{\ensuremath{\mathcal{E}}}
+\newcommand{\varEstimatedDensityFunction}[1]{\ensuremath{\hat{f}\left( #1 \right)}\xspace}
+\newcommand{\varGaussian}{\ensuremath{\mathcal{G}}}
+\newcommand{\varGeometricMean}{\ensuremath{g}\xspace}
+
+% \varKernel
+\makeatletter
+\def\varKernel{\@ifnextchar[{\@with}{\@without}}
+\def\@with[#1]#2{\ensuremath{K_{#1}\left( #2 \right)}\xspace}
+\def\@without#1{\ensuremath{K\left( #1 \right)}\xspace}
+\makeatother
+
+\newcommand{\varKNNDistance}[2]{\ensuremath{d_{#1, #2}}\xspace}
+\newcommand{\varLocalBandwidth}[1]{\ensuremath{\lambda_{#1}}\xspace}
+\newcommand{\varNeighbourhood}[2]{\ensuremath{C_{#1, #2}}\xspace}
+\newcommand{\varNumPatterns}{\ensuremath{N}\xspace}
+\newcommand{\varPercentile}[2]{\ensuremath{P_{#1}\left( #2 \right)}\xspace}
+
+% \varPattern
+\makeatletter
+\def\varPattern{\@ifnextchar[{\@withPattern}{\@withoutPattern}}
+\def\@withPattern[#1]{\ensuremath{\vec{x}_{#1}}\xspace}
+\def\@withoutPattern{\ensuremath{\vec{x}}\xspace}
+\makeatother
+
+\newcommand{\varPilotDensityFunction}[1]{\ensuremath{\hat{f}_{\text{pilot}}\left( #1 \right)}\xspace}
+\newcommand{\varScalingFactor}{\ensuremath{S}\xspace}
+\newcommand{\varMBESensitivityParam}{\ensuremath{\beta}\xspace}
+
+
+
+% Set stuff for title
+\title{Shape-Adaptive Kernel Density Estimation}
+\author{L.E.N. Baakman}
+
+\begin{document}
+
+\maketitle
+
+\input{0_abstract}
+
+\section{Introduction}
+\label{s:introduction}
+\input{1_introduction}
+
+\section{Method}
+\label{s:method}
+\input{2_method}
+	
+\printbibliography
+
+\end{document}

@@ -1,0 +1,50 @@
+%!TEX root = paper.tex
+Density estimation tries to find the density \varDensityFunction{\varPattern} in \varDim-dimensional Euclidean space underlying \varNumPatterns points $\varPattern[1] \dotsc \varPattern[\varNumPatterns]$, that have been selected independently from \varDensityFunction{\varPattern}. One often used method to solve this problem is the Parzen approach \cite{parzen1962estimation}, which gives the following estimate of the density function:
+% Parzen
+%
+\begin{equation}\label{eq:1:parzen}
+	\varEstimatedDensityFunction{\varPattern} = \frac{1}{\varNumPatterns}\sum_{j = 1}^{\varNumPatterns} \frac{1}{\varBandwidth^\varDim}\varKernel{\frac{\varPattern - \varPattern[j]}{\varBandwidth}}.
+\end{equation}
+%
+Thus the estimated density is the mean of bumps placed at each observation. The shape of these bumps is determined by the shape of the kernel function \varKernel{\cdot}, their width is controlled by the bandwidth \varBandwidth \cite{silverman1986density}. The Parzen approach requires that $\varKernel{\varPattern} \geq 0$, with
+% 
+\begin{equation}\label{eq:1:kernelRequirement}
+	\int \varKernel{\varPattern} = 1,
+\end{equation}
+it is often the case that the kernel statisfies some additional conditions. 
+
+% Breiman, Meisel, Purcell
+One downside of the Parzen method is that it cannot respond appropriately to variations in the magnitude of the density function, \ie the peakedness of the kernel is not data-responsive. Consequently in regions of low \varDensityFunction{\varPattern} that contain only one sample point, the estimate will have a peak at $\varPattern$ and be too low over the rest of the region. In areas where the density is high, the sample points are more densely packed together, and the Parzen estimate will tend to spread out the high density region \cite{breiman1977variable}. \citeauthor{breiman1977variable} introduced an variant of the Parzen estimator which makes the sharpness of the kernel responsive to the local data: 
+%§
+\begin{equation}\label{eq:1:BML}
+ 	\varEstimatedDensityFunction{\varPattern} = \frac{1}{\varNumPatterns} \sum_{j = 1}^{\varNumPatterns} (\varBMLconstant \varKNNDistance{j}{k})^{-\varDim} \varKernel[\varGaussian]{\frac{\varPattern - \varPattern[j]}{\varBMLconstant \varKNNDistance{j}{k}}},
+\end{equation} 
+%
+where \varKernel[\varGaussian]{\cdot} represents a Gausian kernel, \varBMLconstant is a multiplicative constant and \varKNNDistance{j}{\KNNK} the distance between \varPattern[j] and the \KNNK nearest neighbour of \varPattern[j]. Comparing \cref{eq:1:parzen} with \eqref{eq:1:BML} we find that the bandwidth \varBandwidth, has been replaced with $\varBMLconstant \varKNNDistance{j}{\KNNK}$.  In low density regions \varKNNDistance{j}{\KNNK} will be large, and the kernel will be spread out, in high density regions the converse occurs. \citeauthor{breiman1977variable} use a minimization algorithm on a goodness of fit statistic to find suitable values for \KNNK and \varBMLconstant.
+
+% % Ferdosi
+One disadvantage of the Breiman estimator is that it is computationally expensive, both due to its minimization procedure and the infinite support kernel. \citeauthor{wilkinson1995dataplot} proposed the modified Breiman estimator:
+%
+	\begin{equation}\label{eq:1:bme}
+		\varEstimatedDensityFunction{\varPattern} = \frac{1}{\varNumPatterns} \sum_{j = 1}^{\varNumPatterns} \left(\varBandwidth \varLocalBandwidth{j} \right)^{- \varDim} \varKernel[\varEpan]{\frac{\varPattern - \varPattern[j]}{\varBandwidth \varLocalBandwidth{j}}}.
+	\end{equation}
+%
+This estimator differs on two points from the Breiman estimator. Firstly contrary to \citeauthor{breiman1977variable} who use a Gaussian kernel, \citeauthor{ferdosi2011comparison} use an Epanechnikov kernel \cite{epanechnikov1969non}. Secondly they replaced the expensive minimization procudure with a pilot density estimate:
+% 
+	\begin{equation}\label{eq:1:mbePilot}
+		\varPilotDensityFunction{\varPattern} = \frac{1}{\varNumPatterns} \sum_{j = 1}^{\varNumPatterns} \varBandwidth^{- \varDim} \varKernel{\frac{\varPattern - \varPattern[j]}{\varBandwidth}}.
+	\end{equation}
+%
+By computing the pilot density first on grid points and using multi-linear interpolation to determine the pilot density for each point the computational complexity is further decreased. 
+Based on these pilot densities the local bandwidths are computed:
+	\begin{equation}\label{eq:1:mbeLocalBandwidth}
+		\varLocalBandwidth{i} = \left( \frac{\varPilotDensityFunction{\varPattern[i]}}{\varGeometricMean}
+		\right)^{-\varMBESensitivityParam}.
+	\end{equation}
+Here \varGeometricMean is the geometric mean of the pilot densities and \varMBESensitivityParam is the sensitivity parameter. 
+
+Although the widths of the kernels used in both the Breiman estimator and the modified Breiman estimator respond to the data, the shapes of the kernels are dependent of the kernel not the data. To further increase the response of the estimator to the data we propose shape-adaptive kernels, kernels of which both the width and the shape are steered by the data. 
+
+A disadvantage of these shape-adaptive kernels is that in regions where the density of sample points is low there are not enough data points to compute the shape of the kernel reliably. Consequently we propose to let the amount in which the shape of the kernel is influenced by the local data depend on their density. 
+
+This paper is organized as follows. \Cref{s:method} discusses the proposed shape-adaptive kernels and somee implementation details. \todo{Aanvullen}
