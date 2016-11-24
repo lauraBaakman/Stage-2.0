@@ -12,55 +12,16 @@ class Parzen:
         self._window_width = window_width
         self._dimension = dimension
 
-    def estimate_python(self, xi_s, x_s=None):
+    def estimate(self, xi_s, x_s=None):
         if x_s is None:
             x_s = xi_s
-        (n, _) = xi_s.shape
-
-        self._kernel.center = np.zeros(self._dimension)
-        self._kernel.shape = np.identity(self._dimension)
-
-        factor = 1 / (n * math.pow(self._window_width, self._dimension))
-        (n_x, _) = x_s.shape
-        densities = np.empty(n_x)
-        for idx, x in enumerate(x_s):
-            bump_sum = 0
-            for xi in xi_s:
-                bump_sum += self._kernel.evaluate((x - xi) / self._window_width)
-            densities[idx] = factor * bump_sum
-        return densities
-
-    def estimate_python_vectorized(self, xi_s, x_s=None):
-        if x_s is None:
-            x_s = xi_s
-        estimator = _EstimatorVectorized(xi_s=xi_s, x_s=x_s,
-                                         dimension=self._dimension,
-                                         kernel=self._kernel,
-                                         window_width=self._window_width)
-        densities = estimator.estimate()
-        return densities
+        estimator = _ParzenEstimator(
+            xi_s=xi_s, x_s=x_s,
+            dimension=self._dimension, kernel=self._kernel, window_width=self._window_width)
+        return estimator.estimate()
 
 
-def benchmark_python(n=1000, dimension=3):
-    patterns = np.random.randn(n, dimension)
-    window_width = 1 / np.sqrt(n)
-    kernel_shape = window_width * window_width * np.identity(dimension)
-    kernel = kernels.Gaussian(covariance_matrix=kernel_shape)
-    estimator = Parzen(window_width=window_width, dimension=dimension, kernel=kernel)
-    densities = estimator.estimate_python(xi_s=patterns)
-
-
-def benchmark_vectorized(n=1000, dimension=3):
-    patterns = np.random.randn(n, dimension)
-    window_width = 1 / np.sqrt(n)
-    kernel_shape = window_width * window_width * np.identity(dimension)
-    kernel = kernels.Gaussian(covariance_matrix=kernel_shape)
-    estimator = Parzen(window_width=window_width, dimension=dimension, kernel=kernel)
-    densities = estimator.estimate_python_vectorized(xi_s=patterns)
-
-
-class _EstimatorVectorized:
-
+class _ParzenEstimator:
     def __init__(self, xi_s, x_s, dimension, kernel, window_width):
         self._xi_s = xi_s
         self._x_s = x_s
