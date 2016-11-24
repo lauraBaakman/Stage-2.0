@@ -24,25 +24,14 @@ class TestParzen(TestCase):
             'dimension': 2
         }
 
-    def test_estimate_python(self):
+    def test_estimate(self):
         kernel_shape = self.data['window_width'] * self.data['window_width'] * np.identity(self.data['dimension'])
         kernel = kde.kernels.Gaussian(covariance_matrix=kernel_shape)
         estimator = kde.Parzen(
             dimension=self.data['dimension'],
-            window_width = self.data['window_width'],
-            kernel=kernel)
-        actual = estimator.estimate_python(xi_s=self.data['patterns'])
-        expected = self.data['parzen_estimated_densities']
-        np.testing.assert_array_almost_equal(actual, expected)
-
-    def test_estimate_python_vectorized(self):
-        kernel_shape = self.data['window_width'] * self.data['window_width'] * np.identity(self.data['dimension'])
-        kernel = kde.kernels.Gaussian(covariance_matrix=kernel_shape)
-        estimator = kde.Parzen(
-            dimension=self.data['dimension'],
-            window_width = self.data['window_width'],
+            window_width=self.data['window_width'],
             kernel=kernel
         )
-        actual = estimator.estimate_python_vectorized(xi_s=self.data['patterns'])
+        actual = estimator.estimate(xi_s=self.data['patterns'])
         expected = self.data['parzen_estimated_densities']
         np.testing.assert_array_almost_equal(actual, expected)
