@@ -23,58 +23,58 @@ class TestGaussian(TestCase):
 
     def test_center_get(self):
         kernel = Gaussian(
-            mean=self.data('mean_1'),
-            covariance_matrix=self.data('cov_1'))
+            mean=self.data['mean_1'],
+            covariance_matrix=self.data['cov_1'])
         actual = kernel.center
-        expected = self.data('mean_1')
-        self.assertEqual(actual, expected)
+        expected = self.data['mean_1']
+        np.testing.assert_array_equal(actual, expected)
 
     def test_center_set_1(self):
         kernel = Gaussian(
-            mean=self.data('mean_1'),
-            covariance_matrix=self.data('cov_1'))
-        kernel.center= self.data('mean_2')
-        actual_density = kernel._kernel.pdf(self.data('pattern'))
-        expected_density = self.data('density_mean_2_cov_1')
+            mean=self.data['mean_1'],
+            covariance_matrix=self.data['cov_1'])
+        kernel.center= self.data['mean_2']
+        actual_density = kernel._kernel.pdf(self.data['pattern'])
+        expected_density = self.data['density_mean_2_cov_1']
         self.assertAlmostEqual(actual_density, expected_density)
 
     def test_center_set_2(self):
         kernel = Gaussian(
-            covariance_matrix=self.data('cov_1'))
-        kernel.center= self.data('mean_1')
-        actual_density = kernel._kernel.pdf(self.data('pattern'))
-        expected_density = self.data('density_mean_1_cov_1')
+            covariance_matrix=self.data['cov_1'])
+        kernel.center= self.data['mean_1']
+        actual_density = kernel._kernel.pdf(self.data['pattern'])
+        expected_density = self.data['density_mean_1_cov_1']
         self.assertAlmostEqual(actual_density, expected_density)
 
     def test_shape_get(self):
         kernel = Gaussian(
-            mean=self.data('mean_1'),
-            covariance_matrix=self.data('cov_1'))
+            mean=self.data['mean_1'],
+            covariance_matrix=self.data['cov_1'])
         actual = kernel.shape
-        expected = self.data('cov_1')
-        self.assertEqual(actual, expected)
+        expected = self.data['cov_1']
+        np.testing.assert_array_equal(actual, expected)
 
     def test_shape_set_1(self):
         kernel = Gaussian(
-            mean=self.data('mean_1'),
-            covariance_matrix=self.data('cov_1'))
-        kernel.shape = self.data('cov_2')
-        actual_density = kernel._kernel.pdf(self.data('pattern'))
-        expected_density = self.data('density_mean_1_cov_2')
+            mean=self.data['mean_1'],
+            covariance_matrix=self.data['cov_1'])
+        kernel.shape = self.data['cov_2']
+        actual_density = kernel._kernel.pdf(self.data['pattern'])
+        expected_density = self.data['density_mean_1_cov_2']
         self.assertAlmostEqual(actual_density, expected_density)
 
     def test_shape_set_2(self):
         kernel = Gaussian(
-            mean=self.data('mean_1'))
-        kernel.shape = self.data('cov_1')
-        actual_density = kernel._kernel.pdf(self.data('pattern'))
-        expected_density = self.data('density_mean_1_cov_1')
+            mean=self.data['mean_1'])
+        kernel.shape = self.data['cov_1']
+        actual_density = kernel._kernel.pdf(self.data['pattern'])
+        expected_density = self.data['density_mean_1_cov_1']
         self.assertAlmostEqual(actual_density, expected_density)
 
     def test_evaluate(self):
         kernel = Gaussian(
-            mean=self.data('mean_1'),
-            covariance_matrix=self.data('cov_1'))
-        actual_density = kernel.evaluate(self.data('pattern'))
-        expected_density = self.data('density_mean_1_cov_1')
+            mean=self.data['mean_1'],
+            covariance_matrix=self.data['cov_1'])
+        actual_density = kernel.evaluate(self.data['pattern'])
+        expected_density = self.data['density_mean_1_cov_1']
         self.assertAlmostEqual(actual_density, expected_density)
