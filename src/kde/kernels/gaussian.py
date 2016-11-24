@@ -6,7 +6,7 @@ class Gaussian:
     def __init__(self, mean=None, covariance_matrix=None):
         self._covariance_matrix = covariance_matrix
         self._mean = mean
-        self._update_kernel()
+        self._kernel = self.updated_kernel()
 
     @property
     def center(self):
@@ -15,7 +15,7 @@ class Gaussian:
     @center.setter
     def center(self, value):
         self._mean = value
-        self._update_kernel()
+        self._kernel = self.updated_kernel()
 
     @property
     def shape(self):
@@ -24,16 +24,16 @@ class Gaussian:
     @shape.setter
     def shape(self, value):
         self._covariance_matrix = value
-        self._update_kernel()
+        self._kernel = self.updated_kernel()
 
-    def _update_kernel(self):
+    def updated_kernel(self):
         if (self._mean is not None) and (self._covariance_matrix is not None):
-            self._kernel = stats.multivariate_normal(
+            return stats.multivariate_normal(
                 mean=self._mean,
                 cov=self._covariance_matrix
             )
         else:
-            self._kernel = None
+            return None
 
     def evaluate(self, x):
         return self._kernel.pdf(x)
