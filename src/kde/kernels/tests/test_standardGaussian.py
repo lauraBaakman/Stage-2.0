@@ -77,3 +77,10 @@ class TestStandardGaussian(TestCase):
         for pattern, expected in zip(self.data_3D['patterns'], self.data_3D['densities']):
             actual = kernel.evaluate(pattern)
             self.assertAlmostEqual(actual, expected)
+
+    def test_evaluate_2D_multiple(self):
+        kernel = StandardGaussian(dimension=self.data_2D['dimension'])
+        patterns = np.matrix(self.data_2D['patterns'])
+        actual = kernel.evaluate(patterns)
+        expected = np.array(self.data_2D['densities'])
+        np.testing.assert_array_almost_equal(actual, expected)
