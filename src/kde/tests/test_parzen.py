@@ -43,6 +43,6 @@ class TestParzen(TestCase):
             window_width = self.data['window_width'],
             kernel=kernel
         )
-        actual = estimator.estimate_python_vectorized(data=self.data['patterns'])
+        actual = estimator.estimate_python_vectorized(xi_s=self.data['patterns'])
         expected = self.data['parzen_estimated_densities']
-        np.testing.assert_array_equal(actual, expected)
+        np.testing.assert_array_almost_equal(actual, expected)
