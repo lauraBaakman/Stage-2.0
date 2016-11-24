@@ -12,21 +12,21 @@ class Parzen:
         self._window_width = window_width
         self._dimension = dimension
 
-    def estimate_python(self, x_is, x_s=None):
+    def estimate_python(self, xi_s, x_s=None):
         if x_s is None:
-            x_s = x_is
-        (n, _) = x_is.shape
+            x_s = xi_s
+        (n, _) = xi_s.shape
 
         self._kernel.center = np.zeros(self._dimension)
         self._kernel.shape = np.identity(self._dimension)
 
         factor = 1 / (n * math.pow(self._window_width, self._dimension))
-        (n_x_i, _) = x_s.shape
-        densities = np.empty(n_x_i)
+        (n_x, _) = x_s.shape
+        densities = np.empty(n_x)
         for idx, x in enumerate(x_s):
             bump_sum = 0
-            for x_i in x_is:
-                bump_sum += self._kernel.evaluate((x - x_i) / self._window_width)
+            for xi in xi_s:
+                bump_sum += self._kernel.evaluate((x - xi) / self._window_width)
             densities[idx] = factor * bump_sum
         return densities
 
@@ -42,4 +42,23 @@ def benchmark_python(n=1000, dimension=3):
     kernel_shape = window_width * window_width * np.identity(dimension)
     kernel = kernels.Gaussian(covariance_matrix=kernel_shape)
     estimator = Parzen(window_width=window_width, dimension=dimension, kernel=kernel)
-    densities = estimator.estimate_python(x_is=patterns)
+    densities = estimator.estimate_python(xi_s=patterns)
+
+
+class _EstimatorVectorized:
+
+    def __init__(self, parent, xi_s, x_s):
+        self._parent = parent
+        self.xi_s = xi_s
+        self.x_s = x_s
+        (self.n_xi_s, _) = xi_s.shape
+        (self.n_x_s, _) = x_s.shape
+
+    def estimate(self):
+        densities = np.empty(self.n_x_s)
+        for idx, x in enumerate(self.n_x_s):
+            densities[idx] = self._estimate_pattern(x)
+        return densities
+
+    def _estimate_pattern(self, x):
+
