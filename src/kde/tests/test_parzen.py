@@ -31,9 +31,9 @@ class TestParzen(TestCase):
             dimension=self.data['dimension'],
             window_width = self.data['window_width'],
             kernel=kernel)
-        actual = estimator.estimate_python(data=self.data['patterns'])
+        actual = estimator.estimate_python(x_is=self.data['patterns'])
         expected = self.data['parzen_estimated_densities']
-        np.testing.assert_array_equal(actual, expected)
+        np.testing.assert_array_almost_equal(actual, expected)
 
     def test_estimate_python_vectorized(self):
         kernel_shape = self.data['window_width'] * self.data['window_width'] * np.identity(self.data['dimension'])
