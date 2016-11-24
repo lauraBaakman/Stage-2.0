@@ -10,7 +10,7 @@ class TestGaussian(TestCase):
     def setUp(self):
         super().setUp()
         self.data = {
-            'cov_1' : np.array([[1, 0], [0, 1]]),
+            'cov_1': np.array([[1, 0], [0, 1]]),
             'cov_2': np.array([[0.5, 0.5], [0.5, 1.5]]),
             'mean_1': np.array([0, 0]),
             'mean_2': np.array([2, 2]),
