@@ -1,30 +1,24 @@
 %!TEX root = paper.tex
-
-% Kernel / Sensitivty Parameter / Window Width
-Contrary to \citeauthor{ferdosi2011comparison} we will use a Gaussian kernels, since those can be simply reshaped by using a different covariance matrix. However we do use the method introduced by \citeauthor{ferdosi2011comparison} to estimate the window width. In short the procedure works as follows. First a window size is computed for each dimension of the data:
+%Pilot density
+We propose to compute the pilot density estimate with the method introduced by \citeauthor{wilkinson1995dataplot}. We use the Epanechnikov kernel for its low computational complexity, as its main disadvantage does matter in the estimation of pilot densities \cite{silverman1986density}. 
+% Final density
+The final density is estimated according to:
 \begin{equation}
-	\varBandwidth_l = \frac{\varPercentile{80}{l} - \varPercentile{20}{l}}{\log \varNumPatterns},\, l = 1, \dotsc, \varDim
+	\varEstimatedDensityFunction{\varPattern} = \frac{1}{\varNumPatterns} \sum_{i = 1}^{\varNumPatterns} \left(\varBandwidth\varLocalBandwidth{i}\right)^{-\varDim} \varKernel[\varGaussian]{\varPattern},
 \end{equation}
-where \varPercentile{x}{l} denotes the $x$th percentile of the data point in dimension $l$. To avoid over smoothing the final pilot window \varBandwidth is chosen as
+where \varKernel[\varGaussian] is a Gaussian kernel with mean $\varPattern[j]$ and covariance \varCovarianceMatrix, 
+% Neighbourhood
+which is the covariance matrix of the neighborhood of \varPattern. The neighbors of \varPattern are determined with the \KNNK nearest neighbors algorithm (\KNN) with Euclidean distance. We use this approach rater than a fixed-radius neighborhood to ensure that independent of the sparsity of the data the kernel shape is always based on a reasonable number of data points. Furthermore using \KNN allows us to choose $\KNNK > \varDim$, which makes it extremely improbable that the covariance matrix of the neighborhood is singular. We follow \citeauthor{silverman1986density}'s \cite{silverman1986density} recommendation of choosing $k = \sqrt{\varNumPatterns}$. To ensure that even in high-dimensional data sets $\KNNK > \varDim$ we use 
+	$\KNNK = \max\left(\sqrt{\varNumPatterns},\, \varDim + 1\right)$. 
+
+%	Covariance
+The basic shape of the kernel used for \varPattern is given by the covariance matrix off \varNeighborhood{\varPattern[i]}, \ie the union of \varPattern and its neighborhood.
+% Scaling
+To allow the density estimation of each pattern to be influenced by an equal area, before the application of the smoothing factor $(\varLocalBandwidth{i})$, the basic shapes of the kernels need to be scaled. The eigenvectors and eigenvalues of the covariance matrix define an ellipse, the eigenellipse. We scale the covariance matrix with the factor \varScalingFactor, defined as:
 \begin{equation}
-	\varBandwidth = \min\left\{\sigma_1, \dotsc, \sigma_\varDim \right\}.
+	\varScalingFactor = \frac{\varBandwidth^2}{\varGeometricMeanFunction{\sqrt{\lambda_1}, \dotsc, \sqrt{\lambda_\varDim}}},
 \end{equation}
+where $\lambda_j$ denotes the $j$th eigenvalue of the $j$th eigenvector of \varCovarianceMatrix. The scaling factor \varScalingFactor ensures that the shape-adapted covariance matrix has the same scale as the covariance matrix that is implicitly used in the Modified Breiman Estimator with a Gaussian kernel.
 
-In the literature there is some discussion on the value of the sensitivity parameter \varMBESensitivityParam. \citeauthor{breiman1977variable} propose a value of $\rfrac{1}{\varDim}$, whereas \citeauthor{silverman1986density} prefers a value of \rfrac{1}{2} regardless of the dimensionality of the data. We have emperically determined that \todo{Empirisch vaststellen}.
-
-\subsection{Kernel Shape}
-	% KNN
-	We use the \KNNK-nearest neighours algorithm (\KNN) to find \varNeighbourhood{\KNNK}{\varPattern}, the set with \KNNK neighbours of data point \varPattern.
-
-	\KNN ensures, assuming a reasonable value of \KNNK, that we have enough points to base the shape of the kernel on. Note that we include the pattern itself in the set of its \KNNK neighbours. We have followed \citeauthor{silverman1986density}'s recommendation of choosing $\KNNK = \sqrt{\varNumPatterns}$. 
-
-	% Covariance
-	The basic shape of the kernel used for \varPattern is determined by the covariance matrix \varCovarianceMatrix of \varNeighbourhood{\KNNK}{\varPattern}, which results in a kernel which has the same shape as the data points in \varNeighbourhood{\KNNK}{\varPattern}. However kernels computed in this way differ in area from each other, to ensure that the density estimation for each point takes an equal area of data points into account \todo{Anders formuleren, in feite is de Gaussian oneindig.} we have to scale the covariance matrix. To do this we compute a scaling factor for the covariance matrix as
-	\begin{equation}
-		\varScalingFactor = \frac{\varBandwidth^2}{\sqrt[\varDim]{\prod_{l = 1}^{\varDim} \sqrt{\varEigenValue_l}}}
-	\end{equation}
-	 where $\varEigenValue_l$ for $l = 1, \dotsc, \varDim$ represent the eigenvalues of the covariance matrix of \varNeighbourhood{\KNNK}{\varPattern}. Note that since we compute the eigenvalues of  this matrix it may not be singular and \KNNK should thus be greater than $\varDim + 1$. The scaling factor $S$ ensures that the area of all kernels at a fixed isoline are equal. We have taken the area at that isoline of the kernel with as covariance matrix the matrix with \varBandwidth on the diagonal as our guideline.
-	
-\subsection{Steering the Kernel Shape}
-
-
+% Value of sensitivity paramter
+Two different values of \varMBESensitivityParam are prevalent in the literature. \textcite{breiman1977variable} argues in favor of $\rfrac{1}{\varDim}$, whereas \textcite{silverman1986density} prefers using $\varMBESensitivityParam = \rfrac{1}{2}$, independent of the dimensionality of the data. We have empirically determined that $\varMBESensitivityParam = ?$ \todo{Empirisch vaststellen} is optimal with respect to the ?.
