@@ -1,50 +1,59 @@
 %!TEX root = paper.tex
-Density estimation tries to find the density \varDensityFunction{\varPattern} in \varDim-dimensional Euclidean space underlying \varNumPatterns points $\varPattern[1] \dotsc \varPattern[\varNumPatterns]$, that have been selected independently from \varDensityFunction{\varPattern}. One often used method to solve this problem is the Parzen approach \cite{parzen1962estimation}, which gives the following estimate of the density function:
+Density estimation tries to find the density \varDensityFunction{\varPattern} in \varDim-dimensional Euclidean space underlying \varNumPatterns points $\varPattern[1] \dotsc \varPattern[\varNumPatterns]$, that have been selected independently from \varDensityFunction{\varPattern}. 
+
+Kernel density estimation has recently been used to predict dose-volume histograms, these histograms are used to determine radiation doses \cite{SkarpmanDose2015}. Ecologists have explored the habitats of seabirds with density estimation \cite{lees2016using}. Density estimation has been described as ``a critical first step in in making progress in many areas of astronomy." \cite{ferdosi2011comparison} Astronomers are for example interested in the an estimation of the cosmic density field, which is required for the reconstruction of the large-scale structure of the universe.
+
 % Parzen
-%
+One often used method in density estimation is the Parzen approach \cite{parzen1962estimation}, which gives the following estimate of the density function:
 \begin{equation}\label{eq:1:parzen}
 	\varEstimatedDensityFunction{\varPattern} = \frac{1}{\varNumPatterns}\sum_{j = 1}^{\varNumPatterns} \frac{1}{\varBandwidth^\varDim}\varKernel{\frac{\varPattern - \varPattern[j]}{\varBandwidth}}.
 \end{equation}
 %
-Thus the estimated density is the mean of bumps placed at each observation. The shape of these bumps is determined by the shape of the kernel function \varKernel{\cdot}, their width is controlled by the bandwidth \varBandwidth \cite{silverman1986density}. The Parzen approach requires that $\varKernel{\varPattern} \geq 0$, with
-% 
-\begin{equation}\label{eq:1:kernelRequirement}
-	\int \varKernel{\varPattern} = 1,
-\end{equation}
-it is often the case that the kernel statisfies some additional conditions. 
+Thus the estimated density is the mean of bumps placed at each observation. The shape of these bumps is determined by the shape of the kernel function \varKernel{\cdot}, their width is controlled by the bandwidth \varBandwidth \cite{silverman1986density}. The Parzen approach requires the kernel to be a probability density function, \ie $\varKernel{\varPattern} \geq 0$ and $\int \varKernel{\varPattern} = 1$.
 
 % Breiman, Meisel, Purcell
-One downside of the Parzen method is that it cannot respond appropriately to variations in the magnitude of the density function, \ie the peakedness of the kernel is not data-responsive. Consequently in regions of low \varDensityFunction{\varPattern} that contain only one sample point, the estimate will have a peak at $\varPattern$ and be too low over the rest of the region. In areas where the density is high, the sample points are more densely packed together, and the Parzen estimate will tend to spread out the high density region \cite{breiman1977variable}. \citeauthor{breiman1977variable} introduced an variant of the Parzen estimator which makes the sharpness of the kernel responsive to the local data: 
+One downside of the Parzen method is that it cannot respond appropriately to variations in the magnitude of the density function, \ie the peakedness of the kernel is not data-responsive. Consequently in regions of low \varDensityFunction{\varPattern} that contain only one sample point, $\varPattern$, the estimate will have a peak at $\varPattern$ and be too low in the rest of the region. In areas where the density is high, the sample points are more densely packed together, and the Parzen estimate will tend to spread out the high density region \cite{breiman1977variable}. \citeauthor{breiman1977variable} introduced an variant of the Parzen estimator that addresses this disadvantage by making the sharpness of the kernel responsive to the local data. This variant defines the density estimate as
 %§
 \begin{equation}\label{eq:1:BML}
  	\varEstimatedDensityFunction{\varPattern} = \frac{1}{\varNumPatterns} \sum_{j = 1}^{\varNumPatterns} (\varBMLconstant \varKNNDistance{j}{k})^{-\varDim} \varKernel[\varGaussian]{\frac{\varPattern - \varPattern[j]}{\varBMLconstant \varKNNDistance{j}{k}}},
 \end{equation} 
 %
-where \varKernel[\varGaussian]{\cdot} represents a Gausian kernel, \varBMLconstant is a multiplicative constant and \varKNNDistance{j}{\KNNK} the distance between \varPattern[j] and the \KNNK nearest neighbour of \varPattern[j]. Comparing \cref{eq:1:parzen} with \eqref{eq:1:BML} we find that the bandwidth \varBandwidth, has been replaced with $\varBMLconstant \varKNNDistance{j}{\KNNK}$.  In low density regions \varKNNDistance{j}{\KNNK} will be large, and the kernel will be spread out, in high density regions the converse occurs. \citeauthor{breiman1977variable} use a minimization algorithm on a goodness of fit statistic to find suitable values for \KNNK and \varBMLconstant.
+where \varKernel[\varGaussian]{\cdot} represents a Gaussian kernel, \varBMLconstant is a multiplicative constant and \varKNNDistance{j}{\KNNK} the distance between \varPattern[j] and the \KNNK nearest neighbor of \varPattern[j]. Comparing \cref{eq:1:parzen} with \eqref{eq:1:BML} we find that the bandwidth \varBandwidth, has been replaced with $\varBMLconstant \varKNNDistance{j}{\KNNK}$.  In low density regions \varKNNDistance{j}{\KNNK} will be large, and the kernel will be spread out, in high density regions the converse occurs. \citeauthor{breiman1977variable} use a minimization algorithm on a goodness of fit statistic to find suitable values for \KNNK and \varBMLconstant.
 
-% % Ferdosi
-One disadvantage of the Breiman estimator is that it is computationally expensive, both due to its minimization procedure and the infinite support kernel. \citeauthor{wilkinson1995dataplot} proposed the modified Breiman estimator:
-%
-	\begin{equation}\label{eq:1:bme}
-		\varEstimatedDensityFunction{\varPattern} = \frac{1}{\varNumPatterns} \sum_{j = 1}^{\varNumPatterns} \left(\varBandwidth \varLocalBandwidth{j} \right)^{- \varDim} \varKernel[\varEpan]{\frac{\varPattern - \varPattern[j]}{\varBandwidth \varLocalBandwidth{j}}}.
+% Introduce Pilot Densities
+The minimization procedure used by \citeauthor{breiman1977variable} implicitly uses a \KNN pilot estimate. If pilot densities are used explicitly the density estimation process becomes \cite{silverman1986density}:
+	\begin{enumerate}[labelindent=0ex]
+		\item Find a pilot estimate \varPilotDensityFunction{\varPattern} that satisfies $\forall i\; \varPilotDensityFunction{\varPattern[i]} > 0$. 
+
+		\item Define local bandwidth factors $\varLocalBandwidth{i}$ by
+			\begin{equation}\label{eq:1:localBandwidth}
+				\varLocalBandwidth{i} = \left( \frac{1}{g} \varPilotDensityFunction{\varPattern[i]} \right)^{- \varMBESensitivityParam}
+			\end{equation}
+			where $g$ is the geometric mean of the $\varPilotDensityFunction{\varPattern[i]}$, and the sensitivity parameter $\varMBESensitivityParam \in \left[0, 1\right]$.
+		\item Compute the adaptive kernel estimate as
+			\begin{equation}\label{eq:1:adaptiveKernelEstimateWithLocalBandwidths}
+				\varEstimatedDensityFunction{\varPattern} = \frac{1}{\varNumPatterns} \sum_{j = 1}^{\varNumPatterns} \left(\varBandwidth\varLocalBandwidth{i}\right)^{-\varDim} \varKernel{\frac{\varPattern - \varPattern[j]}{\varBandwidth \varLocalBandwidth{i}}}.
+			\end{equation}
+	\end{enumerate}
+Often the pilot density is estimated with a fixed kernel method. 
+% Wilkinson and Meijer
+The approach taken by \citeauthor{breiman1977variable} is computationally expensive, partially due to the use of the Gaussian kernel. The infinite base of this kernel means that an exponential function has to be evaluated for each data point to estimate the density of one data point according to \cref{eq:1:BML}. \textcite{wilkinson1995dataplot} propose to reduce this computational complexity in two ways, firstly they replace the infinite base Gaussian kernel with an Epanechnikov kernel, which not only has a finite base, but is also optimal in the sense of the Mean Integrated Square Error (MISE) \cite{epanechnikov1969non}. Secondly they computed the the pilot densities on a grid including all data points and determined the pilot densities with multi-linear interpolation. \citeauthor{wilkinson1995dataplot} used \cref{eq:1:adaptiveKernelEstimateWithLocalBandwidths} with an Epanechnikov kernel, $\varLocalBandwidth{i} = 1$ and 
+	\begin{equation}\label{eq:1:wilkinsonHOpt}
+		\varBandwidth = \left(\frac{8\left(\varDim + 4\right)\left(2 \sqrt{\pi}\right)^\varDim}{c_\varDim}\right)^{\frac{1}{\varDim + 4}}\cdot \varNumPatterns^{\frac{-1}{\varDim + 4}} \cdot s,
 	\end{equation}
-%
-This estimator differs on two points from the Breiman estimator. Firstly contrary to \citeauthor{breiman1977variable} who use a Gaussian kernel, \citeauthor{ferdosi2011comparison} use an Epanechnikov kernel \cite{epanechnikov1969non}. Secondly they replaced the expensive minimization procudure with a pilot density estimate:
-% 
-	\begin{equation}\label{eq:1:mbePilot}
-		\varPilotDensityFunction{\varPattern} = \frac{1}{\varNumPatterns} \sum_{j = 1}^{\varNumPatterns} \varBandwidth^{- \varDim} \varKernel{\frac{\varPattern - \varPattern[j]}{\varBandwidth}}.
+	with $s$ the standard deviation of the average of the variances of each of the data points.
+
+% Ferdosi
+\textcite{ferdosi2011comparison} were interested in the application of density estimation on datasets that are large, \ie datasets with more than 50 000 points with dimension ranging from ten to hundreds. Consequently they used the method proposed by \citeauthor{wilkinson1995dataplot}, but with a more simple estimation of the bandwidth for the pilot estimate kernel, namely 
+	\begin{equation}
+		\varBandwidth_l = \frac{\varPercentile{80}{l} - \varPercentile{20}{l}}{\log \varNumPatterns}, \, l = 1, \dotsc, \varDim,
 	\end{equation}
-%
-By computing the pilot density first on grid points and using multi-linear interpolation to determine the pilot density for each point the computational complexity is further decreased. 
-Based on these pilot densities the local bandwidths are computed:
-	\begin{equation}\label{eq:1:mbeLocalBandwidth}
-		\varLocalBandwidth{i} = \left( \frac{\varPilotDensityFunction{\varPattern[i]}}{\varGeometricMean}
-		\right)^{-\varMBESensitivityParam}.
-	\end{equation}
-Here \varGeometricMean is the geometric mean of the pilot densities and \varMBESensitivityParam is the sensitivity parameter. 
+where \varPercentile{20}{l} and \varPercentile{80}{l} are the twentieth and eightieth percentile of the data in dimension $l$. 
 
-Although the widths of the kernels used in both the Breiman estimator and the modified Breiman estimator respond to the data, the shapes of the kernels are dependent of the kernel not the data. To further increase the response of the estimator to the data we propose shape-adaptive kernels, kernels of which both the width and the shape are steered by the data. 
+% Shape Adaptive Kernel Density Estimation
+Although the widths of the kernels used in both the Breiman estimator and the modified Breiman estimator are sensitive to the data, the shapes of the kernels are dependent of the kernel itself not the data. To further increase the response of the estimator to the data we propose shape-adaptive kernels, kernels of which both the width and the shape are steered by the data. 
 
-A disadvantage of these shape-adaptive kernels is that in regions where the density of sample points is low there are not enough data points to compute the shape of the kernel reliably. Consequently we propose to let the amount in which the shape of the kernel is influenced by the local data depend on their density. 
+A disadvantage of these shape-adaptive kernels is that in regions where the density of sample points is low there are not enough data points to compute the shape of the kernel reliably. Consequently we propose to let the amount in which the shape of the kernel is influenced by the local data depend on the local density of the data points.
 
-This paper is organized as follows. \Cref{s:method} discusses the proposed shape-adaptive kernels and somee implementation details. \todo{Aanvullen}
+% Paper structure
+This paper is organized as follows. \Cref{s:method} discusses the proposed shape-adaptive kernels. \todo{Aanvullen}
