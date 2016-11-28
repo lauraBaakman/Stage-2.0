@@ -1,6 +1,6 @@
 %!TEX root = paper.tex
 %Pilot density
-We propose to compute the pilot density estimate with the method introduced by \citeauthor{wilkinson1995dataplot}. We use the Epanechnikov kernel for its low computational complexity, as its main disadvantage does matter in the estimation of pilot densities \cite{silverman1986density}. 
+We propose to compute the pilot density estimate with the method introduced by \citeauthor{wilkinson1995dataplot}. We use the Epanechnikov kernel for its low computational complexity, as its main disadvantage does not matter in the estimation of pilot densities \cite{silverman1986density}. 
 % Final density
 The final density is estimated according to:
 \begin{equation}
@@ -8,8 +8,7 @@ The final density is estimated according to:
 \end{equation}
 where \varKernel[\varGaussian] is a Gaussian kernel with mean $\varPattern[j]$ and covariance \varCovarianceMatrix, 
 % Neighbourhood
-which is the covariance matrix of the neighborhood of \varPattern. The neighbors of \varPattern are determined with the \KNNK nearest neighbors algorithm (\KNN) with Euclidean distance. We use this approach rater than a fixed-radius neighborhood to ensure that independent of the sparsity of the data the kernel shape is always based on a reasonable number of data points. Furthermore using \KNN allows us to choose $\KNNK > \varDim$, which makes it extremely improbable that the covariance matrix of the neighborhood is singular. We follow \citeauthor{silverman1986density}'s \cite{silverman1986density} recommendation of choosing $k = \sqrt{\varNumPatterns}$. To ensure that even in high-dimensional data sets $\KNNK > \varDim$ we use 
-	$\KNNK = \max\left(\sqrt{\varNumPatterns},\, \varDim + 1\right)$. 
+which is the covariance matrix of the neighborhood of \varPattern. The neighbors of \varPattern are determined with the \KNNK nearest neighbors algorithm (\KNN) with Euclidean distance. We use this approach rater than a fixed-radius neighborhood to ensure that independent of the sparsity of the data the kernel shape is always based on a reasonable number of data points. Furthermore using \KNN allows us to choose $\KNNK > \varDim$, which makes it extremely improbable that the covariance matrix of the neighborhood is singular. We follow \citeauthor{silverman1986density}'s \cite{silverman1986density} recommendation of choosing $k = \sqrt{\varNumPatterns}$. To ensure that even in high-dimensional data sets $\KNNK > \varDim$ we use $\KNNK = \max\left(\sqrt{\varNumPatterns},\, \varDim + 1\right)$.
 
 %	Covariance
 The basic shape of the kernel used for \varPattern is given by the covariance matrix off \varNeighborhood{\varPattern[i]}, \ie the union of \varPattern and its neighborhood.
