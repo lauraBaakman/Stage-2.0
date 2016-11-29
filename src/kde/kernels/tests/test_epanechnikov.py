@@ -42,12 +42,12 @@ class TestEpanechnikov(TestCase):
     def test_evaluate_1D_4(self):
         kernel = Epanechnikov(dimension=1)
         actual = kernel.evaluate(self.data['u_4_1D'])
-        expected = np.array([0, 0.5625])
+        expected = np.array([-0, 0.5625])
         np.testing.assert_array_almost_equal(actual, expected)
 
     def test_evaluate_2D_1_mult(self):
         kernel = Epanechnikov(
-            dimension=1,
+            dimension=2,
             multivariate_approach=epanechnikov.Multivariate.multiplication)
         actual = kernel.evaluate(self.data['u_1_2D'])
         expected = 0
@@ -55,7 +55,7 @@ class TestEpanechnikov(TestCase):
 
     def test_evaluate_2D_2_mult(self):
         kernel = Epanechnikov(
-            dimension=1,
+            dimension=2,
             multivariate_approach=epanechnikov.Multivariate.multiplication)
         actual = kernel.evaluate(self.data['u_2_2D'])
         expected = 0.5625 * 0.5625
@@ -63,15 +63,15 @@ class TestEpanechnikov(TestCase):
 
     def test_evaluate_2D_3_mult(self):
         kernel = Epanechnikov(
-            dimension=1,
+            dimension=2,
             multivariate_approach=epanechnikov.Multivariate.multiplication)
         actual = kernel.evaluate(self.data['u_3_2D'])
-        expected = np.array([0.3839, 0.5625 * 0.5625])
+        expected = np.array([0.383906250000000, 0.5625 * 0.5625])
         np.testing.assert_array_almost_equal(actual, expected)
 
     def test_evaluate_2D_1_norm(self):
         kernel = Epanechnikov(
-            dimension=1,
+            dimension=2,
             multivariate_approach=epanechnikov.Multivariate.norm)
         actual = kernel.evaluate(self.data['u_1_2D'])
         expected = 0.5625
@@ -79,16 +79,16 @@ class TestEpanechnikov(TestCase):
 
     def test_evaluate_2D_2_norm(self):
         kernel = Epanechnikov(
-            dimension=1,
+            dimension=2,
             multivariate_approach=epanechnikov.Multivariate.norm)
         actual = kernel.evaluate(self.data['u_2_2D'])
-        expected = 0.7955
+        expected = 0.795495128834866
         self.assertAlmostEqual(actual, expected)
 
     def test_evaluate_2D_3_norm(self):
         kernel = Epanechnikov(
-            dimension=1,
+            dimension=2,
             multivariate_approach=epanechnikov.Multivariate.norm)
         actual = kernel.evaluate(self.data['u_3_2D'])
-        expected = np.array([0.8844, 0.7955])
+        expected = np.array([0.884427781110476, 0.795495128834866])
         np.testing.assert_array_almost_equal(actual, expected)
