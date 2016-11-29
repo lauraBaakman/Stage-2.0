@@ -18,6 +18,9 @@ class Parzen:
             dimension=self._dimension, kernel=self._kernel, window_width=self._window_width)
         return estimator.estimate()
 
+    def __repr__(self):
+        return "%s(%r)" % (self.__class__, self.__dict__)
+
 
 class _ParzenEstimator:
 
