@@ -1,0 +1,2 @@
+class Epanechnikov:
+    pass
