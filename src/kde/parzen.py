@@ -20,6 +20,7 @@ class Parzen:
 
 
 class _ParzenEstimator:
+
     def __init__(self, xi_s, x_s, dimension, kernel, window_width):
         self._xi_s = xi_s
         self._x_s = x_s
