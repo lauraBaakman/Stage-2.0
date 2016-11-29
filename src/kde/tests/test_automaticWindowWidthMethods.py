@@ -29,8 +29,13 @@ class TestSilverman(TestCase):
         self.assertAlmostEqual(expected, actual)
 
     def test__volume_nd_unit_sphere_5(self):
-        expected = sigma_methods._volume_nd_unit_sphere(4)
+        expected = sigma_methods._volume_nd_unit_sphere(5)
         actual = (8 * math.pi * math.pi) / 15
+        self.assertAlmostEqual(expected, actual)
+
+    def test__volume_nd_unit_sphere_6(self):
+        expected = sigma_methods._volume_nd_unit_sphere(6)
+        actual = (math.pi * math.pi * math.pi) / 6
         self.assertAlmostEqual(expected, actual)
 
     def test_silverman(self):
