@@ -2,13 +2,15 @@ import math
 
 import numpy as np
 
+import kde.kernels as kernels
 
 class Parzen:
 
-    def __init__(self, window_width, dimension, kernel):
-        self._kernel = kernel
-        self._window_width = window_width
+    def __init__(self, dimension, window_width, kernel=None):
         self._dimension = dimension
+        self._kernel = kernel or kernels.Gaussian(dimension=self._dimension)
+        self._window_width = window_width
+
 
     def estimate(self, xi_s, x_s=None):
         if x_s is None:
