@@ -15,7 +15,7 @@ class TestStandardGaussian(TestCase):
             'patterns': [
                 np.array([0.5, 0.5]),
                 np.array([-0.75, -0.5]),
-                np.array([0, 0]),
+                np.array([0, 0]),gi
             ],
             'densities': [
                 0.123949994309653,
