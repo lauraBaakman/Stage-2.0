@@ -2,8 +2,6 @@ import math
 
 import numpy as np
 
-import kde.kernels as kernels
-
 
 class Parzen:
 
