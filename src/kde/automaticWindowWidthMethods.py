@@ -1,6 +1,7 @@
 import math
 
 import scipy as sp
+import numpy as np
 
 
 def _volume_nd_unit_sphere(dimension):
@@ -16,5 +17,9 @@ def silverman(data_points):
     return math.pow(term, 1 / (dimension + 4)) * math.pow(N, -1 / (dimension + 4)) * average_variance
 
 
-def ferdosi(datapoints):
-    raise NotImplementedError()
+def ferdosi(data_points):
+    (N, _) = data_points.shape
+    twentieth = np.percentile(data_points, 20, axis=0)
+    eightieth = np.percentile(data_points, 80, axis=0)
+    sigmas = (eightieth - twentieth) / math.log(N)
+    return np.min(sigmas)

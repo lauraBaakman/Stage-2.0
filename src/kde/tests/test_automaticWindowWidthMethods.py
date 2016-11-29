@@ -47,3 +47,14 @@ class TestSilverman(TestCase):
         expected = 3.333333333333333
         actual = sigma_methods.silverman(datapoints)
         self.assertAlmostEqual(expected, actual)
+
+class TestFerdosi(TestCase):
+
+    def test_ferdosi(self):
+        data_points = np.array([
+            [15, 20, 35, 40, 50],
+            [15, 20, 35, 40, 50]
+        ]).transpose()
+        expected = 14.290703494871073
+        actual = sigma_methods.ferdosi(data_points)
+        self.assertAlmostEqual(expected, actual)
