@@ -2,7 +2,7 @@ import scipy.stats.mstats as stats
 import numpy as np
 
 import kde
-import kde.windowWidthMethods
+import kde.automaticWindowWidthMethods
 import kde.kernels as kernels
 
 
@@ -10,7 +10,7 @@ class ModifiedBreimanEstimator(object):
 
     def __init__(self, dimension, kernel=None, sensitivity=1/2,
                  pilot_kernel=None,
-                 pilot_window_width_method=kde.windowWidthMethods.ferdosi):
+                 pilot_window_width_method=kde.automaticWindowWidthMethods.ferdosi):
         self._dimension = dimension
         self._pilot_window_width_method = pilot_window_width_method
         self._sensitivity = sensitivity
