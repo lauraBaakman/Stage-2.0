@@ -47,12 +47,12 @@ class _ParzenEstimator:
         self._window_width = window_width
 
     @property
-    def n_xi_s(self):
+    def num_xi_s(self):
         (n, _) = self._xi_s.shape
         return n
 
     @property
-    def n_x_s(self):
+    def num_x_s(self):
         (n, _) = self._x_s.shape
         return n
 
@@ -60,8 +60,8 @@ class _ParzenEstimator:
         self._kernel.center = np.zeros(self._dimension)
         self._kernel.shape = np.identity(self._dimension)
 
-        densities = np.empty(self.n_x_s)
-        factor = 1 / (self.n_xi_s * math.pow(self._window_width, self._dimension))
+        densities = np.empty(self.num_x_s)
+        factor = 1 / (self.num_xi_s * math.pow(self._window_width, self._dimension))
         for idx, x in enumerate(self._x_s):
             densities[idx] = self._estimate_pattern(x, factor)
         return densities
