@@ -4,15 +4,27 @@ import numpy as np
 
 import kde.kernels as kernels
 
+
 class Parzen:
+    """Implementation of the Parzen Estimator.
+    """
 
     def __init__(self, dimension, window_width, kernel=None):
+        """ Init method of the Parzen Estimator.
+        :param dimension: (int) The dimension of the data points of which the density is estimated.
+        :param window_width: (int) The window width to use.
+        :param kernel: (kernel, optional) The kernel to use for the final density estimate, defaults to Gaussian.
+        """
         self._dimension = dimension
-        self._kernel = kernel or kernels.Gaussian(dimension=self._dimension)
+        self._kernel = kernel or kernels.Gaussian()
         self._window_width = window_width
 
-
     def estimate(self, xi_s, x_s=None):
+        """Estimate the density of the points xi_s, use the points x_s to determine the density.
+        :param xi_s: (array like) The data points to estimate the density for.
+        :param x_s: (array like, optional) The data points to use to estimate the density. Defaults to xi_s.
+        :return: The estimated densities of x_s.
+        """
         if x_s is None:
             x_s = xi_s
         estimator = _ParzenEstimator(

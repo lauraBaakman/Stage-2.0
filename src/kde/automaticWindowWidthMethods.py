@@ -11,6 +11,11 @@ def _volume_nd_unit_sphere(dimension):
 
 
 def silverman(data_points):
+    """Compute automatic windowwdith according to the method proposed by Silverman.
+
+    :param data_points: (array like) The points for which the window width needs to be estimated.
+    :return: (array like) The window widths for data_points.
+    """
     (N, dimension) = data_points.shape
     term = 8 * (dimension + 4) * math.pow(2 * math.sqrt(math.pi), dimension) / _volume_nd_unit_sphere(dimension)
     average_variance = sp.mean(sp.var(data_points, axis=0))
@@ -18,6 +23,11 @@ def silverman(data_points):
 
 
 def ferdosi(data_points):
+    """Compute automatic windowwdith according to the method proposed by Ferdosi.
+
+    :param data_points: (array like) The points for which the window width needs to be estimated.
+    :return: (array like) The window widths for data_points.
+    """
     (N, _) = data_points.shape
     twentieth = np.percentile(data_points, 20, axis=0)
     eightieth = np.percentile(data_points, 80, axis=0)

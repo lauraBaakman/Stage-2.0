@@ -7,10 +7,20 @@ import kde.kernels as kernels
 
 
 class ModifiedBreimanEstimator(object):
+    """Implementation of the Modifeid Breiman Estimator, as proposed by Wilkinson and Meijer.
+    """
 
     def __init__(self, dimension, kernel=None, sensitivity=1/2,
                  pilot_kernel=None,
                  pilot_window_width_method=kde.automaticWindowWidthMethods.ferdosi):
+        """ Init method of the Modified Breiman Estimator.
+        :param dimension: (int) The dimension of the data points of which the density is estimated.
+        :param kernel: (kernel, optional) The kernel to use for the final density estimate, defaults to Gaussian.
+        :param sensitivity: (int, optional) The sensitivity of the kernel method, defaults to 0.5.
+        :param pilot_kernel: (kernel, optional) The kernel to use for the pilot density estimate, defaults to Epanechnikov.
+        :param pilot_window_width_method: (function, optional) The method to use for the estimation of the automatic
+            window width.
+        """
         self._dimension = dimension
         self._pilot_window_width_method = pilot_window_width_method
         self._sensitivity = sensitivity
@@ -18,6 +28,12 @@ class ModifiedBreimanEstimator(object):
         self._kernel = kernel or kernels.Gaussian()
 
     def estimate(self, xi_s, x_s=None):
+        """
+        Estimate the density of the points xi_s, use the points x_s to determine the density.
+        :param xi_s: (array like) The data points to estimate the density for.
+        :param x_s: (array like, optional) The data points to use to estimate the density. Defaults to xi_s.
+        :return: The estimated densities of x_s.
+        """
         if x_s is None:
             x_s = xi_s
 
@@ -41,9 +57,9 @@ class ModifiedBreimanEstimator(object):
         local_bandwidths = self._compute_local_bandwidths(pilot_densities)
 
         # Compute densities
-        estimator =_MBEstimator(xi_s=xi_s, x_s=x_s,
-                                dimension=self._dimension,
-                                kernel=self._kernel, local_bandwidths=local_bandwidths)
+        estimator = _MBEstimator(xi_s=xi_s, x_s=x_s,
+                                 dimension=self._dimension,
+                                 kernel=self._kernel, local_bandwidths=local_bandwidths)
         densities = estimator.estimate()
 
     def _compute_local_bandwidths(self, pilot_densities):
