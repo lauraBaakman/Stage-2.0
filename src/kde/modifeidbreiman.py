@@ -1,3 +1,5 @@
+import math
+
 import scipy.stats.mstats as stats
 import numpy as np
 
@@ -38,14 +40,14 @@ class ModifiedBreimanEstimator(object):
             x_s = xi_s
 
         # Compute pilot window width
-        window_width = self._pilot_window_width_method(xi_s)
+        pilot_window_width = self._pilot_window_width_method(xi_s)
 
         # Compute grid for pilot densities
         grid_points = x_s
 
         # Compute pilot densities
         pilot_densities = kde.Parzen(
-            window_width=window_width,
+            window_width=pilot_window_width,
             dimension=self._dimension,
             kernel=self._pilot_kernel
         ).estimate(xi_s=xi_s, x_s=grid_points)
@@ -59,7 +61,8 @@ class ModifiedBreimanEstimator(object):
         # Compute densities
         estimator = _MBEstimator(xi_s=xi_s, x_s=x_s,
                                  dimension=self._dimension,
-                                 kernel=self._kernel, local_bandwidths=local_bandwidths)
+                                 kernel=self._kernel, local_bandwidths=local_bandwidths,
+                                 general_bandwidth=pilot_window_width)
         densities = estimator.estimate()
 
     def _compute_local_bandwidths(self, pilot_densities):
@@ -72,12 +75,35 @@ class ModifiedBreimanEstimator(object):
 
 class _MBEstimator:
 
-    def __init__(self, xi_s, x_s, dimension, kernel, local_bandwidths):
+    def __init__(self, xi_s, x_s, dimension, kernel, local_bandwidths, general_bandwidth):
         self._xi_s = xi_s
         self._x_s = x_s
         self._dimension = dimension
         self._kernel = kernel
         self._local_bandwidths = local_bandwidths
+        self._general_bandwidth = general_bandwidth
+
+    @property
+    def num_x_s(self):
+        (n, _) = self._x_s.shape
+        return n
+
+    @property
+    def num_xi_s(self):
+        (n, _) = self._xi_s.shape
+        return n
 
     def estimate(self):
-        raise NotImplementedError()
+        densities = np.empty(self.num_x_s)
+        for idx, x in enumerate(self._x_s):
+            densities[idx] = self._estimate_pattern(x)
+        return (1 / self.num_xi_s) * densities
+
+    def _estimate_pattern(self, x):
+        factors = np.power(self._local_bandwidths * self._general_bandwidth, - self._dimension)
+        terms = self._kernel.evaluate(
+            np.divide((x - self._xi_s).transpose(), self._general_bandwidth * self._local_bandwidths).transpose()
+        )
+        terms *= factors
+        density = terms.sum()
+        return density
