@@ -5,6 +5,7 @@ import numpy as np
 import kde.kernels as kernels
 
 
+
 class Parzen:
     """Implementation of the Parzen Estimator.
     """
