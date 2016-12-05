@@ -19,6 +19,16 @@ class Grid(object):
     def grid_points(self):
         return self._grid_points
 
+    @classmethod
+    def cover(cls, points, padding=0, **kwargs):
+        raise NotImplementedError
+        ranges = list()
+        (_, dimensions) = points.shape
+        for axis in range(dimensions):
+            ranges.append(
+                (np.min(points, axis=axis) - padding, np.max(points, axis=axis) + padding)
+            )
+        return cls(**kwargs, *ranges)
 
 class _GridBuilder(object):
 
