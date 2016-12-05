@@ -3,7 +3,7 @@ from unittest import TestCase
 
 import numpy as np
 
-import kde.automaticWindowWidthMethods as sigma_methods
+import kdeUtils.automaticWindowWidthMethods as sigma_methods
 
 
 class TestSilverman(TestCase):

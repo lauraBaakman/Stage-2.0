@@ -1,11 +1,9 @@
-import math
-
-import scipy.stats.mstats as stats
 import numpy as np
+import scipy.stats.mstats as stats
 
 import kde
-import kde.automaticWindowWidthMethods
 import kde.kernels as kernels
+import kdeUtils.automaticWindowWidthMethods
 
 
 class ModifiedBreimanEstimator(object):
@@ -14,7 +12,7 @@ class ModifiedBreimanEstimator(object):
 
     def __init__(self, dimension, kernel=None, sensitivity=1/2,
                  pilot_kernel=None,
-                 pilot_window_width_method=kde.automaticWindowWidthMethods.ferdosi):
+                 pilot_window_width_method=kdeUtils.automaticWindowWidthMethods.ferdosi):
         """ Init method of the Modified Breiman Estimator.
         :param dimension: (int) The dimension of the data points of which the density is estimated.
         :param kernel: (kernel, optional) The kernel to use for the final density estimate, defaults to Gaussian.
