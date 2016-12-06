@@ -3,11 +3,11 @@ import numpy as np
 class Grid(object):
     """Class to represent a uniform grid."""
 
-    def __init__(self, number_of_grid_points, *ranges):
+    def __init__(self, *ranges, number_of_grid_points):
         """
         Init method of Grid.
-        :param number_of_grid_points: How many gridpoints should be used to cover one dimension, can be either a single
-        number or a list of N values.
+        :param number_of_grid_points: How many grid points should be used to cover one dimension, can be either a single
+        number or a list of N values. Note that the key word is required for this argument.
         :param ranges: List of N tuples, each representing the start and the end of a range. A N-dimensional grid
         is generated.
         """
@@ -21,14 +21,11 @@ class Grid(object):
 
     @classmethod
     def cover(cls, points, padding=0, **kwargs):
-        raise NotImplementedError
-        ranges = list()
         (_, dimensions) = points.shape
-        for axis in range(dimensions):
-            ranges.append(
-                (np.min(points, axis=axis) - padding, np.max(points, axis=axis) + padding)
-            )
-        return cls(**kwargs, *ranges)
+        minima = np.min(points, axis=0) - padding
+        maxima = np.max(points, axis=0) + padding
+        ranges = zip(minima, maxima)
+        return cls(*ranges, **kwargs)
 
 class _GridBuilder(object):
 
