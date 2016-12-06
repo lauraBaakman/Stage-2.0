@@ -49,7 +49,7 @@ class ModifiedBreimanEstimator(object):
         general_window_width = self._general_window_width_method(xi_s)
 
         # Compute pilot densities
-        pilot_densities = self._estimate_pilot_densitites(general_window_width, x_s)
+        pilot_densities = self._estimate_pilot_densitites(general_window_width, x_s=x_s, xi_s=xi_s)
 
         # Compute local bandwidths
         local_bandwidths = self._compute_local_bandwidths(pilot_densities)
@@ -60,20 +60,21 @@ class ModifiedBreimanEstimator(object):
                                  kernel=self._kernel, local_bandwidths=local_bandwidths,
                                  general_bandwidth=general_window_width)
         densities = estimator.estimate()
+        return densities
 
-    def _estimate_pilot_densitites(self, general_window_width, x_s):
+    def _estimate_pilot_densitites(self, general_window_width, xi_s, x_s):
         # Compute grid for pilot densities
-        grid_points = kdeUtils.Grid.cover(x_s, number_of_grid_points=self._number_of_grid_points).grid_points
+        grid_points = kdeUtils.Grid.cover(xi_s, number_of_grid_points=self._number_of_grid_points).grid_points
 
         # Compute pilot densities
         grid_densities = kde.Parzen(
             window_width=general_window_width,
             dimension=self._dimension,
             kernel=self._pilot_kernel
-        ).estimate(xi_s=grid_points, x_s=grid_points)
+        ).estimate(xi_s=xi_s, x_s=grid_points)
 
         # Interpolation: note it is not bilinear interpolation, but uses a triangulation
-        pilot_densities = interpolate.griddata(grid_points, grid_densities, x_s, method='linear')
+        pilot_densities = interpolate.griddata(grid_points, grid_densities, xi_s, method='linear')
 
         return pilot_densities
 
