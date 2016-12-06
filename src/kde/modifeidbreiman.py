@@ -1,31 +1,39 @@
 import numpy as np
+import scipy.interpolate as interpolate
 import scipy.stats.mstats as stats
 
 import kde
 import kde.kernels as kernels
-import kdeUtils.automaticWindowWidthMethods
+import kdeUtils
 
 
 class ModifiedBreimanEstimator(object):
     """Implementation of the Modifeid Breiman Estimator, as proposed by Wilkinson and Meijer.
     """
 
+    default_number_of_grid_points = 50
+
     def __init__(self, dimension, kernel=None, sensitivity=1/2,
                  pilot_kernel=None,
-                 pilot_window_width_method=kdeUtils.automaticWindowWidthMethods.ferdosi):
+                 pilot_window_width_method=kdeUtils.automaticWindowWidthMethods.ferdosi,
+                 number_of_grid_points=default_number_of_grid_points):
         """ Init method of the Modified Breiman Estimator.
         :param dimension: (int) The dimension of the data points of which the density is estimated.
         :param kernel: (kernel, optional) The kernel to use for the final density estimate, defaults to Gaussian.
         :param sensitivity: (int, optional) The sensitivity of the kernel method, defaults to 0.5.
         :param pilot_kernel: (kernel, optional) The kernel to use for the pilot density estimate, defaults to Epanechnikov.
         :param pilot_window_width_method: (function, optional) The method to use for the estimation of the automatic
-            window width.
+            window width. Defaults to ferdosi.
+        :param number_of_grid_points: (int or list, optional) The number of grid points per dimension. If an int is
+        passed the same number of grid points is used for each dimension.
+        Defaults to *ModifiedBreimanEstimator.default_number_of_grid_points*
         """
         self._dimension = dimension
-        self._pilot_window_width_method = pilot_window_width_method
+        self._general_window_width_method = pilot_window_width_method
         self._sensitivity = sensitivity
         self._pilot_kernel = pilot_kernel or kernels.Epanechnikov(dimension=self._dimension)
         self._kernel = kernel or kernels.Gaussian()
+        self._number_of_grid_points = number_of_grid_points
 
     def estimate(self, xi_s, x_s=None):
         """
@@ -37,21 +45,11 @@ class ModifiedBreimanEstimator(object):
         if x_s is None:
             x_s = xi_s
 
-        # Compute pilot window width
-        pilot_window_width = self._pilot_window_width_method(xi_s)
-
-        # Compute grid for pilot densities
-        grid_points = x_s
+        # Compute general window width
+        general_window_width = self._general_window_width_method(xi_s)
 
         # Compute pilot densities
-        pilot_densities = kde.Parzen(
-            window_width=pilot_window_width,
-            dimension=self._dimension,
-            kernel=self._pilot_kernel
-        ).estimate(xi_s=xi_s, x_s=grid_points)
-
-        # Multivariate Linear Interpolation
-        #TODO do multivariate linear interpolation on pilot densitites
+        pilot_densities = self._estimate_pilot_densitites(general_window_width, x_s)
 
         # Compute local bandwidths
         local_bandwidths = self._compute_local_bandwidths(pilot_densities)
@@ -60,12 +58,28 @@ class ModifiedBreimanEstimator(object):
         estimator = _MBEstimator(xi_s=xi_s, x_s=x_s,
                                  dimension=self._dimension,
                                  kernel=self._kernel, local_bandwidths=local_bandwidths,
-                                 general_bandwidth=pilot_window_width)
+                                 general_bandwidth=general_window_width)
         densities = estimator.estimate()
+
+    def _estimate_pilot_densitites(self, general_window_width, x_s):
+        # Compute grid for pilot densities
+        grid_points = kdeUtils.Grid.cover(x_s, number_of_grid_points=self._number_of_grid_points).grid_points
+
+        # Compute pilot densities
+        grid_densities = kde.Parzen(
+            window_width=general_window_width,
+            dimension=self._dimension,
+            kernel=self._pilot_kernel
+        ).estimate(xi_s=grid_points, x_s=grid_points)
+
+        # Interpolation: note it is not bilinear interpolation, but uses a triangulation
+        pilot_densities = interpolate.griddata(grid_points, grid_densities, x_s, method='linear')
+
+        return pilot_densities
 
     def _compute_local_bandwidths(self, pilot_densities):
         geometric_mean = stats.gmean(pilot_densities)
-        return np.power((pilot_densities / geometric_mean), 1 / self._sensitivity)
+        return np.power((pilot_densities / geometric_mean), - self._sensitivity)
 
     def __repr__(self):
         return "%s(%r)" % (self.__class__, self.__dict__)
