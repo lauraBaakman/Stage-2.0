@@ -60,8 +60,8 @@ class TestModifiedBreimanEstimator(TestCase):
             [1, 1]
         ])
         x_s = np.array([
-            [0, 0]
+            [0, 0],
         ])
         actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
-        expected = np.array([[4]])
-        np.testing.assert_array_almost_equal(expected, actual)
+        expected = np.array([4])
+        np.testing.assert_almost_equal(actual, expected)
