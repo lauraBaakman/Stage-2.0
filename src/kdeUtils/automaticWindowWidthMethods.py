@@ -1,7 +1,7 @@
 import math
 
-import scipy as sp
 import numpy as np
+import scipy as sp
 
 
 def _volume_nd_unit_sphere(dimension):
@@ -33,3 +33,7 @@ def ferdosi(data_points):
     eightieth = np.percentile(data_points, 80, axis=0)
     sigmas = (eightieth - twentieth) / math.log(N)
     return np.min(sigmas)
+
+
+def test(data_points):
+    return np.mean(data_points)
