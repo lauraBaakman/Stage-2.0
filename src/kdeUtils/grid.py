@@ -27,6 +27,7 @@ class Grid(object):
         ranges = zip(minima, maxima)
         return cls(*ranges, **kwargs)
 
+
 class _GridBuilder(object):
 
     def __init__(self, number_of_grid_points, *ranges):
