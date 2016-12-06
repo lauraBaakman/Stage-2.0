@@ -21,6 +21,13 @@ class Grid(object):
 
     @classmethod
     def cover(cls, points, padding=0, **kwargs):
+        """
+        Generate a grid that covers *points* possibly with *padding*.
+        :param points: The points that should be covered by the grid.
+        :param padding: How much space there is to be between the extrema of points and the extrema of the grid.
+        :param kwargs: The parameters that should be passed to the constructor of grid: *number_of_grid_points*
+        :return:
+        """
         (_, dimensions) = points.shape
         minima = np.min(points, axis=0) - padding
         maxima = np.max(points, axis=0) + padding
