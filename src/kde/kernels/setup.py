@@ -5,7 +5,7 @@ def configuration(parent_package='', top_path=None):
                            parent_package,
                            top_path)
     config.add_extension(
-        '_standardGaussian',  # Name of the extension
+        '_kernels',  # Name of the extension
         sources=['standardGaussian.c.c']
     )
     return config
