@@ -1,0 +1,8 @@
+//
+// Created by Laura Baakman on 19/12/2016.
+//
+
+#ifndef KERNELS_STANDARDGAUSSIAN_C_H
+#define KERNELS_STANDARDGAUSSIAN_C_H
+
+#endif //KERNELS_STANDARDGAUSSIAN_C_H
