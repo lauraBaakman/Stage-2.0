@@ -3,7 +3,7 @@ project(kernels)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set(SOURCE_FILES standardGaussian.c.c standardGaussian.c.h)
+set(SOURCE_FILES kernels.c kernels.h standardGaussian.c standardGaussian.h)
 add_executable(kernels ${SOURCE_FILES})
 
 find_package(PythonLibs REQUIRED)
