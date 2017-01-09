@@ -12,6 +12,6 @@
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include <numpy/arrayobject.h>
 
-double parzen(double* pattern, int dimensionality, PyArrayObject *dataPoints);
+double parzen(double* pattern, int dimensionality, PyArrayObject *dataPoints, double windowWidth);
 
 #endif //KERNELS_DENSITYFUNCTIONS_H

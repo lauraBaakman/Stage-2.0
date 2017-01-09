@@ -4,7 +4,7 @@
 
 #include "parzen.h"
 
-double parzen(double* pattern, int dimensionality, PyArrayObject* dataPoints){
+double parzen(double* pattern, int dimensionality, PyArrayObject* dataPoints, double windowWidth){
     int numDataPoints = (int)PyArray_DIM(dataPoints, 0);
 
     double* dataDataPoints = (double *)PyArray_DATA(dataPoints);
@@ -12,6 +12,8 @@ double parzen(double* pattern, int dimensionality, PyArrayObject* dataPoints){
     int strideDataPoints = (int)PyArray_STRIDE (dataPoints, 0) / (int)PyArray_ITEMSIZE(dataPoints);
 
     double* currentDataPoint = dataDataPoints;
+
+    printf("WindowWidth: %f\n", windowWidth);
 
     for (int i = 0; i < numDataPoints; ++i) {
         for(int j = 0; j < dimensionality; j++) {

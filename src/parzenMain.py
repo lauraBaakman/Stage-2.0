@@ -7,6 +7,7 @@ if __name__ == '__main__':
     datapoints = np.array([[0.4, 0.4], [0.4, 1.4], [0.4, 0.6], [0.3, 0.4]])
     (num_patterns, _) = patterns.shape
     densities = np.empty(num_patterns, dtype=float)
-    _kde.parzen_multi_pattern(patterns, datapoints, densities)
+    window_width = 0.5
+    _kde.parzen_multi_pattern(patterns, datapoints, window_width, densities)
 
     print(densities)

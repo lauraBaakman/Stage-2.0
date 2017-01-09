@@ -12,9 +12,14 @@ static PyObject * kdeParzenMultiPattern(PyObject *self, PyObject *args){
 
     PyArrayObject* patterns = NULL;
     PyArrayObject* dataPoints = NULL;
+    double windowWidth;
     PyArrayObject* densities = NULL;
 
-    if (!PyArg_ParseTuple(args, "OOO", &inPatterns, &inDataPoints, &outDensities)) goto fail;
+    if (!PyArg_ParseTuple(args, "OOdO",
+                          &inPatterns,
+                          &inDataPoints,
+                          &windowWidth,
+                          &outDensities)) goto fail;
 
     patterns = (PyArrayObject *)PyArray_FROM_OTF(inPatterns, NPY_DOUBLE, NPY_ARRAY_IN_ARRAY);
     if (patterns == NULL) goto fail;
@@ -36,7 +41,7 @@ static PyObject * kdeParzenMultiPattern(PyObject *self, PyObject *args){
 
     for(int j = 0; j < num_patterns; j++)
     {
-        densities_data[j] = parzen(current_pattern, dim_patterns, dataPoints);
+        densities_data[j] = parzen(current_pattern, dim_patterns, dataPoints, windowWidth);
         current_pattern += pattern_stride;
     }
 
