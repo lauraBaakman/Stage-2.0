@@ -29,9 +29,11 @@ static PyObject * standard_gaussian_multi_pattern(PyObject *self, PyObject *args
 
     double* current_pattern = (double*)PyArray_DATA(patterns);
 
+    double factor = standardGaussianFactor(dim_patterns);
+
     for(int j = 0; j < num_patterns; j++)
     {
-        densities_data[j] = standard_gaussian(current_pattern, dim_patterns);
+        densities_data[j] = standardGaussian(current_pattern, dim_patterns, factor);
         current_pattern += pattern_stride;
     }
 
@@ -61,7 +63,8 @@ static PyObject * standard_gaussian_single_pattern(PyObject *self, PyObject *arg
     int dim_pattern = (int)PyArray_DIM(pattern, 0);
 
     double* pattern_data = (double*)PyArray_DATA(pattern);
-    double density = standard_gaussian(pattern_data, dim_pattern);
+    double factor = standardGaussianFactor(dim_pattern);
+    double density = standardGaussian(pattern_data, dim_pattern, factor);
 
     /* Clean up Memory */
     Py_DECREF(pattern);

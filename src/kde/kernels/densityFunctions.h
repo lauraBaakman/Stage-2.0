@@ -8,6 +8,7 @@
 #include <printf.h>
 #include <math.h>
 
-double standard_gaussian(double* pattern, int pattern_dimensionality);
+double standardGaussianFactor(int patternDimensionality);
+double standardGaussian(double* pattern, int patternDimensionality, double factor);
 
 #endif //KERNELS_DENSITYFUNCTIONS_H
