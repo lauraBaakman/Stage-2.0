@@ -3,8 +3,11 @@ import warnings
 
 import numpy as np
 
-# from kde.kernels import StandardGaussian_New as StandardGaussian
-from kde.kernels import StandardGaussian as StandardGaussian
+# Dit is de import die ik wil, breekt.
+# from kde.kernels import StandardGaussian
+
+# Dit is de workaround, dit alleen werkt als in de init van kernels standardGaussian niet geimporteerd wordt.
+from kde.kernels.standardGaussian import StandardGaussian as StandardGaussian
 
 
 class TestStandardGaussian(TestCase):
@@ -39,18 +42,21 @@ class TestStandardGaussian(TestCase):
         }
 
     def test_evaluate_2D(self):
+        print('test_evaluate_2D')
         kernel = StandardGaussian(dimension=self.data_2D['dimension'])
         for pattern, expected in zip(self.data_2D['patterns'], self.data_2D['densities']):
             actual = kernel.evaluate(pattern)
             self.assertAlmostEqual(actual, expected)
 
     def test_evaluate_3D(self):
+        print('test_evaluate_3D')
         kernel = StandardGaussian(dimension=self.data_3D['dimension'])
         for pattern, expected in zip(self.data_3D['patterns'], self.data_3D['densities']):
             actual = kernel.evaluate(pattern)
-            self.assertAlmostEqual(actual, expected)
+            np.testing.assert_array_almost_equal(actual, expected)
 
     def test_evaluate_2D_multiple(self):
+        print('test_evaluate_2D_multiple')
         kernel = StandardGaussian(dimension=self.data_2D['dimension'])
         patterns = np.matrix(self.data_2D['patterns'])
         actual = kernel.evaluate(patterns)
