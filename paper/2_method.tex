@@ -1,17 +1,17 @@
 %!TEX root = paper.tex
 %Pilot density
-We propose to compute the pilot density estimate with the method introduced by \citeauthor{wilkinson1995dataplot}. We use the Epanechnikov kernel for its low computational complexity, as its main disadvantage does not matter in the estimation of pilot densities \cite{silverman1986density}. 
+We propose to compute the pilot density estimate with the method introduced by \citeauthor{wilkinson1995dataplot}. We use the Epanechnikov kernel for its low computational complexity, as its main disadvantage, its finite differentiability, does not matter in the estimation of pilot densities \cite{silverman1986density}. 
 % Final density
 The final density is estimated according to:
 \begin{equation}
 	\varEstimatedDensityFunction{\varPattern} = \frac{1}{\varNumPatterns} \sum_{i = 1}^{\varNumPatterns} \left(\varBandwidth\varLocalBandwidth{i}\right)^{-\varDim} \varKernel[\varGaussian]{\varPattern},
 \end{equation}
-where \varKernel[\varGaussian] is a Gaussian kernel with mean $\varPattern[j]$ and covariance \varCovarianceMatrix, 
+where $\varKernel[\varGaussian]{\cdot}$ is a Gaussian kernel with mean $\varPattern[j]$ and covariance \varCovarianceMatrix, 
 % Neighbourhood
 which is the covariance matrix of the neighborhood of \varPattern. The neighbors of \varPattern are determined with the \KNNK nearest neighbors algorithm (\KNN) with Euclidean distance. We use this approach rater than a fixed-radius neighborhood to ensure that independent of the sparsity of the data the kernel shape is always based on a reasonable number of data points. Furthermore using \KNN allows us to choose $\KNNK > \varDim$, which makes it extremely improbable that the covariance matrix of the neighborhood is singular. We follow \citeauthor{silverman1986density}'s \cite{silverman1986density} recommendation of choosing $k = \sqrt{\varNumPatterns}$. To ensure that even in high-dimensional data sets $\KNNK > \varDim$ we use $\KNNK = \max\left(\sqrt{\varNumPatterns},\, \varDim + 1\right)$.
 
 %	Covariance
-The basic shape of the kernel used for \varPattern is given by the covariance matrix off \varNeighborhood{\varPattern[i]}, \ie the union of \varPattern and its neighborhood.
+The basic shape of the kernel used for \varPattern is given by the covariance matrix of \varNeighborhood{\varPattern}, \ie the union of \varPattern and its neighborhood.
 % Scaling
 To allow the density estimation of each pattern to be influenced by an equal area, before the application of the smoothing factor $(\varLocalBandwidth{i})$, the basic shapes of the kernels need to be scaled. The eigenvectors and eigenvalues of the covariance matrix define an ellipse, the eigenellipse. We scale the covariance matrix with the factor \varScalingFactor, defined as:
 \begin{equation}
@@ -20,4 +20,4 @@ To allow the density estimation of each pattern to be influenced by an equal are
 where $\lambda_j$ denotes the $j$th eigenvalue of the $j$th eigenvector of \varCovarianceMatrix. The scaling factor \varScalingFactor ensures that the shape-adapted covariance matrix has the same scale as the covariance matrix that is implicitly used in the Modified Breiman Estimator with a Gaussian kernel.
 
 % Value of sensitivity paramter
-Two different values of \varMBESensitivityParam are prevalent in the literature. \textcite{breiman1977variable} argues in favor of $\rfrac{1}{\varDim}$, whereas \textcite{silverman1986density} prefers using $\varMBESensitivityParam = \rfrac{1}{2}$, independent of the dimensionality of the data. We have empirically determined that $\varMBESensitivityParam = ?$ \todo{Empirisch vaststellen} is optimal with respect to the ?.
+Two different values of \varMBESensitivityParam are prevalent in the literature. \textcite{breiman1977variable} argue in favor of $\rfrac{1}{\varDim}$, whereas \textcite{silverman1986density} prefers using $\varMBESensitivityParam = \rfrac{1}{2}$, independent of the dimensionality of the data. We have empirically determined that $\varMBESensitivityParam = ?$ \todo{Empirisch vaststellen} is optimal with respect to the ?.
