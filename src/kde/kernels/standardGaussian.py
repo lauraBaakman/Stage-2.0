@@ -1,24 +1,23 @@
 import numpy as np
-import scipy.stats as stats
+
+import kde.kernels._kernels as _kernels
 
 
 class StandardGaussian:
     """Implementation of the Standard Gaussian Kernel, i.e. a mean 0 and I as covariance matrix.
     """
 
-    def __init__(self, dimension=3):
-        """The init of the Standard Gaussian Kernel.
+    def __init__(self, *args, **kwargs):
+        pass
 
-        :param dimension: (int) The dimension of the kernel.
-        """
-        mean = np.zeros(dimension)
-        covariance = np.identity(dimension)
-        self._kernel = stats.multivariate_normal(mean=mean, cov=covariance)
-
-    def evaluate(self, x):
-        """Evaluate the kernel for vector x.
-
-        :param x: (array like) The vector for which to evaluate the kernel.
-        :return: (int) The probability density of the kernel at x.
-        """
-        return self._kernel.pdf(x)
+    def evaluate(self, xs):
+        if xs.ndim == 1:
+            density = _kernels.standard_gaussian_single_pattern(xs)
+            return density
+        elif xs.ndim == 2:
+            (num_patterns, _) = xs.shape
+            densities = np.empty(num_patterns, dtype=float)
+            _kernels.standard_gaussian_multi_pattern(xs, densities)
+            return densities
+        else:
+            raise TypeError("Expected a vector or a matrix, not a {}-dimensional array.".format(xs.ndim))

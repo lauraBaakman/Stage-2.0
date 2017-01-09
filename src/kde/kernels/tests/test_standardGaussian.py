@@ -3,8 +3,11 @@ import warnings
 
 import numpy as np
 
-from kde.kernels.standardGaussian_new import StandardGaussian_New as StandardGaussian
-# from kde.kernels import StandardGaussian as StandardGaussian
+# Dit is de import die ik wil, breekt.
+# from kde.kernels import StandardGaussian
+
+# Dit is de workaround, dit alleen werkt als in de init van kernels standardGaussian niet geimporteerd wordt.
+from kde.kernels.standardGaussian import StandardGaussian as StandardGaussian
 
 
 class TestStandardGaussian(TestCase):
