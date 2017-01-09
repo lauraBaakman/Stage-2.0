@@ -1,7 +1,6 @@
-import warnings
-
 import numpy as np
 import scipy.stats as stats
+
 
 class StandardGaussian:
     """Implementation of the Standard Gaussian Kernel, i.e. a mean 0 and I as covariance matrix.
