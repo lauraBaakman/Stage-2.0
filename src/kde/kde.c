@@ -4,8 +4,8 @@
 
 #include "kde.h"
 
-static char kernels_standardGaussian_docstring[] = "Evaluate the Standard Gaussian (zero vector mean and identity covariance matrix) for each row in the input matrix.";
-static PyObject * standard_gaussian_multi_pattern(PyObject *self, PyObject *args){
+static char kernels_standardGaussian_docstring[] = "Estimate the densities with Parzen.";
+static PyObject * kdeParzenMultiPattern(PyObject *self, PyObject *args){
     PyObject* inPatterns = NULL;
     PyObject* outDensities = NULL;
 
@@ -49,35 +49,9 @@ static PyObject * standard_gaussian_multi_pattern(PyObject *self, PyObject *args
     return NULL;
 }
 
-static PyObject * standard_gaussian_single_pattern(PyObject *self, PyObject *args){
-    PyObject* inPatterns = NULL;
-    PyArrayObject* pattern = NULL;
-
-    if (!PyArg_ParseTuple(args, "O", &inPatterns)) goto fail;
-
-    pattern = (PyArrayObject *)PyArray_FROM_OTF(inPatterns, NPY_DOUBLE, NPY_ARRAY_IN_ARRAY);
-    if (pattern == NULL) goto fail;
-
-    int dim_pattern = (int)PyArray_DIM(pattern, 0);
-
-    double* pattern_data = (double*)PyArray_DATA(pattern);
-    double density = parzen(pattern_data, dim_pattern);
-
-    /* Clean up Memory */
-    Py_DECREF(pattern);
-
-    /* Create return object */
-    PyObject *returnObject = Py_BuildValue("d", density);
-    return returnObject;
-
-    fail:
-    Py_XDECREF(pattern);
-    return NULL;
-}
 
 static PyMethodDef method_table[] = {
-        {"standard_gaussian_multi_pattern",     standard_gaussian_multi_pattern, METH_VARARGS,   kernels_standardGaussian_docstring},
-        {"standard_gaussian_single_pattern",    standard_gaussian_single_pattern,   METH_VARARGS,   kernels_standardGaussian_docstring},
+        {"parzen_multi_pattern",     kdeParzenMultiPattern, METH_VARARGS,   kernels_standardGaussian_docstring},
         /* Sentinel */
         {NULL,                              NULL,                                   0,              NULL}
 };
