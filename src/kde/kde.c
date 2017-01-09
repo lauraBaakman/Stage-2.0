@@ -5,7 +5,7 @@
 #include "kde.h"
 
 static char kernels_standardGaussian_docstring[] = "Estimate the densities with Parzen.";
-static PyObject * kdeParzenMultiPattern(PyObject *self, PyObject *args){
+static PyObject * kdeParzenStandardGaussian(PyObject *self, PyObject *args){
     PyObject* inPatterns = NULL;
     PyObject* inDataPoints = NULL;
     PyObject* outDensities = NULL;
@@ -63,7 +63,7 @@ static PyObject * kdeParzenMultiPattern(PyObject *self, PyObject *args){
 
 
 static PyMethodDef method_table[] = {
-        {"parzen_multi_pattern",     kdeParzenMultiPattern, METH_VARARGS,   kernels_standardGaussian_docstring},
+        {"parzen_standard_gaussian",     kdeParzenStandardGaussian, METH_VARARGS,   kernels_standardGaussian_docstring},
         /* Sentinel */
         {NULL,                              NULL,                                   0,              NULL}
 };

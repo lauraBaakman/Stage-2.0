@@ -8,6 +8,6 @@ if __name__ == '__main__':
     (num_patterns, _) = patterns.shape
     densities = np.empty(num_patterns, dtype=float)
     window_width = 0.5
-    _kde.parzen_multi_pattern(patterns, datapoints, window_width, densities)
+    _kde.parzen_standard_gaussian(patterns, datapoints, window_width, densities)
 
     print(densities)
