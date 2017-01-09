@@ -115,12 +115,12 @@ target/
 
 # PyCharm
 # http://www.jetbrains.com/pycharm/webhelp/project.html
-.idea
+#.idea
 .iml
 
 
 ###CLion###
-src/kde/kernels/cmake-build-debug/*
+**/cmake-build-debug/*
 
 
 ###IntelliJ###
