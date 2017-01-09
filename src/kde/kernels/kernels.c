@@ -5,15 +5,14 @@
 #include "kernels.h"
 
 static char kernels_standardGaussian_docstring[] = "Evaluate the Standard Gaussian (zero vector mean and identity covariance matrix) for each row in the input matrix.";
-static PyObject * kernels_standard_gaussian(PyObject *self, PyObject *args){
+static PyObject * standard_gaussian_multi_pattern(PyObject *self, PyObject *args){
     PyObject* inPatterns = NULL;
     PyObject* outDensities = NULL;
 
     PyArrayObject* patterns = NULL;
     PyArrayObject* densities = NULL;
 
-    if (!PyArg_ParseTuple(args, "OO", &inPatterns, &outDensities))
-        goto fail;
+    if (!PyArg_ParseTuple(args, "OO", &inPatterns, &outDensities)) goto fail;
 
     patterns = (PyArrayObject *)PyArray_FROM_OTF(inPatterns, NPY_DOUBLE, NPY_ARRAY_IN_ARRAY);
     if (patterns == NULL) goto fail;
@@ -36,49 +35,11 @@ static PyObject * kernels_standard_gaussian(PyObject *self, PyObject *args){
         current_pattern += pattern_stride;
     }
 
-//    /* Call the function that does the computation */
-//    double result = term;
-//
-//    int dim_0 = PyArray_DIM(vector, 0);
-//    printf("dim_0: %d\n", dim_0);
-//
-//    int dim_1 = PyArray_DIM(vector, 1);
-//    printf("dim_1: %d\n", dim_1);v
-//
-//    int dim_0_stride = PyArray_STRIDE(vector, 0) / PyArray_ITEMSIZE(vector);
-//    printf("dim_0_stride: %d\n", dim_0_stride);
-//
-//    int dim_1_stride = PyArray_STRIDE(vector, 1) / PyArray_ITEMSIZE(vector);
-//    printf("dim_1_stride: %d\n", dim_1_stride);
-//
-//    int itemsize = PyArray_ITEMSIZE(vector);
-//    printf("itemsize: %d\n", itemsize);
-//
-//    double value;
-//    for (int i = 0; i < dim_0; i++){
-//        for (int j = 0; j < dim_1; j++){
-//            value = *((double *)PyArray_GETPTR2(vector,i, j));
-//            printf("(%d, %d) = %f (%d)\n", i, j, value, PyArray_GETPTR2(vector,i, j));
-//        }
-//    }
-//
-//    //Iterate through the rows of vector
-//    double* i = (double*)PyArray_DATA(vector);
-//    for(int j = 0; j < dim_0; j++)
-//    {
-//        printf("%d: %f %d\n", j, *i, i);
-//        i += dim_0_stride;
-//    }
-//
-//    printf("Term: %f\n", term);
-
     /* Clean up Memory */
     Py_DECREF(patterns);
     Py_XDECREF(densities);
 
-    /* Return None */
-//    PyObject *returnObject = Py_BuildValue("d", 42.0);
-//    return returnObject;
+    /* Create return object */
     Py_INCREF(Py_None);
     return Py_None;
 
@@ -88,10 +49,37 @@ static PyObject * kernels_standard_gaussian(PyObject *self, PyObject *args){
     return NULL;
 }
 
+static PyObject * standard_gaussian_single_pattern(PyObject *self, PyObject *args){
+    PyObject* inPatterns = NULL;
+    PyArrayObject* pattern = NULL;
+
+    if (!PyArg_ParseTuple(args, "O", &inPatterns)) goto fail;
+
+    pattern = (PyArrayObject *)PyArray_FROM_OTF(inPatterns, NPY_DOUBLE, NPY_ARRAY_IN_ARRAY);
+    if (pattern == NULL) goto fail;
+
+    int dim_pattern = (int)PyArray_DIM(pattern, 0);
+
+    double* pattern_data = (double*)PyArray_DATA(pattern);
+    double density = standard_gaussian(pattern_data, dim_pattern);
+
+    /* Clean up Memory */
+    Py_DECREF(pattern);
+
+    /* Create return object */
+    PyObject *returnObject = Py_BuildValue("d", density);
+    return returnObject;
+
+    fail:
+    Py_XDECREF(pattern);
+    return NULL;
+}
+
 static PyMethodDef method_table[] = {
-        {"standard_gaussian",   kernels_standard_gaussian,   METH_VARARGS,   kernels_standardGaussian_docstring},
+        {"standard_gaussian_multi_pattern",     standard_gaussian_multi_pattern, METH_VARARGS,   kernels_standardGaussian_docstring},
+        {"standard_gaussian_single_pattern",    standard_gaussian_single_pattern,   METH_VARARGS,   kernels_standardGaussian_docstring},
         /* Sentinel */
-        {NULL,                  NULL,                       0,              NULL}
+        {NULL,                              NULL,                                   0,              NULL}
 };
 
 static struct PyModuleDef kernelModule = {
