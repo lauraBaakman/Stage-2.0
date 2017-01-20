@@ -10,7 +10,6 @@ static PyObject * kdeParzenStandardGaussian(PyObject *self, PyObject *args){
     PyObject* inDataPoints = NULL;
     PyObject* outDensities = NULL;
 
-    PyArrayObject* patterns = NULL;
     PyArrayObject* dataPoints = NULL;
     double windowWidth;
     PyArrayObject* densities = NULL;
@@ -23,11 +22,7 @@ static PyObject * kdeParzenStandardGaussian(PyObject *self, PyObject *args){
 
 
 
-    Array tempPatterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
-    printArray(&tempPatterns);
-
-    patterns = (PyArrayObject *)PyArray_FROM_OTF(inDataPoints, NPY_DOUBLE, NPY_ARRAY_IN_ARRAY);
-    if (patterns == NULL) goto fail;
+    Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
 
     dataPoints = (PyArrayObject *)PyArray_FROM_OTF(inDataPoints, NPY_DOUBLE, NPY_ARRAY_IN_ARRAY);
     if (dataPoints == NULL) goto fail;
@@ -37,16 +32,16 @@ static PyObject * kdeParzenStandardGaussian(PyObject *self, PyObject *args){
 
     double* densities_data = (double *)PyArray_DATA(densities);
 
-    int num_patterns = (int)PyArray_DIM(patterns, 0);
-    int dim_patterns = (int)PyArray_DIM(patterns, 1);
+    int num_patterns = patterns.length;
+    int dim_patterns = patterns.dimensionality;
 
     int num_datapoints = (int)PyArray_DIM(dataPoints, 0);
 
-    int pattern_stride = (int)PyArray_STRIDE (patterns, 0) / (int)PyArray_ITEMSIZE(patterns);
+    int pattern_stride = patterns.stride;
 
     double factor = 1.0 / (num_datapoints * pow(windowWidth, dim_patterns));
 
-    double* current_pattern = (double*)PyArray_DATA(patterns);
+    double* current_pattern = patterns.data;
     for(
             int j = 0;
             j < num_patterns;
@@ -56,7 +51,6 @@ static PyObject * kdeParzenStandardGaussian(PyObject *self, PyObject *args){
     }
 
     /* Clean up Memory */
-    Py_DECREF(patterns);
     Py_XDECREF(dataPoints);
     Py_XDECREF(densities);
 
@@ -65,7 +59,6 @@ static PyObject * kdeParzenStandardGaussian(PyObject *self, PyObject *args){
     return Py_None;
 
     fail:
-    Py_XDECREF(patterns);
     Py_XDECREF(dataPoints);
     Py_XDECREF(densities);
     return NULL;
