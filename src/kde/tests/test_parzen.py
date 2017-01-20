@@ -2,8 +2,6 @@ from unittest import TestCase
 
 import numpy as np
 
-import kde
-
 
 class TestParzen(TestCase):
 
@@ -24,7 +22,8 @@ class TestParzen(TestCase):
             'dimension': 2
         }
 
-    def test_estimate(self):
+    def test_estimate_python(self):
+        import kde
         kernel_shape = self.data['window_width'] * self.data['window_width'] * np.identity(self.data['dimension'])
         kernel = kde.kernels.Gaussian(covariance_matrix=kernel_shape)
         estimator = kde.Parzen(
@@ -33,5 +32,13 @@ class TestParzen(TestCase):
             kernel=kernel
         )
         actual = estimator.estimate(xi_s=self.data['patterns'])
+        expected = self.data['parzen_estimated_densities']
+        np.testing.assert_array_almost_equal(actual, expected)
+
+    def test_estimate_C(self):
+        import kde._kde as kde
+        (num_patterns, dimension) = self.data['patterns'].shape
+        actual = np.empty(num_patterns, dtype=float)
+        kde.parzen_standard_gaussian(self.data['patterns'], self.data['patterns'], self.data['window_width'], actual)
         expected = self.data['parzen_estimated_densities']
         np.testing.assert_array_almost_equal(actual, expected)
