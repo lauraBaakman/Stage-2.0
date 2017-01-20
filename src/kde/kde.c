@@ -27,10 +27,9 @@ static PyObject * kdeParzenStandardGaussian(PyObject *self, PyObject *args){
 
     double* current_pattern = patterns.data;
 
-    for(
-            int j = 0;
-            j < patterns.length;
-            j++, current_pattern += patterns.stride)
+    for(int j = 0;
+        j < patterns.length;
+        j++, current_pattern += patterns.stride)
     {
         densities.data[j] = parzen(current_pattern, &dataPoints, windowWidth, parzenFactor, gaussianFactor);
     }

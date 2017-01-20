@@ -11,7 +11,10 @@ double parzen(double *pattern, Array *dataPoints, double windowWidth, double par
 
     double* scaledPattern = (double *)malloc(sizeof(double) * dataPoints->dimensionality);
 
-    for (int i = 0; i < dataPoints->length; ++i, currentDataPoint += dataPoints->stride) {
+    for (int i = 0;
+         i < dataPoints->length;
+         ++i, currentDataPoint += dataPoints->stride)
+    {
         scaledPattern = scalePattern(pattern, currentDataPoint, scaledPattern, dataPoints->dimensionality, windowWidth);
         density += standardGaussian(scaledPattern, dataPoints->dimensionality, gaussianFactor);
     }
