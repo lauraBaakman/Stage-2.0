@@ -11,5 +11,8 @@
 #include <numpy/arrayobject.h>
 
 #include "parzen.h"
+#include "utils.h"
+
+Array pyObjectToArray(PyObject *pythonObject, int requirements);
 
 #endif //KDE_H

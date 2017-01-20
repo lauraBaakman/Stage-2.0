@@ -21,7 +21,12 @@ static PyObject * kdeParzenStandardGaussian(PyObject *self, PyObject *args){
                           &windowWidth,
                           &outDensities)) goto fail;
 
-    patterns = (PyArrayObject *)PyArray_FROM_OTF(inPatterns, NPY_DOUBLE, NPY_ARRAY_IN_ARRAY);
+
+
+    Array tempPatterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
+    printArray(&tempPatterns);
+
+    patterns = (PyArrayObject *)PyArray_FROM_OTF(inDataPoints, NPY_DOUBLE, NPY_ARRAY_IN_ARRAY);
     if (patterns == NULL) goto fail;
 
     dataPoints = (PyArrayObject *)PyArray_FROM_OTF(inDataPoints, NPY_DOUBLE, NPY_ARRAY_IN_ARRAY);
@@ -64,6 +69,18 @@ static PyObject * kdeParzenStandardGaussian(PyObject *self, PyObject *args){
     Py_XDECREF(dataPoints);
     Py_XDECREF(densities);
     return NULL;
+}
+
+Array pyObjectToArray(PyObject *pythonObject, int requirements){
+    PyArrayObject* arrayObject = NULL;
+    arrayObject = (PyArrayObject *)PyArray_FROM_OTF(pythonObject, NPY_DOUBLE, requirements);
+    if (arrayObject == NULL){
+        fprintf(stderr, "Error converting PyObject to PyArrayObject\n");
+        exit(-1);
+    }
+    Array array = buildArrayFromPyArray(arrayObject);
+    Py_XDECREF(arrayObject);
+    return array;
 }
 
 

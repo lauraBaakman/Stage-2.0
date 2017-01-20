@@ -6,7 +6,7 @@ def configuration(parent_package='', top_path=None):
                            top_path)
     config.add_extension(
         '_kde',  # Name of the extension
-        sources=['kde.c', 'parzen.c', 'kernels/densityFunctions.c']
+        sources=['utils.c', 'kde.c', 'parzen.c', 'kernels/densityFunctions.c']
     )
     return config
 
