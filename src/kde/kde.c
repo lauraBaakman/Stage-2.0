@@ -35,14 +35,19 @@ static PyObject * kdeParzenStandardGaussian(PyObject *self, PyObject *args){
     int num_patterns = (int)PyArray_DIM(patterns, 0);
     int dim_patterns = (int)PyArray_DIM(patterns, 1);
 
+    int num_datapoints = (int)PyArray_DIM(dataPoints, 0);
+
     int pattern_stride = (int)PyArray_STRIDE (patterns, 0) / (int)PyArray_ITEMSIZE(patterns);
 
-    double* current_pattern = (double*)PyArray_DATA(patterns);
+    double factor = 1.0 / (num_datapoints * pow(windowWidth, dim_patterns));
 
-    for(int j = 0; j < num_patterns; j++)
+    double* current_pattern = (double*)PyArray_DATA(patterns);
+    for(
+            int j = 0;
+            j < num_patterns;
+            j++, current_pattern += pattern_stride)
     {
-        densities_data[j] = parzen(current_pattern, dim_patterns, dataPoints, windowWidth);
-        current_pattern += pattern_stride;
+        densities_data[j] = parzen(current_pattern, dim_patterns, dataPoints, windowWidth, factor);
     }
 
     /* Clean up Memory */
@@ -70,7 +75,7 @@ static PyMethodDef method_table[] = {
 
 static struct PyModuleDef kernelModule = {
         PyModuleDef_HEAD_INIT, "_kernels",
-        "C implementation of some kernels.",
+        "C implementation of some kernel density estimation methods.",
         -1, method_table
 };
 
