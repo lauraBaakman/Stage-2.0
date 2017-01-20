@@ -11,7 +11,6 @@ static PyObject * kdeParzenStandardGaussian(PyObject *self, PyObject *args){
     PyObject* outDensities = NULL;
 
     double windowWidth;
-    PyArrayObject* densities = NULL;
 
     if (!PyArg_ParseTuple(args, "OOdO",
                           &inPatterns,
@@ -23,11 +22,10 @@ static PyObject * kdeParzenStandardGaussian(PyObject *self, PyObject *args){
 
     Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
     Array dataPoints = pyObjectToArray(inDataPoints, NPY_ARRAY_IN_ARRAY);
+    Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
 
-    densities = (PyArrayObject *)PyArray_FROM_OTF(outDensities, NPY_DOUBLE, NPY_ARRAY_OUT_ARRAY);
-    if (densities == NULL) goto fail;
 
-    double* densities_data = (double *)PyArray_DATA(densities);
+    double* densities_data = densities.data;
 
     int num_patterns = patterns.length;
     int dim_patterns = patterns.dimensionality;
@@ -47,15 +45,12 @@ static PyObject * kdeParzenStandardGaussian(PyObject *self, PyObject *args){
         densities_data[j] = parzen(current_pattern, dim_patterns, &dataPoints, windowWidth, factor);
     }
 
-    /* Clean up Memory */
-    Py_XDECREF(densities);
 
     /* Create return object */
     Py_INCREF(Py_None);
     return Py_None;
 
     fail:
-    Py_XDECREF(densities);
     return NULL;
 }
 
