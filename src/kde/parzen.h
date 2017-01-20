@@ -15,7 +15,7 @@
 #include "kernels/densityFunctions.h"
 #include "utils.h"
 
-double parzen(double* pattern, int dimensionality, Array* dataPoints, double windowWidth, double factor);
+double parzen(double *pattern, Array *dataPoints, double windowWidth, double parzenFactor, double gaussianFactor);
 
 //'Private stuff', didn't feel like messing around with internal headers
 double* scalePattern(double* pattern, double* dataPoint, double* scaledPattern, int dimensionality, double windowWidth);

@@ -5,25 +5,17 @@
 #include "parzen.h"
 #include "utils.h"
 
-double parzen(double* pattern, int dimensionality, Array* dataPoints, double windowWidth, double factor){
-    int numDataPoints = dataPoints->length;
-
-    double* dataDataPoints = dataPoints->data;
-
-    int strideDataPoints = dataPoints->stride;
-
+double parzen(double *pattern, Array *dataPoints, double windowWidth, double parzenFactor, double gaussianFactor) {
     double* currentDataPoint = dataPoints->data;
-
     double density = 0;
-    double gaussianFactor = standardGaussianFactor(dimensionality);
 
-    double* scaledPattern = (double *)malloc(sizeof(double) * dimensionality);
+    double* scaledPattern = (double *)malloc(sizeof(double) * dataPoints->dimensionality);
 
-    for (int i = 0; i < numDataPoints; ++i, currentDataPoint += strideDataPoints) {
-        scaledPattern = scalePattern(pattern, currentDataPoint, scaledPattern, dimensionality, windowWidth);
-        density += standardGaussian(scaledPattern, dimensionality, gaussianFactor);
+    for (int i = 0; i < dataPoints->length; ++i, currentDataPoint += dataPoints->stride) {
+        scaledPattern = scalePattern(pattern, currentDataPoint, scaledPattern, dataPoints->dimensionality, windowWidth);
+        density += standardGaussian(scaledPattern, dataPoints->dimensionality, gaussianFactor);
     }
-    density *= factor;
+    density *= parzenFactor;
 
     free(scaledPattern);
     return density;

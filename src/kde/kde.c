@@ -16,42 +16,28 @@ static PyObject * kdeParzenStandardGaussian(PyObject *self, PyObject *args){
                           &inPatterns,
                           &inDataPoints,
                           &windowWidth,
-                          &outDensities)) goto fail;
-
-
+                          &outDensities)) return NULL;
 
     Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
     Array dataPoints = pyObjectToArray(inDataPoints, NPY_ARRAY_IN_ARRAY);
     Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
 
-
-    double* densities_data = densities.data;
-
-    int num_patterns = patterns.length;
-    int dim_patterns = patterns.dimensionality;
-
-    int num_datapoints = dataPoints.length;
-
-    int pattern_stride = patterns.stride;
-
-    double factor = 1.0 / (num_datapoints * pow(windowWidth, dim_patterns));
+    double parzenFactor = 1.0 / (dataPoints.length * pow(windowWidth, patterns.dimensionality));
+    double gaussianFactor = standardGaussianFactor(dataPoints.dimensionality);
 
     double* current_pattern = patterns.data;
+
     for(
             int j = 0;
-            j < num_patterns;
-            j++, current_pattern += pattern_stride)
+            j < patterns.length;
+            j++, current_pattern += patterns.stride)
     {
-        densities_data[j] = parzen(current_pattern, dim_patterns, &dataPoints, windowWidth, factor);
+        densities.data[j] = parzen(current_pattern, &dataPoints, windowWidth, parzenFactor, gaussianFactor);
     }
-
 
     /* Create return object */
     Py_INCREF(Py_None);
     return Py_None;
-
-    fail:
-    return NULL;
 }
 
 Array pyObjectToArray(PyObject *pythonObject, int requirements){
