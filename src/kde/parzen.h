@@ -13,8 +13,9 @@
 #include <numpy/arrayobject.h>
 
 #include "kernels/densityFunctions.h"
+#include "utils.h"
 
-double parzen(double* pattern, int dimensionality, PyArrayObject *dataPoints, double windowWidth, double factor);
+double parzen(double* pattern, int dimensionality, Array* dataPoints, double windowWidth, double factor);
 
 //'Private stuff', didn't feel like messing around with internal headers
 double* scalePattern(double* pattern, double* dataPoint, double* scaledPattern, int dimensionality, double windowWidth);

@@ -10,7 +10,6 @@ static PyObject * kdeParzenStandardGaussian(PyObject *self, PyObject *args){
     PyObject* inDataPoints = NULL;
     PyObject* outDensities = NULL;
 
-    PyArrayObject* dataPoints = NULL;
     double windowWidth;
     PyArrayObject* densities = NULL;
 
@@ -23,9 +22,7 @@ static PyObject * kdeParzenStandardGaussian(PyObject *self, PyObject *args){
 
 
     Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
-
-    dataPoints = (PyArrayObject *)PyArray_FROM_OTF(inDataPoints, NPY_DOUBLE, NPY_ARRAY_IN_ARRAY);
-    if (dataPoints == NULL) goto fail;
+    Array dataPoints = pyObjectToArray(inDataPoints, NPY_ARRAY_IN_ARRAY);
 
     densities = (PyArrayObject *)PyArray_FROM_OTF(outDensities, NPY_DOUBLE, NPY_ARRAY_OUT_ARRAY);
     if (densities == NULL) goto fail;
@@ -35,7 +32,7 @@ static PyObject * kdeParzenStandardGaussian(PyObject *self, PyObject *args){
     int num_patterns = patterns.length;
     int dim_patterns = patterns.dimensionality;
 
-    int num_datapoints = (int)PyArray_DIM(dataPoints, 0);
+    int num_datapoints = dataPoints.length;
 
     int pattern_stride = patterns.stride;
 
@@ -47,11 +44,10 @@ static PyObject * kdeParzenStandardGaussian(PyObject *self, PyObject *args){
             j < num_patterns;
             j++, current_pattern += pattern_stride)
     {
-        densities_data[j] = parzen(current_pattern, dim_patterns, dataPoints, windowWidth, factor);
+        densities_data[j] = parzen(current_pattern, dim_patterns, &dataPoints, windowWidth, factor);
     }
 
     /* Clean up Memory */
-    Py_XDECREF(dataPoints);
     Py_XDECREF(densities);
 
     /* Create return object */
@@ -59,7 +55,6 @@ static PyObject * kdeParzenStandardGaussian(PyObject *self, PyObject *args){
     return Py_None;
 
     fail:
-    Py_XDECREF(dataPoints);
     Py_XDECREF(densities);
     return NULL;
 }

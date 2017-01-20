@@ -3,15 +3,16 @@
 //
 
 #include "parzen.h"
+#include "utils.h"
 
-double parzen(double* pattern, int dimensionality, PyArrayObject* dataPoints, double windowWidth, double factor){
-    int numDataPoints = (int)PyArray_DIM(dataPoints, 0);
+double parzen(double* pattern, int dimensionality, Array* dataPoints, double windowWidth, double factor){
+    int numDataPoints = dataPoints->length;
 
-    double* dataDataPoints = (double *)PyArray_DATA(dataPoints);
+    double* dataDataPoints = dataPoints->data;
 
-    int strideDataPoints = (int)PyArray_STRIDE (dataPoints, 0) / (int)PyArray_ITEMSIZE(dataPoints);
+    int strideDataPoints = dataPoints->stride;
 
-    double* currentDataPoint = dataDataPoints;
+    double* currentDataPoint = dataPoints->data;
 
     double density = 0;
     double gaussianFactor = standardGaussianFactor(dimensionality);
