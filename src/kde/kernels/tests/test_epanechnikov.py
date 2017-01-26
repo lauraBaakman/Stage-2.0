@@ -16,19 +16,19 @@ class TestEpanechnikov(TestCase):
         x = np.array([5])
         actual = self.kernel.evaluate(x)
         expected = np.array([0])
-        self.assertAlmostEqual(actual, expected)
+        np.testing.assert_array_almost_equal(actual, expected)
 
     def test_evaluate_1D_2(self):
         x = np.array([-0.5])
         actual = self.kernel.evaluate(x)
         expected = np.array([0.562500000000000])
-        self.assertAlmostEqual(actual, expected)
+        np.testing.assert_array_almost_equal(actual, expected)
 
     def test_evaluate_1D_3(self):
         x = np.array([0.5])
         actual = self.kernel.evaluate(x)
         expected = np.array([0.562500000000000])
-        self.assertAlmostEqual(actual, expected)
+        np.testing.assert_array_almost_equal(actual, expected)
 
     def test_evaluate_1D_4(self):
         x = np.array([[5], [0.5]])
@@ -37,40 +37,40 @@ class TestEpanechnikov(TestCase):
         np.testing.assert_array_almost_equal(actual, expected)
 
     def test_evaluate_2D_1(self):
-        x = np.array([5, 0.5])
+        x = np.array([[5, 0.5]])
         actual = self.kernel.evaluate(x)
         expected = np.array([0])
-        self.assertAlmostEqual(actual, expected)
+        np.testing.assert_array_almost_equal(actual, expected)
 
     def test_evaluate_2D_2(self):
         x = np.array([0.5, 0.5])
         actual = self.kernel.evaluate(x)
         expected = np.array([0.318309886183791])
-        self.assertAlmostEqual(actual, expected)
+        np.testing.assert_array_almost_equal(actual, expected)
 
     def test_evaluate_2D_3(self):
         x = np.array([[0.3, 0.5], [0.5, 0.5]])
         actual = self.kernel.evaluate(x)
         expected = np.array([0.420169049762604, 0.318309886183791])
-        self.assertAlmostEqual(actual, expected)
+        np.testing.assert_array_almost_equal(actual, expected)
 
     def test_evaluate_3D(self):
         x = np.array([0.5, 0.5, 0.5])
         actual = self.kernel.evaluate(x)
-        expected = np.array([0.149207759148652  ])
-        self.assertAlmostEqual(actual, expected)
+        expected = np.array([0.149207759148652])
+        np.testing.assert_array_almost_equal(actual, expected)
 
     def test_evaluate_4D(self):
-        x = np.array([[0.3, 0.5, 0.5, 0.5]])
+        x = np.array([0.3, 0.5, 0.5, 0.5])
         actual = self.kernel.evaluate(x)
         expected = np.array([0.097268336296644])
-        self.assertAlmostEqual(actual, expected)
+        np.testing.assert_array_almost_equal(actual, expected)
 
     def test_evaluate_5D(self):
-        x = np.array([[0.3, 0.5, 0.5, 0.5, 0.2]])
+        x = np.array([0.3, 0.5, 0.5, 0.5, 0.2])
         actual = self.kernel.evaluate(x)
         expected = np.array([0.079790432118341])
-        self.assertAlmostEqual(actual, expected)
+        np.testing.assert_array_almost_equal(actual, expected)
 
     def test___unit_sphere_volume_1D(self):
         dimension = 1
