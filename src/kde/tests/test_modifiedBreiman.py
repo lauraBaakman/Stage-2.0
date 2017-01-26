@@ -51,7 +51,6 @@ class TestModifiedBreimanEstimator(TestCase):
         np.testing.assert_array_almost_equal(actual, expected)
 
     def test_estimate(self):
-        self.fail("The test raises an error, fix before starting C implementation.")
         estimator = kde.ModifiedBreimanEstimator(
             dimension=2, sensitivity=0.5, number_of_grid_points=2,
             pilot_kernel=TestKernel(), kernel=TestKernel(),

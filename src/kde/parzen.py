@@ -1,8 +1,8 @@
 import math
 
+import kde._kde as kde
 import numpy as np
 
-import kde._kde as kde
 from kde.estimator import Estimator
 
 
@@ -20,15 +20,15 @@ class Parzen(Estimator):
 
     def estimate(self, xi_s, x_s=None):
         """Estimate the density of the points xi_s, use the points x_s to determine the density.
-        :param xi_s: (array like) The data points to estimate the density for.
-        :param x_s: (array like, optional) The data points to use to estimate the density. Defaults to xi_s.
+        :param x_s: (array like) The data points to estimate the density for.
+        :param xi_s: (array like, optional) The data points to use to estimate the density. Defaults to x_s.
         :return: The estimated densities of x_s.
         """
 
         if x_s is None:
             x_s = xi_s
         self._validate_data(x_s, xi_s)
-        (num_patterns, _) = xi_s.shape
+        (num_patterns, _) = x_s.shape
         densities = np.empty(num_patterns, dtype=float)
         kde.parzen_standard_gaussian(x_s, xi_s, self._window_width, densities)
         return densities
