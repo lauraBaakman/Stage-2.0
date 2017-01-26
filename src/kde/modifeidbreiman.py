@@ -21,7 +21,7 @@ class ModifiedBreimanEstimator(object):
         :param dimension: (int) The dimension of the data points of which the density is estimated.
         :param kernel: (kernel, optional) The kernel to use for the final density estimate, defaults to Gaussian.
         :param sensitivity: (int, optional) The sensitivity of the kernel method, defaults to 0.5.
-        :param pilot_kernel: (kernel, optional) The kernel to use for the pilot density estimate, defaults to Epanechnikov.
+        :param pilot_kernel: (kernel, optional) The kernel to use for the pilot density estimate, defaults to Epanechnikov_Python.
         :param pilot_window_width_method: (function, optional) The method to use for the estimation of the automatic
             window width. Defaults to ferdosi.
         :param number_of_grid_points: (int or list, optional) The number of grid points per dimension. If an int is
@@ -31,7 +31,7 @@ class ModifiedBreimanEstimator(object):
         self._dimension = dimension
         self._general_window_width_method = pilot_window_width_method
         self._sensitivity = sensitivity
-        self._pilot_kernel = pilot_kernel or kernels.Epanechnikov(dimension=self._dimension)
+        self._pilot_kernel = pilot_kernel or kernels.Epanechnikov_Python(dimension=self._dimension)
         self._kernel = kernel or kernels.Gaussian()
         self._number_of_grid_points = number_of_grid_points
 
