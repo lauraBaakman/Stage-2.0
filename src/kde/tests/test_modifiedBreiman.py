@@ -29,9 +29,9 @@ class TestModifiedBreimanEstimator(TestCase):
         kernel = TestKernel()
         local_bandwidths = np.array([1, 2])
         general_bandwidth = 0.5
-        estimator = mbe._MBEEstimator(xi_s=xi_s, x_s=x_s,
-                                      dimension=dimension, kernel=kernel,
-                                      local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth)
+        estimator = mbe._MBEEstimator_Python(xi_s=xi_s, x_s=x_s,
+                                             dimension=dimension, kernel=kernel,
+                                             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth)
         actual = estimator.estimate()
         expected = np.array([1.5, 6])
         np.testing.assert_array_almost_equal(actual, expected)
@@ -43,9 +43,9 @@ class TestModifiedBreimanEstimator(TestCase):
         kernel = TestKernel()
         local_bandwidths = np.array([1, 2])
         general_bandwidth = 0.5
-        estimator = mbe._MBEEstimator(xi_s=xi_s, x_s=x_s,
-                                      dimension=dimension, kernel=kernel,
-                                      local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth)
+        estimator = mbe._MBEEstimator_Python(xi_s=xi_s, x_s=x_s,
+                                             dimension=dimension, kernel=kernel,
+                                             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth)
         actual = estimator.estimate()
         expected = np.array([4.5])
         np.testing.assert_array_almost_equal(actual, expected)

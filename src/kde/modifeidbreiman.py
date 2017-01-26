@@ -57,9 +57,9 @@ class ModifiedBreimanEstimator(object):
 
         # Compute densities
         estimator = _MBEEstimator(xi_s=xi_s, x_s=x_s,
-                                  dimension=self._dimension,
-                                  kernel=self._kernel, local_bandwidths=local_bandwidths,
-                                  general_bandwidth=general_window_width)
+                                         dimension=self._dimension,
+                                         kernel=self._kernel, local_bandwidths=local_bandwidths,
+                                         general_bandwidth=general_window_width)
         densities = estimator.estimate()
         return densities
 
@@ -87,7 +87,7 @@ class ModifiedBreimanEstimator(object):
         return "%s(%r)" % (self.__class__, self.__dict__)
 
 
-class _MBEEstimator:
+class _MBEEstimator_Python:
 
     def __init__(self, xi_s, x_s, dimension, kernel, local_bandwidths, general_bandwidth):
         self._xi_s = xi_s
@@ -121,3 +121,12 @@ class _MBEEstimator:
         terms *= factors
         density = terms.sum()
         return density
+
+
+class _MBEEstimator(_MBEEstimator_Python):
+
+    def __init__(self, *args, **kwargs):
+        super(_MBEEstimator, self).__init__(*args, **kwargs)
+
+    def estimate(self):
+        raise NotImplementedError()
