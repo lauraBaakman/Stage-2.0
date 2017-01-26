@@ -10,5 +10,8 @@
 #include <numpy/arrayobject.h>
 
 #include "densityFunctions.h"
+#include "../utils.h"
+
+Array pyObjectToArray(PyObject *pythonObject, int requirements);
 
 #endif //KERNELS_STANDARDGAUSSIAN_C_H
