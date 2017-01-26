@@ -5,6 +5,7 @@ import scipy.stats.mstats as stats
 import kde
 import kde.kernels as kernels
 import kdeUtils
+from kde.kernels.epanechnikov import Epanechnikov
 
 
 class ModifiedBreimanEstimator(object):
@@ -31,7 +32,7 @@ class ModifiedBreimanEstimator(object):
         self._dimension = dimension
         self._general_window_width_method = pilot_window_width_method
         self._sensitivity = sensitivity
-        self._pilot_kernel = pilot_kernel or kernels.Epanechnikov_Python(dimension=self._dimension)
+        self._pilot_kernel = pilot_kernel or Epanechnikov()
         self._kernel = kernel or kernels.Gaussian()
         self._number_of_grid_points = number_of_grid_points
 
