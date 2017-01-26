@@ -56,10 +56,10 @@ class ModifiedBreimanEstimator(object):
         local_bandwidths = self._compute_local_bandwidths(pilot_densities)
 
         # Compute densities
-        estimator = _MBEstimator(xi_s=xi_s, x_s=x_s,
-                                 dimension=self._dimension,
-                                 kernel=self._kernel, local_bandwidths=local_bandwidths,
-                                 general_bandwidth=general_window_width)
+        estimator = _MBEEstimator(xi_s=xi_s, x_s=x_s,
+                                  dimension=self._dimension,
+                                  kernel=self._kernel, local_bandwidths=local_bandwidths,
+                                  general_bandwidth=general_window_width)
         densities = estimator.estimate()
         return densities
 
@@ -87,7 +87,7 @@ class ModifiedBreimanEstimator(object):
         return "%s(%r)" % (self.__class__, self.__dict__)
 
 
-class _MBEstimator:
+class _MBEEstimator:
 
     def __init__(self, xi_s, x_s, dimension, kernel, local_bandwidths, general_bandwidth):
         self._xi_s = xi_s
