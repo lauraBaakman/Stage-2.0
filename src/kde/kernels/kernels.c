@@ -10,46 +10,25 @@ static PyObject * standard_gaussian_multi_pattern(PyObject *self, PyObject *args
     PyObject* inPatterns = NULL;
     PyObject* outDensities = NULL;
 
-    PyArrayObject* patterns = NULL;
-    PyArrayObject* densities = NULL;
+    if (!PyArg_ParseTuple(args, "OO", &inPatterns, &outDensities)) return NULL;
 
-    if (!PyArg_ParseTuple(args, "OO", &inPatterns, &outDensities)) goto fail;
+    Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
+    Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
 
-    patterns = (PyArrayObject *)PyArray_FROM_OTF(inPatterns, NPY_DOUBLE, NPY_ARRAY_IN_ARRAY);
-    if (patterns == NULL) goto fail;
+    double* current_pattern = patterns.data;
 
-    densities = (PyArrayObject *)PyArray_FROM_OTF(outDensities, NPY_DOUBLE, NPY_ARRAY_OUT_ARRAY);
-    if (densities == NULL) goto fail;
+    double factor = standardGaussianFactor(patterns.dimensionality);
 
-    double* densities_data = (double *)PyArray_DATA(densities);
-
-    int num_patterns = (int)PyArray_DIM(patterns, 0);
-    int dim_patterns = (int)PyArray_DIM(patterns, 1);
-
-    int pattern_stride = (int)PyArray_STRIDE (patterns, 0) / (int)PyArray_ITEMSIZE(patterns);
-
-    double* current_pattern = (double*)PyArray_DATA(patterns);
-
-    double factor = standardGaussianFactor(dim_patterns);
-
-    for(int j = 0; j < num_patterns; j++)
+    for(
+            int j = 0;
+            j < patterns.length;
+            j++, current_pattern += patterns.stride)
     {
-        densities_data[j] = standardGaussian(current_pattern, dim_patterns, factor);
-        current_pattern += pattern_stride;
+        densities.data[j] = standardGaussian(current_pattern, patterns.dimensionality, factor);
     }
-
-    /* Clean up Memory */
-    Py_DECREF(patterns);
-    Py_XDECREF(densities);
-
     /* Create return object */
     Py_INCREF(Py_None);
     return Py_None;
-
-    fail:
-    Py_XDECREF(patterns);
-    Py_XDECREF(densities);
-    return NULL;
 }
 
 static PyObject * standard_gaussian_single_pattern(PyObject *self, PyObject *args){
