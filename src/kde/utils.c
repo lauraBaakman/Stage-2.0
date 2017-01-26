@@ -20,7 +20,6 @@ Array buildArrayFromPyArray(PyArrayObject* arrayObject){
     return array;
 }
 
-
 void printArray(Array* array){
     printf("Array { data: %p, dimensionality: %2d, length: %4d, stride: %4d}\n",
     array->data, array->dimensionality, array->length, array->stride);
