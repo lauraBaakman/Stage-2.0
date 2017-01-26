@@ -8,7 +8,7 @@ set(SOURCE_FILES
         ./kernels/densityFunctions.c ./kernels/densityFunctions.h
         ./kernels/kernels.c ./kernels/kernels.h
         parzen.c parzen.h
-        utils.c utils.h)
+        utils.c utils.h mbe.c mbe.h)
 add_executable(kde ${SOURCE_FILES})
 
 find_package(PythonLibs REQUIRED)
