@@ -2,8 +2,7 @@ from unittest import TestCase
 
 import numpy as np
 
-from kde.kernels import Epanechnikov
-import kde.kernels.epanechnikov as epanechnikov
+from kde.kernels.epanechnikov import Epanechnikov
 
 
 class TestEpanechnikov(TestCase):
