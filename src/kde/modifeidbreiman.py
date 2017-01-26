@@ -129,4 +129,4 @@ class _MBEEstimator(_MBEEstimator_Python):
         super(_MBEEstimator, self).__init__(*args, **kwargs)
 
     def estimate(self):
-        raise NotImplementedError()
+        raise NotImplementedError("I should eventually call kdeBreimanEpanechnikov from _kde.")
