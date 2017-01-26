@@ -54,29 +54,17 @@ static PyObject * standard_gaussian_multi_pattern(PyObject *self, PyObject *args
 
 static PyObject * standard_gaussian_single_pattern(PyObject *self, PyObject *args){
     PyObject* inPatterns = NULL;
-    PyArrayObject* pattern = NULL;
 
-    if (!PyArg_ParseTuple(args, "O", &inPatterns)) goto fail;
+    if (!PyArg_ParseTuple(args, "O", &inPatterns)) return NULL;
 
-    pattern = (PyArrayObject *)PyArray_FROM_OTF(inPatterns, NPY_DOUBLE, NPY_ARRAY_IN_ARRAY);
-    if (pattern == NULL) goto fail;
+    Array pattern = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
 
-    int dim_pattern = (int)PyArray_DIM(pattern, 0);
-
-    double* pattern_data = (double*)PyArray_DATA(pattern);
-    double factor = standardGaussianFactor(dim_pattern);
-    double density = standardGaussian(pattern_data, dim_pattern, factor);
-
-    /* Clean up Memory */
-    Py_DECREF(pattern);
+    double factor = standardGaussianFactor(pattern.dimensionality);
+    double density = standardGaussian(pattern.data, pattern.dimensionality, factor);
 
     /* Create return object */
     PyObject *returnObject = Py_BuildValue("d", density);
     return returnObject;
-
-    fail:
-    Py_XDECREF(pattern);
-    return NULL;
 }
 
 static char kernels_epanechnikov_docstring[] = "Evaluate the Epanechnikov kernel for each row in the input matrix.";

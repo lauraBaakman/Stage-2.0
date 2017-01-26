@@ -12,7 +12,8 @@ class StandardGaussian:
 
     def evaluate(self, xs):
         if xs.ndim == 1:
-            density = _kernels.standard_gaussian_single_pattern(xs)
+            data = np.array([xs])
+            density = _kernels.standard_gaussian_single_pattern(data)
             return density
         elif xs.ndim == 2:
             (num_patterns, _) = xs.shape
