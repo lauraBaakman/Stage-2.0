@@ -80,6 +80,9 @@ static PyObject * kdeBreimanEpanechnikov(PyObject *self, PyObject *args){
     PyObject* inDataPoints = NULL;
     PyObject* outDensities = NULL;
 
+    fprintf(stderr, "Implementation of kdeBreimanEpanechnikov is still a dummy.\n");
+    exit(-1);
+
     double windowWidth;
 
     if (!PyArg_ParseTuple(args, "OOdO",
