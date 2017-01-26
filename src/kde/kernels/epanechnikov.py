@@ -12,3 +12,6 @@ class Epanechnikov:
 
     def evaluate(self, x):
         raise NotImplementedError()
+
+    def _unit_sphere_volume(self, dimension):
+        raise NotImplementedError()
