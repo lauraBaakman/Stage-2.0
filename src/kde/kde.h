@@ -11,6 +11,7 @@
 #include <numpy/arrayobject.h>
 
 #include "parzen.h"
+#include "breiman.h"
 #include "utils.h"
 
 Array pyObjectToArray(PyObject *pythonObject, int requirements);

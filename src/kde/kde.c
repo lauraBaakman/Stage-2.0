@@ -101,7 +101,7 @@ static PyObject * kdeBreimanEpanechnikov(PyObject *self, PyObject *args){
         j < patterns.length;
         j++, current_pattern += patterns.stride)
     {
-        densities.data[j] = parzen_epanechnikov(current_pattern, &dataPoints, windowWidth, parzenFactor, epanechnikovFactor);
+        densities.data[j] = mbe_epanechnikov(current_pattern, &dataPoints, windowWidth, parzenFactor, epanechnikovFactor);
     }
 
     /* Create return object */
