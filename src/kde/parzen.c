@@ -5,7 +5,8 @@
 #include "parzen.h"
 #include "utils.h"
 
-double parzen(double *pattern, Array *dataPoints, double windowWidth, double parzenFactor, double gaussianFactor) {
+double parzen_gaussian(double *pattern, Array *dataPoints, double windowWidth, double parzenFactor,
+                       double gaussianFactor) {
     double* currentDataPoint = dataPoints->data;
     double density = 0;
 
@@ -17,6 +18,26 @@ double parzen(double *pattern, Array *dataPoints, double windowWidth, double par
     {
         scaledPattern = scalePattern(pattern, currentDataPoint, scaledPattern, dataPoints->dimensionality, windowWidth);
         density += standardGaussian(scaledPattern, dataPoints->dimensionality, gaussianFactor);
+    }
+    density *= parzenFactor;
+
+    free(scaledPattern);
+    return density;
+}
+
+double parzen_epanechnikov(double *pattern, Array *dataPoints, double windowWidth, double parzenFactor,
+                       double epanechnikovFactor) {
+    double* currentDataPoint = dataPoints->data;
+    double density = 0;
+
+    double* scaledPattern = (double *)malloc(sizeof(double) * dataPoints->dimensionality);
+
+    for (int i = 0;
+         i < dataPoints->length;
+         ++i, currentDataPoint += dataPoints->stride)
+    {
+        scaledPattern = scalePattern(pattern, currentDataPoint, scaledPattern, dataPoints->dimensionality, windowWidth);
+        density += epanechnikov(scaledPattern, dataPoints->dimensionality, epanechnikovFactor);
     }
     density *= parzenFactor;
 

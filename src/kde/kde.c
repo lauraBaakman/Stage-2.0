@@ -4,7 +4,7 @@
 
 #include "kde.h"
 
-static char kernels_standardGaussian_docstring[] = "Estimate the densities with Parzen.";
+static char kde_parzen_standardGaussian_docstring[] = "Estimate the densities with Parzen with a Gaussian kernel.";
 static PyObject * kdeParzenStandardGaussian(PyObject *self, PyObject *args){
     PyObject* inPatterns = NULL;
     PyObject* inDataPoints = NULL;
@@ -31,7 +31,42 @@ static PyObject * kdeParzenStandardGaussian(PyObject *self, PyObject *args){
         j < patterns.length;
         j++, current_pattern += patterns.stride)
     {
-        densities.data[j] = parzen(current_pattern, &dataPoints, windowWidth, parzenFactor, gaussianFactor);
+        densities.data[j] = parzen_gaussian(current_pattern, &dataPoints, windowWidth, parzenFactor, gaussianFactor);
+    }
+
+    /* Create return object */
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static char kde_parzen_epanechnikov_docstring[] = "Estimate the densities with Parzen with the Epanechnikov kernel.";
+static PyObject * kdeParzenEpanechnikov(PyObject *self, PyObject *args){
+    PyObject* inPatterns = NULL;
+    PyObject* inDataPoints = NULL;
+    PyObject* outDensities = NULL;
+
+    double windowWidth;
+
+    if (!PyArg_ParseTuple(args, "OOdO",
+                          &inPatterns,
+                          &inDataPoints,
+                          &windowWidth,
+                          &outDensities)) return NULL;
+
+    Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
+    Array dataPoints = pyObjectToArray(inDataPoints, NPY_ARRAY_IN_ARRAY);
+    Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
+
+    double parzenFactor = 1.0 / (dataPoints.length * pow(windowWidth, patterns.dimensionality));
+    double epanechnikovFactor = epanechnikovDenominator(dataPoints.dimensionality);
+
+    double* current_pattern = patterns.data;
+
+    for(int j = 0;
+        j < patterns.length;
+        j++, current_pattern += patterns.stride)
+    {
+        densities.data[j] = parzen_epanechnikov(current_pattern, &dataPoints, windowWidth, parzenFactor, epanechnikovFactor);
     }
 
     /* Create return object */
@@ -53,7 +88,8 @@ Array pyObjectToArray(PyObject *pythonObject, int requirements){
 
 
 static PyMethodDef method_table[] = {
-        {"parzen_standard_gaussian",     kdeParzenStandardGaussian, METH_VARARGS,   kernels_standardGaussian_docstring},
+        {"parzen_standard_gaussian",    kdeParzenStandardGaussian,  METH_VARARGS,   kde_parzen_standardGaussian_docstring},
+        {"parzen_epanechnikov",         kdeParzenEpanechnikov,      METH_VARARGS,   kde_parzen_epanechnikov_docstring},
         /* Sentinel */
         {NULL,                              NULL,                                   0,              NULL}
 };
