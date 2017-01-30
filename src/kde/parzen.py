@@ -1,4 +1,5 @@
 import math
+import warnings
 
 import kde._kde as kde
 import numpy as np
@@ -24,6 +25,8 @@ class Parzen(Estimator):
         :param xi_s: (array like, optional) The data points to use to estimate the density. Defaults to x_s.
         :return: The estimated densities of x_s.
         """
+
+        warnings.warn("No matter the passed arguments the Standard Gaussian Kernel is used.")
 
         if x_s is None:
             x_s = xi_s

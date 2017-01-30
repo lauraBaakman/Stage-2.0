@@ -1,3 +1,5 @@
+import warnings
+
 import numpy as np
 import scipy.interpolate as interpolate
 import scipy.stats.mstats as stats
@@ -57,9 +59,10 @@ class ModifiedBreimanEstimator(object):
 
         # Compute densities
         estimator = _MBEEstimator(xi_s=xi_s, x_s=x_s,
-                                         dimension=self._dimension,
-                                         kernel=self._kernel, local_bandwidths=local_bandwidths,
-                                         general_bandwidth=general_window_width)
+                                  dimension=self._dimension,
+                                  kernel=self._kernel,
+                                  local_bandwidths=local_bandwidths,
+                                  general_bandwidth=general_window_width)
         densities = estimator.estimate()
         return densities
 
@@ -129,4 +132,6 @@ class _MBEEstimator(_MBEEstimator_Python):
         super(_MBEEstimator, self).__init__(*args, **kwargs)
 
     def estimate(self):
+        warnings.warn("""No matter the passed arguments the Epanechnikov Kernel is used for the pilot densities and the
+        Standard Gaussian Kernel is used for the final density estimation.""")
         raise NotImplementedError("I should eventually call kdeBreimanEpanechnikov from _kde.")
