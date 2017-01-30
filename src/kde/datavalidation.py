@@ -40,3 +40,26 @@ class ParzenDataValidator(EstimatorDataValidator):
 
     def __init__(self, x_s, xi_s):
         super(ParzenDataValidator, self).__init__(x_s, xi_s)
+
+
+class MBEDataValidator(EstimatorDataValidator):
+    
+    def __init__(self, x_s, xi_s, local_bandwidths):
+        super(MBEDataValidator, self).__init__(x_s, xi_s)
+        self._local_bandwidths = local_bandwidths
+
+    def validate(self):
+        super(MBEDataValidator, self).validate()
+        self._do_arrays_have_the_same_length(self._xi_s, self._local_bandwidths)
+
+    @staticmethod
+    def _do_arrays_have_the_same_length(*arrays):
+        (first_array_length, _) = arrays[0].shape
+        for array in arrays[1:]:
+            (current_array_length, _) = array.shape
+            if current_array_length is not first_array_length:
+                raise InvalidEstimatorArguments('''The estimator expects the elements to have the same length, namely {expected}, but
+                some array length {actual}'''.format(
+                    expected=first_array_length,
+                    actual=current_array_length)
+                )
