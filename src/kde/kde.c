@@ -78,24 +78,28 @@ static char kde_breiman_epanechnikov_docstring[] = "Estimate the densities with 
 static PyObject * kdeBreimanEpanechnikov(PyObject *self, PyObject *args){
     PyObject* inPatterns = NULL;
     PyObject* inDataPoints = NULL;
+    PyObject* inLocalBandwidths = NULL;
     PyObject* outDensities = NULL;
+
 
     fprintf(stderr, "Implementation of kdeBreimanEpanechnikov is still a dummy.\n");
     exit(-1);
 
-    double windowWidth;
+    double globalBandwidth;
 
-    if (!PyArg_ParseTuple(args, "OOdO",
+    if (!PyArg_ParseTuple(args, "OOdOO",
                           &inPatterns,
                           &inDataPoints,
-                          &windowWidth,
+                          &globalBandwidth,
+                          &inLocalBandwidths,
                           &outDensities)) return NULL;
 
     Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
     Array dataPoints = pyObjectToArray(inDataPoints, NPY_ARRAY_IN_ARRAY);
+    Array localBandwidths = pyObjectToArray(inLocalBandwidths, NPY_ARRAY_IN_ARRAY);
     Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
 
-    double parzenFactor = 1.0 / (dataPoints.length * pow(windowWidth, patterns.dimensionality));
+    double parzenFactor = 1.0 / (dataPoints.length * pow(globalBandwidth, patterns.dimensionality));
     double epanechnikovFactor = epanechnikovDenominator(dataPoints.dimensionality);
 
     double* current_pattern = patterns.data;
@@ -104,7 +108,7 @@ static PyObject * kdeBreimanEpanechnikov(PyObject *self, PyObject *args){
         j < patterns.length;
         j++, current_pattern += patterns.stride)
     {
-        densities.data[j] = mbe_epanechnikov(current_pattern, &dataPoints, windowWidth, parzenFactor, epanechnikovFactor);
+        densities.data[j] = mbe_epanechnikov(current_pattern, &dataPoints, globalBandwidth, parzenFactor, epanechnikovFactor);
     }
 
     /* Create return object */
