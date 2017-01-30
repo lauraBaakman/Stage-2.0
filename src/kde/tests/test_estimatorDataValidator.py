@@ -51,7 +51,8 @@ class TestEstimatorDataValidator(TestCase):
     def _do_elements_have_same_dimension_helper(self, *args):
         try:
             EstimatorDataValidator._do_elements_have_same_dimension(*args)
-        except InvalidEstimatorArguments:
+        except InvalidEstimatorArguments as e:
+            print(e)
             pass
         except Exception as e:
             self.fail('Unexpected exception raised: {}'.format(e))
@@ -101,7 +102,8 @@ class TestMBEDataValidator(TestEstimatorDataValidator):
     def _do_arrays_have_the_same_length_helper(self, *args):
         try:
             MBEDataValidator._do_arrays_have_the_same_length(*args)
-        except InvalidEstimatorArguments:
+        except InvalidEstimatorArguments as e:
+            print(e)
             pass
         except Exception as e:
             self.fail('Unexpected exception raised: {}'.format(e))
@@ -111,12 +113,12 @@ class TestMBEDataValidator(TestEstimatorDataValidator):
     def test__do_elements_have_same_length_2(self):
         xi_s = np.array([[0.5, 0.5, 0.5], [0.1, 0.1, 0.1]])
         x_s = np.array([[0.5], [0.1], [0.5], [0.1]])
-        self._do_elements_have_same_dimension_helper(xi_s, x_s)
+        self._do_arrays_have_the_same_length_helper(xi_s, x_s)
 
     def test__do_elements_have_same_length_3(self):
         xi_s = np.array([[0.5, 0.5, 0.5], [0.1, 0.1, 0.1]])
         x_s = np.array([[0.5, 0.5], [0.1, 0.1], [0.5, 0.5], [0.1, 0.1]])
-        self._do_elements_have_same_dimension_helper(xi_s, x_s)
+        self._do_arrays_have_the_same_length_helper(xi_s, x_s)
 
     def test__do_arrays_have_the_same_length_4(self):
         xi_s = np.array([[0.5, 0.5], [0.1, 0.1]])
@@ -130,10 +132,10 @@ class TestMBEDataValidator(TestEstimatorDataValidator):
         xi_s = np.array([[0.5, 0.5, 0.5], [0.1, 0.1, 0.1]])
         x2_s = np.array([[0.5, 0.5, 0.5], [0.1, 0.1, 0.1]])
         x_s = np.array([[0.5], [0.1], [0.5], [0.1]])
-        self._do_elements_have_same_dimension_helper(xi_s, x2_s, x_s)
+        self._do_arrays_have_the_same_length_helper(xi_s, x2_s, x_s)
 
     def test__do_elements_have_same_length_6(self):
         xi_s = np.array([[0.5, 0.5, 0.5], [0.1, 0.1, 0.1]])
         x2_s = np.array([[0.5, 0.5, 0.5], [0.1, 0.1, 0.1]])
         x_s = np.array([[0.5, 0.5], [0.1, 0.1], [0.5, 0.5], [0.1, 0.1]])
-        self._do_elements_have_same_dimension_helper(xi_s, x2_s, x_s)
+        self._do_arrays_have_the_same_length_helper(xi_s, x2_s, x_s)

@@ -1,5 +1,9 @@
 class InvalidEstimatorArguments(Exception):
-    pass
+    def __init__(self, message, actual=None, expected=None, *args):
+        self.message = message
+        self.actual = actual
+        self.expected = expected
+        super(InvalidEstimatorArguments, self).__init__(message, *args)
 
 
 class EstimatorDataValidator(object):
@@ -20,10 +24,10 @@ class EstimatorDataValidator(object):
     def _do_elements_have_same_dimension(cls, *arrays):
         try:
             cls._do_arrays_have_same_size_in_dimension(1, *arrays)
-        except InvalidEstimatorArguments:
-            raise InvalidEstimatorArguments(
-                '''The estimator expects the elements to have dimension {expected}, but some array has elements with
-                dimension {actual}'''.format(expected='?', actual='?'))
+        except InvalidEstimatorArguments as e:
+            raise InvalidEstimatorArguments('''The estimator expects the elements to have dimension {expected}, but '''
+                                            '''some array has elements with dimension {actual}.'''.format(
+                expected=e.expected, actual=e.actual))
 
     @staticmethod
     def _do_arrays_have_same_size_in_dimension(dimension, *arrays):
@@ -31,14 +35,13 @@ class EstimatorDataValidator(object):
         for array in arrays[1:]:
             current_array_size = array.shape[dimension]
             if current_array_size is not first_element_size:
-                raise InvalidEstimatorArguments()
+                raise InvalidEstimatorArguments(None, actual=current_array_size, expected=first_element_size)
 
     @staticmethod
     def _array_has_two_dimensions(array):
         if array.ndim is not 2:
-            raise InvalidEstimatorArguments('''
-                The estimator expects 2D arrays as input, the input array has {} dimensions.
-            '''.format(array.ndim))
+            raise InvalidEstimatorArguments('''The estimator expects 2D arrays as input, the input array has {} '''
+                                            '''dimensions.'''.format(array.ndim))
 
 
 class ParzenDataValidator(EstimatorDataValidator):
@@ -61,9 +64,9 @@ class MBEDataValidator(EstimatorDataValidator):
     def _do_arrays_have_the_same_length(cls, *arrays):
         try:
             cls._do_arrays_have_same_size_in_dimension(0, *arrays)
-        except InvalidEstimatorArguments:
-            raise InvalidEstimatorArguments('''The estimator expects the elements to have the same length, namely {expected}, but
-            some array length {actual}'''.format(
-                expected='?',
-                actual='?')
+        except InvalidEstimatorArguments as e:
+            raise InvalidEstimatorArguments('''The estimator expects the elements to have the same length, namely '''
+                                            '''{expected}, but some array has length {actual}.'''.format(
+                expected=e.expected,
+                actual=e.actual)
             )
