@@ -37,7 +37,7 @@ class Parzen(Estimator):
         return densities
 
 
-class _ParzenInPython:
+class _Parzen_Python:
     """Implementation of the Parzen Estimator.
     """
 
@@ -59,7 +59,7 @@ class _ParzenInPython:
         """
         if x_s is None:
             x_s = xi_s
-        estimator = _ParzenEstimator(
+        estimator = _ParzenEstimator_Python(
             xi_s=xi_s, x_s=x_s,
             dimension=self._dimension, kernel=self._kernel, window_width=self._window_width)
         return estimator.estimate()
@@ -68,7 +68,7 @@ class _ParzenInPython:
         return "%s(%r)" % (self.__class__, self.__dict__)
 
 
-class _ParzenEstimator:
+class _ParzenEstimator_Python:
 
     def __init__(self, xi_s, x_s, dimension, kernel, window_width):
         self._xi_s = xi_s
