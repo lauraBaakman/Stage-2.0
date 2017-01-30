@@ -16,17 +16,22 @@ class EstimatorDataValidator(object):
     def _validate_data_set(self, data_set):
         self._array_has_two_dimensions(data_set)
 
+    @classmethod
+    def _do_elements_have_same_dimension(cls, *arrays):
+        try:
+            cls._do_arrays_have_same_size_in_dimension(1, *arrays)
+        except InvalidEstimatorArguments:
+            raise InvalidEstimatorArguments(
+                '''The estimator expects the elements to have dimension {expected}, but some array has elements with
+                dimension {actual}'''.format(expected='?', actual='?'))
+
     @staticmethod
-    def _do_elements_have_same_dimension(*arrays):
-        (_, first_element_dimension) = arrays[0].shape
+    def _do_arrays_have_same_size_in_dimension(dimension, *arrays):
+        first_element_size = arrays[0].shape[dimension]
         for array in arrays[1:]:
-            (_, current_array_dimension) = array.shape
-            if current_array_dimension is not first_element_dimension:
-                raise InvalidEstimatorArguments('''The estimator expects the elements to have dimension {expected}, but
-                some array has elements with dimension {actual}'''.format(
-                    expected=first_element_dimension,
-                    actual=current_array_dimension)
-                )
+            current_array_size = array.shape[dimension]
+            if current_array_size is not first_element_size:
+                raise InvalidEstimatorArguments()
 
     @staticmethod
     def _array_has_two_dimensions(array):
@@ -52,14 +57,13 @@ class MBEDataValidator(EstimatorDataValidator):
         super(MBEDataValidator, self).validate()
         self._do_arrays_have_the_same_length(self._xi_s, self._local_bandwidths)
 
-    @staticmethod
-    def _do_arrays_have_the_same_length(*arrays):
-        (first_array_length, _) = arrays[0].shape
-        for array in arrays[1:]:
-            (current_array_length, _) = array.shape
-            if current_array_length is not first_array_length:
-                raise InvalidEstimatorArguments('''The estimator expects the elements to have the same length, namely {expected}, but
-                some array length {actual}'''.format(
-                    expected=first_array_length,
-                    actual=current_array_length)
-                )
+    @classmethod
+    def _do_arrays_have_the_same_length(cls, *arrays):
+        try:
+            cls._do_arrays_have_same_size_in_dimension(0, *arrays)
+        except InvalidEstimatorArguments:
+            raise InvalidEstimatorArguments('''The estimator expects the elements to have the same length, namely {expected}, but
+            some array length {actual}'''.format(
+                expected='?',
+                actual='?')
+            )
