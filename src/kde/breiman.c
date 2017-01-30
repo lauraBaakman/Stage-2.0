@@ -4,9 +4,9 @@
 
 #include "breiman.h"
 
-double mbe_epanechnikov(double *pattern, Array *dataPoints, double windowWidth, double parzenFactor,
-                        double epanechnikovFactor){
-    printf("Hoi ik ben mbe_epanechnikov\n");
+double mbe_epanechnikov(double *pattern, Array *dataPoints, double globalBandwidth, Array *localBandwidths,
+                        double epanechnikovFactor, double parzenFactor) {
+    printf("Hoi ik ben mbe_epanechnikov dummy.\n");
 
     return 42.0;
 }

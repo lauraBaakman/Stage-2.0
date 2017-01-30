@@ -82,9 +82,6 @@ static PyObject * kdeBreimanEpanechnikov(PyObject *self, PyObject *args){
     PyObject* outDensities = NULL;
 
 
-    fprintf(stderr, "Implementation of kdeBreimanEpanechnikov is still a dummy.\n");
-    exit(-1);
-
     double globalBandwidth;
 
     if (!PyArg_ParseTuple(args, "OOdOO",
@@ -108,7 +105,9 @@ static PyObject * kdeBreimanEpanechnikov(PyObject *self, PyObject *args){
         j < patterns.length;
         j++, current_pattern += patterns.stride)
     {
-        densities.data[j] = mbe_epanechnikov(current_pattern, &dataPoints, globalBandwidth, parzenFactor, epanechnikovFactor);
+        densities.data[j] = mbe_epanechnikov(current_pattern, &dataPoints,
+                                             globalBandwidth, &localBandwidths,
+                                             epanechnikovFactor, parzenFactor);
     }
 
     /* Create return object */

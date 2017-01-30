@@ -7,7 +7,8 @@
 
 #include "utils.h"
 
-double mbe_epanechnikov(double *pattern, Array *dataPoints, double windowWidth, double parzenFactor,
-                           double epanechnikovFactor);
+double mbe_epanechnikov(double *pattern, Array *dataPoints,
+                        double globalBandwidth, Array *localBandwidths,
+                        double epanechnikovFactor, double parzenFactor);
 
 #endif //KERNELS_MBE_H
