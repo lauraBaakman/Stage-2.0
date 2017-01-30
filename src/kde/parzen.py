@@ -1,13 +1,14 @@
 import math
 import warnings
 
-import kde._kde as kde
+import kde._kde as _kde
 import numpy as np
 
+from kde import kernels
 from kde.estimator import Estimator
 
 
-class Parzen(Estimator):
+class Parzen(object):
     """
     Wrapper for the C implementation of Parzen density estimation with a Gaussian kernel.
     """
@@ -16,7 +17,6 @@ class Parzen(Estimator):
         """ Init method of the Parzen Estimator with a Gaussian kernel.
         :param window_width: (int) The window width to use.
         """
-        super(Estimator, self).__init__()
         self._window_width = window_width
 
     def estimate(self, xi_s, x_s=None):
@@ -26,18 +26,30 @@ class Parzen(Estimator):
         :return: The estimated densities of x_s.
         """
 
-        warnings.warn("No matter the passed arguments the Standard Gaussian Kernel is used.")
-
         if x_s is None:
             x_s = xi_s
-        self._validate_data(x_s, xi_s)
-        (num_patterns, _) = x_s.shape
+
+        # Compute densities
+        estimator = _ParzenEstimator(xi_s=xi_s, x_s=x_s, general_bandwidth=self._window_width)
+        return estimator.estimate()
+
+
+class _ParzenEstimator(Estimator):
+    def __init__(self, xi_s, x_s, general_bandwidth):
+        warnings.warn("No matter the passed arguments the Standard Gaussian Kernel is used.")
+        (_, dimension) = xi_s.shape
+        super(_ParzenEstimator, self).__init__(x_s=x_s, xi_s=xi_s,
+                                               dimension=dimension,
+                                               kernel=None, general_bandwidth=general_bandwidth)
+
+    def estimate(self):
+        (num_patterns, _) = self._x_s.shape
         densities = np.empty(num_patterns, dtype=float)
-        kde.parzen_standard_gaussian(x_s, xi_s, self._window_width, densities)
+        _kde.parzen_standard_gaussian(self._x_s, self._xi_s, self._general_bandwidth, densities)
         return densities
 
 
-class _Parzen_Python:
+class Parzen_Python(object):
     """Implementation of the Parzen Estimator.
     """
 
@@ -68,14 +80,14 @@ class _Parzen_Python:
         return "%s(%r)" % (self.__class__, self.__dict__)
 
 
-class _ParzenEstimator_Python:
+class _ParzenEstimator_Python(Estimator):
 
     def __init__(self, xi_s, x_s, dimension, kernel, window_width):
-        self._xi_s = xi_s
-        self._x_s = x_s
-        self._dimension = dimension
-        self._kernel = kernel
-        self._window_width = window_width
+        super(_ParzenEstimator_Python, self).__init__(
+            xi_s=xi_s, x_s=x_s,
+            dimension=dimension,
+            kernel=kernel, general_bandwidth=window_width
+        )
 
     @property
     def num_xi_s(self):
@@ -92,12 +104,12 @@ class _ParzenEstimator_Python:
         self._kernel.shape = np.identity(self._dimension)
 
         densities = np.empty(self.num_x_s)
-        factor = 1 / (self.num_xi_s * math.pow(self._window_width, self._dimension))
+        factor = 1 / (self.num_xi_s * math.pow(self._general_bandwidth, self._dimension))
         for idx, x in enumerate(self._x_s):
             densities[idx] = self._estimate_pattern(x, factor)
         return densities
 
     def _estimate_pattern(self, x, factor):
-        terms = self._kernel.evaluate((x - self._xi_s)/self._window_width)
+        terms = self._kernel.evaluate((x - self._xi_s) / self._general_bandwidth)
         density = factor * terms.sum()
         return density
