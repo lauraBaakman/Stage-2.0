@@ -13,33 +13,27 @@ class TestEstimatorDataValidator(TestCase):
         actual = EstimatorDataValidator._array_has_two_dimensions(x_s)
         self.assertIsNone(actual)
 
-    def test__array_has_two_dimensions_2(self):
-        x_s = np.array([
-            [[0.5, 0.5, 0.5], [0.1, 0.1, 0.1]],
-            [[0.5, 0.5, 0.5], [0.1, 0.1, 0.1]]])
-
+    def _array_has_two_dimensions_helper(self, array):
         try:
-            EstimatorDataValidator._array_has_two_dimensions(x_s)
+            EstimatorDataValidator._array_has_two_dimensions(array)
         except InvalidEstimatorArguments:
             pass
         except Exception as e:
             self.fail('Unexpected exception raised: {}'.format(e))
         else:
             self.fail('ExpectedException not raised')
+
+    def test__array_has_two_dimensions_2(self):
+        x_s = np.array([
+            [[0.5, 0.5, 0.5], [0.1, 0.1, 0.1]],
+            [[0.5, 0.5, 0.5], [0.1, 0.1, 0.1]]])
+        self._array_has_two_dimensions_helper(x_s)
 
     def test__array_has_two_dimensions_3(self):
         x_s = np.array([
             [[0.5, 0.5], [0.1, 0.1]],
             [[0.5, 0.5], [0.1, 0.1]]])
-
-        try:
-            EstimatorDataValidator._array_has_two_dimensions(x_s)
-        except InvalidEstimatorArguments:
-            pass
-        except Exception as e:
-            self.fail('Unexpected exception raised: {}'.format(e))
-        else:
-            self.fail('ExpectedException not raised')
+        self._array_has_two_dimensions_helper(x_s)
 
     def test__do_elements_have_same_dimension_1(self):
         xi_s = np.array([[0.5, 0.5], [0.1, 0.1]])
@@ -52,7 +46,6 @@ class TestEstimatorDataValidator(TestCase):
         try:
             EstimatorDataValidator._do_elements_have_same_dimension(*args)
         except InvalidEstimatorArguments as e:
-            print(e)
             pass
         except Exception as e:
             self.fail('Unexpected exception raised: {}'.format(e))
@@ -103,7 +96,6 @@ class TestMBEDataValidator(TestEstimatorDataValidator):
         try:
             MBEDataValidator._do_arrays_have_the_same_length(*args)
         except InvalidEstimatorArguments as e:
-            print(e)
             pass
         except Exception as e:
             self.fail('Unexpected exception raised: {}'.format(e))
