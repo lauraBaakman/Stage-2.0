@@ -3,12 +3,8 @@ from unittest import TestCase
 import numpy as np
 
 import kde
-import kde.modifeidbreiman as mbe
-import kdeUtils.automaticWindowWidthMethods
-from kde.kernels.testKernel import TestKernel
 from kde.kernels.epanechnikov import Epanechnikov
-from kdeUtils.grid import Grid
-from kde.modifeidbreiman import _MBEEstimator, _MBEEstimator_Python, ModifiedBreimanEstimator
+from kde.modifeidbreiman import _MBEEstimator, _MBEEstimator_Python
 
 
 class TestModifiedBreimanEstimator(TestCase):
@@ -24,36 +20,14 @@ class TestModifiedBreimanEstimator(TestCase):
         actual = self.estimator._compute_local_bandwidths(densities)
         np.testing.assert_array_almost_equal(expected, actual)
 
-    def test_estimate_on_grid(self):
-        xi_s = Grid((0, 3), number_of_grid_points=2).grid_points
-        x_s = xi_s
-        dimension = 1
-        kernel = TestKernel()
-        local_bandwidths = np.array([1, 2])
-        general_bandwidth = 0.5
-        estimator = mbe._MBEEstimator_Python(xi_s=xi_s, x_s=x_s,
-                                             dimension=dimension, kernel=kernel,
-                                             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth)
-        actual = estimator.estimate()
-        expected = np.array([1.5, 6])
-        np.testing.assert_array_almost_equal(actual, expected)
+    def test_estimate(self):
+        raise NotImplementedError()
 
-    def test_estimate_with_xs(self):
-        xi_s = Grid((0, 3), number_of_grid_points=2).grid_points
-        x_s = np.array([[2]])
-        dimension = 1
-        kernel = TestKernel()
-        local_bandwidths = np.array([1, 2])
-        general_bandwidth = 0.5
-        estimator = mbe._MBEEstimator_Python(xi_s=xi_s, x_s=x_s,
-                                             dimension=dimension, kernel=kernel,
-                                             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth)
-        actual = estimator.estimate()
-        expected = np.array([4.5])
-        np.testing.assert_array_almost_equal(actual, expected)
+    def test_estimate_pilot_densitites(self):
+        raise NotImplementedError()
 
 
-class MBEEstimatorAbstractTest(TestCase):
+class MBEEstimatorAbstractTest(object):
 
     def setUp(self):
         super().setUp()
@@ -71,17 +45,36 @@ class MBEEstimatorAbstractTest(TestCase):
         np.testing.assert_array_almost_equal(actual, expected)
 
 
-class Test_MBEEstimator_Python(MBEEstimatorAbstractTest):
+class Test_MBEEstimator_Python(MBEEstimatorAbstractTest, TestCase):
 
     def setUp(self):
         super().setUp()
         self._estimator_class =_MBEEstimator_Python
 
-    def test_estimate_pattern(self):
-        raise NotImplementedError()
+    def test_estimate_pattern_1(self):
+        xi_s = np.array([[-1, -1], [1, 1], [0, 0]])
+        x_s = np.array([[0, 0], [1, 1]])
+        local_bandwidths = np.array([10, 20, 50])
+        estimator = self._estimator_class(xi_s=xi_s, x_s=x_s, dimension=2,
+                                          kernel=Epanechnikov(),
+                                          local_bandwidths=local_bandwidths, general_bandwidth=0.5)
+        actual = estimator._estimate_pattern(np.array([0, 0]))
+        expected = 0.010228357933333333 * 3
+        self.assertAlmostEqual(actual, expected)
+
+    def test_estimate_pattern_2(self):
+        xi_s = np.array([[-1, -1], [1, 1], [0, 0]])
+        x_s = np.array([[0, 0], [1, 1]])
+        local_bandwidths = np.array([10, 20, 50])
+        estimator = self._estimator_class(xi_s=xi_s, x_s=x_s, dimension=2,
+                                          kernel=Epanechnikov(),
+                                          local_bandwidths=local_bandwidths, general_bandwidth=0.5)
+        actual = estimator._estimate_pattern(np.array([1, 1]))
+        expected = 0.00823253 * 3
+        self.assertAlmostEqual(actual, expected)
 
 
-class Test_MBEEstimator(MBEEstimatorAbstractTest):
+class Test_MBEEstimator(MBEEstimatorAbstractTest, TestCase):
 
     def setUp(self):
         super().setUp()
