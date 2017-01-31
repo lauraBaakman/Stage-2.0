@@ -21,7 +21,7 @@ class ModifiedBreimanEstimator(object):
     def __init__(self, dimension, kernel=None, sensitivity=1/2,
                  pilot_kernel=None,
                  pilot_window_width_method=kdeUtils.automaticWindowWidthMethods.ferdosi,
-                 number_of_grid_points=default_number_of_grid_points):
+                 number_of_grid_points=default_number_of_grid_points, final_estimator_implementation=None):
         """ Init method of the Modified Breiman Estimator.
         :param dimension: (int) The dimension of the data points of which the density is estimated.
         :param kernel: (kernel, optional) The kernel to use for the final density estimate, defaults to Gaussian.
@@ -32,6 +32,7 @@ class ModifiedBreimanEstimator(object):
         :param number_of_grid_points: (int or list, optional) The number of grid points per dimension. If an int is
         passed the same number of grid points is used for each dimension.
         Defaults to *ModifiedBreimanEstimator.default_number_of_grid_points*
+        :param final_estimator_implementation: Class that inherits from Estimator.
         """
         self._dimension = dimension
         self._general_window_width_method = pilot_window_width_method
@@ -39,6 +40,7 @@ class ModifiedBreimanEstimator(object):
         self._pilot_kernel = pilot_kernel or Epanechnikov()
         self._kernel = kernel or Gaussian()
         self._number_of_grid_points = number_of_grid_points
+        self._final_estimator_implementation = final_estimator_implementation or _MBEEstimator_Python
 
     def estimate(self, xi_s, x_s=None):
         """
@@ -60,11 +62,11 @@ class ModifiedBreimanEstimator(object):
         local_bandwidths = self._compute_local_bandwidths(pilot_densities)
 
         # Compute densities
-        estimator = _MBEEstimator(xi_s=xi_s, x_s=x_s,
-                                  dimension=self._dimension,
-                                  kernel=self._kernel,
-                                  local_bandwidths=local_bandwidths,
-                                  general_bandwidth=general_window_width)
+        estimator = self._final_estimator_implementation(xi_s=xi_s, x_s=x_s,
+                                                         dimension=self._dimension,
+                                                         kernel=self._kernel,
+                                                         local_bandwidths=local_bandwidths,
+                                                         general_bandwidth=general_window_width)
         densities = estimator.estimate()
         return densities
 
