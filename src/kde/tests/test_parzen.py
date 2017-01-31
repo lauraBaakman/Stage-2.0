@@ -2,7 +2,7 @@ from unittest import TestCase
 
 import numpy as np
 
-import kde
+from kde.parzen import Parzen
 
 
 class TestParzen(TestCase):
@@ -22,7 +22,7 @@ class TestParzen(TestCase):
         self._window_width = 0.3
 
     def test_estimate(self):
-        estimator = kde.Parzen(window_width=self._window_width)
+        estimator = Parzen(window_width=self._window_width)
         actual = estimator.estimate(xi_s=self._patterns)
         expected = self._parzen_estimated_densities
         np.testing.assert_array_almost_equal(actual, expected)
