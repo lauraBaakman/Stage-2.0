@@ -6,7 +6,7 @@ def configuration(parent_package='', top_path=None):
                            top_path)
     config.add_extension(
         '_kernels',  # Name of the extension
-        sources=['kernels.c', 'densityFunctions.c']
+        sources=['kernels.c', 'densityFunctions.c', '../utils.c']
     )
     return config
 
