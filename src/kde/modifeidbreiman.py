@@ -1,14 +1,14 @@
 import warnings
 
+import kde._kde as _kde
 import numpy as np
 import scipy.interpolate as interpolate
 import scipy.stats.mstats as stats
 
-import kde._kde as _kde
 import kde
-from kde.estimator import Estimator
 import kde.kernels as kernels
 import kdeUtils
+from kde.estimator import Estimator
 from kde.kernels.epanechnikov import Epanechnikov
 
 
@@ -95,22 +95,10 @@ class ModifiedBreimanEstimator(object):
 class _MBEEstimator_Python(Estimator):
 
     def __init__(self, xi_s, x_s, dimension, kernel, local_bandwidths, general_bandwidth):
-        self._xi_s = xi_s
-        self._x_s = x_s
-        self._dimension = dimension
-        self._kernel = kernel
+        super(_MBEEstimator_Python, self).__init__(
+            xi_s=xi_s, x_s=x_s, dimension=dimension,
+            general_bandwidth=general_bandwidth, kernel=kernel)
         self._local_bandwidths = local_bandwidths
-        self._general_bandwidth = general_bandwidth
-
-    @property
-    def num_x_s(self):
-        (n, _) = self._x_s.shape
-        return n
-
-    @property
-    def num_xi_s(self):
-        (n, _) = self._xi_s.shape
-        return n
 
     def estimate(self):
         densities = np.empty(self.num_x_s)
@@ -136,7 +124,7 @@ class _MBEEstimator(_MBEEstimator_Python):
     def estimate(self):
         warnings.warn("""No matter the passed arguments the Epanechnikov Kernel is used for the pilot densities and the
         Standard Gaussian Kernel is used for the final density estimation.""")
-        self._validate_data(self._x_s, self._xi_s)
+        self._validate_data()
         (num_patterns, _) = self._x_s.shape
         densities = np.empty(num_patterns, dtype=float)
         _kde.breiman_epanechnikov(self._x_s, self._xi_s, self._general_bandwidth, self._local_bandwidths, densities)
