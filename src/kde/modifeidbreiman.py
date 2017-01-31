@@ -54,7 +54,7 @@ class ModifiedBreimanEstimator(object):
         general_window_width = self._general_window_width_method(xi_s)
 
         # Compute pilot densities
-        pilot_densities = self._estimate_pilot_densitites(general_window_width, x_s=x_s, xi_s=xi_s)
+        pilot_densities = self._estimate_pilot_densitites(general_window_width, xi_s=xi_s)
 
         # Compute local bandwidths
         local_bandwidths = self._compute_local_bandwidths(pilot_densities)
@@ -68,7 +68,7 @@ class ModifiedBreimanEstimator(object):
         densities = estimator.estimate()
         return densities
 
-    def _estimate_pilot_densitites(self, general_window_width, xi_s, x_s):
+    def _estimate_pilot_densitites(self, general_window_width, xi_s):
         # Compute grid for pilot densities
         grid_points = kdeUtils.Grid.cover(xi_s, number_of_grid_points=self._number_of_grid_points).grid_points
 
@@ -122,10 +122,7 @@ class _MBEEstimator(_MBEEstimator_Python):
         super(_MBEEstimator, self).__init__(*args, **kwargs)
 
     def estimate(self):
-        warnings.warn("""No matter the passed arguments the Epanechnikov Kernel is used for the pilot densities and the
-        Standard Gaussian Kernel is used for the final density estimation.""")
-        self._validate_data()
-        (num_patterns, _) = self._x_s.shape
-        densities = np.empty(num_patterns, dtype=float)
+        warnings.warn("""No matter the passed arguments the Epanechnikov Kernel is used.""")
+        densities = np.empty(self.num_x_s, dtype=float)
         _kde.breiman_epanechnikov(self._x_s, self._xi_s, self._general_bandwidth, self._local_bandwidths, densities)
         return densities
