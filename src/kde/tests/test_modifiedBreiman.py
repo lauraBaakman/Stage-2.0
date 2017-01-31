@@ -2,9 +2,10 @@ from unittest import TestCase
 
 import numpy as np
 
+import kdeUtils.automaticWindowWidthMethods
 from kde.kernels.epanechnikov import Epanechnikov
+from kde.kernels.testKernel import TestKernel
 from kde.modifeidbreiman import ModifiedBreimanEstimator, _MBEEstimator, _MBEEstimator_Python
-
 
 class TestModifiedBreimanEstimator(TestCase):
 
@@ -20,7 +21,21 @@ class TestModifiedBreimanEstimator(TestCase):
         np.testing.assert_array_almost_equal(expected, actual)
 
     def test_estimate(self):
-        raise NotImplementedError()
+        estimator = ModifiedBreimanEstimator(
+            dimension=2, sensitivity=0.5, number_of_grid_points=2,
+            pilot_kernel=TestKernel(), kernel=TestKernel(),
+            pilot_window_width_method=kdeUtils.automaticWindowWidthMethods.test,
+            final_estimator_implementation=_MBEEstimator_Python)
+        xi_s = np.array([
+            [0, 0],
+            [1, 1]
+        ])
+        x_s = np.array([
+            [0, 0],
+        ])
+        actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
+        expected = np.array([4])
+        np.testing.assert_almost_equal(actual, expected)
 
     def test_estimate_pilot_densitites(self):
         raise NotImplementedError()
