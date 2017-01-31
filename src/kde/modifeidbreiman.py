@@ -5,11 +5,11 @@ import numpy as np
 import scipy.interpolate as interpolate
 import scipy.stats.mstats as stats
 
-import kde
 import kdeUtils
 from kde.estimator import Estimator
 from kde.kernels.epanechnikov import Epanechnikov
 from kde.kernels.gaussian import Gaussian
+from kde.parzen import Parzen
 
 
 class ModifiedBreimanEstimator(object):
@@ -75,7 +75,7 @@ class ModifiedBreimanEstimator(object):
         grid_points = kdeUtils.Grid.cover(xi_s, number_of_grid_points=self._number_of_grid_points).grid_points
 
         # Compute pilot densities
-        grid_densities = kde.Parzen(
+        grid_densities = Parzen(
             window_width=general_window_width,
             dimension=self._dimension,
             kernel=self._pilot_kernel
