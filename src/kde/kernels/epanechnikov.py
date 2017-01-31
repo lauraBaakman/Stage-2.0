@@ -5,8 +5,8 @@ import numpy as np
 import scipy.special
 
 
-class _EpanechnikovInPython(object):
-    """Implementation of the _EpanechnikovInPython Kernel.
+class _Epanechnikov_Python(object):
+    """Implementation of the _Epanechnikov_Python Kernel.
     """
 
     def __init__(self):
@@ -48,10 +48,10 @@ class _EpanechnikovInPython(object):
         return numerator / denominator
 
 
-class Epanechnikov(_EpanechnikovInPython):
+class Epanechnikov(_Epanechnikov_Python):
 
     def __init__(self):
-        super(_EpanechnikovInPython, self).__init__()
+        super(_Epanechnikov_Python, self).__init__()
 
     def evaluate(self, x):
         if x.ndim == 1:
