@@ -56,7 +56,7 @@ class ModifiedBreimanEstimator(object):
         general_window_width = self._general_window_width_method(xi_s)
 
         # Compute pilot densities
-        pilot_densities = self._estimate_pilot_densitites(general_window_width, xi_s=xi_s)
+        pilot_densities = self._estimate_pilot_densities(general_window_width, xi_s=xi_s)
 
         # Compute local bandwidths
         local_bandwidths = self._compute_local_bandwidths(pilot_densities)
@@ -70,7 +70,7 @@ class ModifiedBreimanEstimator(object):
         densities = estimator.estimate()
         return densities
 
-    def _estimate_pilot_densitites(self, general_window_width, xi_s):
+    def _estimate_pilot_densities(self, general_window_width, xi_s):
         # Compute grid for pilot densities
         grid_points = kdeUtils.Grid.cover(xi_s, number_of_grid_points=self._number_of_grid_points).grid_points
 
