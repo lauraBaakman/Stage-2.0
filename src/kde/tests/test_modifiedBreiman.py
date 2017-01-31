@@ -38,7 +38,18 @@ class TestModifiedBreimanEstimator(TestCase):
         np.testing.assert_almost_equal(actual, expected)
 
     def test_estimate_pilot_densitites(self):
-        raise NotImplementedError()
+        estimator = ModifiedBreimanEstimator(
+            dimension=2, sensitivity=0.5, number_of_grid_points=2,
+            pilot_kernel=TestKernel(), kernel=TestKernel(),
+            pilot_window_width_method=kdeUtils.automaticWindowWidthMethods.test,
+            final_estimator_implementation=_MBEEstimator_Python)
+        xi_s = np.array([
+            [0, 0],
+            [1, 1]
+        ])
+        actual = estimator._estimate_pilot_densities(0.5, xi_s)
+        expected = np.array([0.2820062130103994, 0.2820062130103994])
+        np.testing.assert_almost_equal(actual, expected)
 
 
 class MBEEstimatorAbstractTest(object):
