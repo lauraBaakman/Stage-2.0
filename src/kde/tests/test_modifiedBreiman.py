@@ -6,7 +6,9 @@ import kde
 import kde.modifeidbreiman as mbe
 import kdeUtils.automaticWindowWidthMethods
 from kde.kernels.testKernel import TestKernel
+from kde.kernels.epanechnikov import Epanechnikov
 from kdeUtils.grid import Grid
+from kde.modifeidbreiman import _MBEEstimator, _MBEEstimator_Python, ModifiedBreimanEstimator
 
 
 class TestModifiedBreimanEstimator(TestCase):
@@ -50,18 +52,37 @@ class TestModifiedBreimanEstimator(TestCase):
         expected = np.array([4.5])
         np.testing.assert_array_almost_equal(actual, expected)
 
-    def test_estimate(self):
-        estimator = kde.ModifiedBreimanEstimator(
-            dimension=2, sensitivity=0.5, number_of_grid_points=2,
-            pilot_kernel=TestKernel(), kernel=TestKernel(),
-            pilot_window_width_method=kdeUtils.automaticWindowWidthMethods.test)
-        xi_s = np.array([
-            [0, 0],
-            [1, 1]
-        ])
-        x_s = np.array([
-            [0, 0],
-        ])
-        actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
-        expected = np.array([4])
-        np.testing.assert_almost_equal(actual, expected)
+
+class MBEEstimatorAbstractTest(TestCase):
+
+    def setUp(self):
+        super().setUp()
+        self._estimator_class = None
+
+    def test_estimate_1(self):
+        xi_s = np.array([[-1, -1], [1, 1], [0, 0]])
+        x_s = np.array([[0, 0], [1, 1]])
+        local_bandwidths = np.array([10, 20, 50])
+        estimator = self._estimator_class(xi_s= xi_s, x_s=x_s, dimension=2,
+                                          kernel=Epanechnikov(),
+                                          local_bandwidths=local_bandwidths, general_bandwidth=0.5)
+        actual = estimator.estimate()
+        expected = np.array([0.010228357933333333, 0.00823253])
+        np.testing.assert_array_almost_equal(actual, expected)
+
+
+class Test_MBEEstimator_Python(MBEEstimatorAbstractTest):
+
+    def setUp(self):
+        super().setUp()
+        self._estimator_class =_MBEEstimator_Python
+
+    def test_estimate_pattern(self):
+        raise NotImplementedError()
+
+
+class Test_MBEEstimator(MBEEstimatorAbstractTest):
+
+    def setUp(self):
+        super().setUp()
+        self._estimator_class = _MBEEstimator
