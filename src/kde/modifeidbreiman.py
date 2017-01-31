@@ -6,10 +6,10 @@ import scipy.interpolate as interpolate
 import scipy.stats.mstats as stats
 
 import kde
-import kde.kernels as kernels
 import kdeUtils
 from kde.estimator import Estimator
 from kde.kernels.epanechnikov import Epanechnikov
+from kde.kernels.gaussian import Gaussian
 
 
 class ModifiedBreimanEstimator(object):
@@ -37,7 +37,7 @@ class ModifiedBreimanEstimator(object):
         self._general_window_width_method = pilot_window_width_method
         self._sensitivity = sensitivity
         self._pilot_kernel = pilot_kernel or Epanechnikov()
-        self._kernel = kernel or kernels.Gaussian()
+        self._kernel = kernel or Gaussian()
         self._number_of_grid_points = number_of_grid_points
 
     def estimate(self, xi_s, x_s=None):

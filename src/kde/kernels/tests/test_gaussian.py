@@ -2,7 +2,7 @@ from unittest import TestCase
 
 import numpy as np
 
-from kde.kernels import Gaussian
+from kde.kernels.gaussian import Gaussian
 
 
 class TestGaussian(TestCase):
