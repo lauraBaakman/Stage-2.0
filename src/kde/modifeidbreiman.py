@@ -70,13 +70,13 @@ class ModifiedBreimanEstimator(object):
         densities = estimator.estimate()
         return densities
 
-    def _estimate_pilot_densities(self, general_window_width, xi_s):
+    def _estimate_pilot_densities(self, general_bandwidth, xi_s):
         # Compute grid for pilot densities
         grid_points = kdeUtils.Grid.cover(xi_s, number_of_grid_points=self._number_of_grid_points).grid_points
 
         # Compute pilot densities
         grid_densities = Parzen(
-            window_width=general_window_width,
+            window_width=general_bandwidth,
             dimension=self._dimension,
             kernel=self._pilot_kernel
         ).estimate(xi_s=xi_s, x_s=grid_points)
