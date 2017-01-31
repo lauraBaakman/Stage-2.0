@@ -2,16 +2,15 @@ from unittest import TestCase
 
 import numpy as np
 
-import kde
 from kde.kernels.epanechnikov import Epanechnikov
-from kde.modifeidbreiman import _MBEEstimator, _MBEEstimator_Python
+from kde.modifeidbreiman import ModifiedBreimanEstimator, _MBEEstimator, _MBEEstimator_Python
 
 
 class TestModifiedBreimanEstimator(TestCase):
 
     def setUp(self):
         super().setUp()
-        self.estimator = kde.ModifiedBreimanEstimator(dimension=2, sensitivity=0.5)
+        self.estimator = ModifiedBreimanEstimator(dimension=2, sensitivity=0.5)
 
     def test__compute_local_bandwidths(self):
         densities = np.array([1, 2, 3, 4, 5, 6])
@@ -49,7 +48,7 @@ class Test_MBEEstimator_Python(MBEEstimatorAbstractTest, TestCase):
 
     def setUp(self):
         super().setUp()
-        self._estimator_class =_MBEEstimator_Python
+        self._estimator_class = _MBEEstimator_Python
 
     def test_estimate_pattern_1(self):
         xi_s = np.array([[-1, -1], [1, 1], [0, 0]])
