@@ -13,11 +13,12 @@ class Parzen(object):
     Wrapper for the C implementation of Parzen density estimation with a Gaussian kernel.
     """
 
-    def __init__(self, window_width, *args, **kwargs):
+    def __init__(self, window_width, estimator_implementation=None, *args, **kwargs):
         """ Init method of the Parzen Estimator with a Gaussian kernel.
         :param window_width: (int) The window width to use.
         """
         self._window_width = window_width
+        self._estimator_implementation = estimator_implementation or _ParzenEstimator
 
     def estimate(self, xi_s, x_s=None):
         """Estimate the density of the points xi_s, use the points x_s to determine the density.
