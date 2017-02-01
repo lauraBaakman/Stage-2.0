@@ -6,14 +6,14 @@ import scipy.interpolate as interpolate
 import scipy.stats.mstats as stats
 
 import kdeUtils
-from kde.estimator import Estimator
+from kde.estimatorimplementation import EstimatorImplementation
 from kde.kernels.epanechnikov import Epanechnikov
 from kde.kernels.gaussian import Gaussian
-from kde.parzen import Parzen
+from kde.parzen_old import Parzen
 
 
 class ModifiedBreimanEstimator(object):
-    """Implementation of the Modifeid Breiman Estimator, as proposed by Wilkinson and Meijer.
+    """Implementation of the Modifeid Breiman EstimatorImplementation, as proposed by Wilkinson and Meijer.
     """
 
     default_number_of_grid_points = 50
@@ -23,7 +23,7 @@ class ModifiedBreimanEstimator(object):
                  pilot_window_width_method=kdeUtils.automaticWindowWidthMethods.ferdosi,
                  number_of_grid_points=default_number_of_grid_points,
                  pilot_estimator_implementation=None, final_estimator_implementation=None):
-        """ Init method of the Modified Breiman Estimator.
+        """ Init method of the Modified Breiman EstimatorImplementation.
         :param dimension: (int) The dimension of the data points of which the density is estimated.
         :param kernel: (kernel, optional) The kernel to use for the final density estimate, defaults to Gaussian.
         :param sensitivity: (int, optional) The sensitivity of the kernel method, defaults to 0.5.
@@ -33,7 +33,7 @@ class ModifiedBreimanEstimator(object):
         :param number_of_grid_points: (int or list, optional) The number of grid points per dimension. If an int is
         passed the same number of grid points is used for each dimension.
         Defaults to *ModifiedBreimanEstimator.default_number_of_grid_points*
-        :param final_estimator_implementation: Class that inherits from Estimator.
+        :param final_estimator_implementation: Class that inherits from EstimatorImplementation.
         """
         self._dimension = dimension
         self._general_window_width_method = pilot_window_width_method
@@ -97,7 +97,7 @@ class ModifiedBreimanEstimator(object):
         return "%s(%r)" % (self.__class__, self.__dict__)
 
 
-class _MBEEstimator_Python(Estimator):
+class _MBEEstimator_Python(EstimatorImplementation):
 
     def __init__(self, xi_s, x_s, dimension, kernel, local_bandwidths, general_bandwidth):
         super(_MBEEstimator_Python, self).__init__(

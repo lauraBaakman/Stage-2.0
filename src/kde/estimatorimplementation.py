@@ -1,10 +1,10 @@
 from kde.datavalidation import EstimatorDataValidator
 
 
-class Estimator(object):
+class EstimatorImplementation(object):
 
     def __init__(self, xi_s, x_s, dimension, kernel, general_bandwidth):
-        super(Estimator, self).__init__()
+        super(EstimatorImplementation, self).__init__()
         self._dimension = dimension
         self._kernel = kernel
         self._xi_s = xi_s
