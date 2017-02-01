@@ -43,7 +43,7 @@ class ModifiedBreimanEstimator(object):
         self._number_of_grid_points = number_of_grid_points
 
         self._pilot_estimator_implementation = pilot_estimator_implementation or ParzenEstimator
-        self._final_estimator_implementation = final_estimator_implementation or _MBEEstimator
+        self._final_estimator_implementation = final_estimator_implementation or _MBEEstimator_C
 
     def estimate(self, xi_s, x_s=None):
         """
@@ -93,17 +93,22 @@ class ModifiedBreimanEstimator(object):
         geometric_mean = stats.gmean(pilot_densities)
         return np.power((pilot_densities / geometric_mean), - self._sensitivity)
 
-    def __repr__(self):
-        return "%s(%r)" % (self.__class__, self.__dict__)
 
-
-class _MBEEstimator_Python(EstimatorImplementation):
+class _MBEEstimator(EstimatorImplementation):
 
     def __init__(self, xi_s, x_s, dimension, kernel, local_bandwidths, general_bandwidth):
-        super(_MBEEstimator_Python, self).__init__(
+        super().__init__(
             xi_s=xi_s, x_s=x_s, dimension=dimension,
             general_bandwidth=general_bandwidth, kernel=kernel)
         self._local_bandwidths = local_bandwidths
+
+
+class _MBEEstimator_Python(_MBEEstimator):
+    def __init__(self, xi_s, x_s, dimension, kernel, local_bandwidths, general_bandwidth):
+        super().__init__(
+            xi_s=xi_s, x_s=x_s, dimension=dimension,
+            general_bandwidth=general_bandwidth, local_bandwidths=local_bandwidths,
+            kernel=kernel)
 
     def estimate(self):
         densities = np.empty(self.num_x_s)
@@ -121,10 +126,12 @@ class _MBEEstimator_Python(EstimatorImplementation):
         return density
 
 
-class _MBEEstimator(_MBEEstimator_Python):
-
-    def __init__(self, *args, **kwargs):
-        super(_MBEEstimator, self).__init__(*args, **kwargs)
+class _MBEEstimator_C(_MBEEstimator):
+    def __init__(self, xi_s, x_s, dimension, kernel, local_bandwidths, general_bandwidth):
+        super().__init__(
+            xi_s=xi_s, x_s=x_s, dimension=dimension,
+            general_bandwidth=general_bandwidth, local_bandwidths=local_bandwidths,
+            kernel=kernel)
 
     def estimate(self):
         warnings.warn("""No matter the passed arguments the Epanechnikov Kernel is used.""")
