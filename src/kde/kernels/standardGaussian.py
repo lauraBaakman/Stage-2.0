@@ -10,9 +10,6 @@ class StandardGaussian(Kernel):
         implementation_class = implementation or _StandardGaussian_C
         self._implementation = implementation_class()
 
-    def evaluate(self, pattern):
-        return self._implementation.evaluate(pattern)
-
     def to_C_enum(self):
         return 1
 
