@@ -9,7 +9,7 @@ import kdeUtils
 from kde.estimatorimplementation import EstimatorImplementation
 from kde.kernels.epanechnikov import Epanechnikov
 from kde.kernels.gaussian import Gaussian
-from kde.parzen_old import Parzen
+from kde.parzen import ParzenEstimator
 
 
 class ModifiedBreimanEstimator(object):
@@ -42,7 +42,7 @@ class ModifiedBreimanEstimator(object):
         self._kernel = kernel or Gaussian()
         self._number_of_grid_points = number_of_grid_points
 
-        self._pilot_estimator_implementation = pilot_estimator_implementation or Parzen
+        self._pilot_estimator_implementation = pilot_estimator_implementation or ParzenEstimator
         self._final_estimator_implementation = final_estimator_implementation or _MBEEstimator
 
     def estimate(self, xi_s, x_s=None):
