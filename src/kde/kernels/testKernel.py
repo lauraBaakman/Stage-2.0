@@ -1,3 +1,4 @@
+import kde.kernels._kernels as _kernels
 import numpy as np
 
 from kde.kernels.kernel import Kernel
@@ -5,7 +6,7 @@ from kde.kernels.kernel import Kernel
 
 class TestKernel(Kernel):
     def __init__(self, implementation=None):
-        implementation_class = implementation or _TestKernel_Python
+        implementation_class = implementation or _TestKernel_C
         self._implementation = implementation_class()
 
     def to_C_enum(self):
@@ -37,4 +38,14 @@ class _TestKernel_C(Kernel):
         pass
 
     def evaluate(self, x):
-        raise NotImplementedError()
+        if x.ndim == 1:
+            data = np.array([x])
+            density = _kernels.test_kernel_single_pattern(data)
+            return np.array([density])
+        elif x.ndim == 2:
+            (num_patterns, _) = x.shape
+            densities = np.empty(num_patterns, dtype=float)
+            _kernels.test_kernel_multi_pattern(x, densities)
+            return densities
+        else:
+            raise TypeError("Expected a vector or a matrix, not a {}-dimensional array.".format(x.ndim))

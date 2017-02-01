@@ -87,6 +87,48 @@ static PyObject * epanechnikov_multi_pattern(PyObject *self, PyObject *args){
     return Py_None;
 }
 
+static char kernels_testKernel_docstring[] = "Evaluate the TestKernel for each row in the input matrix. This kernel returns the absolute value of the mean of the elements of the patterns.";
+static PyObject * testKernel_single_pattern(PyObject *self, PyObject *args){
+    PyObject* inPatterns = NULL;
+
+    if (!PyArg_ParseTuple(args, "O", &inPatterns)) return NULL;
+
+    Array pattern = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
+
+    double factor = testKernelFactor(pattern.dimensionality);
+    double density = testKernel(pattern.data, pattern.dimensionality, factor);
+
+    /* Create return object */
+    PyObject *returnObject = Py_BuildValue("d", density);
+    return returnObject;
+}
+
+static PyObject * testKernel_multi_pattern(PyObject *self, PyObject *args){
+    PyObject* inPatterns = NULL;
+    PyObject* outDensities = NULL;
+
+    if (!PyArg_ParseTuple(args, "OO", &inPatterns, &outDensities)) return NULL;
+
+    Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
+    Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
+
+    double factor = testKernelFactor(patterns.dimensionality);
+
+    double* currentPattern = patterns.data;
+
+    for (int i = 0;
+         i < patterns.length;
+         ++i, currentPattern += patterns.stride)
+    {
+        densities.data[i] = testKernel(currentPattern, patterns.dimensionality, factor);
+    }
+
+    /* Create return object */
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+
 Array pyObjectToArray(PyObject *pythonObject, int requirements){
     PyArrayObject* arrayObject = NULL;
     arrayObject = (PyArrayObject *)PyArray_FROM_OTF(pythonObject, NPY_DOUBLE, requirements);
@@ -104,6 +146,8 @@ static PyMethodDef method_table[] = {
         {"standard_gaussian_single_pattern",    standard_gaussian_single_pattern,   METH_VARARGS,   kernels_standardGaussian_docstring},
         {"epanechnikov_single_pattern",         epanechnikov_single_pattern,        METH_VARARGS,   kernels_epanechnikov_docstring},
         {"epanechnikov_multi_pattern",          epanechnikov_multi_pattern,         METH_VARARGS,   kernels_epanechnikov_docstring},
+        {"test_kernel_single_pattern",          testKernel_single_pattern,          METH_VARARGS,   kernels_testKernel_docstring},
+        {"test_kernel_multi_pattern",           testKernel_multi_pattern,           METH_VARARGS,   kernels_testKernel_docstring},
         /* Sentinel */
         {NULL,                              NULL,                                   0,              NULL}
 };

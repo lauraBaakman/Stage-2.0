@@ -15,8 +15,10 @@ double standardGaussian(double* pattern, int patternDimensionality, double facto
 double epanechnikovDenominator(int dimensionality);
 double epanechnikov(double *data, int dimensionality, double denominator);
 
+double testKernelFactor(int patternDimensionality);
+double testKernel(double *data, int dimensionality, double factor);
+
 //Auxilaries that should be in a internal header....
 double dotProduct(double *a, double *b, int length);
-
 
 #endif //KERNELS_DENSITYFUNCTIONS_H

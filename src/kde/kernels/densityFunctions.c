@@ -38,3 +38,16 @@ double dotProduct(double *a, double *b, int length) {
     }
     return dotProduct;
 }
+
+double testKernelFactor(int patternDimensionality){
+    return 1.0 / patternDimensionality;
+}
+
+double testKernel(double *data, int dimensionality, double factor){
+    double density = 0;
+    for (int i = 0; i < dimensionality; i++){
+        density += data[i];
+    }
+    double mean = density * factor;
+    return fabs(mean);
+}
