@@ -26,10 +26,6 @@ class TestEpanechnikov(TestCase):
 
 class EpanechnikovImpAbstractTest(object):
 
-    def setUp(self):
-        super().setUp()
-        self._kernel_class = None
-
     def test_evaluate_1D_1(self):
         x = np.array([5])
         actual = self._kernel_class().evaluate(x)
