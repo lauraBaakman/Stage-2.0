@@ -2,55 +2,84 @@ from unittest import TestCase
 
 import numpy as np
 
-from kde.kernels.standardGaussian import StandardGaussian as StandardGaussian
-
+from kde.kernels.standardGaussian import StandardGaussian, _StandardGaussian_C, _StandardGaussian_Python
 
 class TestStandardGaussian(TestCase):
+    def test_evaluate_default_implementation(self):
+        x = np.array([0.5, 0.5])
+        actual = StandardGaussian().evaluate(x)
+        expected = np.array([0.123949994309653])
+        np.testing.assert_array_almost_equal(actual, expected)
 
-    def setUp(self):
-        super().setUp()
-        self.data_2D = {
-            'patterns': [
-                np.array([0.5, 0.5]),
-                np.array([-0.75, -0.5]),
-                np.array([0, 0]),
-            ],
-            'densities': [
-                0.123949994309653,
-                0.106020048452543,
-                0.159154943091895,
-            ],
-            'dimension': 2,
-        }
-        self.data_3D = {
-            'patterns': [
-                np.array([0.5, 0.5, 0.5]),
-                np.array([-0.75, -0.5, 0.1]),
-                np.array([0, 0, 0]),
-            ],
-            'densities': [
-                0.043638495249061,
-                0.042084928316873,
-                0.063493635934241,
-            ],
-            'dimension': 3,
-        }
+    def test_evaluate_alternative_implementation(self):
+        x = np.array([0.5, 0.5])
+        actual = StandardGaussian(implementation=_StandardGaussian_Python).evaluate(x)
+        expected = np.array([0.123949994309653])
+        np.testing.assert_array_almost_equal(actual, expected)
 
-    def test_evaluate_2D(self):
-        kernel = StandardGaussian(dimension=self.data_2D['dimension'])
-        for pattern, expected in zip(self.data_2D['patterns'], self.data_2D['densities']):
-            actual = kernel.evaluate(pattern)
-            self.assertAlmostEqual(actual, expected)
+    def test_to_C_enum(self):
+        expected = 1
+        actual = StandardGaussian().to_C_enum()
+        self.assertEqual(expected, actual)
 
-    def test_evaluate_3D(self):
-        kernel = StandardGaussian(dimension=self.data_3D['dimension'])
-        for pattern, expected in zip(self.data_3D['patterns'], self.data_3D['densities']):
-            actual = kernel.evaluate(pattern)
-            np.testing.assert_array_almost_equal(actual, expected)
+
+class StandardGaussianImpAbstractTest(object):
+    def test_evaluate_2D_1(self):
+        x = np.array([0.5, 0.5])
+        actual = self._kernel_class().evaluate(x)
+        expected = np.array([0.123949994309653])
+        np.testing.assert_array_almost_equal(actual, expected)
+
+    def test_evaluate_2D_2(self):
+        x = np.array([-0.75, -0.5])
+        actual = self._kernel_class().evaluate(x)
+        expected = np.array([0.106020048452543])
+        np.testing.assert_array_almost_equal(actual, expected)
+
+    def test_evaluate_2D_3(self):
+        x = np.array([0, 0])
+        actual = self._kernel_class().evaluate(x)
+        expected = np.array([0.159154943091895])
+        np.testing.assert_array_almost_equal(actual, expected)
 
     def test_evaluate_2D_multiple(self):
-        kernel = StandardGaussian(dimension=self.data_2D['dimension'])
-        patterns = np.matrix(self.data_2D['patterns'])
-        actual = kernel.evaluate(patterns)
-        expected = np.array(self.data_2D['densities'])
+        x = np.array([[0, 0], [-0.75, -0.5], [0.5, 0.5]])
+        actual = self._kernel_class().evaluate(x)
+        expected = np.array([0.159154943091895, 0.106020048452543, 0.123949994309653])
         np.testing.assert_array_almost_equal(actual, expected)
+
+    def test_evaluate_3D_1(self):
+        x = np.array([0.5, 0.5, 0.5])
+        actual = self._kernel_class().evaluate(x)
+        expected = np.array([0.043638495249061])
+        np.testing.assert_array_almost_equal(actual, expected)
+
+    def test_evaluate_3D_2(self):
+        x = np.array([-0.75, -0.5, 0.1])
+        actual = self._kernel_class().evaluate(x)
+        expected = np.array([0.042084928316873])
+        np.testing.assert_array_almost_equal(actual, expected)
+
+    def test_evaluate_3D_3(self):
+        x = np.array([0, 0, 0])
+        actual = self._kernel_class().evaluate(x)
+        expected = np.array([0.063493635934241])
+        np.testing.assert_array_almost_equal(actual, expected)
+
+    def test_evaluate_3D_multiple(self):
+        x = np.array([[0, 0, 0], [0.5, 0.5, 0.5], [-0.75, -0.5, 0.1]])
+        actual = self._kernel_class().evaluate(x)
+        expected = np.array([0.063493635934241, 0.043638495249061, 0.042084928316873])
+        np.testing.assert_array_almost_equal(actual, expected)
+
+
+class Test_StandardGaussian_Python(StandardGaussianImpAbstractTest, TestCase):
+    def setUp(self):
+        super().setUp()
+        self._kernel_class = _StandardGaussian_Python
+
+
+class Test_StandardGaussian_C(StandardGaussianImpAbstractTest, TestCase):
+    def setUp(self):
+        super().setUp()
+        self._kernel_class = _StandardGaussian_C
