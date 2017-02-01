@@ -11,20 +11,20 @@ class TestParzenEstimator(TestCase):
         xi_s = np.array([[-1, -1], [0, 0], [1 / 2.0, 1 / 2.0]])
         x_s = np.array([[0, 0], [1 / 4.0, 1 / 2.0]])
         estimator = ParzenEstimator(dimension=2,
-                                    bandwidth=0.25, kernel=StandardGaussian(),
+                                    bandwidth=4, kernel=StandardGaussian(),
                                     estimator_implementation=_ParzenEstimator_Python)
         actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
-        expected = np.array([0.0387795541707939, 0.0381443156873352])
+        expected = np.array([0.0096947375, 0.0095360625])
         np.testing.assert_array_almost_equal(actual, expected)
 
     def test_estimate_C(self):
         xi_s = np.array([[-1, -1], [0, 0], [1 / 2.0, 1 / 2.0]])
         x_s = np.array([[0, 0], [1 / 4.0, 1 / 2.0]])
         estimator = ParzenEstimator(dimension=2,
-                                    bandwidth=0.25, kernel=StandardGaussian(),
+                                    bandwidth=4, kernel=StandardGaussian(),
                                     estimator_implementation=_ParzenEstimator_C)
         actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
-        expected = np.array([0.0387795541707939, 0.0381443156873352])
+        expected = np.array([0.0096947375, 0.0095360625])
         np.testing.assert_array_almost_equal(actual, expected)
 
 
@@ -38,9 +38,9 @@ class ParzenEstimatorImpAbstractTest(object):
         x_s = np.array([[0, 0], [1 / 4.0, 1 / 2.0]])
         estimator = self._estimator_class(
             xi_s=xi_s, x_s=x_s, dimension=2,
-            kernel=StandardGaussian(), general_bandwidth=0.25)
+            kernel=StandardGaussian(), general_bandwidth=4)
         actual = estimator.estimate()
-        expected = np.array([0.0387795541707939, 0.0381443156873352])
+        expected = np.array([0.0096947375, 0.0095360625])
         np.testing.assert_array_almost_equal(actual, expected)
 
 
@@ -52,14 +52,14 @@ class Test_ParzenEstimator_Python(ParzenEstimatorImpAbstractTest, TestCase):
     def test_estimate_pattern(self):
         xi_s = np.array([[-1, -1], [0, 0], [1 / 2.0, 1 / 2.0]])
         x_s = np.array([[0, 0], [1 / 4.0, 1 / 2.0]])
-        pattern = x_s[0]
-        factor = 0.5
+        pattern = x_s[1]
+        factor = 1 / 48
         estimator = _ParzenEstimator_Python(
             xi_s=xi_s, x_s=x_s,
             dimension=2,
-            kernel=TestKernel(), general_bandwidth=0.75)
+            kernel=TestKernel(), general_bandwidth=4)
         actual = estimator._estimate_pattern(pattern=pattern, factor=factor)
-        expected = 15 / 384.0
+        expected = 15 / 1536.0
         self.assertAlmostEqual(actual, expected)
 
 
