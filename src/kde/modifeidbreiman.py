@@ -77,12 +77,12 @@ class ModifiedBreimanEstimator(object):
         # Compute grid for pilot densities
         grid_points = kdeUtils.Grid.cover(xi_s, number_of_grid_points=self._number_of_grid_points).grid_points
 
-        # Compute pilot densities
-        grid_densities = self._pilot_estimator_implementation(
-            window_width=general_bandwidth,
+        # Compute densities of the points on the grid
+        pilot_estimator = ParzenEstimator(
             dimension=self._dimension,
-            kernel=self._pilot_kernel
-        ).estimate(xi_s=xi_s, x_s=grid_points)
+            bandwidth=general_bandwidth, kernel=self._pilot_kernel,
+            estimator_implementation=self._pilot_estimator_implementation)
+        grid_densities = pilot_estimator.estimate(xi_s=xi_s, x_s=grid_points)
 
         # Interpolation: note it is not bilinear interpolation, but uses a triangulation
         pilot_densities = interpolate.griddata(grid_points, grid_densities, xi_s, method='linear')
