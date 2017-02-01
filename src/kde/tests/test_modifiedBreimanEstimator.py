@@ -4,16 +4,17 @@ import numpy as np
 
 from kde.kernels.epanechnikov import Epanechnikov
 from kde.kernels.standardGaussian import StandardGaussian
+from kde.kernels.testKernel import TestKernel
 from kde.modifeidbreiman import _MBEEstimator_Python, _MBEEstimator_C, ModifiedBreimanEstimator
 from kde.parzen import _ParzenEstimator_Python, _ParzenEstimator_C
 
 
 class TestModifiedBreimanEstimator(TestCase):
     def estimate_test_helper(self, pilot_implementation, final_implementation):
-        xi_s = np.array([])
-        x_s = np.array([])
-        pilot_kernel = Epanechnikov
-        final_kerel = StandardGaussian
+        xi_s = np.array([[0, 0], [1, 1]])
+        x_s = np.array([[0, 0]])
+        pilot_kernel = TestKernel()
+        final_kerel = TestKernel()
         number_of_grid_points = 2
         sensitivity = 0.5
         estimator = ModifiedBreimanEstimator(
@@ -23,7 +24,7 @@ class TestModifiedBreimanEstimator(TestCase):
             sensitivity=sensitivity
         )
         actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
-        expected = np.array([])
+        expected = np.array([4])
         np.testing.assert_array_almost_equal(actual, expected)
 
     def test_estimate_python_python(self):
@@ -38,7 +39,7 @@ class TestModifiedBreimanEstimator(TestCase):
     def test_estimate_C_C(self):
         self.estimate_test_helper(_ParzenEstimator_C, _ParzenEstimator_C)
 
-    def estimate_pilot_densities_gaussian_test_helper(self, _parzen_implementation):
+    def estimate_pilot_densities_test_helper(self, _parzen_implementation):
         xi_s = np.array([
             [0, 0],
             [1, 1]
@@ -48,33 +49,14 @@ class TestModifiedBreimanEstimator(TestCase):
             dimension=2, sensitivity=0.5
         )
         actual = estimator._estimate_pilot_densities(0.5, xi_s)
-        expected = np.array([])
+        expected = np.array([0.32413993511384709, 0.43540954923242903])
         np.testing.assert_array_almost_equal(actual, expected)
 
-    def test__estimate_pilot_densities_python_gaussian(self):
-        self.estimate_pilot_densities_gaussian_test_helper(_ParzenEstimator_Python)
+    def test__estimate_pilot_densities_python(self):
+        self.estimate_pilot_densities_test_helper(_ParzenEstimator_Python)
 
-    def test__estimate_pilot_densities_C_gaussian(self):
-        self.estimate_pilot_densities_gaussian_test_helper(_ParzenEstimator_C)
-
-    def estimate_pilot_densities_epanechnikov_test_helper(self, _parzen_implementation):
-        xi_s = np.array([
-            [0, 0],
-            [1, 1]
-        ])
-        estimator = ModifiedBreimanEstimator(
-            pilot_kernel=Epanechnikov(), pilot_estimator_implementation=_parzen_implementation,
-            dimension=2, sensitivity=0.5
-        )
-        actual = estimator._estimate_pilot_densities(0.5, xi_s)
-        expected = np.array([])
-        np.testing.assert_array_almost_equal(actual, expected)
-
-    def test__estimate_pilot_densities_python_epanechnikov(self):
-        self.estimate_pilot_densities_epanechnikov_test_helper(_ParzenEstimator_Python)
-
-    def test__estimate_pilot_densities_C_epanechnikov(self):
-        self.estimate_pilot_densities_epanechnikov_test_helper(_ParzenEstimator_C)
+    def test__estimate_pilot_densities_C(self):
+        self.estimate_pilot_densities_test_helper(_ParzenEstimator_C)
 
     def test__compute_local_bandwidths(self):
         densities = np.array([1, 2, 3, 4, 5, 6])
@@ -90,10 +72,10 @@ class ModifiedBreimanEstimatorImpAbstractTest(object):
         self._estimator_class = None
 
     def test_estimate_epanechnikov(self):
-        xi_s = np.array([[-1, -1], [0, 0], [1 / 2.0, 1 / 2.0]])
-        local_bandwidths = np.array([])
-        x_s = np.array([[0, 0], [1 / 4.0, 1 / 2.0]])
-        general_bandwidth = None
+        xi_s = np.array([[-1, -1], [1, 1], [0, 0]])
+        x_s = np.array([[0, 0], [1, 1], [0, 1]])
+        local_bandwidths = np.array([10, 20, 50])
+        general_bandwidth = 0.5
         kernel = Epanechnikov()
         estimator = self._estimator_class(
             xi_s=xi_s, x_s=x_s, dimension=2,
@@ -101,14 +83,14 @@ class ModifiedBreimanEstimatorImpAbstractTest(object):
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
         actual = estimator.estimate()
-        expected = np.array([])
+        expected = np.array([0.01022836, 0.00823253, 0.00923044])
         np.testing.assert_array_almost_equal(actual, expected)
 
     def test_estimate_gaussian(self):
-        xi_s = np.array([[-1, -1], [0, 0], [1 / 2.0, 1 / 2.0]])
-        local_bandwidths = np.array([])
-        x_s = np.array([[0, 0], [1 / 4.0, 1 / 2.0]])
-        general_bandwidth = None
+        xi_s = np.array([[-1, -1], [1, 1], [0, 0]])
+        x_s = np.array([[0, 0], [1, 1], [0, 1]])
+        local_bandwidths = np.array([10, 20, 50])
+        general_bandwidth = 0.5
         kernel = StandardGaussian()
         estimator = self._estimator_class(
             xi_s=xi_s, x_s=x_s, dimension=2,
@@ -116,7 +98,7 @@ class ModifiedBreimanEstimatorImpAbstractTest(object):
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
         actual = estimator.estimate()
-        expected = np.array([])
+        expected = np.array([0.00264898, 0.0024237, 0.00253281])
         np.testing.assert_array_almost_equal(actual, expected)
 
 
@@ -126,35 +108,35 @@ class Test_MBEEstimator_Python(ModifiedBreimanEstimatorImpAbstractTest, TestCase
         self._estimator_class = _MBEEstimator_Python
 
     def test_estimate_pattern_gaussian(self):
-        xi_s = np.array([[-1, -1], [0, 0], [1 / 2.0, 1 / 2.0]])
-        local_bandwidths = np.array([])
-        x_s = np.array([[0, 0], [1 / 4.0, 1 / 2.0]])
-        pattern = x_s[0]
-        general_bandwidth = None
+        xi_s = np.array([[-1, -1], [1, 1], [0, 0]])
+        x_s = np.array([[0, 0], [1, 1]])
+        local_bandwidths = np.array([10, 20, 50])
+        general_bandwidth = 0.5
         kernel = StandardGaussian()
+        pattern = x_s[0]
         estimator = self._estimator_class(
             xi_s=xi_s, x_s=x_s, dimension=2,
             kernel=kernel,
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
         actual = estimator._estimate_pattern(pattern)
-        expected = None
+        expected = 0.00264898
         self.assertAlmostEqual(actual, expected)
 
     def test_estimate_pattern_epanechnikov(self):
-        xi_s = np.array([[-1, -1], [0, 0], [1 / 2.0, 1 / 2.0]])
-        local_bandwidths = np.array([])
-        x_s = np.array([[0, 0], [1 / 4.0, 1 / 2.0]])
-        pattern = x_s[0]
-        general_bandwidth = None
+        xi_s = np.array([[-1, -1], [1, 1], [0, 0]])
+        x_s = np.array([[0, 0], [1, 1]])
+        local_bandwidths = np.array([10, 20, 50])
+        general_bandwidth = 0.5
         kernel = Epanechnikov()
+        pattern = x_s[0]
         estimator = self._estimator_class(
             xi_s=xi_s, x_s=x_s, dimension=2,
             kernel=kernel,
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
         actual = estimator._estimate_pattern(pattern)
-        expected = None
+        expected = 0.01022836
         self.assertAlmostEqual(actual, expected)
 
 
