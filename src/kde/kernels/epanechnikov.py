@@ -4,10 +4,22 @@ import kde.kernels._kernels as _kernels
 import numpy as np
 import scipy.special
 
+from kde.kernels.kernel import Kernel
 
-class _Epanechnikov_Python(object):
-    """Implementation of the _Epanechnikov_Python Kernel.
-    """
+
+class Epanechnikov(Kernel):
+    def __init__(self, implementation=None):
+        implementation_class = implementation or _Epanechnikov_C
+        self._implementation = implementation_class()
+
+    def evaluate(self, pattern):
+        return self._implementation.evaluate(pattern)
+
+    def to_C_enum(self):
+        return 0
+
+
+class _Epanechnikov_Python(Epanechnikov):
 
     def __init__(self):
         pass
@@ -48,10 +60,10 @@ class _Epanechnikov_Python(object):
         return numerator / denominator
 
 
-class Epanechnikov(_Epanechnikov_Python):
+class _Epanechnikov_C(Epanechnikov):
 
     def __init__(self):
-        super(_Epanechnikov_Python, self).__init__()
+        pass
 
     def evaluate(self, x):
         if x.ndim == 1:
