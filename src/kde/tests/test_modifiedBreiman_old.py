@@ -6,7 +6,7 @@ import kdeUtils.automaticWindowWidthMethods
 from kde.kernels.epanechnikov import Epanechnikov
 from kde.kernels.standardGaussian import StandardGaussian
 from kde.kernels.testKernel import TestKernel
-from kde.modifeidbreiman import ModifiedBreimanEstimator, _MBEEstimator, _MBEEstimator_Python
+from kde.modifeidbreiman import ModifiedBreimanEstimator, _MBEEstimator_C, _MBEEstimator_Python
 
 class TestModifiedBreimanEstimator(TestCase):
 
@@ -45,7 +45,7 @@ class TestModifiedBreimanEstimator(TestCase):
             pilot_kernel=TestKernel(), kernel=TestKernel(),
             pilot_window_width_method=kdeUtils.automaticWindowWidthMethods.test,
             pilot_estimator_implementation=_ParzenEstimator_Python,
-            final_estimator_implementation=_MBEEstimator)
+            final_estimator_implementation=_MBEEstimator_C)
         xi_s = np.array([
             [0, 0],
             [1, 1]
@@ -81,7 +81,7 @@ class TestModifiedBreimanEstimator(TestCase):
             pilot_kernel=TestKernel(), kernel=TestKernel(),
             pilot_window_width_method=kdeUtils.automaticWindowWidthMethods.test,
             pilot_estimator_implementation=_ParzenEstimator,
-            final_estimator_implementation=_MBEEstimator)
+            final_estimator_implementation=_MBEEstimator_C)
         xi_s = np.array([
             [0, 0],
             [1, 1]
@@ -173,4 +173,4 @@ class Test_MBEEstimator(MBEEstimatorAbstractTest, TestCase):
 
     def setUp(self):
         super().setUp()
-        self._estimator_class = _MBEEstimator
+        self._estimator_class = _MBEEstimator_C
