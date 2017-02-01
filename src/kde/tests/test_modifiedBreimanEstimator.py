@@ -120,7 +120,7 @@ class Test_MBEEstimator_Python(ModifiedBreimanEstimatorImpAbstractTest, TestCase
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
         actual = estimator._estimate_pattern(pattern)
-        expected = 0.00264898
+        expected = 0.00264898 * 3
         self.assertAlmostEqual(actual, expected)
 
     def test_estimate_pattern_epanechnikov(self):
@@ -136,7 +136,7 @@ class Test_MBEEstimator_Python(ModifiedBreimanEstimatorImpAbstractTest, TestCase
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
         actual = estimator._estimate_pattern(pattern)
-        expected = 0.01022836
+        expected = 0.01022836 * 3
         self.assertAlmostEqual(actual, expected)
 
 
