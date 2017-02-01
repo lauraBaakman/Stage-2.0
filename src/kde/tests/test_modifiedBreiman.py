@@ -4,6 +4,7 @@ import numpy as np
 
 import kdeUtils.automaticWindowWidthMethods
 from kde.kernels.epanechnikov import Epanechnikov
+from kde.kernels.standardGaussian import StandardGaussian
 from kde.kernels.testKernel import TestKernel
 from kde.modifeidbreiman import ModifiedBreimanEstimator, _MBEEstimator, _MBEEstimator_Python
 
@@ -20,11 +21,12 @@ class TestModifiedBreimanEstimator(TestCase):
         actual = self.estimator._compute_local_bandwidths(densities)
         np.testing.assert_array_almost_equal(expected, actual)
 
-    def test_estimate(self):
+    def test_estimate_python_python(self):
         estimator = ModifiedBreimanEstimator(
             dimension=2, sensitivity=0.5, number_of_grid_points=2,
             pilot_kernel=TestKernel(), kernel=TestKernel(),
             pilot_window_width_method=kdeUtils.automaticWindowWidthMethods.test,
+            pilot_estimator_implementation=_ParzenEstimator_Python,
             final_estimator_implementation=_MBEEstimator_Python)
         xi_s = np.array([
             [0, 0],
@@ -37,12 +39,80 @@ class TestModifiedBreimanEstimator(TestCase):
         expected = np.array([4])
         np.testing.assert_almost_equal(actual, expected)
 
-    def test_estimate_pilot_densitites(self):
+    def test_estimate_python_C(self):
         estimator = ModifiedBreimanEstimator(
             dimension=2, sensitivity=0.5, number_of_grid_points=2,
             pilot_kernel=TestKernel(), kernel=TestKernel(),
             pilot_window_width_method=kdeUtils.automaticWindowWidthMethods.test,
+            pilot_estimator_implementation=_ParzenEstimator_Python,
+            final_estimator_implementation=_MBEEstimator)
+        xi_s = np.array([
+            [0, 0],
+            [1, 1]
+        ])
+        x_s = np.array([
+            [0, 0],
+        ])
+        actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
+        expected = np.array([4])
+        np.testing.assert_almost_equal(actual, expected)
+
+    def test_estimate_C_python(self):
+        estimator = ModifiedBreimanEstimator(
+            dimension=2, sensitivity=0.5, number_of_grid_points=2,
+            pilot_kernel=TestKernel(), kernel=TestKernel(),
+            pilot_window_width_method=kdeUtils.automaticWindowWidthMethods.test,
+            pilot_estimator_implementation=_ParzenEstimator,
             final_estimator_implementation=_MBEEstimator_Python)
+        xi_s = np.array([
+            [0, 0],
+            [1, 1]
+        ])
+        x_s = np.array([
+            [0, 0],
+        ])
+        actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
+        expected = np.array([4])
+        np.testing.assert_almost_equal(actual, expected)
+
+    def test_estimate_C_C(self):
+        estimator = ModifiedBreimanEstimator(
+            dimension=2, sensitivity=0.5, number_of_grid_points=2,
+            pilot_kernel=TestKernel(), kernel=TestKernel(),
+            pilot_window_width_method=kdeUtils.automaticWindowWidthMethods.test,
+            pilot_estimator_implementation=_ParzenEstimator,
+            final_estimator_implementation=_MBEEstimator)
+        xi_s = np.array([
+            [0, 0],
+            [1, 1]
+        ])
+        x_s = np.array([
+            [0, 0],
+        ])
+        actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
+        expected = np.array([4])
+        np.testing.assert_almost_equal(actual, expected)
+
+    def test_estimate_pilot_densitites_python(self):
+        estimator = ModifiedBreimanEstimator(
+            dimension=2, sensitivity=0.5, number_of_grid_points=2,
+            pilot_kernel=StandardGaussian, kernel=TestKernel(),
+            pilot_window_width_method=kdeUtils.automaticWindowWidthMethods.test,
+            pilot_estimator_implementation=_ParzenEstimator_Python)
+        xi_s = np.array([
+            [0, 0],
+            [1, 1]
+        ])
+        actual = estimator._estimate_pilot_densities(0.5, xi_s)
+        expected = np.array([0.2820062130103994, 0.2820062130103994])
+        np.testing.assert_almost_equal(actual, expected)
+
+    def test_estimate_pilot_densitites_C(self):
+        estimator = ModifiedBreimanEstimator(
+            dimension=2, sensitivity=0.5, number_of_grid_points=2,
+            pilot_kernel=StandardGaussian, kernel=TestKernel(),
+            pilot_window_width_method=kdeUtils.automaticWindowWidthMethods.test,
+            pilot_estimator_implementation=_ParzenEstimator)
         xi_s = np.array([
             [0, 0],
             [1, 1]
