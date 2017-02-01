@@ -2,6 +2,7 @@ from unittest import TestCase
 
 import numpy as np
 
+import kdeUtils.automaticWindowWidthMethods
 from kde.kernels.epanechnikov import Epanechnikov
 from kde.kernels.standardGaussian import StandardGaussian
 from kde.kernels.testKernel import TestKernel
@@ -21,10 +22,11 @@ class TestModifiedBreimanEstimator(TestCase):
             pilot_kernel=pilot_kernel, pilot_estimator_implementation=pilot_implementation,
             kernel=final_kerel, final_estimator_implementation=final_implementation,
             dimension=2, number_of_grid_points=number_of_grid_points,
-            sensitivity=sensitivity
+            sensitivity=sensitivity,
+            pilot_window_width_method=kdeUtils.automaticWindowWidthMethods.ferdosi
         )
         actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
-        expected = np.array([4])
+        expected = np.array([0.7708904])
         np.testing.assert_array_almost_equal(actual, expected)
 
     def test_estimate_python_python(self):
@@ -37,7 +39,7 @@ class TestModifiedBreimanEstimator(TestCase):
         self.estimate_test_helper(_ParzenEstimator_C, _MBEEstimator_Python)
 
     def test_estimate_C_C(self):
-        self.estimate_test_helper(_ParzenEstimator_C, _ParzenEstimator_C)
+        self.estimate_test_helper(_ParzenEstimator_C, _MBEEstimator_C)
 
     def estimate_pilot_densities_test_helper(self, _parzen_implementation):
         xi_s = np.array([
@@ -49,7 +51,7 @@ class TestModifiedBreimanEstimator(TestCase):
             dimension=2, sensitivity=0.5
         )
         actual = estimator._estimate_pilot_densities(0.5, xi_s)
-        expected = np.array([0.32413993511384709, 0.43540954923242903])
+        expected = np.array([0.32413993511384709, 0.32413993511384709])
         np.testing.assert_array_almost_equal(actual, expected)
 
     def test__estimate_pilot_densities_python(self):
@@ -59,10 +61,11 @@ class TestModifiedBreimanEstimator(TestCase):
         self.estimate_pilot_densities_test_helper(_ParzenEstimator_C)
 
     def test__compute_local_bandwidths(self):
+        estimator = ModifiedBreimanEstimator(dimension=2, sensitivity=0.5)
         densities = np.array([1, 2, 3, 4, 5, 6])
         expected = np.array([1.730258699016973, 1.223477659281915, 0.998965325645141,
                              0.865129349508487, 0.773795213932460, 0.706375155933907])
-        actual = self.estimator._compute_local_bandwidths(densities)
+        actual = estimator._compute_local_bandwidths(densities)
         np.testing.assert_array_almost_equal(expected, actual)
 
 
