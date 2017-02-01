@@ -2,7 +2,7 @@ from unittest import TestCase
 
 import numpy as np
 
-from kde.kernels.epanechnikov import Epanechnikov, _Epanechnikov_Python
+from kde.kernels.epanechnikov import Epanechnikov, _Epanechnikov_Python, _Epanechnikov_C
 
 
 class TestEpanechnikov(TestCase):
@@ -126,4 +126,4 @@ class TestEpanechnikov_Python(EpanechnikovImpAbstractTest, TestCase):
 class TestEpanechnikov_C(EpanechnikovImpAbstractTest, TestCase):
     def setUp(self):
         super().setUp()
-        self._kernel_class = Epanechnikov
+        self._kernel_class = _Epanechnikov_C
