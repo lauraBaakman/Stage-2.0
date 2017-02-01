@@ -21,7 +21,8 @@ class ModifiedBreimanEstimator(object):
     def __init__(self, dimension, kernel=None, sensitivity=1/2,
                  pilot_kernel=None,
                  pilot_window_width_method=kdeUtils.automaticWindowWidthMethods.ferdosi,
-                 number_of_grid_points=default_number_of_grid_points, final_estimator_implementation=None):
+                 number_of_grid_points=default_number_of_grid_points,
+                 pilot_estimator_implementation=None, final_estimator_implementation=None):
         """ Init method of the Modified Breiman Estimator.
         :param dimension: (int) The dimension of the data points of which the density is estimated.
         :param kernel: (kernel, optional) The kernel to use for the final density estimate, defaults to Gaussian.
@@ -40,7 +41,9 @@ class ModifiedBreimanEstimator(object):
         self._pilot_kernel = pilot_kernel or Epanechnikov()
         self._kernel = kernel or Gaussian()
         self._number_of_grid_points = number_of_grid_points
-        self._final_estimator_implementation = final_estimator_implementation or _MBEEstimator_Python
+
+        self._pilot_estimator_implementation = pilot_estimator_implementation or Parzen
+        self._final_estimator_implementation = final_estimator_implementation or _MBEEstimator
 
     def estimate(self, xi_s, x_s=None):
         """
@@ -75,7 +78,7 @@ class ModifiedBreimanEstimator(object):
         grid_points = kdeUtils.Grid.cover(xi_s, number_of_grid_points=self._number_of_grid_points).grid_points
 
         # Compute pilot densities
-        grid_densities = Parzen(
+        grid_densities = self._pilot_estimator_implementation(
             window_width=general_bandwidth,
             dimension=self._dimension,
             kernel=self._pilot_kernel
