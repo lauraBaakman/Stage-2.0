@@ -2,8 +2,8 @@
 // Created by Laura Baakman on 09/01/2017.
 //
 
-#ifndef KDE_H
-#define KDE_H
+#ifndef KDE_MODULE_H
+#define KDE_MODULE_H
 
 #include <math.h>
 #include <Python.h>
@@ -17,4 +17,4 @@
 
 Array pyObjectToArray(PyObject *pythonObject, int requirements);
 
-#endif //KDE_H
+#endif //KDE_MODULE_H

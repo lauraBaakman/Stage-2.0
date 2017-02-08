@@ -1,5 +1,5 @@
-#ifndef KERNELS_DENSITYFUNCTIONS_H
-#define KERNELS_DENSITYFUNCTIONS_H
+#ifndef KERNELS_KERNELS_H
+#define KERNELS_KERNELS_H
 
 typedef double (*KernelDensityFunction)(double* data, int dimensionality, double factor);
 typedef double (*KernelConstantFunction)(int dimensionality);
@@ -12,4 +12,4 @@ extern Kernel standardGaussianKernel;
 extern Kernel epanechnikovKernel;
 extern Kernel testKernel;
 
-#endif //KERNELS_DENSITYFUNCTIONS_H
+#endif //KERNELS_KERNELS_H

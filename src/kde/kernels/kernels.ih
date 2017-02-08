@@ -1,5 +1,5 @@
-#ifndef KERNELS_DENSITYFUNCTIONS_IH
-#define KERNELS_DENSITYFUNCTIONS_IH
+#ifndef KERNELS_KERNELS_IH
+#define KERNELS_KERNELS_IH
 
 #include "kernels.h"
 #include <printf.h>
@@ -18,4 +18,4 @@ double testKernelPDF(double *data, int dimensionality, double constant);
 //Auxilaries that should be in a internal header....
 double dotProduct(double *a, double *b, int length);
 
-#endif //KERNELS_DENSITYFUNCTIONS_IH
+#endif //KERNELS_KERNELS_IH
