@@ -4,9 +4,8 @@
 
 #include "modifeidbreiman.h"
 
-double mbe_epanechnikov(double *pattern, Array *dataPoints, double globalBandwidth, Array *localBandwidths,
-                        double epanechnikovFactor, double parzenFactor) {
-    printf("Hoi ik ben mbe_epanechnikov dummy.\n");
-
+double modifeidBreimenFinalDensity(double *pattern, Array *dataPoints,
+                                   double globalBandwidth, Array *localBandwidths, double parzenFactor,
+                                   double kernelFactor, KernelDensityFunction kernel){
     return 42.0;
 }

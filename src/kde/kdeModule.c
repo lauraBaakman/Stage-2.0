@@ -46,7 +46,7 @@ static PyObject * kdeParzen(PyObject *self, PyObject *args){
 }
 
 static char kde_breiman_epanechnikov_docstring[] = "Estimate the densities with Parzen with the Epanechnikov kernel.";
-static PyObject * kdeBreimanEpanechnikov(PyObject *self, PyObject *args){
+static PyObject *kde_modifeid_breiman(PyObject *self, PyObject *args){
     PyObject* inPatterns = NULL;
     PyObject* inDataPoints = NULL;
     PyObject* inLocalBandwidths = NULL;
@@ -78,15 +78,17 @@ static PyObject * kdeBreimanEpanechnikov(PyObject *self, PyObject *args){
         j < patterns.length;
         j++, current_pattern += patterns.stride)
     {
-        densities.data[j] = mbe_epanechnikov(current_pattern, &dataPoints,
-                                             globalBandwidth, &localBandwidths,
-                                             kernelConstant, parzenFactor);
+        densities.data[j] = modifeidBreimenFinalDensity(current_pattern, &dataPoints,
+                                                        globalBandwidth, &localBandwidths, parzenFactor,
+                                                        kernelConstant, kernel.densityFunction);
     }
 
     /* Create return object */
     Py_INCREF(Py_None);
     return Py_None;
 }
+
+
 
 Array pyObjectToArray(PyObject *pythonObject, int requirements){
     PyArrayObject* arrayObject = NULL;
@@ -102,7 +104,7 @@ Array pyObjectToArray(PyObject *pythonObject, int requirements){
 
 static PyMethodDef method_table[] = {
         {"parzen",                      kdeParzen,                  METH_VARARGS,   kde_parzen_docstring},
-        {"breiman_epanechnikov",        kdeBreimanEpanechnikov,     METH_VARARGS,   kde_breiman_epanechnikov_docstring},
+        {"breiman_epanechnikov",        kde_modifeid_breiman,     METH_VARARGS,   kde_breiman_epanechnikov_docstring},
         /* Sentinel */
         {NULL,                              NULL,                                   0,              NULL}
 };

@@ -6,9 +6,10 @@
 #define KERNELS_MODIFEID_BREIMAN_H
 
 #include "utils.h"
+#include "kernels/kernels.h"
 
-double mbe_epanechnikov(double *pattern, Array *dataPoints,
-                        double globalBandwidth, Array *localBandwidths,
-                        double epanechnikovFactor, double parzenFactor);
+double modifeidBreimenFinalDensity(double *pattern, Array *dataPoints,
+                                   double globalBandwidth, Array *localBandwidths, double parzenFactor,
+                                   double kernelFactor, KernelDensityFunction kernel);
 
 #endif //KERNELS_MODIFEID_BREIMAN_H
