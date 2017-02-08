@@ -33,6 +33,22 @@ int determine_dimensionality(PyArrayObject* arrayObject){
 void printArray(Array* array){
     printf("Array { data: %p, dimensionality: %2d, length: %4d, stride: %4d}\n",
     array->data, array->dimensionality, array->length, array->stride);
+    double* currentElement = array->data;
+
+    for (int i = 0;
+         i < array->length;
+         ++i, currentElement += array->stride) {
+        printElement(currentElement, array->dimensionality);
+    }
+    printf("\n");
+}
+
+void printElement(double* element, int dimension){
+    printf("[ ");
+    for (int i = 0; i < dimension; ++i) {
+        printf("%f ", element[i]);
+    }
+    printf("]\n");
 }
 
 double* scalePattern(double* pattern, double* dataPoint, double* scaledPattern, int dimensionality, double windowWidth){

@@ -9,4 +9,6 @@
 
 int determine_dimensionality(PyArrayObject* arrayObject);
 
+void printElement(double* element, int dimension);
+
 #endif //UTILS_IH
