@@ -72,7 +72,6 @@ static PyObject * kdeParzenEpanechnikov(PyObject *self, PyObject *args){
         j < patterns.length;
         j++, current_pattern += patterns.stride)
     {
-//        densities.data[j] = parzen_epanechnikov(current_pattern, &dataPoints, windowWidth, parzenFactor, epanechnikovFactor);
         densities.data[j] = parzen(current_pattern, &dataPoints,
                                    windowWidth, parzenFactor,
                                    kernel.densityFunction, kernelConstant);

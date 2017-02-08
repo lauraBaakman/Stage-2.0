@@ -15,11 +15,6 @@
 #include "kernels/densityFunctions.h"
 #include "utils.h"
 
-double parzen_gaussian(double *pattern, Array *dataPoints, double windowWidth, double parzenFactor,
-                       double gaussianFactor);
-double parzen_epanechnikov(double *pattern, Array *dataPoints, double windowWidth, double parzenFactor,
-                       double epanechnikovFactor);
-
 double parzen(double *pattern, Array *dataPoints, double windowWidth, double parzenFactor,
               KernelDensityFunction kernel, double kernelConstant);
 
