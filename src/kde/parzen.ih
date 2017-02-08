@@ -10,5 +10,4 @@
 
 #include "parzen.h"
 
-double* scalePattern(double* pattern, double* dataPoint, double* scaledPattern, int dimensionality, double windowWidth);
 #endif //PARZEN_IH
