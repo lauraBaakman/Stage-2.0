@@ -6,10 +6,6 @@
 #include <math.h>
 #include "../utils.h"
 
-static Kernel standardGaussianKernel;
-static Kernel epanechnikovKernel;
-static Kernel testKernel;
-
 double standardGaussianConstant(int patternDimensionality);
 double standardGaussianPDF(double *pattern, int patternDimensionality, double constant);
 
