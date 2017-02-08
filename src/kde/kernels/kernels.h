@@ -9,9 +9,9 @@ typedef struct Kernel {
 } Kernel;
 
 typedef enum {
-    STANDARDGAUSSIAN,
-    EPANECHNIKOV,
-    TEST,
+    TEST = 0,
+    STANDARD_GAUSSIAN = 1,
+    EPANECHNIKOV = 2,
 } KernelType;
 
 Kernel selectKernel(KernelType type);

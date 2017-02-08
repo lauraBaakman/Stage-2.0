@@ -24,7 +24,7 @@ static PyObject * kdeParzenStandardGaussian(PyObject *self, PyObject *args){
 
     double parzenFactor = 1.0 / (dataPoints.length * pow(windowWidth, patterns.dimensionality));
 
-    Kernel kernel = selectKernel(STANDARDGAUSSIAN);
+    Kernel kernel = selectKernel(STANDARD_GAUSSIAN);
     double kernelConstant = kernel.factorFunction(dataPoints.dimensionality);
 
     double* current_pattern = patterns.data;

@@ -24,7 +24,7 @@ Kernel selectKernel(KernelType type){
     switch (type) {
         case EPANECHNIKOV:
             return epanechnikovKernel;
-        case STANDARDGAUSSIAN:
+        case STANDARD_GAUSSIAN:
             return standardGaussianKernel;
         case TEST:
             return testKernel;
