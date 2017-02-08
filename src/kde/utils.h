@@ -19,4 +19,6 @@ typedef struct Array{
 Array buildArrayFromPyArray(PyArrayObject *arrayObject);
 void printArray(Array* array);
 
+double* scalePattern(double* pattern, double* dataPoint, double* scaledPattern, int dimensionality, double windowWidth)
+
 #endif //UTILS_H

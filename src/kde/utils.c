@@ -1,7 +1,6 @@
 //
 // Created by Laura Baakman on 20/01/2017.
 //
-
 #include "utils.h"
 
 Array buildArrayFromPyArray(PyArrayObject* arrayObject){
@@ -23,4 +22,11 @@ Array buildArrayFromPyArray(PyArrayObject* arrayObject){
 void printArray(Array* array){
     printf("Array { data: %p, dimensionality: %2d, length: %4d, stride: %4d}\n",
     array->data, array->dimensionality, array->length, array->stride);
+}
+
+double* scalePattern(double* pattern, double* dataPoint, double* scaledPattern, int dimensionality, double windowWidth){
+    for (int i = 0; i < dimensionality; ++i) {
+        scaledPattern[i] = (pattern[i] - dataPoint[i]) / windowWidth;
+    }
+    return scaledPattern;
 }
