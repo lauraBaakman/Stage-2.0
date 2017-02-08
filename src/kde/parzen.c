@@ -24,9 +24,3 @@ double parzen(double *pattern, Array *dataPoints, double windowWidth, double par
     return density;
 }
 
-double* scalePattern(double* pattern, double* dataPoint, double* scaledPattern, int dimensionality, double windowWidth){
-    for (int i = 0; i < dimensionality; ++i) {
-        scaledPattern[i] = (pattern[i] - dataPoint[i]) / windowWidth;
-    }
-    return scaledPattern;
-}
