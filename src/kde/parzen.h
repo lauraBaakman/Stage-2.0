@@ -6,7 +6,7 @@
 #define PARZEN_H
 
 #include "utils.h"
-#include "kernels/densityFunctions.h"
+#include "kernels/kernels.h"
 
 double parzen(double *pattern, Array *dataPoints, double windowWidth, double parzenFactor,
               KernelDensityFunction kernel, double kernelConstant);

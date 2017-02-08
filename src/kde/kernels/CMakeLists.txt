@@ -5,7 +5,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(SOURCE_FILES
         kernelsModule.c kernelsModule.h
-        densityFunctions.c densityFunctions.h)
+        kernels.c kernels.h)
 add_executable(kernels ${SOURCE_FILES})
 
 find_package(PythonLibs REQUIRED)

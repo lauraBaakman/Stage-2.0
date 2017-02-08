@@ -2,7 +2,7 @@
 // Created by Laura Baakman on 19/12/2016.
 //
 
-#include "densityFunctions.ih"
+#include "kernels.ih"
 
 Kernel standardGaussianKernel = {
         .factorFunction = standardGaussianConstant,

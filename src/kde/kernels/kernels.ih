@@ -1,7 +1,7 @@
 #ifndef KERNELS_DENSITYFUNCTIONS_IH
 #define KERNELS_DENSITYFUNCTIONS_IH
 
-#include "densityFunctions.h"
+#include "kernels.h"
 #include <printf.h>
 #include <math.h>
 #include "../utils.h"

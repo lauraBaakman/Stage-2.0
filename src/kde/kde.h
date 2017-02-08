@@ -13,7 +13,7 @@
 #include "parzen.h"
 #include "breiman.h"
 #include "utils.h"
-#include "kernels/densityFunctions.h"
+#include "kernels/kernels.h"
 
 Array pyObjectToArray(PyObject *pythonObject, int requirements);
 
