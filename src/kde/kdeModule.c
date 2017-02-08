@@ -10,23 +10,23 @@ static PyObject * kdeParzen(PyObject *self, PyObject *args){
     PyObject* inDataPoints = NULL;
     PyObject* outDensities = NULL;
 
-    double windowWidth;
-    KernelType kernelType;
+    double inWindowWidth;
+    KernelType inKernelType;
 
     if (!PyArg_ParseTuple(args, "OOdiO",
                           &inPatterns,
                           &inDataPoints,
-                          &windowWidth,
-                          &kernelType,
+                          &inWindowWidth,
+                          &inKernelType,
                           &outDensities)) return NULL;
 
     Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
     Array dataPoints = pyObjectToArray(inDataPoints, NPY_ARRAY_IN_ARRAY);
     Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
 
-    double parzenFactor = 1.0 / (dataPoints.length * pow(windowWidth, patterns.dimensionality));
+    double parzenFactor = 1.0 / (dataPoints.length * pow(inWindowWidth, patterns.dimensionality));
 
-    Kernel kernel = selectKernel(kernelType);
+    Kernel kernel = selectKernel(inKernelType);
     double kernelConstant = kernel.factorFunction(dataPoints.dimensionality);
 
     double* current_pattern = patterns.data;
@@ -36,7 +36,7 @@ static PyObject * kdeParzen(PyObject *self, PyObject *args){
         j++, current_pattern += patterns.stride)
     {
         densities.data[j] = parzen(current_pattern, &dataPoints,
-                                   windowWidth, parzenFactor,
+                                   inWindowWidth, parzenFactor,
                                    kernel.densityFunction, kernelConstant);
     }
 
@@ -45,8 +45,8 @@ static PyObject * kdeParzen(PyObject *self, PyObject *args){
     return Py_None;
 }
 
-static char kde_breiman_epanechnikov_docstring[] = "Estimate the densities with Parzen with the Epanechnikov kernel.";
-static PyObject *kde_modifeid_breiman(PyObject *self, PyObject *args){
+static char kde_breiman_docstring[] = "Perform the final estimation step of the Modified breiman estimator.";
+static PyObject *kde_modified_breiman(PyObject *self, PyObject *args){
     PyObject* inPatterns = NULL;
     PyObject* inDataPoints = NULL;
     PyObject* inLocalBandwidths = NULL;
@@ -54,12 +54,14 @@ static PyObject *kde_modifeid_breiman(PyObject *self, PyObject *args){
 
 
     double globalBandwidth;
+    KernelType inKernelType;
 
-    if (!PyArg_ParseTuple(args, "OOdOO",
+    if (!PyArg_ParseTuple(args, "OOdOiO",
                           &inPatterns,
                           &inDataPoints,
                           &globalBandwidth,
                           &inLocalBandwidths,
+                          &inKernelType,
                           &outDensities)) return NULL;
 
     Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
@@ -69,7 +71,7 @@ static PyObject *kde_modifeid_breiman(PyObject *self, PyObject *args){
 
     double parzenFactor = 1.0 / (dataPoints.length * pow(globalBandwidth, patterns.dimensionality));
 
-    Kernel kernel = selectKernel(EPANECHNIKOV);
+    Kernel kernel = selectKernel(inKernelType);
     double kernelConstant = kernel.factorFunction(dataPoints.dimensionality);
 
     double* current_pattern = patterns.data;
@@ -104,7 +106,7 @@ Array pyObjectToArray(PyObject *pythonObject, int requirements){
 
 static PyMethodDef method_table[] = {
         {"parzen",                      kdeParzen,                  METH_VARARGS,   kde_parzen_docstring},
-        {"breiman_epanechnikov",        kde_modifeid_breiman,     METH_VARARGS,   kde_breiman_epanechnikov_docstring},
+        {"modified_breiman",                     kde_modified_breiman,     METH_VARARGS,     kde_breiman_docstring},
         /* Sentinel */
         {NULL,                              NULL,                                   0,              NULL}
 };
