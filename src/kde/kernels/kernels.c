@@ -16,15 +16,17 @@ static PyObject * standard_gaussian_multi_pattern(PyObject *self, PyObject *args
 
     double* current_pattern = patterns.data;
 
-    double factor = standardGaussianConstant(patterns.dimensionality);
+    Kernel kernel = standardGaussianKernel;
+    double kernelConstant = kernel.factorFunction(patterns.dimensionality);
 
     for(
             int j = 0;
             j < patterns.length;
             j++, current_pattern += patterns.stride)
     {
-        densities.data[j] = standardGaussianPDF(current_pattern, patterns.dimensionality, factor);
+        densities.data[j] = standardGaussianKernel.densityFunction(current_pattern, patterns.dimensionality, kernelConstant);
     }
+
     /* Create return object */
     Py_INCREF(Py_None);
     return Py_None;
