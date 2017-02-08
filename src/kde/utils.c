@@ -1,13 +1,15 @@
 //
 // Created by Laura Baakman on 20/01/2017.
 //
-#include "utils.h"
+#include "utils.ih"
 
 Array buildArrayFromPyArray(PyArrayObject* arrayObject){
 
     double* data = (double *)PyArray_DATA(arrayObject);
+
+    int dimensionality = determine_dimensionality(arrayObject);
     int length = (int)PyArray_DIM(arrayObject, 0);
-    int dimensionality = (int)PyArray_DIM(arrayObject, 1);
+
     int stride = (int)PyArray_STRIDE (arrayObject, 0) / (int)PyArray_ITEMSIZE(arrayObject);
 
     Array array = {
@@ -17,6 +19,15 @@ Array buildArrayFromPyArray(PyArrayObject* arrayObject){
             .stride = stride
     };
     return array;
+}
+
+int determine_dimensionality(PyArrayObject* arrayObject){
+    int num_dimensions = PyArray_NDIM(arrayObject);
+    if (num_dimensions == 1) {
+        return 1;
+    } else {
+        return (int)PyArray_DIM(arrayObject, 1);
+    }
 }
 
 void printArray(Array* array){

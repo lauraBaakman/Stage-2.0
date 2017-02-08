@@ -1,7 +1,3 @@
-//
-// Created by Laura Baakman on 20/01/2017.
-//
-
 #ifndef UTILS_H
 #define UTILS_H
 
@@ -19,6 +15,6 @@ typedef struct Array{
 Array buildArrayFromPyArray(PyArrayObject *arrayObject);
 void printArray(Array* array);
 
-double* scalePattern(double* pattern, double* dataPoint, double* scaledPattern, int dimensionality, double windowWidth)
+double* scalePattern(double* pattern, double* dataPoint, double* scaledPattern, int dimensionality, double windowWidth);
 
 #endif //UTILS_H

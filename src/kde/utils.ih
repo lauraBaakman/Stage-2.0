@@ -1,0 +1,12 @@
+//
+// Created by Laura Baakman on 20/01/2017.
+//
+
+#ifndef UTILS_IH
+#define UTILS_IH
+
+#include "utils.h"
+
+int determine_dimensionality(PyArrayObject* arrayObject);
+
+#endif //UTILS_IH
