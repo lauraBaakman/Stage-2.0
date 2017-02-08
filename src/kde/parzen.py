@@ -1,5 +1,4 @@
 import math
-import warnings
 
 import kde._kde as _kde
 import numpy as np
@@ -65,7 +64,6 @@ class _ParzenEstimator_Python(_ParzenEstimator):
 
 class _ParzenEstimator_C(_ParzenEstimator):
     def __init__(self, xi_s, x_s, dimension, kernel, general_bandwidth):
-        warnings.warn("No matter the passed arguments the Standard Gaussian Kernel is used.")
         super(_ParzenEstimator_C, self).__init__(
             xi_s=xi_s, x_s=x_s,
             dimension=dimension,
@@ -74,5 +72,5 @@ class _ParzenEstimator_C(_ParzenEstimator):
 
     def estimate(self):
         densities = np.empty(self.num_x_s, dtype=float)
-        _kde.parzen_standard_gaussian(self._x_s, self._xi_s, self._general_bandwidth, densities)
+        _kde.parzen(self._x_s, self._xi_s, self._general_bandwidth, self._kernel.to_C_enum(), densities)
         return densities
