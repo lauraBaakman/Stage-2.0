@@ -2,8 +2,7 @@
 // Created by Laura Baakman on 09/01/2017.
 //
 
-#include "parzen.h"
-#include "utils.h"
+#include "parzen.ih"
 
 double parzen(double *pattern, Array *dataPoints, double windowWidth, double parzenFactor,
               KernelDensityFunction kernel, double kernelConstant){

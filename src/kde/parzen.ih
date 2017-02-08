@@ -1,0 +1,14 @@
+#ifndef PARZEN_IH
+#define PARZEN_IH
+
+#include <printf.h>
+#include <math.h>
+
+#include <Python.h>
+#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
+#include <numpy/arrayobject.h>
+
+#include "parzen.h"
+
+double* scalePattern(double* pattern, double* dataPoint, double* scaledPattern, int dimensionality, double windowWidth);
+#endif //PARZEN_IH
