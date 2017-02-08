@@ -16,7 +16,7 @@ static PyObject * standard_gaussian_multi_pattern(PyObject *self, PyObject *args
 
     double* current_pattern = patterns.data;
 
-    Kernel kernel = standardGaussianKernel;
+    Kernel kernel = selectKernel(STANDARD_GAUSSIAN);
     double kernelConstant = kernel.factorFunction(patterns.dimensionality);
 
     for(
@@ -76,7 +76,7 @@ static PyObject * epanechnikov_multi_pattern(PyObject *self, PyObject *args){
 
     double* currentPattern = patterns.data;
 
-    Kernel kernel = epanechnikovKernel;
+    Kernel kernel = selectKernel(EPANECHNIKOV);
     double kernelConstant = kernel.factorFunction(patterns.dimensionality);
 
     for (int i = 0;
@@ -117,7 +117,7 @@ static PyObject * testKernel_multi_pattern(PyObject *self, PyObject *args){
     Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
     Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
 
-    Kernel kernel = testKernel;
+    Kernel kernel = selectKernel(TEST);
     double kernelConstant = kernel.factorFunction(patterns.dimensionality);
 
     double* currentPattern = patterns.data;
