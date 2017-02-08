@@ -19,6 +19,21 @@ Kernel testKernel = {
         .densityFunction = testKernelPDF,
 };
 
+
+Kernel selectKernel(KernelType type){
+    switch (type) {
+        case EPANECHNIKOV:
+            return epanechnikovKernel;
+        case STANDARDGAUSSIAN:
+            return standardGaussianKernel;
+        case TEST:
+            return testKernel;
+        default:
+            fprintf(stderr, "%d is an invalid kernel type.\n", type);
+            exit(-1);
+    }
+}
+
 double standardGaussianConstant(int patternDimensionality){
     return pow(2 * M_PI, - 1 * patternDimensionality * 0.5);
 }

@@ -17,4 +17,6 @@
 
 Array pyObjectToArray(PyObject *pythonObject, int requirements);
 
+Kernel selectKernel(KernelType type);
+
 #endif //KDE_MODULE_H

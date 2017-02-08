@@ -8,6 +8,14 @@ typedef struct Kernel {
     KernelDensityFunction densityFunction;
 } Kernel;
 
+typedef enum {
+    STANDARDGAUSSIAN,
+    EPANECHNIKOV,
+    TEST,
+} KernelType;
+
+Kernel selectKernel(KernelType type);
+
 extern Kernel standardGaussianKernel;
 extern Kernel epanechnikovKernel;
 extern Kernel testKernel;

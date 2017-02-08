@@ -5,7 +5,7 @@
 #include "parzen.ih"
 
 double parzen(double *pattern, Array *dataPoints, double windowWidth, double parzenFactor,
-              KernelDensityFunction kernel, double kernelConstant){
+              KernelDensityFunction kernel, double  kernelConstant){
     double* currentDataPoint = dataPoints->data;
     double density = 0;
 
