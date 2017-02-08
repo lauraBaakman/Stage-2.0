@@ -9,14 +9,25 @@
 #include <math.h>
 #include "../utils.h"
 
-double standardGaussianFactor(int patternDimensionality);
-double standardGaussian(double* pattern, int patternDimensionality, double factor);
+typedef double (*KernelDensityFunction)(double* data, int dimensionality, double factor);
+typedef double (*KernelConstantFunction)(int dimensionality);
+typedef struct Kernel {
+    KernelConstantFunction factorFunction;
+    KernelDensityFunction densityFunction;
+} Kernel;
 
-double epanechnikovDenominator(int dimensionality);
-double epanechnikov(double *data, int dimensionality, double denominator);
+double standardGaussianConstant(int patternDimensionality);
+double standardGaussianPDF(double *pattern, int patternDimensionality, double constant);
 
-double testKernelFactor(int patternDimensionality);
-double testKernel(double *data, int dimensionality, double factor);
+double epanechnikovConstant(int dimensionality);
+double epanechnikovPDF(double *data, int dimensionality, double constant);
+
+double testKernelConstant(int patternDimensionality);
+double testKernelPDF(double *data, int dimensionality, double constant);
+
+extern Kernel standardGaussianKernel;
+extern Kernel epanechnikovKernel;
+extern Kernel testKernel;
 
 //Auxilaries that should be in a internal header....
 double dotProduct(double *a, double *b, int length);

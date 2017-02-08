@@ -23,7 +23,7 @@ static PyObject * kdeParzenStandardGaussian(PyObject *self, PyObject *args){
     Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
 
     double parzenFactor = 1.0 / (dataPoints.length * pow(windowWidth, patterns.dimensionality));
-    double gaussianFactor = standardGaussianFactor(dataPoints.dimensionality);
+    double gaussianFactor = standardGaussianConstant(dataPoints.dimensionality);
 
     double* current_pattern = patterns.data;
 
@@ -58,7 +58,7 @@ static PyObject * kdeParzenEpanechnikov(PyObject *self, PyObject *args){
     Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
 
     double parzenFactor = 1.0 / (dataPoints.length * pow(windowWidth, patterns.dimensionality));
-    double epanechnikovFactor = epanechnikovDenominator(dataPoints.dimensionality);
+    double epanechnikovFactor = epanechnikovConstant(dataPoints.dimensionality);
 
     double* current_pattern = patterns.data;
 
@@ -97,7 +97,7 @@ static PyObject * kdeBreimanEpanechnikov(PyObject *self, PyObject *args){
     Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
 
     double parzenFactor = 1.0 / (dataPoints.length * pow(globalBandwidth, patterns.dimensionality));
-    double epanechnikovFactor = epanechnikovDenominator(dataPoints.dimensionality);
+    double epanechnikovFactor = epanechnikovConstant(dataPoints.dimensionality);
 
     double* current_pattern = patterns.data;
 

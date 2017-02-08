@@ -3,7 +3,6 @@
 //
 
 #include "kernels.h"
-#include "../../../../../.virtualenvs/stage/include/python3.5m/object.h"
 
 static char kernels_standardGaussian_docstring[] = "Evaluate the Standard Gaussian (zero vector mean and identity covariance matrix) for each row in the input matrix.";
 static PyObject * standard_gaussian_multi_pattern(PyObject *self, PyObject *args){
@@ -17,14 +16,14 @@ static PyObject * standard_gaussian_multi_pattern(PyObject *self, PyObject *args
 
     double* current_pattern = patterns.data;
 
-    double factor = standardGaussianFactor(patterns.dimensionality);
+    double factor = standardGaussianConstant(patterns.dimensionality);
 
     for(
             int j = 0;
             j < patterns.length;
             j++, current_pattern += patterns.stride)
     {
-        densities.data[j] = standardGaussian(current_pattern, patterns.dimensionality, factor);
+        densities.data[j] = standardGaussianPDF(current_pattern, patterns.dimensionality, factor);
     }
     /* Create return object */
     Py_INCREF(Py_None);
@@ -38,8 +37,8 @@ static PyObject * standard_gaussian_single_pattern(PyObject *self, PyObject *arg
 
     Array pattern = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
 
-    double factor = standardGaussianFactor(pattern.dimensionality);
-    double density = standardGaussian(pattern.data, pattern.dimensionality, factor);
+    double factor = standardGaussianConstant(pattern.dimensionality);
+    double density = standardGaussianPDF(pattern.data, pattern.dimensionality, factor);
 
     /* Create return object */
     PyObject *returnObject = Py_BuildValue("d", density);
@@ -54,8 +53,8 @@ static PyObject * epanechnikov_single_pattern(PyObject *self, PyObject *args){
 
     Array pattern = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
 
-    double denominator = epanechnikovDenominator(pattern.dimensionality);
-    double density = epanechnikov(pattern.data, pattern.dimensionality, denominator);
+    double denominator = epanechnikovConstant(pattern.dimensionality);
+    double density = epanechnikovPDF(pattern.data, pattern.dimensionality, denominator);
 
     /* Create return object */
     PyObject *returnObject = Py_BuildValue("d", density);
@@ -71,7 +70,7 @@ static PyObject * epanechnikov_multi_pattern(PyObject *self, PyObject *args){
     Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
     Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
 
-    double denominator = epanechnikovDenominator(patterns.dimensionality);
+    double denominator = epanechnikovConstant(patterns.dimensionality);
 
     double* currentPattern = patterns.data;
 
@@ -79,7 +78,7 @@ static PyObject * epanechnikov_multi_pattern(PyObject *self, PyObject *args){
          i < patterns.length;
          ++i, currentPattern += patterns.stride)
     {
-        densities.data[i] = epanechnikov(currentPattern, patterns.dimensionality, denominator);
+        densities.data[i] = epanechnikovPDF(currentPattern, patterns.dimensionality, denominator);
     }
 
     /* Create return object */
@@ -95,8 +94,8 @@ static PyObject * testKernel_single_pattern(PyObject *self, PyObject *args){
 
     Array pattern = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
 
-    double factor = testKernelFactor(pattern.dimensionality);
-    double density = testKernel(pattern.data, pattern.dimensionality, factor);
+    double factor = testKernelConstant(pattern.dimensionality);
+    double density = testKernelPDF(pattern.data, pattern.dimensionality, factor);
 
     /* Create return object */
     PyObject *returnObject = Py_BuildValue("d", density);
@@ -112,7 +111,7 @@ static PyObject * testKernel_multi_pattern(PyObject *self, PyObject *args){
     Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
     Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
 
-    double factor = testKernelFactor(patterns.dimensionality);
+    double factor = testKernelConstant(patterns.dimensionality);
 
     double* currentPattern = patterns.data;
 
@@ -120,7 +119,7 @@ static PyObject * testKernel_multi_pattern(PyObject *self, PyObject *args){
          i < patterns.length;
          ++i, currentPattern += patterns.stride)
     {
-        densities.data[i] = testKernel(currentPattern, patterns.dimensionality, factor);
+        densities.data[i] = testKernelPDF(currentPattern, patterns.dimensionality, factor);
     }
 
     /* Create return object */

@@ -17,7 +17,7 @@ double parzen_gaussian(double *pattern, Array *dataPoints, double windowWidth, d
          ++i, currentDataPoint += dataPoints->stride)
     {
         scaledPattern = scalePattern(pattern, currentDataPoint, scaledPattern, dataPoints->dimensionality, windowWidth);
-        density += standardGaussian(scaledPattern, dataPoints->dimensionality, gaussianFactor);
+        density += standardGaussianPDF(scaledPattern, dataPoints->dimensionality, gaussianFactor);
     }
     density *= parzenFactor;
 
@@ -37,7 +37,7 @@ double parzen_epanechnikov(double *pattern, Array *dataPoints, double windowWidt
          ++i, currentDataPoint += dataPoints->stride)
     {
         scaledPattern = scalePattern(pattern, currentDataPoint, scaledPattern, dataPoints->dimensionality, windowWidth);
-        density += epanechnikov(scaledPattern, dataPoints->dimensionality, epanechnikovFactor);
+        density += epanechnikovPDF(scaledPattern, dataPoints->dimensionality, epanechnikovFactor);
     }
     density *= parzenFactor;
 
