@@ -1,11 +1,10 @@
-import warnings
-
 import kde._kde as _kde
 import numpy as np
 import scipy.interpolate as interpolate
 import scipy.stats.mstats as stats
 
-import kdeUtils
+import kde.kdeUtils as kdeUtils
+import kde.kdeUtils.automaticWindowWidthMethods as automaticWindowWidthMethods
 from kde.estimatorimplementation import EstimatorImplementation
 from kde.kernels.epanechnikov import Epanechnikov
 from kde.kernels.standardGaussian import StandardGaussian
@@ -20,7 +19,7 @@ class ModifiedBreimanEstimator(object):
 
     def __init__(self, dimension, kernel=None, sensitivity=1/2,
                  pilot_kernel=None,
-                 pilot_window_width_method=kdeUtils.automaticWindowWidthMethods.ferdosi,
+                 pilot_window_width_method=automaticWindowWidthMethods.ferdosi,
                  number_of_grid_points=default_number_of_grid_points,
                  pilot_estimator_implementation=None, final_estimator_implementation=None):
         """ Init method of the Modified Breiman EstimatorImplementation.

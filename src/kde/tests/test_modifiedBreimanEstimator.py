@@ -2,7 +2,7 @@ from unittest import TestCase
 
 import numpy as np
 
-import kdeUtils.automaticWindowWidthMethods
+import kde
 from kde.kernels.epanechnikov import Epanechnikov
 from kde.kernels.standardGaussian import StandardGaussian
 from kde.kernels.testKernel import TestKernel
@@ -23,7 +23,7 @@ class TestModifiedBreimanEstimator(TestCase):
             kernel=final_kerel, final_estimator_implementation=final_implementation,
             dimension=2, number_of_grid_points=number_of_grid_points,
             sensitivity=sensitivity,
-            pilot_window_width_method=kdeUtils.automaticWindowWidthMethods.ferdosi
+            pilot_window_width_method=kde.kdeUtils.automaticWindowWidthMethods.ferdosi
         )
         actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
         expected = np.array([0.7708904])

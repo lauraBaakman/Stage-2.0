@@ -1,51 +1,48 @@
-Week 46
+√ Week 46
 - Brush op on theory
 - Write introduction
 
-Week 47
+√ Week 47
 - Implement Parzen Windows with Gaussian Kernel
 - review Introduction
 - Start writing method
 
-Week 48
+√ Week 48
 - Implement Modified Breiman Estimator
 - Review introduction
 - Finish method
 
-Week 49
+√ Week 49
 - Review introduction, method
 - Extra implementation time
 
-Week 49
+Week 6
 - Test MBE Implementation on artificial dataset, improve speed if required
 - Review introduction, method
 
-Week 50
+Week 7
 - Review introduction, method
 - Implement Shape-Adaptive MBE
 - Write experiments section for artifical data
 
-Week 51
+Week 8
 - Review introduction, method, experiments
 - Finish implementation of Shape-Adapative MBE
 
-Week 1
-- ?
-
-Week 2
+Week 9
 - Test Shape-Adaptive MBE on artifical dataset, improve speed if required
 - Test if 1/d (Breiman, Meise and Purcell) or 1/2 (Silverman) as sensitiviy parameter works better.
 - Review introduction, method, experiment
 - Write results for artifical data, for both MBE and Shape-Adaptive MBE
 
-Week 3
+Week 10
 - Test (Shape-Adaptive) MBE on real world data.
 - Write experiment, results for real world data
 - Review introduction, method, experiment, results
 
-Week 4
+Week 11
 - Write conclusion
 - Review paper
 
-Week 5
+Week 12
 - Review paper
