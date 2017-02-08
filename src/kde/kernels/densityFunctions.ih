@@ -1,0 +1,21 @@
+#ifndef KERNELS_DENSITYFUNCTIONS_IH
+#define KERNELS_DENSITYFUNCTIONS_IH
+
+#include "densityFunctions.h"
+#include <printf.h>
+#include <math.h>
+#include "../utils.h"
+
+double standardGaussianConstant(int patternDimensionality);
+double standardGaussianPDF(double *pattern, int patternDimensionality, double constant);
+
+double epanechnikovConstant(int dimensionality);
+double epanechnikovPDF(double *data, int dimensionality, double constant);
+
+double testKernelConstant(int patternDimensionality);
+double testKernelPDF(double *data, int dimensionality, double constant);
+
+//Auxilaries that should be in a internal header....
+double dotProduct(double *a, double *b, int length);
+
+#endif //KERNELS_DENSITYFUNCTIONS_IH
