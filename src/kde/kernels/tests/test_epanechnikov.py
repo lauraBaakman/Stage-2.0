@@ -19,7 +19,7 @@ class TestEpanechnikov(TestCase):
         np.testing.assert_array_almost_equal(actual, expected)
 
     def test_to_C_enum(self):
-        expected = 0
+        expected = 2
         actual = Epanechnikov().to_C_enum()
         self.assertEqual(expected, actual)
 

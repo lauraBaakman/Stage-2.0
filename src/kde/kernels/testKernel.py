@@ -10,7 +10,7 @@ class TestKernel(Kernel):
         self._implementation = implementation_class()
 
     def to_C_enum(self):
-        return 3
+        return 0
 
 
 class _TestKernel_Python(Kernel):

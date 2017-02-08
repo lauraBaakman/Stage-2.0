@@ -19,7 +19,7 @@ class TestTestKernel(TestCase):
         np.testing.assert_array_almost_equal(actual, expected)
 
     def test_to_C_enum(self):
-        expected = 3
+        expected = 0
         actual = TestKernel().to_C_enum()
         self.assertEqual(expected, actual)
 

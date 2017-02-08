@@ -13,7 +13,7 @@ class Epanechnikov(Kernel):
         self._implementation = implementation_class()
 
     def to_C_enum(self):
-        return 0
+        return 2
 
 
 class _Epanechnikov_Python(Epanechnikov):
