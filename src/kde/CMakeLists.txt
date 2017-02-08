@@ -6,7 +6,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(SOURCE_FILES
         kde.c kde.h
         ./kernels/densityFunctions.c ./kernels/densityFunctions.h
-        ./kernels/kernels.c ./kernels/kernels.h
+        kernels/kernelsModule.c kernels/kernelsModule.h
         parzen.c parzen.h
         utils.c utils.h breiman.c breiman.h)
 add_executable(kde ${SOURCE_FILES})

@@ -4,7 +4,7 @@ project(kernels)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(SOURCE_FILES
-        kernels.c kernels.h
+        kernelsModule.c kernelsModule.h
         densityFunctions.c densityFunctions.h)
 add_executable(kernels ${SOURCE_FILES})
 

@@ -2,7 +2,7 @@
 // Created by Laura Baakman on 19/12/2016.
 //
 
-#include "kernels.h"
+#include "kernelsModule.h"
 
 static char kernels_standardGaussian_docstring[] = "Evaluate the Standard Gaussian (zero vector mean and identity covariance matrix) for each row in the input matrix.";
 static PyObject * standard_gaussian_multi_pattern(PyObject *self, PyObject *args){
