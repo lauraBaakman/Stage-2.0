@@ -11,7 +11,7 @@
 #include <numpy/arrayobject.h>
 
 #include "parzen.h"
-#include "breiman.h"
+#include "modifeidbreiman.h"
 #include "utils.h"
 #include "kernels/kernels.h"
 

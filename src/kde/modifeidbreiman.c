@@ -2,7 +2,7 @@
 // Created by Laura Baakman on 26/01/2017.
 //
 
-#include "breiman.h"
+#include "modifeidbreiman.h"
 
 double mbe_epanechnikov(double *pattern, Array *dataPoints, double globalBandwidth, Array *localBandwidths,
                         double epanechnikovFactor, double parzenFactor) {

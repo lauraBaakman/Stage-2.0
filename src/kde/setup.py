@@ -6,7 +6,7 @@ def configuration(parent_package='', top_path=None):
                            top_path)
     config.add_extension(
         '_kde',  # Name of the extension
-        sources=['utils.c', 'kdeModule.c', 'parzen.c', 'breiman.c', 'kernels/kernels.c']
+        sources=['utils.c', 'kdeModule.c', 'parzen.c', 'modifeidbreiman.c', 'kernels/kernels.c']
     )
     return config
 
