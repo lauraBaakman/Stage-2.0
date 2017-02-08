@@ -4,7 +4,6 @@ double modifiedBreimanFinalDensity(double *pattern, Array *dataPoints,
                                    double globalBandwidth, Array *localBandwidths,
                                    double kernelConstant, KernelDensityFunction kernel){
     double* currentDataPoint = dataPoints->data;
-    double* currentLocalBandWidth = localBandwidths->data;
 
     double* scaledPattern = (double *)malloc(sizeof(double) * dataPoints->dimensionality);
 
@@ -13,8 +12,9 @@ double modifiedBreimanFinalDensity(double *pattern, Array *dataPoints,
 
     for(int i = 0;
             i < dataPoints->length;
-            ++i, currentDataPoint+= dataPoints->stride, currentLocalBandWidth+= localBandwidths->stride){
-        bandwidth = globalBandwidth * (*currentLocalBandWidth);
+            ++i, currentDataPoint+= dataPoints->stride){
+
+        bandwidth = globalBandwidth * localBandwidths->data[i];
         factor = pow(bandwidth, -1 * dataPoints->dimensionality);
         scaledPattern = scalePattern(pattern, currentDataPoint, scaledPattern, dataPoints->dimensionality, bandwidth);
         density += (factor * kernel(scaledPattern, dataPoints->dimensionality, kernelConstant));
