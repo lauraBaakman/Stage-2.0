@@ -62,7 +62,9 @@ static PyObject * kdeParzenEpanechnikov(PyObject *self, PyObject *args){
     Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
 
     double parzenFactor = 1.0 / (dataPoints.length * pow(windowWidth, patterns.dimensionality));
-    double epanechnikovFactor = epanechnikovConstant(dataPoints.dimensionality);
+
+    Kernel kernel = epanechnikovKernel;
+    double kernelConstant = kernel.factorFunction(dataPoints.dimensionality);
 
     double* current_pattern = patterns.data;
 
@@ -70,7 +72,10 @@ static PyObject * kdeParzenEpanechnikov(PyObject *self, PyObject *args){
         j < patterns.length;
         j++, current_pattern += patterns.stride)
     {
-        densities.data[j] = parzen_epanechnikov(current_pattern, &dataPoints, windowWidth, parzenFactor, epanechnikovFactor);
+//        densities.data[j] = parzen_epanechnikov(current_pattern, &dataPoints, windowWidth, parzenFactor, epanechnikovFactor);
+        densities.data[j] = parzen(current_pattern, &dataPoints,
+                                   windowWidth, parzenFactor,
+                                   kernel.densityFunction, kernelConstant);
     }
 
     /* Create return object */
