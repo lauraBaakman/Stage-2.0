@@ -19,7 +19,6 @@ double epanechnikovPDF(double *data, int dimensionality, double constant);
 double testKernelConstant(int patternDimensionality);
 double testKernelPDF(double *data, int dimensionality, double constant);
 
-//Auxilaries that should be in a internal header....
 double dotProduct(double *a, double *b, int length);
 
 #endif //KERNELS_KERNELS_IH
