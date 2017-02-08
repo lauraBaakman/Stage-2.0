@@ -3,8 +3,8 @@ import numpy as np
 import scipy.interpolate as interpolate
 import scipy.stats.mstats as stats
 
-import kde.kdeUtils as kdeUtils
-import kde.kdeUtils.automaticWindowWidthMethods as automaticWindowWidthMethods
+import kde.utils as utils
+import kde.utils.automaticWindowWidthMethods as automaticWindowWidthMethods
 from kde.estimatorimplementation import EstimatorImplementation
 from kde.kernels.epanechnikov import Epanechnikov
 from kde.kernels.standardGaussian import StandardGaussian
@@ -74,7 +74,7 @@ class ModifiedBreimanEstimator(object):
 
     def _estimate_pilot_densities(self, general_bandwidth, xi_s):
         # Compute grid for pilot densities
-        grid_points = kdeUtils.Grid.cover(xi_s, number_of_grid_points=self._number_of_grid_points).grid_points
+        grid_points = utils.Grid.cover(xi_s, number_of_grid_points=self._number_of_grid_points).grid_points
 
         # Compute densities of the points on the grid
         pilot_estimator = ParzenEstimator(
