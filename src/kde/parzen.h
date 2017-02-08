@@ -19,6 +19,7 @@ double parzen_gaussian(double *pattern, Array *dataPoints, double windowWidth, d
                        double gaussianFactor);
 double parzen_epanechnikov(double *pattern, Array *dataPoints, double windowWidth, double parzenFactor,
                        double epanechnikovFactor);
+
 //'Private stuff', didn't feel like messing around with internal headers
 double* scalePattern(double* pattern, double* dataPoint, double* scaledPattern, int dimensionality, double windowWidth);
 #endif //PARZEN_H
