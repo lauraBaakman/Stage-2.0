@@ -24,7 +24,7 @@ static PyObject * standard_gaussian_multi_pattern(PyObject *self, PyObject *args
             j < patterns.length;
             j++, current_pattern += patterns.stride)
     {
-        densities.data[j] = standardGaussianKernel.densityFunction(current_pattern, patterns.dimensionality, kernelConstant);
+        densities.data[j] = kernel.densityFunction(current_pattern, patterns.dimensionality, kernelConstant);
     }
 
     /* Create return object */
@@ -39,8 +39,9 @@ static PyObject * standard_gaussian_single_pattern(PyObject *self, PyObject *arg
 
     Array pattern = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
 
-    double factor = standardGaussianConstant(pattern.dimensionality);
-    double density = standardGaussianPDF(pattern.data, pattern.dimensionality, factor);
+    Kernel kernel = standardGaussianKernel;
+    double kernelConstant = kernel.factorFunction(pattern.dimensionality);
+    double density = kernel.densityFunction(pattern.data, pattern.dimensionality, kernelConstant);
 
     /* Create return object */
     PyObject *returnObject = Py_BuildValue("d", density);
@@ -55,8 +56,9 @@ static PyObject * epanechnikov_single_pattern(PyObject *self, PyObject *args){
 
     Array pattern = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
 
-    double denominator = epanechnikovConstant(pattern.dimensionality);
-    double density = epanechnikovPDF(pattern.data, pattern.dimensionality, denominator);
+    Kernel kernel = epanechnikovKernel;
+    double kernelConstant = kernel.factorFunction(pattern.dimensionality);
+    double density = kernel.densityFunction(pattern.data, pattern.dimensionality, kernelConstant);
 
     /* Create return object */
     PyObject *returnObject = Py_BuildValue("d", density);
@@ -72,15 +74,16 @@ static PyObject * epanechnikov_multi_pattern(PyObject *self, PyObject *args){
     Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
     Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
 
-    double denominator = epanechnikovConstant(patterns.dimensionality);
-
     double* currentPattern = patterns.data;
+
+    Kernel kernel = epanechnikovKernel;
+    double kernelConstant = kernel.factorFunction(patterns.dimensionality);
 
     for (int i = 0;
          i < patterns.length;
          ++i, currentPattern += patterns.stride)
     {
-        densities.data[i] = epanechnikovPDF(currentPattern, patterns.dimensionality, denominator);
+        densities.data[i] = kernel.densityFunction(currentPattern, patterns.dimensionality, kernelConstant);
     }
 
     /* Create return object */
@@ -96,8 +99,9 @@ static PyObject * testKernel_single_pattern(PyObject *self, PyObject *args){
 
     Array pattern = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
 
-    double factor = testKernelConstant(pattern.dimensionality);
-    double density = testKernelPDF(pattern.data, pattern.dimensionality, factor);
+    Kernel kernel = testKernel;
+    double kernelConstant = kernel.factorFunction(pattern.dimensionality);
+    double density = kernel.densityFunction(pattern.data, pattern.dimensionality, kernelConstant);
 
     /* Create return object */
     PyObject *returnObject = Py_BuildValue("d", density);
@@ -113,7 +117,8 @@ static PyObject * testKernel_multi_pattern(PyObject *self, PyObject *args){
     Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
     Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
 
-    double factor = testKernelConstant(patterns.dimensionality);
+    Kernel kernel = testKernel;
+    double kernelConstant = kernel.factorFunction(patterns.dimensionality);
 
     double* currentPattern = patterns.data;
 
@@ -121,7 +126,7 @@ static PyObject * testKernel_multi_pattern(PyObject *self, PyObject *args){
          i < patterns.length;
          ++i, currentPattern += patterns.stride)
     {
-        densities.data[i] = testKernelPDF(currentPattern, patterns.dimensionality, factor);
+        densities.data[i] = kernel.densityFunction(currentPattern, patterns.dimensionality, kernelConstant);
     }
 
     /* Create return object */
