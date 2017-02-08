@@ -8,8 +8,8 @@
 #include "utils.h"
 #include "kernels/kernels.h"
 
-double modifeidBreimenFinalDensity(double *pattern, Array *dataPoints,
-                                   double globalBandwidth, Array *localBandwidths, double parzenFactor,
-                                   double kernelFactor, KernelDensityFunction kernel);
+double modifiedBreimanFinalDensity(double *pattern, Array *dataPoints,
+                                   double globalBandwidth, Array *localBandwidths,
+                                   double kernelConstant, KernelDensityFunction kernel);
 
 #endif //KERNELS_MODIFEID_BREIMAN_H

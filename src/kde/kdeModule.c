@@ -69,8 +69,6 @@ static PyObject *kde_modified_breiman(PyObject *self, PyObject *args){
     Array localBandwidths = pyObjectToArray(inLocalBandwidths, NPY_ARRAY_IN_ARRAY);
     Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
 
-    double parzenFactor = 1.0 / (dataPoints.length * pow(globalBandwidth, patterns.dimensionality));
-
     Kernel kernel = selectKernel(inKernelType);
     double kernelConstant = kernel.factorFunction(dataPoints.dimensionality);
 
@@ -80,8 +78,8 @@ static PyObject *kde_modified_breiman(PyObject *self, PyObject *args){
         j < patterns.length;
         j++, current_pattern += patterns.stride)
     {
-        densities.data[j] = modifeidBreimenFinalDensity(current_pattern, &dataPoints,
-                                                        globalBandwidth, &localBandwidths, parzenFactor,
+        densities.data[j] = modifiedBreimanFinalDensity(current_pattern, &dataPoints,
+                                                        globalBandwidth, &localBandwidths,
                                                         kernelConstant, kernel.densityFunction);
     }
 
