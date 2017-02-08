@@ -4,6 +4,47 @@
 
 #include "kdeModule.h"
 
+static char kde_parzen_docstring[] = "Estimate densities with Parzen.";
+static PyObject * kdeParzen(PyObject *self, PyObject *args){
+    PyObject* inPatterns = NULL;
+    PyObject* inDataPoints = NULL;
+    PyObject* outDensities = NULL;
+
+    double windowWidth;
+    KernelType kernelType;
+
+    if (!PyArg_ParseTuple(args, "OOdiO",
+                          &inPatterns,
+                          &inDataPoints,
+                          &windowWidth,
+                          &kernelType,
+                          &outDensities)) return NULL;
+
+    Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
+    Array dataPoints = pyObjectToArray(inDataPoints, NPY_ARRAY_IN_ARRAY);
+    Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
+
+    double parzenFactor = 1.0 / (dataPoints.length * pow(windowWidth, patterns.dimensionality));
+
+    Kernel kernel = selectKernel(kernelType);
+    double kernelConstant = kernel.factorFunction(dataPoints.dimensionality);
+
+    double* current_pattern = patterns.data;
+
+    for(int j = 0;
+        j < patterns.length;
+        j++, current_pattern += patterns.stride)
+    {
+        densities.data[j] = parzen(current_pattern, &dataPoints,
+                                   windowWidth, parzenFactor,
+                                   kernel.densityFunction, kernelConstant);
+    }
+
+    /* Create return object */
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 static char kde_parzen_standardGaussian_docstring[] = "Estimate the densities with Parzen with a Gaussian kernel.";
 static PyObject * kdeParzenStandardGaussian(PyObject *self, PyObject *args){
     PyObject* inPatterns = NULL;
@@ -125,6 +166,8 @@ static PyObject * kdeBreimanEpanechnikov(PyObject *self, PyObject *args){
     return Py_None;
 }
 
+
+
 Array pyObjectToArray(PyObject *pythonObject, int requirements){
     PyArrayObject* arrayObject = NULL;
     arrayObject = (PyArrayObject *)PyArray_FROM_OTF(pythonObject, NPY_DOUBLE, requirements);
@@ -140,6 +183,7 @@ Array pyObjectToArray(PyObject *pythonObject, int requirements){
 static PyMethodDef method_table[] = {
         {"parzen_standard_gaussian",    kdeParzenStandardGaussian,  METH_VARARGS,   kde_parzen_standardGaussian_docstring},
         {"parzen_epanechnikov",         kdeParzenEpanechnikov,      METH_VARARGS,   kde_parzen_epanechnikov_docstring},
+        {"parzen",                      kdeParzen,                  METH_VARARGS,   kde_parzen_docstring},
         {"breiman_epanechnikov",        kdeBreimanEpanechnikov,     METH_VARARGS,   kde_breiman_epanechnikov_docstring},
         /* Sentinel */
         {NULL,                              NULL,                                   0,              NULL}
