@@ -17,6 +17,7 @@ include_directories(
         /Users/laura/.virtualenvs/stage/lib/python3.5/site-packages/numpy/core/include
         /Users/laura/.virtualenvs/stage/include/python3.5m
         /Users/laura/.virtualenvs/stage/include/python3.5m/Python.h
-        /usr/include
         /Library/Frameworks/Python.framework/Headers
+        /usr/include
+        /usr/local/include
 )
