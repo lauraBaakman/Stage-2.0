@@ -2,7 +2,7 @@
 // Created by Laura Baakman on 09/01/2017.
 //
 
-#include "kde.h"
+#include "kdeModule.h"
 
 static char kde_parzen_standardGaussian_docstring[] = "Estimate the densities with Parzen with a Gaussian kernel.";
 static PyObject * kdeParzenStandardGaussian(PyObject *self, PyObject *args){
