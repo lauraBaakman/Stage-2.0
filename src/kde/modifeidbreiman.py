@@ -100,7 +100,7 @@ class _MBEEstimator(EstimatorImplementation):
         super().__init__(
             xi_s=xi_s, x_s=x_s, dimension=dimension,
             general_bandwidth=general_bandwidth, kernel=kernel)
-        self._local_bandwidths = local_bandwidths
+        self._local_bandwidths = local_bandwidths.astype(float, copy=False)
 
 
 class _MBEEstimator_Python(_MBEEstimator):
@@ -136,7 +136,7 @@ class _MBEEstimator_C(_MBEEstimator):
     def estimate(self):
         densities = np.empty(self.num_x_s, dtype=float)
         _kde.modified_breiman(self._x_s, self._xi_s,
-                                  self._general_bandwidth, self._local_bandwidths,
+                                  self._general_bandwidth,
                                   self._kernel.to_C_enum(),
                                   densities)
         return densities

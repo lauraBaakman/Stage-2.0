@@ -7,9 +7,10 @@ class EstimatorImplementation(object):
         super(EstimatorImplementation, self).__init__()
         self._dimension = dimension
         self._kernel = kernel
-        self._xi_s = xi_s
+        # XI_S and X_S really need to be floats, otherwise the C module breaks
+        self._xi_s = xi_s.astype(float, copy=False)
         self._general_bandwidth = general_bandwidth
-        self._x_s = x_s
+        self._x_s = x_s.astype(float, copy=False)
         self._data_validator = EstimatorDataValidator(
             x_s=self._x_s, xi_s=self._xi_s
         ).validate()
