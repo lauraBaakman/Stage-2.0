@@ -1,4 +1,4 @@
-from io import StringIO
+from io import BytesIO
 from unittest import TestCase
 
 import numpy as np
@@ -74,49 +74,48 @@ class TestDataSet(TestCase):
         np.testing.assert_array_equal(actual, expected)
 
     def test_from_file(self):
-        self.fail()
-        input_file = StringIO("""5 3"""
-                              """2 3"""
-                              """52.0 45.0 56.0"""
-                              """60.0 52.0 41.0"""
-                              """37.0 44.0 49.0"""
-                              """54.0 56.0 47.0"""
-                              """51.0 46.0 47.0"""
-                              """7.539699219e-05"""
-                              """1.240164051e-05"""
-                              """1.227518586e-05"""
-                              """7.288289757e-05"""
-                              """0.0001832763582""")
+        input_file = BytesIO("""5 3\n"""
+                             """2 3\n"""
+                             """52.0 45.0 56.0\n"""
+                             """60.0 52.0 41.0\n"""
+                             """37.0 44.1 49.0\n"""
+                             """54.0 56.0 47.0\n"""
+                             """51.0 46.0 47.0\n"""
+                             """7.539699219e-05\n"""
+                             """1.240164051e-05\n"""
+                             """1.227518586e-05\n"""
+                             """7.288289757e-05\n"""
+                             """0.0001832763582\n""".encode())
 
         actual = DataSet.from_file(input_file)
         expected = DataSet(
             patterns=np.array([
                 [52.0, 45.0, 56.0],
                 [60.0, 52.0, 41.0],
-                [37.0, 44.0, 49.0],
+                [37.0, 44.1, 49.0],
                 [54.0, 56.0, 47.0],
                 [51.0, 46.0, 47.0],
             ])
         )
 
-        self.assertAlmostEqual(actual, expected)
+        self.assertEqual(actual, expected)
 
 
 class Test_DataSetReader(TestCase):
     def setUp(self):
         super().setUpClass()
-        self._input_file = StringIO("""5 3"""
-                                    """2 3"""
-                                    """52.0 45.0 56.0"""
-                                    """60.0 52.0 41.0"""
-                                    """37.0 44.0 49.0"""
-                                    """54.0 56.0 47.0"""
-                                    """51.0 46.0 47.0"""
-                                    """7.539699219e-05"""
-                                    """1.240164051e-05"""
-                                    """1.227518586e-05"""
-                                    """7.288289757e-05"""
-                                    """0.0001832763582""")
+        self._input_file = BytesIO("""5 3\n"""
+                                   """2 3\n"""
+                                   """52.0 45.0 56.0\n"""
+                                   """60.0 52.0 41.0\n"""
+                                   """37.0 44.1 49.0\n"""
+                                   """54.0 56.0 47.0\n"""
+                                   """51.0 46.0 47.0\n"""
+                                   """7.539699219e-05\n"""
+                                   """1.240164051e-05\n"""
+                                   """1.227518586e-05\n"""
+                                   """7.288289757e-05\n"""
+                                   """0.0001832763582\n""".encode())
 
     def test_read(self):
         actual = _DataSetReader(self._input_file).read()
@@ -124,7 +123,7 @@ class Test_DataSetReader(TestCase):
             patterns=np.array([
                 [52.0, 45.0, 56.0],
                 [60.0, 52.0, 41.0],
-                [37.0, 44.0, 49.0],
+                [37.0, 44.1, 49.0],
                 [54.0, 56.0, 47.0],
                 [51.0, 46.0, 47.0],
             ])
@@ -137,18 +136,22 @@ class Test_DataSetReader(TestCase):
         self.assertEqual(actual, expected)
 
     def test__read_patterns(self):
-        actual = _DataSetReader(self._input_file)._read_patterns()
+        reader = _DataSetReader(self._input_file)
+        reader._num_patterns = 5
+        actual = reader._read_patterns()
         expected = np.array([
             [52.0, 45.0, 56.0],
             [60.0, 52.0, 41.0],
-            [37.0, 44.0, 49.0],
+            [37.0, 44.1, 49.0],
             [54.0, 56.0, 47.0],
             [51.0, 46.0, 47.0],
         ])
         np.testing.assert_array_equal(actual, expected)
 
     def test__read_labels(self):
-        actual = _DataSetReader(self._input_file)._read_labels()
+        reader = _DataSetReader(self._input_file)
+        reader._num_patterns = 5
+        actual = reader._read_labels()
         expected = np.array([
             7.539699219e-05,
             1.240164051e-05,

@@ -4,7 +4,6 @@ import numpy as np
 class DataSet(object):
     def __init__(self, patterns):
         self._patterns = patterns
-        self._results = None
         _DataSetValidator(patterns=patterns).validate()
 
     @property
@@ -39,6 +38,16 @@ class DataSet(object):
         :return: patterns, labels
         """
         return _DataSetReader(in_file).read()
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return np.array_equiv(self.patterns, other.patterns)
+        return NotImplemented
+
+    def __ne__(self, other):
+        if isinstance(other, self.__class__):
+            return not self.__eq__(other)
+        return NotImplemented
 
 
 class _DataSetReader(object):
@@ -96,5 +105,5 @@ class InvalidDataSetException(Exception):
 
 if __name__ == '__main__':
     input_file = '/Users/laura/Repositories/stage-2.0/data/artificial/test.txt'
-    with open(input_file) as in_file:
+    with open(input_file, mode='rb') as in_file:
         data_set = DataSet.from_file(in_file)
