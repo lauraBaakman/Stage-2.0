@@ -37,24 +37,13 @@ class _DataSetValidator(object):
 
     def validate(self):
         self._patterns_is_2D_array()
-        self._each_pattern_has_same_dimension()
 
     def _patterns_is_2D_array(self):
         if self._patterns.ndim is not 2:
             raise InvalidDataSetException(
                 '''2D arrays are expected as input, the input array has {} dimensions.'''
-                    .format(self._data_set.patterns.ndim)
+                    .format(self._patterns.ndim)
             )
-
-    def _each_pattern_has_same_dimension(self):
-        first_element_size = self._patterns[0].shape[0]
-        for element in self._patterns[1:]:
-            current_element_size = element.shape[0]
-            if element is not first_element_size:
-                raise InvalidDataSetException(
-                    '''Each element of the data set is expected to have dimension {}, an element with dimension {} '''
-                    '''was encountered.'''
-                        .format(first_element_size, current_element_size))
 
 
 class InvalidDataSetException(Exception):
