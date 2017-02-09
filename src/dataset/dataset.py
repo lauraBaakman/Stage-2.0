@@ -37,7 +37,13 @@ class DataSet(object):
         :param input_file: The file to read the data from.
         :return: patterns, labels
         """
-        return _DataSetReader(in_file).read()
+        try:
+            data_set = _DataSetReader(in_file).read()
+        except AttributeError:
+            in_file = open(input_file, mode='rb')
+            data_set = _DataSetReader(in_file).read()
+        return data_set
+
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -105,5 +111,12 @@ class InvalidDataSetException(Exception):
 
 if __name__ == '__main__':
     input_file = '/Users/laura/Repositories/stage-2.0/data/artificial/test.txt'
+
+    # Option 1
     with open(input_file, mode='rb') as in_file:
         data_set = DataSet.from_file(in_file)
+    print(data_set.patterns)
+
+    # Option 2
+    data_set = DataSet.from_file(input_file)
+    print(data_set.patterns)
