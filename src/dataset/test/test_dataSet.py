@@ -3,10 +3,22 @@ from unittest import TestCase
 
 import numpy as np
 
-from dataset.dataset import DataSet
+from dataset.dataset import DataSet, InvalidDataSetException, _DataSetValidator
 
 
 class TestDataSet(TestCase):
+    def setUp(self):
+        super().setUp()
+        self._data_set = DataSet(
+            patterns=np.array([
+                [52.0, 45.0, 56.0],
+                [60.0, 52.0, 41.0],
+                [37.0, 44.0, 49.0],
+                [54.0, 56.0, 47.0],
+                [51.0, 46.0, 47.0],
+            ]),
+        )
+
     def test_num_patterns(self):
         data_set = DataSet(
             patterns=np.array([
@@ -16,10 +28,10 @@ class TestDataSet(TestCase):
                 [54.0, 56.0, 47.0],
                 [51.0, 46.0, 47.0],
             ]),
-            results=np.array([
+        )
+        data_set.results = np.array([
                 1.0, 2.0, 3.0, 4.0, 5.1234567891011121314
             ])
-        )
         actual = data_set.num_patterns
         expected = 5
 
@@ -34,9 +46,6 @@ class TestDataSet(TestCase):
                 [54.0, 56.0, 47.0],
                 [51.0, 46.0, 47.0],
             ]),
-            results=np.array([
-                1.0, 2.0, 3.0, 4.0, 5.1234567891011121314
-            ])
         )
         actual = data_set.dimension
         expected = 3
@@ -52,9 +61,6 @@ class TestDataSet(TestCase):
                 [54.0, 56.0, 47.0],
                 [51.0, 46.0, 47.0],
             ]),
-            results=np.array([
-                1.0, 2.0, 3.0, 4.0, 5.1234567891011121314
-            ])
         )
         actual = data_set.patterns
         expected = np.array([
@@ -82,30 +88,17 @@ class TestDataSet(TestCase):
                               """0.0001832763582""")
 
         actual = DataSet.from_file(input_file)
-        expected = DataSet()
-
-        self.assertAlmostEqual(actual, expected)
-
-    def test_result_to_file(self):
-        data_set = DataSet(
+        expected = DataSet(
             patterns=np.array([
                 [52.0, 45.0, 56.0],
                 [60.0, 52.0, 41.0],
                 [37.0, 44.0, 49.0],
                 [54.0, 56.0, 47.0],
                 [51.0, 46.0, 47.0],
-            ]),
-            results=np.array([
-                1.0, 2.0, 3.0, 4.0, 5.1234567891011121314
             ])
         )
-        outfile = StringIO("")
-        data_set.result_to_file(outfile)
-        outfile.seek(0)
-        actual = outfile.read()
 
-        expected = None
-        self.assertEqual(actual, expected)
+        self.assertAlmostEqual(actual, expected)
 
 
 class Test_DataSetReader(TestCase):
@@ -124,30 +117,141 @@ class Test_DataSetReader(TestCase):
                               """0.0001832763582""")
 
         actual = DataSet.from_file(input_file)
-        expected = DataSet()
-
-        self.assertAlmostEqual(actual, expected)
-
-
-class _ResultsWriter(TestCase):
-    def test_write(self):
-        data_set = DataSet(
+        expected = DataSet(
             patterns=np.array([
                 [52.0, 45.0, 56.0],
                 [60.0, 52.0, 41.0],
                 [37.0, 44.0, 49.0],
                 [54.0, 56.0, 47.0],
                 [51.0, 46.0, 47.0],
-            ]),
-            results=np.array([
-                1.0, 2.0, 3.0, 4.0, 5.1234567891011121314
             ])
         )
+        self.assertAlmostEqual(actual, expected)
 
-        outfile = StringIO()
-        data_set.result_to_file(outfile)
-        outfile.seek(0)
-        actual = outfile.read()
 
-        expected = None
-        self.assertEqual(actual, expected)
+class Test_DataSetValidator(TestCase):
+    def test_validate_1(self):
+        patterns = np.array([
+            [52.0, 45.0, 56.0],
+            [60.0, 52.0, 41.0],
+            [37.0, 44.0, 49.0],
+            [54.0, 56.0, 47.0],
+            [51.0, 46.0, 47.0],
+        ])
+        validator = _DataSetValidator(patterns=patterns)
+        actual = validator.validate()
+        self.assertIsNone(actual)
+
+    def test_validate_2(self):
+        try:
+            patterns = np.array([
+                [52.0, 45.0, 56.0],
+                [60.0, 52.0, 41.0],
+                [37.0, 44.0, 49.0],
+                [54.0, 56.0, 47.0],
+                [51.0, 46.0, 47.0],
+            ])
+            validator = _DataSetValidator(patterns=patterns)
+            actual = validator.validate()
+        except InvalidDataSetException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test__patterns_is_2D_array_1(self):
+        patterns = np.array([
+            [52.0, 45.0, 56.0],
+            [60.0, 52.0, 41.0],
+            [37.0, 44.0, 49.0],
+            [54.0, 56.0, 47.0],
+            [51.0, 46.0, 47.0],
+        ])
+        validator = _DataSetValidator(patterns=patterns)
+        actual = validator._patterns_is_2D_array()
+        self.assertIsNone(actual)
+
+    def test__patterns_is_2D_array_2(self):
+        try:
+            patterns = np.array([
+                [[52.0, 45.0, 56.0],
+                 [60.0, 52.0, 41.0],
+                 [37.0, 44.0, 49.0]],
+                [[54.0, 56.0, 47.0],
+                 [51.0, 46.0, 47.0]],
+            ])
+            validator = _DataSetValidator(patterns=patterns)
+            actual = validator._patterns_is_2D_array()
+        except InvalidDataSetException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test__each_pattern_has_same_dimension_1(self):
+        patterns = np.array([
+            [52.0, 45.0, 56.0],
+            [60.0, 52.0, 41.0],
+            [37.0, 44.0, 49.0],
+            [54.0, 56.0, 47.0],
+            [51.0, 46.0, 47.0],
+        ])
+        validator = _DataSetValidator(patterns=patterns)
+        actual = validator._each_pattern_has_same_dimension()
+        self.assertIsNone(actual)
+
+    def test__each_pattern_has_same_dimension_2(self):
+        try:
+            patterns = np.array([
+                [52.0, 45.0, 56.0],
+                [60.0, 52.0],
+                [37.0, 44.0, 49.0],
+                [54.0, 56.0, 47.0],
+                [51.0, 46.0, 47.0],
+            ])
+            validator = _DataSetValidator(patterns=patterns)
+            actual = validator._each_pattern_has_same_dimension()
+        except InvalidDataSetException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test__each_pattern_has_same_dimension_3(self):
+        try:
+            patterns = np.array([
+                [52.0, 45.0, 56.0],
+                [60.0, 52.0, 41.0],
+                [37.0, 44.0, 49.0],
+                [54.0, 56.0, 47.0],
+                [51.0, 46.0],
+            ])
+            validator = _DataSetValidator(patterns=patterns)
+            actual = validator._each_pattern_has_same_dimension()
+        except InvalidDataSetException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test__each_pattern_has_same_dimension_4(self):
+        try:
+            patterns = np.array([
+                [52.0, 45.0],
+                [60.0, 52.0, 41.0],
+                [37.0, 44.0, 49.0],
+                [54.0, 56.0, 47.0],
+                [51.0, 46.0, 47.0],
+            ])
+            validator = _DataSetValidator(patterns=patterns)
+            actual = validator._each_pattern_has_same_dimension()
+        except InvalidDataSetException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
