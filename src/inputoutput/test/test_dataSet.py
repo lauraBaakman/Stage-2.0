@@ -3,7 +3,7 @@ from unittest import TestCase
 
 import numpy as np
 
-from dataset.dataset import DataSet, InvalidDataSetException, _DataSetValidator, _DataSetReader
+from inputoutput.dataset import DataSet, InvalidDataSetException, _DataSetValidator, _DataSetReader
 
 
 class TestDataSet(TestCase):

@@ -2,8 +2,8 @@ from unittest import TestCase
 
 import numpy as np
 
-from dataset import DataSet
-from dataset.results import _ResultsValidator, Results, InvalidResultsException
+from inputoutput import DataSet
+from inputoutput.results import _ResultsValidator, Results, InvalidResultsException
 
 
 class TestResults(TestCase):
