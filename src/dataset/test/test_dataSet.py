@@ -3,7 +3,7 @@ from unittest import TestCase
 
 import numpy as np
 
-from dataset.dataset import DataSet, InvalidDataSetException, _DataSetValidator
+from dataset.dataset import DataSet, InvalidDataSetException, _DataSetValidator, _DataSetReader
 
 
 class TestDataSet(TestCase):
@@ -103,21 +103,23 @@ class TestDataSet(TestCase):
 
 
 class Test_DataSetReader(TestCase):
-    def test_read(self):
-        input_file = StringIO("""5 3"""
-                              """2 3"""
-                              """52.0 45.0 56.0"""
-                              """60.0 52.0 41.0"""
-                              """37.0 44.0 49.0"""
-                              """54.0 56.0 47.0"""
-                              """51.0 46.0 47.0"""
-                              """7.539699219e-05"""
-                              """1.240164051e-05"""
-                              """1.227518586e-05"""
-                              """7.288289757e-05"""
-                              """0.0001832763582""")
+    def setUp(self):
+        super().setUpClass()
+        self._input_file = StringIO("""5 3"""
+                                    """2 3"""
+                                    """52.0 45.0 56.0"""
+                                    """60.0 52.0 41.0"""
+                                    """37.0 44.0 49.0"""
+                                    """54.0 56.0 47.0"""
+                                    """51.0 46.0 47.0"""
+                                    """7.539699219e-05"""
+                                    """1.240164051e-05"""
+                                    """1.227518586e-05"""
+                                    """7.288289757e-05"""
+                                    """0.0001832763582""")
 
-        actual = DataSet.from_file(input_file)
+    def test_read(self):
+        actual = _DataSetReader(self._input_file).read()
         expected = DataSet(
             patterns=np.array([
                 [52.0, 45.0, 56.0],
@@ -127,7 +129,34 @@ class Test_DataSetReader(TestCase):
                 [51.0, 46.0, 47.0],
             ])
         )
-        self.assertAlmostEqual(actual, expected)
+        self.assertEqual(actual, expected)
+
+    def test__read_pattern_count(self):
+        actual = _DataSetReader(self._input_file)._read_pattern_count()
+        expected = 5
+        self.assertEqual(actual, expected)
+
+    def test__read_patterns(self):
+        actual = _DataSetReader(self._input_file)._read_patterns()
+        expected = np.array([
+            [52.0, 45.0, 56.0],
+            [60.0, 52.0, 41.0],
+            [37.0, 44.0, 49.0],
+            [54.0, 56.0, 47.0],
+            [51.0, 46.0, 47.0],
+        ])
+        np.testing.assert_array_equal(actual, expected)
+
+    def test__read_labels(self):
+        actual = _DataSetReader(self._input_file)._read_labels()
+        expected = np.array([
+            7.539699219e-05,
+            1.240164051e-05,
+            1.227518586e-05,
+            7.288289757e-05,
+            0.0001832763582
+        ])
+        np.testing.assert_array_equal(actual, expected)
 
 
 class Test_DataSetValidator(TestCase):
