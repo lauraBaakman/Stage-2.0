@@ -71,7 +71,7 @@ class TestDataSet(TestCase):
             [51.0, 46.0, 47.0],
         ])
 
-        self.assertEqual(actual, expected)
+        np.testing.assert_array_equal(actual, expected)
 
     def test_from_file(self):
         self.fail()

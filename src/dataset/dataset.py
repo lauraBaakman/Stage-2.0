@@ -6,17 +6,17 @@ class DataSet(object):
 
     @property
     def num_patterns(self):
-        (num_patterns, _) = self.patterns.shape
+        (num_patterns, _) = self._patterns.shape
         return num_patterns
 
     @property
     def dimension(self):
-        (_, dimension) = self.patterns.shape
+        (_, dimension) = self._patterns.shape
         return dimension
 
     @property
     def patterns(self):
-        return self.patterns
+        return self._patterns
 
     @classmethod
     def from_file(cls, in_file):
