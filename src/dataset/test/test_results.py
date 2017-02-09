@@ -9,20 +9,20 @@ from dataset.results import _ResultsValidator, Results, InvalidResultsException
 class TestResults(TestCase):
     def test_num_results(self):
         results = Results(
+            data_set=DataSet(
+                patterns=np.array([
+                    [52.0, 45.0, 56.0],
+                    [60.0, 52.0, 41.0],
+                    [37.0, 44.1, 49.0],
+                    [54.0, 56.0, 47.0],
+                    [51.0, 46.0, 47.0],
+                ])
+            ),
             results_array=np.array([1.0, 2.0, 3.0, 4.0, 5.1234567891011121314])
         )
         actual = results.num_results
         expected = 5
         self.assertEqual(actual, expected)
-
-    def test_to_file(self):
-        self.fail("To be implemented.")
-
-
-class Test_ResultsWriter(TestCase):
-    def test_write(self):
-        self.fail("To be implemented.")
-
 
 class Test_ResultsValidator(TestCase):
     def setUp(self):
