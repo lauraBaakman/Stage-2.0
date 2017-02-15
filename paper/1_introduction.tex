@@ -55,24 +55,24 @@ Estimating densities with kernels has been fairly popular of late. In the medica
 		\end{cases}
 	\end{equation}
 	where \varUnitSphere{\varDim} denotes the volume of the unit sphere in \varDim dimensions. There are two advantages to using this kernel, firstly it has a finite base and secondly it is optimal in the sense of the Mean Integrated Square Error (MISE) \cite{epanechnikov1969non}. A disadvantage of this kernel is that it is not continuously differentiable, however as differentiability is not a requirement for the pilot densities, this is not a problem.
-	The second change \textcite{wilkinson1995dataplot} made to the method proposed by \textcite{breiman1977variable} is that they computed the densities for points on a grid, that covered the data points, and determined the pilot densities with multi-linear interpolation. \citeauthor{wilkinson1995dataplot} used \cref{eq:1:adaptiveKernelEstimateWithLocalBandwidths} with an Epanechnikov kernel and $\varLocalBandwidth{i} = 1$ to estimate the pilot densities. They estimated the general bandwidth according to
+	The second change \textcite{wilkinson1995dataplot} made to the method proposed by \textcite{breiman1977variable} is that they computed the densities for points on a grid, that covered the data points, and determined the pilot densities with multi-linear interpolation. \citeauthor{wilkinson1995dataplot} used \cref{eq:1:adaptiveKernelEstimateWithLocalBandwidths} with an Epanechnikov kernel and $\varLocalBandwidth{i} = 1$ to estimate the pilot densities. They determined the general bandwidth according to
 		\begin{equation}\label{eq:1:wilkinsonHOpt}
-			\varBandwidth = \left(\frac{8\left(\varDim + 4\right) \cdot \left(2 \sqrt{\pi}\right)^\varDim}{\varUnitSphere{\varDim}}\right)^{\frac{1}{\varDim + 4}}\cdot \varNumPatterns^{\left(\frac{-1}{\varDim + 4}\right)} \cdot s,
+			\varBandwidth = \left(\frac{8\left(\varDim + 4\right) \cdot \left(2 \sqrt{\pi}\right)^\varDim}{\varUnitSphere{\varDim}}\right)^{\frac{1}{\varDim + 4}}\cdot \varNumPatterns^{\left(\frac{-1}{\varDim +  4}\right)} \cdot s,
 		\end{equation}
-	where $s$ the standard deviation of the average of the variances of each of the data series. The described estimator will be referred to as the Modified Breiman Estimator (MBE).  \todo[inline]{Hier verder, noem nog even hoe zo local bandwidths en de final estimates uitrekenen.}
+	where $s$ the square root of the average of the variances of the different dimensions. They estimate the final densities with \cref{eq:1:adaptiveKernelEstimateWithLocalBandwidths} using the general and local bandwidths estimated in \cref{eq:1:wilkinsonHOpt,eq:1:localBandwidth}, respectively. The described estimator will be referred to as the Modified Breiman Estimator (MBE). 
 
 % Ferdosi
-	\textcite{ferdosi2011comparison} were interested in the application of density estimation on datasets that are large, \ie datasets with more than 50 000 points with the dimension of the data points ranging from ten to hundreds of elements. They used the MBE with a simpler estimation of the bandwidth for the pilot estimate kernel, namely 
+	\textcite{ferdosi2011comparison} considered the application of density estimation on datasets that are large, \ie datasets with more than 50 000 points with the dimension of the data points ranging from ten to hundreds of elements. They used the MBE with a simpler estimation of the bandwidth for the pilot estimate kernel, namely 
 		\begin{equation}
 			\varBandwidth_l = \frac{\varPercentile{80}{l} - \varPercentile{20}{l}}{\log \varNumPatterns}, \, l = 1, \dotsc, \varDim,
 		\end{equation}
 	where \varPercentile{20}{l} and \varPercentile{80}{l} are the twentieth and eightieth percentile of the data in dimension $l$, respectively. 
-	The optimal pilot window width, \varBandwidth, is chosen as the smallest of $\varBandwidth_1, \dotsc, \varBandwidth_\varDim$.
+	The optimal pilot window width, \varBandwidth, is chosen as the smallest of $\varBandwidth_1, \dotsc, \varBandwidth_\varDim$ to avoid oversmoothing.
 
 % Shape Adaptive Kernel Density Estimation
-	Although the widths of the kernels used in estimators proposed by \citeauthor{breiman1977variable,wilkinson1995dataplot} are sensitive to the data, the shapes of the kernels are dependent on the kernel itself not the data. To further increase the responsiveness of the estimator to the data we propose shape-adaptive kernels, kernels whose width and shape are steered by the data. 
+	Although the widths of the kernels used in estimators proposed by \citeauthor{breiman1977variable,wilkinson1995dataplot} are sensitive to the data, the shapes of the kernels are dependent on the kernel itself not the data. To further increase the responsiveness of the estimator to the data we propose the use of shape-adaptive kernels in density estimation. Not only the width but also the shape of these kernels would be steered by the data. 
 
-	A disadvantage of these shape-adaptive kernels is that in regions where the density of sample points is low there are not enough data points to compute the shape of the kernel reliably. Consequently we propose to let the amount of influence exerted by the local data on the shape of the kernel be dependent on the density of the data points in that region.
+	A disadvantage of these shape-adaptive kernels could be that in regions where the density of sample points is low, there are insufficient data points to compute the shape of the kernel reliably. Consequently we let the amount of influence exerted by the local data on the shape of the kernel be dependent on the density of the data points in that region.
 
 % Paper structure
-	This paper is organized as follows. \Cref{s:method} discusses the proposed shape-adaptive kernels. The datasets used to investigate the performance of these kernels are presented in \cref{s:datasets}. \Cref{s:results} presents the results of both the `normal' and the `shape-adaptive' Breiman estimator on these dataset. These results are discussed in \cref{s:discussion}. And this paper is concluded in \cref{s:conclusion}.
+	This paper is organized as follows. \Cref{s:method} discusses the proposed shape-adaptive kernels. The datasets used to investigate the performance of these kernels are presented in \cref{s:datasets}. \Cref{s:results} presents the results of using both the `normal' and the `shape-adaptive' Modified Breiman estimator to estimate the densities of these datasets. The results are discussed in \cref{s:discussion}, this paper is concluded in \cref{s:conclusion}.
