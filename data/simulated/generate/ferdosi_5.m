@@ -11,11 +11,13 @@ function [ data, densities, Ns] = ferdosi_5( N, d)
 
     clear rows;
     [startRow, endRow] = rows(Ns);
-    %% Wall 1
+    
+    %% Gaussian
     means(:,:,1) = 10;
     covariances(:,:,1) = 5;
     data(startRow:endRow, 2) = normalDistribution(means(:,:,1), covariances(:,:,1), Ns(1));
     
+    %% Wall 1
     lower(:,:,1) = [0, 0];
     upper(:,:,1) = [100, 100];
     data(startRow:endRow, [1,3]) = blockUniformDistribution(lower(:,:,1), upper(:,:,1), Ns(1), 2);
