@@ -1,0 +1,33 @@
+{
+	"folders":
+	[
+		{
+			"file_exclude_patterns":
+			[
+				"*.aux",
+				"*.fdb_latexmk",
+				"*.log",
+				"*.out",
+				"*.gz",
+				"*.*-workspace",
+				"*.mex*",
+				"*.bbl",
+				"*.bcf",
+				"*.run.xml",
+				"*.blg",
+				"*.nav",
+				"*.toc",
+				"*.snm"
+			],
+			"path": "./"
+		}
+	],
+	"settings":
+	{
+		"FuzzyFilePath":
+		{
+		},
+		"spell_check": false,
+		"tab_size": 4
+	}
+}
