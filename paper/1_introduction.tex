@@ -47,14 +47,16 @@ Estimating densities with kernels has been fairly popular of late. In the medica
 
 % Wilkinson and Meijer
 	The approach taken by \citeauthor{breiman1977variable} is computationally expensive, partially due to the use of the Gaussian kernel. The infinite base of this kernel means that an exponential function has to be evaluated for each data point to estimate the density of one data point according to \cref{eq:1:BML}. \textcite{wilkinson1995dataplot} propose to reduce this computational complexity in two ways, firstly they replace the infinite base Gaussian kernel with an Epanechnikov kernel,
-	\begin{equation}
+	\begin{equation}\label{eq:1:epanechnikovKernelNoCovarianceMatrix}
 		\varKernel[\varEpan]{\varPattern} = 
 		\begin{cases}
 			\frac{\varDim + 2}{2\varUnitSphere{\varDim}} \left( 1 - \varPattern \cdot \varPattern \right) & \text{if } \varPattern \cdot \varPattern < 1\\
 			0 & \text{otherwise}
 		\end{cases}
 	\end{equation}
-	where \varUnitSphere{\varDim} denotes the volume of the unit sphere in \varDim dimensions. There are two advantages to using this kernel, firstly it has a finite base and secondly it is optimal in the sense of the Mean Integrated Square Error (MISE) \cite{epanechnikov1969non}. A disadvantage of this kernel is that it is not continuously differentiable, however as differentiability is not a requirement for the pilot densities, this is not a problem.
+	where \varUnitSphere{\varDim} denotes the volume of the unit sphere in \varDim dimensions. Note that the kernel defined in \cref{eq:1:epanechnikovKernelNoCovarianceMatrix} does not have unit variance. this can be corrected by multiplying \varBandwidth with the square root of the variance of \varKernel[\varEpan]{\cdot}.
+
+	 There are two advantages to using this kernel, firstly it has a finite base and secondly it is optimal in the sense of the Mean Integrated Square Error (MISE) \cite{epanechnikov1969non}. A disadvantage of this kernel is that it is not continuously differentiable, however as differentiability is not a requirement for the pilot densities, this is not a problem.
 	The second change \textcite{wilkinson1995dataplot} made to the method proposed by \textcite{breiman1977variable} is that they computed the densities for points on a grid, that covered the data points, and determined the pilot densities with multi-linear interpolation. \citeauthor{wilkinson1995dataplot} used \cref{eq:1:adaptiveKernelEstimateWithLocalBandwidths} with an Epanechnikov kernel and $\varLocalBandwidth{i} = 1$ to estimate the pilot densities. They determined the general bandwidth according to
 		\begin{equation}\label{eq:1:wilkinsonHOpt}
 			\varBandwidth = \left(\frac{8\left(\varDim + 4\right) \cdot \left(2 \sqrt{\pi}\right)^\varDim}{\varUnitSphere{\varDim}}\right)^{\frac{1}{\varDim + 4}}\cdot \varNumPatterns^{\left(\frac{-1}{\varDim +  4}\right)} \cdot s,
@@ -63,7 +65,7 @@ Estimating densities with kernels has been fairly popular of late. In the medica
 
 % Ferdosi
 	\textcite{ferdosi2011comparison} considered the application of density estimation on datasets that are large, \ie datasets with more than 50 000 points with the dimension of the data points ranging from ten to hundreds of elements. They used the MBE with a simpler estimation of the bandwidth for the pilot estimate kernel, namely 
-		\begin{equation}
+		\begin{equation}\label{eq:1:ferdosiGeneralBandwidth}
 			\varBandwidth_l = \frac{\varPercentile{80}{l} - \varPercentile{20}{l}}{\log \varNumPatterns}, \, l = 1, \dotsc, \varDim,
 		\end{equation}
 	where \varPercentile{20}{l} and \varPercentile{80}{l} are the twentieth and eightieth percentile of the data in dimension $l$, respectively. 

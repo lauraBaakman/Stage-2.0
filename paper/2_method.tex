@@ -1,25 +1,32 @@
 %!TEX root = paper.tex
-%Pilot density
-We propose to compute the pilot density estimate with the method introduced by \citeauthor{wilkinson1995dataplot}. We use the Epanechnikov kernel for its low computational complexity, as its main disadvantage, its finite differentiability, does not matter in the estimation of pilot densities \cite{silverman1986density}. 
-% Final density
-The final density is estimated according to:
-\begin{equation}
-	\varEstimatedDensityFunction{\varPattern} = \frac{1}{\varNumPatterns} \sum_{i = 1}^{\varNumPatterns} \left(\varBandwidth\varLocalBandwidth{i}\right)^{-\varDim} \varKernel[\varGaussian]{\varPattern},
-\end{equation}
-where $\varKernel[\varGaussian]{\cdot}$ is a Gaussian kernel with mean $\varPattern[j]$ and covariance \varCovarianceMatrix, 
-% Neighbourhood
-which is the covariance matrix of the neighborhood of \varPattern. The neighbors of \varPattern are determined with the \KNNK nearest neighbors algorithm (\KNN) with Euclidean distance. We use this approach rater than a fixed-radius neighborhood to ensure that independent of the sparsity of the data the kernel shape is always based on a reasonable number of data points. Furthermore using \KNN allows us to choose $\KNNK > \varDim$, which makes it extremely improbable that the covariance matrix of the neighborhood is singular. We follow \citeauthor{silverman1986density}'s \cite{silverman1986density} recommendation of choosing $k = \sqrt{\varNumPatterns}$. To ensure that even in high-dimensional data sets $\KNNK > \varDim$ we use $\KNNK = \max\left(\sqrt{\varNumPatterns},\, \varDim + 1\right)$.
 
-%	Covariance
-The basic shape of the kernel used for \varPattern is given by the covariance matrix of \varNeighborhood{\varPattern}, \ie the union of \varPattern and its neighborhood.
-% Scaling
-To allow the density estimation of each pattern to be influenced by an equal area, before the application of the smoothing factor $(\varLocalBandwidth{i})$, the basic shapes of the kernels need to be scaled. The eigenvectors and eigenvalues of the covariance matrix define an ellipse, the eigenellipse. We scale the covariance matrix with the factor \varScalingFactor, defined as:
-\begin{equation}
-	\varScalingFactor = \frac{\varBandwidth^2}{\varGeometricMeanFunction{\sqrt{\lambda_1}, \dotsc, \sqrt{\lambda_\varDim}}},
-\end{equation}
-where $\lambda_j$ denotes the $j$th eigenvalue of the $j$th eigenvector of \varCovarianceMatrix. The scaling factor \varScalingFactor ensures that the shape-adapted covariance matrix has the same scale as the covariance matrix that is implicitly used in the Modified Breiman Estimator with a Gaussian kernel.
+%General Idea
+	We use our shape adaptive kernels in combination with the Modified Breiman Estimator introduced by \textcite{wilkinson1995dataplot}. The grid used for the pilot densities is 
+	%Pilot Densities
+	The grid that the pilot densities are computed on \todo{Iets over hoe het grid bepaald wordt, of de standaard grootte van het grid.} 
+	%General bandwidth
+	We choose to use the method proposed by \textcite{ferdosi2011comparison} for computing the general bandwidth because of its lower complexity, compared to the method used by \textcite{wilkinson1995dataplot}. 
+	%Local bandwidths
+	We have empirically determined \todo{hoe hebben we dat vastgesteld} that using \varMBESensitivityParam = \todo{Een of andere waarde} works best in our case. 
+	%Final densities
+	The final densities are estimated according to \cref{eq:1:adaptiveKernelEstimateWithLocalBandwidths} with a reshaped and scaled Epanechnikov kernel. The Epanechnikov kernel reshaped with the matrix \varCovarianceMatrix is defined as:
+	\begin{equation}\label{eq:1:epanechnikovKernelWithCovarianceMatrix}
+		\varKernel[\varEpan]{\varPattern} = 
+		\begin{cases}
+			\frac{\varDim + 2}{2\varUnitSphere{\varDim}} \left( 1 - \varPattern \varCovarianceMatrix \varPattern \right) & \text{if } \varPattern \cdot \varPattern < 1\\
+			0 & \text{otherwise.}
+		\end{cases}
+	\end{equation}
+	As stated before the matrix \varCovarianceMatrix is determined based on the neighborhood of the pattern, \varPattern, whose density we are estimating. 
 
-% Value of sensitivity paramter
-Two different values of \varMBESensitivityParam are prevalent in the literature. \textcite{breiman1977variable} argue in favor of $\rfrac{1}{\varDim}$, whereas \textcite{silverman1986density} prefers using $\varMBESensitivityParam = \rfrac{1}{2}$, independent of the dimensionality of the data. We have empirically determined that $\varMBESensitivityParam = ?$ \todo{Empirisch vaststellen} is optimal with respect to the ?.
+	We determine the neighbors of \varPattern with the \KNNK nearest neighbors algorithm (\KNN) with Euclidean distance. This approach is used rather than a fixed-radius neighborhood to ensure that independent of the sparsity of the data the kernel shape is always based on a reasonable number of data points. Furthermore using \KNN allows us to choose $\KNNK > \varDim$, which makes it extremely improbable that the covariance matrix of the neighborhood is singular. We follow \citeauthor{silverman1986density}'s \cite{silverman1986density} recommendation of choosing $k = \sqrt{\varNumPatterns}$. To ensure that even in high-dimensional data sets $\KNNK > \varDim$ we use
+	\begin{equation*}
+	\KNNK = \max\left(\sqrt{\varNumPatterns},\, \varDim + 1\right).	
+	\end{equation*}
+	Let \varNeighborhood{\varPattern} denote the union of \varPattern and its neighborhood, the basic shape of the kernel used for \varPattern is then given by \varCovarianceFunction{\varNeighborhood{\varPattern}}.
 
-\todo[inline]{Discuss performance metric?}
+	To allow the density estimation of each pattern to be influenced by an equal area, before the application of the smoothing factor $\varLocalBandwidth{i}$, the basic shapes of the kernels need to be scaled. To that end we use the eigenellipse, the ellipse defined by the eigenvectors and eigenvalues of \varCovarianceFunction{\varNeighborhood{\varPattern}}. We scale the covariance matrix with the factor \varScalingFactor, defined as:
+	\begin{equation}
+		\varScalingFactor = \frac{\varBandwidth^2}{\varGeometricMeanFunction{\sqrt{\lambda_1}, \dotsc, \sqrt{\lambda_\varDim}}},
+	\end{equation}
+	where $\lambda_j$ denotes the $j$th eigenvalue of the $j$th eigenvector of \varCovarianceMatrix. The scaling factor \varScalingFactor ensures that the shape-adapted covariance matrix has the same scale as the covariance matrix that is implicitly used in the Modified Breiman Estimator with a Gaussian kernel.
