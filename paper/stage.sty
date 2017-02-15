@@ -24,6 +24,7 @@
 \RequirePackage{amsmath}
 \RequirePackage{amsfonts}
 \RequirePackage{amssymb}
+\RequirePackage[mathcal]{euscript}
 
 % References
 \RequirePackage{varioref}
@@ -33,6 +34,10 @@
 %Lists
 \RequirePackage{enumitem}
 \setlist[enumerate]{leftmargin=*,label=(\roman*).,itemsep=0.2ex,labelindent=\parindent}
+
+%Tables
+\usepackage{booktabs}
+\renewcommand{\arraystretch}{1.2}
 
 % Citations
 % References
@@ -57,5 +62,10 @@
 \renewcommand{\t}[1]{\texttt{\justify#1}}
 \renewcommand{\vec}[1]{\mathbf{#1}}
 \newcommand*\rfrac[2]{\ensuremath{{}^{#1}\!/_{#2}}}
+\DeclareMathOperator{\diag}{diag}
 
 \usepackage{variables}
+
+% Distributions
+\newcommand{\gaussDist}[2]{\ensuremath{\mathcal{N}\big(#1, #2\big)}}
+\newcommand{\uniformDist}[2]{\ensuremath{\mathcal{U}\big(#1, #2\big)}}
