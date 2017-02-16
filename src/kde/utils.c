@@ -43,6 +43,14 @@ void arrayPrint(Array *array){
     printf("\n");
 }
 
+void printElement(double* element, int dimension){
+    printf("[ ");
+    for (int i = 0; i < dimension; ++i) {
+        printf("%f ", element[i]);
+    }
+    printf("]\n");
+}
+
 void arraySetDiagonalToZero(Array *array){
     double* currentRow = array->data;
     for (int i = 0;
@@ -52,13 +60,11 @@ void arraySetDiagonalToZero(Array *array){
     }
 }
 
-void printElement(double* element, int dimension){
-    printf("[ ");
-    for (int i = 0; i < dimension; ++i) {
-        printf("%f ", element[i]);
-    }
-    printf("]\n");
+void arraySetElement(Array* array, int rowIdx, int colIdx, double value){
+    double* row = array->data + rowIdx * array->stride;
+    row[colIdx] = value;
 }
+
 
 double* scalePattern(double* pattern, double* dataPoint, double* scaledPattern, int dimensionality, double windowWidth){
     for (int i = 0; i < dimensionality; ++i) {

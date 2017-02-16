@@ -15,6 +15,7 @@ typedef struct Array{
 Array arrayBuildFromPyArray(PyArrayObject *arrayObject);
 void arrayPrint(Array *array);
 void arraySetDiagonalToZero(Array *array);
+void arraySetElement(Array* array, int rowIdx, int colIdx, double value);
 
 
 double* scalePattern(double* pattern, double* dataPoint, double* scaledPattern, int dimensionality, double windowWidth);
