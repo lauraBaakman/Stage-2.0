@@ -5,13 +5,15 @@ static PyObject * distance_matrix(PyObject *self, PyObject *args){
 
     /* Handle input */
     PyObject* inPatterns = NULL;
+    PyObject* outDistanceMatrix = NULL;
 
-    if (!PyArg_ParseTuple(args, "O", &inPatterns)) return NULL;
+    if (!PyArg_ParseTuple(args, "OO", &inPatterns, &outDistanceMatrix)) return NULL;
 
     Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
+    Array distanceMatrix = pyObjectToArray(outDistanceMatrix, NPY_ARRAY_OUT_ARRAY);
 
     /* Do stuff */
-    printArray(&patterns);
+    computeDistanceMatrix(&patterns, &distanceMatrix);
 
     /* Create return object */
     PyObject *returnObject = Py_BuildValue("d", 42.0);
