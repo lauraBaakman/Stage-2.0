@@ -43,6 +43,15 @@ void arrayPrint(Array *array){
     printf("\n");
 }
 
+void arraySetDiagonalToZero(Array *array){
+    double* currentRow = array->data;
+    for (int i = 0;
+         i < array->length;
+         ++i, currentRow+= array->stride) {
+        currentRow[i] = 0;
+    }
+}
+
 void printElement(double* element, int dimension){
     printf("[ ");
     for (int i = 0; i < dimension; ++i) {

@@ -6,6 +6,8 @@ void computeDistanceMatrix(Array *patterns, Array *distanceMatrix){
     double* b;
     double distance;
 
+    arraySetDiagonalToZero(distanceMatrix);
+
     for(int i = 0;
             i < patterns->length;
             i++, a+= patterns->stride)
