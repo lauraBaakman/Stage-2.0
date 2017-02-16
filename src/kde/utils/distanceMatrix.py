@@ -1,9 +1,11 @@
 def compute_distance_matrix(patterns, implementation=None):
-    actual_implementation = implementation or compute_distance_matrix_C
+    actual_implementation = implementation or _compute_distance_matrix_C
     return actual_implementation(patterns)
 
-def compute_distance_matrix_python(patterns):
+
+def _compute_distance_matrix_Python(patterns):
     raise NotImplementedError()
 
-def compute_distance_matrix_C(patterns):
+
+def _compute_distance_matrix_C(patterns):
     raise NotImplementedError()
