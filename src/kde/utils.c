@@ -3,7 +3,7 @@
 //
 #include "utils.ih"
 
-Array buildArrayFromPyArray(PyArrayObject* arrayObject){
+Array arrayBuildFromPyArray(PyArrayObject *arrayObject){
 
     double* data = (double *)PyArray_DATA(arrayObject);
 
@@ -30,7 +30,7 @@ int determine_dimensionality(PyArrayObject* arrayObject){
     }
 }
 
-void printArray(Array* array){
+void arrayPrint(Array *array){
     printf("Array { data: %p, dimensionality: %2d, length: %4d, stride: %4d}\n",
     array->data, array->dimensionality, array->length, array->stride);
     double* currentElement = array->data;

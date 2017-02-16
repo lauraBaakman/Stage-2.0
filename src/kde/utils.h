@@ -12,8 +12,8 @@ typedef struct Array{
     int stride;
 } Array;
 
-Array buildArrayFromPyArray(PyArrayObject *arrayObject);
-void printArray(Array* array);
+Array arrayBuildFromPyArray(PyArrayObject *arrayObject);
+void arrayPrint(Array *array);
 
 double* scalePattern(double* pattern, double* dataPoint, double* scaledPattern, int dimensionality, double windowWidth);
 

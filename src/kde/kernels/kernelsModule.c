@@ -142,7 +142,7 @@ Array pyObjectToArray(PyObject *pythonObject, int requirements){
         fprintf(stderr, "Error converting PyObject to PyArrayObject\n");
         exit(-1);
     }
-    Array array = buildArrayFromPyArray(arrayObject);
+    Array array = arrayBuildFromPyArray(arrayObject);
     Py_XDECREF(arrayObject);
     return array;
 }
