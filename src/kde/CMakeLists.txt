@@ -8,7 +8,7 @@ set(SOURCE_FILES
         kernels/kernels.c kernels/kernels.h
         kernels/kernelsModule.c kernels/kernelsModule.h
         parzen.c parzen.h
-        utils.c utils.h modifeidbreiman.c modifeidbreiman.h)
+        utils.c utils.h modifeidbreiman.c modifeidbreiman.h utils/utilsModule.c utils/utilsModule.h)
 add_executable(kde ${SOURCE_FILES})
 
 find_package(PythonLibs REQUIRED)

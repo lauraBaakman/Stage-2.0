@@ -5,8 +5,8 @@ def configuration(parent_package='', top_path=None):
                            parent_package,
                            top_path)
     config.add_extension(
-        '_kernels',  # Name of the extension
-        sources=['kernelsModule.c', 'kernels.c', '../utils.c']
+        '_utils',  # Name of the extension
+        sources=['utilsModule.c', '../utils.c']
     )
     return config
 
