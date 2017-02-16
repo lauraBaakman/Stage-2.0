@@ -20,6 +20,35 @@ static PyObject * distance_matrix(PyObject *self, PyObject *args){
     return Py_None;
 }
 
+static char utils_knn_docstring[] = "Compute the K nearest neighbours of some pattern, based on the provided distance matrix.";
+static PyObject * knn(PyObject *self, PyObject *args){
+
+    /* Handle input */
+    PyObject* inPattern = NULL;
+    PyObject* inPatterns = NULL;
+    PyObject* inDistanceMatrix = NULL;
+    PyObject* outNearestNeighbours = NULL;
+
+    int k;
+
+    if (!PyArg_ParseTuple(args, "dOOOO",
+                          &k, &inPattern, &inPatterns, &inDistanceMatrix, &outNearestNeighbours)) return NULL;
+
+    Array pattern = pyObjectToArray(inPattern, NPY_ARRAY_IN_ARRAY);
+    Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
+    Array distanceMatrix = pyObjectToArray(inDistanceMatrix, NPY_ARRAY_IN_ARRAY);
+    Array nearestNeighbours = pyObjectToArray(outNearestNeighbours, NPY_ARRAY_OUT_ARRAY);
+
+
+    /* Do stuff */
+
+
+    /* Create return object */
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+
 Array pyObjectToArray(PyObject *pythonObject, int requirements){
     PyArrayObject* arrayObject = NULL;
     arrayObject = (PyArrayObject *)PyArray_FROM_OTF(pythonObject, NPY_DOUBLE, requirements);
@@ -34,6 +63,7 @@ Array pyObjectToArray(PyObject *pythonObject, int requirements){
 
 static PyMethodDef method_table[] = {
         {"distance_matrix",     distance_matrix,    METH_VARARGS,   utils_distanceMatrix_docstring},
+        {"knn",                 knn,                METH_VARARGS,   utils_knn_docstring},
         /* Sentinel */
         {NULL,                  NULL,               0,              NULL}
 };

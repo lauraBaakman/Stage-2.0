@@ -1,6 +1,8 @@
 from sklearn.neighbors import KDTree
+import numpy as np
 
 import kde.utils.distanceMatrix as distanceMatrix
+import kde.utils._utils as _utils
 
 
 class KNN(object):
@@ -39,7 +41,10 @@ class _KNN_C(_KNN):
         self._distance_matrix = distanceMatrix.compute_distance_matrix(patterns)
 
     def find_k_nearest_neighbours(self, pattern, k):
-        raise NotImplementedError()
+        (dimension,) = pattern.shape
+        nearest_neighbours = np.empty([k, dimension], dtype=np.float64)
+        _utils.knn(k, pattern, self._patterns, self._distance_matrix, nearest_neighbours)
+        return nearest_neighbours
 
 
 class _KNN_Python(_KNN):
