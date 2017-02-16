@@ -1,4 +1,4 @@
-#include "distancematrix.h"
+#include "distancematrix.ih"
 
 void computeDistanceMatrix(Array *patterns, Array *distanceMatrix){
 
@@ -16,8 +16,18 @@ void computeDistanceMatrix(Array *patterns, Array *distanceMatrix){
         for(int j = i + 1;
                 j < patterns->length;
                 j++, b+= patterns->stride){
-            printf("i = %d j = %d a[0] = %f b[0] %f\n", i, j, a[0], b[0]);
-
+            distance = squaredEuclidean(a, b, patterns->dimensionality);
+            arraySetElement(distanceMatrix, i, j, distance);
+            arraySetElement(distanceMatrix, j, i, distance);
         }
     }
 }
+
+double squaredEuclidean(double* a, double* b, int length){
+    double distance = 0;
+    for(int i = 0; i < length; i++){
+        distance += (a[i] - b[i]) * (a[i] - b[i]);
+    }
+    return distance;
+}
+
