@@ -16,8 +16,8 @@ static PyObject * distance_matrix(PyObject *self, PyObject *args){
     computeDistanceMatrix(&patterns, &distanceMatrix);
 
     /* Create return object */
-    PyObject *returnObject = Py_BuildValue("d", 42.0);
-    return returnObject;
+    Py_INCREF(Py_None);
+    return Py_None;
 }
 
 Array pyObjectToArray(PyObject *pythonObject, int requirements){
