@@ -1,0 +1,6 @@
+#ifndef KERNELS_KNN_IH
+#define KERNELS_KNN_IH
+
+#include "knn.h"
+
+#endif //KERNELS_KNN_IH

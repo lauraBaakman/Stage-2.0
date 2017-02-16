@@ -41,7 +41,7 @@ static PyObject * knn(PyObject *self, PyObject *args){
 
 
     /* Do stuff */
-
+    compute_k_nearest_neighbours(k, &pattern, &patterns, &distanceMatrix, &nearestNeighbours);
 
     /* Create return object */
     Py_INCREF(Py_None);
