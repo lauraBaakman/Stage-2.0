@@ -3,6 +3,15 @@
 static char utils_distanceMatrix_docstring[] = "Compute the distance matrix for the input patterns with squared Euclidean distance as a metric.";
 static PyObject * distance_matrix(PyObject *self, PyObject *args){
 
+    /* Handle input */
+    PyObject* inPatterns = NULL;
+
+    if (!PyArg_ParseTuple(args, "O", &inPatterns)) return NULL;
+
+    Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
+
+    /* Do stuff */
+    printArray(&patterns);
 
     /* Create return object */
     PyObject *returnObject = Py_BuildValue("d", 42.0);

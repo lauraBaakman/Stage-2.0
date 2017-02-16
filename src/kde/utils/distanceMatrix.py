@@ -15,4 +15,4 @@ def _compute_distance_matrix_Python(patterns):
 
 
 def _compute_distance_matrix_C(patterns):
-    return _utils.distance_matrix()
+    return _utils.distance_matrix(patterns)
