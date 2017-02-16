@@ -1,0 +1,33 @@
+#include "distancematrix.ih"
+
+void computeDistanceMatrix(Array *patterns, Array *distanceMatrix){
+
+    double* a = patterns->data;
+    double* b;
+    double distance;
+
+    arraySetDiagonalToZero(distanceMatrix);
+
+    for(int i = 0;
+            i < patterns->length;
+            i++, a+= patterns->stride)
+    {
+        b = a + patterns->stride;
+        for(int j = i + 1;
+                j < patterns->length;
+                j++, b+= patterns->stride){
+            distance = squaredEuclidean(a, b, patterns->dimensionality);
+            arraySetElement(distanceMatrix, i, j, distance);
+            arraySetElement(distanceMatrix, j, i, distance);
+        }
+    }
+}
+
+double squaredEuclidean(double* a, double* b, int length){
+    double distance = 0;
+    for(int i = 0; i < length; i++){
+        distance += (a[i] - b[i]) * (a[i] - b[i]);
+    }
+    return distance;
+}
+

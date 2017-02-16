@@ -3,7 +3,7 @@
 //
 #include "utils.ih"
 
-Array buildArrayFromPyArray(PyArrayObject* arrayObject){
+Array arrayBuildFromPyArray(PyArrayObject *arrayObject){
 
     double* data = (double *)PyArray_DATA(arrayObject);
 
@@ -30,7 +30,7 @@ int determine_dimensionality(PyArrayObject* arrayObject){
     }
 }
 
-void printArray(Array* array){
+void arrayPrint(Array *array){
     printf("Array { data: %p, dimensionality: %2d, length: %4d, stride: %4d}\n",
     array->data, array->dimensionality, array->length, array->stride);
     double* currentElement = array->data;
@@ -50,6 +50,21 @@ void printElement(double* element, int dimension){
     }
     printf("]\n");
 }
+
+void arraySetDiagonalToZero(Array *array){
+    double* currentRow = array->data;
+    for (int i = 0;
+         i < array->length;
+         ++i, currentRow+= array->stride) {
+        currentRow[i] = 0;
+    }
+}
+
+void arraySetElement(Array* array, int rowIdx, int colIdx, double value){
+    double* row = array->data + rowIdx * array->stride;
+    row[colIdx] = value;
+}
+
 
 double* scalePattern(double* pattern, double* dataPoint, double* scaledPattern, int dimensionality, double windowWidth){
     for (int i = 0; i < dimensionality; ++i) {

@@ -1,0 +1,8 @@
+#ifndef KERNELS_DISTANCEMATRIX_IH
+#define KERNELS_DISTANCEMATRIX_IH
+
+#include "distancematrix.h"
+
+double squaredEuclidean(double* a, double* b, int length);
+
+#endif //KERNELS_DISTANCEMATRIX_IH
