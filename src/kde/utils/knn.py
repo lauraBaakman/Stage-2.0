@@ -43,8 +43,13 @@ class _KNN_C(_KNN):
     def find_k_nearest_neighbours(self, pattern, k):
         (dimension,) = pattern.shape
         nearest_neighbours = np.empty([k, dimension], dtype=np.float64)
-        _utils.knn(k, pattern, self._patterns, self._distance_matrix, nearest_neighbours)
+        pattern_idx = self._find_idx_of_pattern(pattern)
+        _utils.knn(k, pattern_idx, self._patterns, self._distance_matrix, nearest_neighbours)
         return nearest_neighbours
+
+    def _find_idx_of_pattern(self, pattern):
+        idx_array = np.where(np.all(self._patterns == pattern, axis=1))
+        return idx_array[0]
 
 
 class _KNN_Python(_KNN):
@@ -56,4 +61,3 @@ class _KNN_Python(_KNN):
     def find_k_nearest_neighbours(self, pattern, k):
         indices = self._kdtree.query(pattern, k=k, return_distance=False)[0]
         return self._patterns[indices]
-

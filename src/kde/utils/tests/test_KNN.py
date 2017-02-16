@@ -88,6 +88,13 @@ class Test_KNN_C(KNNImpAbstractTest, TestCase):
         super().setUp()
         self._implementation = _KNN_C
 
+    def _find_idx_of_pattern(self):
+        knn = self._implementation(self.patterns)
+        pattern = np.array([1, 1])
+        expected = 1
+        actual = knn._find_idx_of_pattern(pattern)
+        self.assertEqual(actual, expected)
+
 
 class Test_KNN_Python(KNNImpAbstractTest, TestCase):
     def setUp(self):

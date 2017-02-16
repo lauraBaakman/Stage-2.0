@@ -24,24 +24,23 @@ static char utils_knn_docstring[] = "Compute the K nearest neighbours of some pa
 static PyObject * knn(PyObject *self, PyObject *args){
 
     /* Handle input */
-    PyObject* inPattern = NULL;
     PyObject* inPatterns = NULL;
     PyObject* inDistanceMatrix = NULL;
     PyObject* outNearestNeighbours = NULL;
 
     int k;
+    int patternIdx;
 
-    if (!PyArg_ParseTuple(args, "dOOOO",
-                          &k, &inPattern, &inPatterns, &inDistanceMatrix, &outNearestNeighbours)) return NULL;
+    if (!PyArg_ParseTuple(args, "ddOOO",
+                          &k, &patternIdx, &inPatterns, &inDistanceMatrix, &outNearestNeighbours)) return NULL;
 
-    Array pattern = pyObjectToArray(inPattern, NPY_ARRAY_IN_ARRAY);
     Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
     Array distanceMatrix = pyObjectToArray(inDistanceMatrix, NPY_ARRAY_IN_ARRAY);
     Array nearestNeighbours = pyObjectToArray(outNearestNeighbours, NPY_ARRAY_OUT_ARRAY);
 
 
     /* Do stuff */
-    compute_k_nearest_neighbours(k, &pattern, &patterns, &distanceMatrix, &nearestNeighbours);
+    compute_k_nearest_neighbours(k, patternIdx, &patterns, &distanceMatrix, &nearestNeighbours);
 
     /* Create return object */
     Py_INCREF(Py_None);
