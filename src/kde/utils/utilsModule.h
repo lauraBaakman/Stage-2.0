@@ -10,6 +10,7 @@
 #include <numpy/arrayobject.h>
 
 #include "../utils.h"
+#include "distancematrix.h"
 
 Array pyObjectToArray(PyObject *pythonObject, int requirements);
 

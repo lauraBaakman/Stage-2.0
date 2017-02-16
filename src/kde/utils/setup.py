@@ -6,7 +6,7 @@ def configuration(parent_package='', top_path=None):
                            top_path)
     config.add_extension(
         '_utils',  # Name of the extension
-        sources=['utilsModule.c', '../utils.c']
+        sources=['utilsModule.c', '../utils.c', 'distancematrix.c']
     )
     return config
 
