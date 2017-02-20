@@ -3,6 +3,8 @@
 
 #include "covariancematrix.h"
 
+double computeVariance(double *pDouble, int length);
 
+double computeCovariance(double *pDouble, double *columnB, int length);
 
 #endif //KERNELS_COVARIANCEMATRIX_IH
