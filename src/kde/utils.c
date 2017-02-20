@@ -65,6 +65,11 @@ void arraySetElement(Array* array, int rowIdx, int colIdx, double value){
     row[colIdx] = value;
 }
 
+double* arrayGetRow(Array* array, int rowIdx){
+    double* row = array->data + rowIdx * array->stride;
+    return row;
+}
+
 
 double* scalePattern(double* pattern, double* dataPoint, double* scaledPattern, int dimensionality, double windowWidth){
     for (int i = 0; i < dimensionality; ++i) {
