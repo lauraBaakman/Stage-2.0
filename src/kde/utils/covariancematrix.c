@@ -1,6 +1,8 @@
 #include "covariancematrix.ih"
 
 
+double computeMean(double **data, int length);
+
 void computeCovarianceMatrix(Array *patterns, Array *covarianceMatrix) {
 //http://stackoverflow.com/a/3307381/1357229
     double **columnA = (double**) malloc(patterns->length * sizeof(double*));
@@ -32,5 +34,19 @@ double computeCovariance(double **columnA, double **columnB, int length) {
 }
 
 double computeVariance(double **data, int length) {
-    return 42.0;
+    double variance = 0;
+    double mean = computeMean(data, length);
+    for(int i = 0; i<length; i++){
+        variance += (*(data[i]) - mean) * (*(data[i]) - mean);
+    }
+    variance = variance / length;
+    return variance;
+}
+
+double computeMean(double **data, int length) {
+    double mean = 0;
+    for(int i = 0; i < length; i++){
+        mean += *(data[i]);
+    }
+    return mean / length;
 }
