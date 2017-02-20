@@ -46,9 +46,11 @@ class TestKNN(TestCase):
             [0, 0],
             [1, 1]
         ], dtype=np.float64)
+        expected.sort(axis=0)
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
             actual = knn.find_k_nearest_neighbours(pattern=pattern, k=self._k)
+            actual.sort(axis=0)
             self.assertEqual(len(w), 1)
             self.assertIsInstance(knn._implementation, _KNN_Python)
             np.testing.assert_array_almost_equal(actual, expected)
@@ -87,12 +89,12 @@ class KNNImpAbstractTest(object):
             [2, 3],
             [4, 7]
         ], dtype=np.float64)
-        self.pattern = np.array([0.4, 0.4], dtype=np.float64)
         self._implementation = None
 
     def test_find_k_nearest_neighbours_0(self):
         knn = self._implementation(self.patterns)
-        actual = knn.find_k_nearest_neighbours(self.pattern, k=2)
+        pattern = np.array([0, 0])
+        actual = knn.find_k_nearest_neighbours(pattern, k=2)
         expected = np.array([
             [0, 0],
             [1, 1]

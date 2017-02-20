@@ -53,13 +53,13 @@ class _KNN_C(_KNN):
 
     def find_k_nearest_neighbours(self, pattern, k):
         (dimension,) = pattern.shape
-        nearest_neighbours = np.empty([k, dimension], dtype=np.float64)
+        nearest_neighbours = np.zeros([k, dimension], dtype=np.float64)
         pattern_idx = self._find_idx_of_pattern(pattern)
         _utils.knn(k, pattern_idx, self._patterns, self._distance_matrix, nearest_neighbours)
         return nearest_neighbours
 
     def _find_idx_of_pattern(self, pattern):
-        idx_array = np.where(np.all(self._patterns == pattern, axis=1))
+        (idx_array,) = np.where(np.all(self._patterns == pattern, axis=1))
         if len(idx_array) != 1:
             raise KNNException(
                 "The pattern {} occurred an unexpected number of times.".format(pattern),
@@ -75,7 +75,7 @@ class _KNN_Python(_KNN):
         self._kdtree = KDTree(patterns, metric='euclidean')
 
     def find_k_nearest_neighbours(self, pattern, k):
-        indices = self._kdtree.query(pattern, k=k, return_distance=False)[0]
+        indices = self._kdtree.query(pattern.reshape(1, -1), k=k, return_distance=False)[0]
         return self._patterns[indices]
 
 
