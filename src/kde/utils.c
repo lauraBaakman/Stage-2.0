@@ -85,3 +85,13 @@ double* scalePattern(double* pattern, double* dataPoint, double* scaledPattern, 
     }
     return scaledPattern;
 }
+
+double **arrayGetColumn(Array *array, int colIdx, double **column) {
+    double* data = array->data;
+    printf("\narrayGetColumn colIdx (%d).\n", colIdx);
+    for(int i = 0; i < array->length; i++, data+=array->rowStride){
+        printf("%d %d = %f\n", i, colIdx, data[colIdx]);
+        column[i] = &data[colIdx];
+    }
+    return column;
+}
