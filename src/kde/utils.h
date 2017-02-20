@@ -16,6 +16,7 @@ Array arrayBuildFromPyArray(PyArrayObject *arrayObject);
 void arrayPrint(Array *array);
 void arraySetDiagonalToZero(Array *array);
 void arraySetElement(Array* array, int rowIdx, int colIdx, double value);
+void arraySetRow(Array* array, int rowIdx, double* values);
 double* arrayGetRow(Array* array, int rowIdx);
 
 
