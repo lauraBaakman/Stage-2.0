@@ -101,6 +101,18 @@ class KNNImpAbstractTest(object):
         ], dtype=np.float64)
         np.testing.assert_array_almost_equal(actual, expected)
 
+    def test_find_k_nearest_neighbours_1(self):
+        knn = self._implementation(self.patterns)
+        pattern = np.array([1, 1])
+        actual = knn.find_k_nearest_neighbours(pattern, k=2)
+        expected = np.array([
+            [0, 0],
+            [1, 1]
+        ], dtype=np.float64)
+        expected.sort(axis=0)
+        actual.sort(axis=0)
+        np.testing.assert_array_almost_equal(actual, expected)
+
 
 class Test_KNN_C(KNNImpAbstractTest, TestCase):
     def setUp(self):
