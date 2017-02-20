@@ -47,6 +47,7 @@ class TestCovariance(TestCase):
         actual = covariance(data, implementation=_covariance_C)
         np.testing.assert_array_almost_equal(actual, expected)
 
+
 class CovarianceImpAbstractTest(object):
 
     def setUp(self):
@@ -63,6 +64,18 @@ class CovarianceImpAbstractTest(object):
         expected = np.array([
             [1.687500000000000, 1.375000000000000],
             [1.375000000000000, 1.250000000000000]
+        ])
+        actual = self._implementation(data)
+        np.testing.assert_array_almost_equal(actual, expected)
+
+    def test_covariance_1(self):
+        data = np.array([
+            [1, 2],
+            [1, 3],
+        ])
+        expected = np.array([
+            [0.0, 0.0],
+            [0.0, 0.250000000000000]
         ])
         actual = self._implementation(data)
         np.testing.assert_array_almost_equal(actual, expected)
