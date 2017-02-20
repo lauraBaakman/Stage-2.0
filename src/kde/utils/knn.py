@@ -26,7 +26,6 @@ class KNN(object):
             neighbours = self._implementation.find_k_nearest_neighbours(pattern=pattern, k=k)
         return neighbours
 
-
     def _validate_k(self, k):
         if k <= 0:
             raise KNNException("K should be greater than zero, not {}".format(k))
