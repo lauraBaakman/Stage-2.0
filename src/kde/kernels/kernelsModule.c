@@ -22,7 +22,7 @@ static PyObject * standard_gaussian_multi_pattern(PyObject *self, PyObject *args
     for(
             int j = 0;
             j < patterns.length;
-            j++, current_pattern += patterns.stride)
+            j++, current_pattern += patterns.rowStride)
     {
         densities.data[j] = kernel.densityFunction(current_pattern, patterns.dimensionality, kernelConstant);
     }
@@ -81,7 +81,7 @@ static PyObject * epanechnikov_multi_pattern(PyObject *self, PyObject *args){
 
     for (int i = 0;
          i < patterns.length;
-         ++i, currentPattern += patterns.stride)
+         ++i, currentPattern += patterns.rowStride)
     {
         densities.data[i] = kernel.densityFunction(currentPattern, patterns.dimensionality, kernelConstant);
     }
@@ -124,7 +124,7 @@ static PyObject * testKernel_multi_pattern(PyObject *self, PyObject *args){
 
     for (int i = 0;
          i < patterns.length;
-         ++i, currentPattern += patterns.stride)
+         ++i, currentPattern += patterns.rowStride)
     {
         densities.data[i] = kernel.densityFunction(currentPattern, patterns.dimensionality, kernelConstant);
     }

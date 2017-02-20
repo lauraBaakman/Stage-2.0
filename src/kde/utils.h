@@ -9,7 +9,8 @@ typedef struct Array{
     double* data;
     int length;
     int dimensionality;
-    int stride;
+    int rowStride;
+    int colStride;
 } Array;
 
 Array arrayBuildFromPyArray(PyArrayObject *arrayObject);

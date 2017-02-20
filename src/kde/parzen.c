@@ -13,7 +13,7 @@ double parzen(double *pattern, Array *dataPoints, double windowWidth, double par
 
     for (int i = 0;
          i < dataPoints->length;
-         ++i, currentDataPoint += dataPoints->stride)
+         ++i, currentDataPoint += dataPoints->rowStride)
     {
         scaledPattern = scalePattern(pattern, currentDataPoint, scaledPattern, dataPoints->dimensionality, windowWidth);
         density += kernel(scaledPattern, dataPoints->dimensionality, kernelConstant);

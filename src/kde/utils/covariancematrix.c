@@ -8,7 +8,7 @@ void computeCovarianceMatrix(Array *patterns, Array *covarianceMatrix) {
     double covariance;
     for(int row = 0; row < covarianceMatrix->dimensionality; row++, columnA += patterns->colStride){
         arraySetElement(covarianceMatrix, row, row, computeVariance(columnA, patterns->length));
-        columnB += patterns->stride * (row + 1);
+        columnB += patterns->colStride * (row + 1);
         for(int col = row  + 1; col < covarianceMatrix->dimensionality; col++, columnB+= patterns->colStride){
             covariance = computeCovariance(columnA, columnB, patterns->length);
             arraySetElement(covarianceMatrix, row, col, covariance);

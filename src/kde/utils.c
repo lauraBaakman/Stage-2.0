@@ -10,13 +10,15 @@ Array arrayBuildFromPyArray(PyArrayObject *arrayObject){
     int dimensionality = determine_dimensionality(arrayObject);
     int length = (int)PyArray_DIM(arrayObject, 0);
 
-    int stride = (int)PyArray_STRIDE (arrayObject, 0) / (int)PyArray_ITEMSIZE(arrayObject);
+    int rowStride = (int)PyArray_STRIDE (arrayObject, 0) / (int)PyArray_ITEMSIZE(arrayObject);
+    int colStride = (int)PyArray_STRIDE (arrayObject, 1) / (int)PyArray_ITEMSIZE(arrayObject);
 
     Array array = {
             .data = data,
             .dimensionality = dimensionality,
             .length = length,
-            .stride = stride
+            .rowStride= rowStride,
+            .colStride = colStride
     };
     return array;
 }
@@ -31,13 +33,13 @@ int determine_dimensionality(PyArrayObject* arrayObject){
 }
 
 void arrayPrint(Array *array){
-    printf("Array { data: %p, dimensionality: %2d, length: %4d, stride: %4d}\n",
-    array->data, array->dimensionality, array->length, array->stride);
+    printf("Array { data: %p, dimensionality: %2d, length: %4d, row stride: %4d, col stride: %4d}\n",
+    array->data, array->dimensionality, array->length, array->rowStride, array->colStride);
     double* currentElement = array->data;
 
     for (int i = 0;
          i < array->length;
-         ++i, currentElement += array->stride) {
+         ++i, currentElement += array->rowStride) {
         printElement(currentElement, array->dimensionality);
     }
     printf("\n");
@@ -55,18 +57,18 @@ void arraySetDiagonalToZero(Array *array){
     double* currentRow = array->data;
     for (int i = 0;
          i < array->length;
-         ++i, currentRow+= array->stride) {
+         ++i, currentRow+= array->rowStride) {
         currentRow[i] = 0;
     }
 }
 
 void arraySetElement(Array* array, int rowIdx, int colIdx, double value){
-    double* row = array->data + rowIdx * array->stride;
+    double* row = array->data + rowIdx * array->rowStride;
     row[colIdx] = value;
 }
 
 double* arrayGetRow(Array* array, int rowIdx){
-    double* row = array->data + rowIdx * array->stride;
+    double* row = array->data + rowIdx * array->rowStride;
     return row;
 }
 
