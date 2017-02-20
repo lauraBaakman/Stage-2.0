@@ -21,27 +21,40 @@ class TestKNN(TestCase):
             [0, 0],
             [1, 1]
         ], dtype=np.float64)
-        self._pattern = np.array([0.4, 0.4], dtype=np.float64)
-
+        self._expected.sort(axis=0)
 
     def test_find_k_nearest_neighbours_implicit_C(self):
         knn = KNN(patterns=self._patterns)
-        actual = knn.find_k_nearest_neighbours(pattern=self._pattern, k=self._k)
-        np.testing.assert_array_almost_equal   (actual, self._expected)
+        pattern = np.array([1, 1], dtype=np.float64)
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            self.assertEqual(len(w), 0)
+            actual = knn.find_k_nearest_neighbours(pattern=pattern, k=self._k)
+            actual.sort(axis=0)
+            np.testing.assert_array_almost_equal(actual, self._expected)
 
     def test_find_k_nearest_neighbours_explicit_C(self):
         knn = KNN(patterns=self._patterns, implementation=_KNN_C)
-        actual = knn.find_k_nearest_neighbours(pattern=self._pattern, k=self._k)
-        np.testing.assert_array_almost_equal(actual, self._expected)
+        pattern = np.array([1, 1], dtype=np.float64)
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            self.assertEqual(len(w), 0)
+            actual = knn.find_k_nearest_neighbours(pattern=pattern, k=self._k)
+            actual.sort(axis =0)
+            np.testing.assert_array_almost_equal(actual, self._expected)
 
     def test_find_k_nearest_neighbours_explicit_Python(self):
         knn = KNN(patterns=self._patterns, implementation=_KNN_Python)
-        actual = knn.find_k_nearest_neighbours(pattern=self._pattern, k=self._k)
-        np.testing.assert_array_almost_equal(actual, self._expected)
+        pattern = np.array([0.4, 0.4], dtype=np.float64)
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            self.assertEqual(len(w), 0)
+            actual = knn.find_k_nearest_neighbours(pattern=pattern, k=self._k)
+            np.testing.assert_array_almost_equal(actual, self._expected)
 
     def test_find_k_nearest_neighbours_switch_to_Python(self):
         knn = KNN(patterns=self._patterns, implementation=_KNN_C)
-        pattern = np.array([0.5, 0.5])
+        pattern = np.array([0.4, 0.4])
         expected = np.array([
             [0, 0],
             [1, 1]
