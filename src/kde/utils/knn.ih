@@ -4,5 +4,18 @@
 #include "knn.h"
 
 
+typedef struct ListElement{
+    double* value;
+    int index;
+} ListElement;
+
+void getKNearestElements(ListElement* sortedDistances, int k, Array* patterns, Array* neighbours);
+
+ListElement* toArrayOfListElements(double *values, int numValues);
+
+int listElementCompare(const void *s1, const void *s2);
+void listElementArraySort(ListElement* elements, int numElements);
+void listElementArrayPrint(ListElement* elements, int numElements);
+void listElementPrint(ListElement* element);
 
 #endif //KERNELS_KNN_IH
