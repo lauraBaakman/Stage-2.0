@@ -12,8 +12,6 @@ Array* compute_k_nearest_neighbours(int k, int patternIdx, Array *patterns, Arra
 
     free(elements);
 
-    arrayPrint(nearestNeighbours);
-
     return nearestNeighbours;
 }
 
