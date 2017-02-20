@@ -8,7 +8,7 @@ set(SOURCE_FILES
         kernels/kernels.c kernels/kernels.h
         kernels/kernelsModule.c kernels/kernelsModule.h
         parzen.c parzen.h
-        utils.c utils.h modifeidbreiman.c modifeidbreiman.h utils/utilsModule.c utils/utilsModule.h utils/distancematrix.c utils/distancematrix.h utils/knn.c utils/knn.h)
+        utils.c utils.h modifeidbreiman.c modifeidbreiman.h utils/utilsModule.c utils/utilsModule.h utils/distancematrix.c utils/distancematrix.h utils/knn.c utils/knn.h utils/covariancematrix.cpp utils/covariancematrix.h)
 add_executable(kde ${SOURCE_FILES})
 
 find_package(PythonLibs REQUIRED)

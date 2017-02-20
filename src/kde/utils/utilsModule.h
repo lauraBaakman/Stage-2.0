@@ -12,6 +12,7 @@
 #include "../utils.h"
 #include "distancematrix.h"
 #include "knn.h"
+#include "covariancematrix.h"
 
 Array pyObjectToArray(PyObject *pythonObject, int requirements);
 

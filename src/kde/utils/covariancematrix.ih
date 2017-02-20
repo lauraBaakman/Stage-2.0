@@ -1,0 +1,8 @@
+#ifndef KERNELS_COVARIANCEMATRIX_IH
+#define KERNELS_COVARIANCEMATRIX_IH
+
+#include "covariancematrix.h"
+
+
+
+#endif //KERNELS_COVARIANCEMATRIX_IH
