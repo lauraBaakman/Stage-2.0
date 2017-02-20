@@ -31,8 +31,11 @@ static PyObject * knn(PyObject *self, PyObject *args){
     int k;
     int patternIdx;
 
-    if (!PyArg_ParseTuple(args, "ddOOO",
+    if (!PyArg_ParseTuple(args, "iiOOO",
                           &k, &patternIdx, &inPatterns, &inDistanceMatrix, &outNearestNeighbours)) return NULL;
+
+    printf("knn: k: %d\n", k);
+    printf("knn: patternIdx: %d\n", patternIdx);
 
     Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
     Array distanceMatrix = pyObjectToArray(inDistanceMatrix, NPY_ARRAY_IN_ARRAY);
