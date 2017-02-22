@@ -2,6 +2,7 @@ from kde.kernels.kernel import Kernel
 
 
 class Gaussian(object):
+
     def __new__(cls, mean, covariance_matrix, implementation=None):
         implementation_class = implementation or _Gaussian_C
         return implementation_class(mean=mean, covariance_matrix=covariance_matrix)
