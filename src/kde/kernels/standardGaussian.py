@@ -1,4 +1,5 @@
 import kde.kernels._kernels as _kernels
+from kde.kernels.kernel import KernelException
 import numpy as np
 import scipy.stats as stats
 
@@ -12,6 +13,20 @@ class StandardGaussian(Kernel):
 
     def to_C_enum(self):
         return 1
+
+    def scaling_factor(self, general_bandwidth, eigen_values):
+        self._validate_scaling_factors_parameters(general_bandwidth=general_bandwidth, eigen_values=eigen_values)
+        return self._implementation.scaling_factor(general_bandwidth=general_bandwidth, eigen_values=eigen_values)
+
+    @staticmethod
+    def _validate_scaling_factors_parameters(general_bandwidth, eigen_values):
+        if eigen_values is None:
+            return
+        if np.all(eigen_values == general_bandwidth):
+            return
+        raise KernelException("The StandardGaussian can only have a covariance matrix of the form:"
+                              "general_bandwidth * I. Thus the eigen values should all be equal to the general "
+                              " bandwidth.")
 
 
 class _StandardGaussian_C(StandardGaussian):
@@ -37,6 +52,9 @@ class _StandardGaussian_C(StandardGaussian):
         _kernels.standard_gaussian_multi_pattern(xs, densities)
         return densities
 
+    def scaling_factor(self, general_bandwidth, eigen_values=None):
+        raise NotImplementedError("This class does not have an implementation of the scaling factor computation method.")
+
 
 class _StandardGaussian_Python(StandardGaussian):
     def __init__(self):
@@ -56,3 +74,6 @@ class _StandardGaussian_Python(StandardGaussian):
         else:
             raise TypeError("Expected a vector or a matrix, not a {}-dimensional array.".format(xs.ndim))
         return dimension
+
+    def scaling_factor(self, general_bandwidth, eigen_values=None):
+        return general_bandwidth * np.sqrt(general_bandwidth)

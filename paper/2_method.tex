@@ -27,6 +27,7 @@
 	Let \varNeighborhood{\varPattern} denote the union of \varPattern and its neighborhood, the basic shape of the kernel used for \varPattern is then given by \varCovarianceFunction{\varNeighborhood{\varPattern}}.
 
 	\todo{The scaling discussed here has to change if the Epanechnikov kernel is used for the final density estimate.}
+	\todo[inline]{For the uniformly scaled Gaussian this reduces to $h\sqrt{h}$.}
 	To allow the density estimation of each pattern to be influenced by an equal area, before the application of the smoothing factor $\varLocalBandwidth{i}$, the basic shapes of the kernels need to be scaled. To that end we use the eigenellipse, the ellipse defined by the eigenvectors and eigenvalues of \varCovarianceFunction{\varNeighborhood{\varPattern}}. We scale the covariance matrix with the factor \varScalingFactor, defined as:
 	\begin{equation}
 		\varScalingFactor = \frac{\varBandwidth^2}{\varGeometricMeanFunction{\sqrt{\lambda_1}, \dotsc, \sqrt{\lambda_\varDim}}},

@@ -32,6 +32,9 @@ class _TestKernel_Python(Kernel):
     def _evaluate_multiple_patterns(self, x):
         return np.abs(np.mean(x, axis=1))
 
+    def scaling_factor(self, general_bandwidth=None, eigen_values=None):
+        return 0.5
+
 
 class _TestKernel_C(Kernel):
     def __init__(self):
@@ -49,3 +52,6 @@ class _TestKernel_C(Kernel):
             return densities
         else:
             raise TypeError("Expected a vector or a matrix, not a {}-dimensional array.".format(x.ndim))
+
+    def scaling_factor(self, general_bandwidth, eigen_values):
+        raise NotImplementedError("This class does not have an implementation of the scaling factor computation method.")
