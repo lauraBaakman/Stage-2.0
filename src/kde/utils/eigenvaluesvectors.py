@@ -9,5 +9,10 @@ def _eig_Python(data):
     raise NotImplementedError()
 
 
-def eig(data, implementation=_eig_Python):
+def eigenValuesAndVectors(data, implementation=_eig_Python):
+    """
+    :param data:
+    :param implementation:
+    :return: Each column of the matrix with eigenvectors is a eigenvector.
+    """
     return implementation(data)
