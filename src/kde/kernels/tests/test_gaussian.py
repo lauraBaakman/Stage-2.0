@@ -18,6 +18,47 @@ class TestGaussian(TestCase):
         expected = 3
         self.assertEqual(actual, expected)
 
+    @skip("The C implementation of the Gaussian kernel has not yet been written.")
+    def test_default_implementation(self):
+        covariance_matrix = np.array([[1, 0], [0, 1]])
+        mean = np.array([0, 0])
+        pattern = np.array([0.5, 0.5])
+        expected = 0.123949994309653
+        actual = Gaussian(mean, covariance_matrix).evaluate(pattern)
+        self.assertAlmostEqual(expected, actual)
+
+    def test_alternative_implementation(self):
+        covariance_matrix = np.array([[1, 0], [0, 1]])
+        mean = np.array([0, 0])
+        pattern = np.array([0.5, 0.5])
+        expected = 0.123949994309653
+        actual = Gaussian(mean, covariance_matrix, _Gaussian_Python).evaluate(pattern)
+        self.assertAlmostEqual(expected, actual)
+
+    def test_input_validation_alternative_implementation(self):
+        covariance_matrix = np.array([[1, 0], [0, 1]])
+        mean = np.array([0, 0, 0.5])
+        try:
+            Gaussian(mean, covariance_matrix, _Gaussian_Python)
+        except KernelException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test_input_validation_default_implementation(self):
+        covariance_matrix = np.array([[1, 0], [0, 1]])
+        mean = np.array([0, 0, 0.5])
+        try:
+            Gaussian(mean, covariance_matrix)
+        except KernelException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
 
 class Test_Gaussian(TestCase):
 
@@ -232,6 +273,28 @@ class Test_Gaussian(TestCase):
         else:
             self.fail('ExpectedException not raised')
 
+    def test__validate_covariance_matrix_2(self):
+        # Invalid covariance matrix: not 2D
+        covariance = np.array([
+            [
+                [1.2, 2.1],
+                [2.3, 3.2]
+            ],
+            [
+                [1.2, 2.1],
+                [2.3, 3.2]
+            ]
+        ])
+        try:
+            _Gaussian(None, None)._validate_covariance_matrix(covariance)
+        except KernelException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    @skip("The C implementation of the Gaussian kernel has not yet been written.")
     def test_evaluate_default_implementation(self):
         covariance_matrix = np.array([[1, 0], [0, 1]])
         mean = np.array([0, 0])
@@ -240,11 +303,18 @@ class Test_Gaussian(TestCase):
         actual = Gaussian(covariance_matrix, mean).evaluate(pattern)
         self.assertAlmostEqual(expected, actual)
 
+    @skip("The C implementation of the Gaussian kernel has not yet been written.")
     def test_scaling_factor(self):
         eigen_values = np.array([4.0, 9.0, 16.0, 25.0])
+        covariance_matrix = np.array([
+            [1, 0, 0, 1],
+            [0, 1, 1, 0],
+            [0, 1, 1, 0],
+            [0, 1, 1, 0],
+        ])
         h = 0.5
         expected = 0.5 * np.sqrt(7.5)
-        actual = Gaussian(None, None).scaling_factor(general_bandwidth=h, eigen_values=eigen_values)
+        actual = Gaussian(None, covariance_matrix).scaling_factor(general_bandwidth=h, eigen_values=eigen_values)
         self.assertAlmostEqual(expected, actual)
 
 
@@ -283,11 +353,14 @@ class GaussianImpAbstractTest(object):
         self.assertAlmostEqual(expected, actual)
 
     def test_scaling_factor(self):
-        eigen_values = np.array([4.0, 9.0, 16.0, 25.0])
+        eigen_values = np.array([4.0, 9.0])
         h = 0.5
-        expected = 0.5 * np.sqrt(7.5)
-        actual = self._kernel_class(None, None).scaling_factor(general_bandwidth=h, eigen_values=eigen_values)
+        covariance_matrix = np.array([[0.5, 0.5], [0.5, 1.5]])
+        mean = np.array([2, 2])
+        expected = 0.25 * np.sqrt(6)
+        actual = self._kernel_class(mean, covariance_matrix).scaling_factor(general_bandwidth=h, eigen_values=eigen_values)
         self.assertAlmostEqual(expected, actual)
+        self.fail("Figure out what the expected value should be in this case!")
 
 
 class Test_Gaussian_Python(GaussianImpAbstractTest, TestCase):
