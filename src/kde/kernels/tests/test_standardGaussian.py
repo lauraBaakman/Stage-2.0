@@ -4,6 +4,7 @@ import numpy as np
 
 from kde.kernels.standardGaussian import StandardGaussian, _StandardGaussian_C, _StandardGaussian_Python
 
+
 class TestStandardGaussian(TestCase):
     def test_evaluate_default_implementation(self):
         x = np.array([0.5, 0.5])
@@ -22,6 +23,8 @@ class TestStandardGaussian(TestCase):
         actual = StandardGaussian().to_C_enum()
         self.assertEqual(expected, actual)
 
+    def test_scaling_factor(self):
+        self.fail()
 
 class StandardGaussianImpAbstractTest(object):
     def test_evaluate_2D_1(self):
@@ -72,14 +75,18 @@ class StandardGaussianImpAbstractTest(object):
         expected = np.array([0.063493635934241, 0.043638495249061, 0.042084928316873])
         np.testing.assert_array_almost_equal(actual, expected)
 
+    def test_scaling_factor(self):
+        self.fail()
 
 class Test_StandardGaussian_Python(StandardGaussianImpAbstractTest, TestCase):
+
     def setUp(self):
         super().setUp()
         self._kernel_class = _StandardGaussian_Python
 
 
 class Test_StandardGaussian_C(StandardGaussianImpAbstractTest, TestCase):
+
     def setUp(self):
         super().setUp()
         self._kernel_class = _StandardGaussian_C

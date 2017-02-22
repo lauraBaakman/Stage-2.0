@@ -1,4 +1,4 @@
-from unittest import TestCase
+from unittest import TestCase,skip
 
 import numpy as np
 
@@ -23,6 +23,10 @@ class TestTestKernel(TestCase):
         actual = TestKernel().to_C_enum()
         self.assertEqual(expected, actual)
 
+    @skip("The function scaling_factor has not been implemented for the Test kernel.")
+    def test_scaling_factor(self):
+        self.fail()
+
 
 class TestKernelImpAbstractTest(object):
     def test_evaluate_1(self):
@@ -36,6 +40,10 @@ class TestKernelImpAbstractTest(object):
         actual = self._kernel_class().evaluate(x)
         expected = np.array([2.5, 3.5, 4.5])
         np.testing.assert_array_equal(actual, expected)
+
+    @skip("The function scaling_factor has not been implemented for the Test kernel.")
+    def test_scaling_factor(self):
+        self.fail()
 
 
 class TestTestKernel_C(TestKernelImpAbstractTest, TestCase):
