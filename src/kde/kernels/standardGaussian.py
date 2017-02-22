@@ -37,6 +37,9 @@ class _StandardGaussian_C(StandardGaussian):
         _kernels.standard_gaussian_multi_pattern(xs, densities)
         return densities
 
+    def scaling_factor(self):
+        raise NotImplementedError("This class does not have an implementation of the scaling factor computation method.")
+
 
 class _StandardGaussian_Python(StandardGaussian):
     def __init__(self):
@@ -56,3 +59,6 @@ class _StandardGaussian_Python(StandardGaussian):
         else:
             raise TypeError("Expected a vector or a matrix, not a {}-dimensional array.".format(xs.ndim))
         return dimension
+
+    def scaling_factor(self):
+        raise NotImplementedError("This class does not have an implementation of the scaling factor computation method.")
