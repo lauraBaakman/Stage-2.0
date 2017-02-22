@@ -33,19 +33,19 @@ int determine_dimensionality(PyArrayObject* arrayObject){
 }
 
 void arrayPrint(Array *array){
-    printf("Array { data: %p, dimensionality: %2d, length: %4d, row stride: %4d, col stride: %4d}\n",
+    printf("Array { data: %p, numberOfColumns: %2d, columnLength: %4d, row stride: %4d, col stride: %4d}\n",
     array->data, array->dimensionality, array->length, array->rowStride, array->colStride);
     double* currentElement = array->data;
 
     for (int i = 0;
          i < array->length;
          ++i, currentElement += array->rowStride) {
-        printElement(currentElement, array->dimensionality);
+        arrayPrintElement(currentElement, array->dimensionality);
     }
     printf("\n");
 }
 
-void printElement(double* element, int dimension){
+void arrayPrintElement(double *element, int dimension){
     printf("[ ");
     for (int i = 0; i < dimension; ++i) {
         printf("%f ", element[i]);
@@ -86,49 +86,47 @@ double* scalePattern(double* pattern, double* dataPoint, double* scaledPattern, 
     return scaledPattern;
 }
 
-ColumnFist2DArray toColumnWiseMatrix(Array *array) {
-    ColumnFist2DArray matrix = columnFirst2DArrayAllocate(array->length, array->dimensionality);
-    double* row = array->data;
-    for (int i = 0; i < array->length; ++i, row += array->rowStride) {
-        for (int j = 0; j < array->dimensionality; ++j) {
-            matrix.data[i][j] = row[j];
-            printf("matrix[%d][%d] = %f", i, j, row[j]);
+ArrayColumns getColumns(Array *array) {
+    ArrayColumns columns = arrayColumnsAllocate(array->dimensionality, array->length);
+    for (int columnElementIdx = 0, dataIdx = 0; columnElementIdx < columns.columnLength; ++columnElementIdx) {
+        for (int  columnIdx = 0; columnIdx < columns.numberOfColumns; ++columnIdx, dataIdx++) {
+            columns.data[columnIdx][columnElementIdx] = array->data[dataIdx];
         }
     }
-    return matrix;
+    return columns;
 }
 
-void columnFist2DArrayFree(ColumnFist2DArray *matrix) {
-    for(int i = 0; i < matrix->dimensionality; i++){
+void arrayColumnsFree(ArrayColumns *matrix) {
+    for(int i = 0; i < matrix->numberOfColumns; i++){
         free(matrix->data[i]);
     }
     free(matrix->data);
 }
 
-ColumnFist2DArray columnFirst2DArrayAllocate(int length, int dimensionality) {
-    double** data = malloc(dimensionality * sizeof(double*));
-    for(int i = 0; i < dimensionality; i++){
-        data[i] = malloc(length * sizeof(double));
+ArrayColumns arrayColumnsAllocate(int numberOfColumns, int columnLength) {
+    double** data = malloc(numberOfColumns * sizeof(double*));
+    for(int i = 0; i < numberOfColumns; i++){
+        data[i] = malloc(columnLength * sizeof(double));
     }
-    ColumnFist2DArray matrix= {
+    ArrayColumns matrix= {
             .data = data,
-            .dimensionality = dimensionality,
-            .length = length
+            .numberOfColumns = numberOfColumns,
+            .columnLength = columnLength
     };
     return matrix;
 }
 
 
-void columnFirst2DArrayPrint(ColumnFist2DArray *matrix) {
-    printf("ColumnWiseMatrixPrint { data: %p, dimensionality: %2d, length: %4d}\n",
-           matrix->data, matrix->dimensionality, matrix->length);
-    for (int i = 0; i < matrix->dimensionality; ++i) {
-        columnFirst2DArrayPrintColumn(matrix->data[i], matrix->length);
+void arrayColumnsPrint(ArrayColumns *matrix) {
+    printf("ArrayColumns{ data: %p, numberOfColumns: %2d, columnLength: %4d}\n",
+           matrix->data, matrix->numberOfColumns, matrix->columnLength);
+    for (int i = 0; i < matrix->numberOfColumns; ++i) {
+        arrayColumnsPrintColumn(matrix->data[i], matrix->columnLength);
     }
     printf("\n");
 }
 
-void columnFirst2DArrayPrintColumn(double *row, int length) {
+void arrayColumnsPrintColumn(double *row, int length) {
     printf("[ ");
     for (int i = 0; i < length; ++i) {
         printf("%f ", row[i]);

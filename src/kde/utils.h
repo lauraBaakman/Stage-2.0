@@ -13,11 +13,11 @@ typedef struct Array{
     int colStride;
 } Array;
 
-typedef struct ColumnFist2DArray{
+typedef struct ArrayColumns{
     double** data;
-    int length;
-    int dimensionality;
-} ColumnFist2DArray;
+    int columnLength;
+    int numberOfColumns;
+} ArrayColumns;
 
 Array arrayBuildFromPyArray(PyArrayObject *arrayObject);
 void arrayPrint(Array *array);
@@ -27,11 +27,9 @@ void arraySetRow(Array* array, int rowIdx, double* values);
 
 double* arrayGetRowView(Array *array, int rowIdx);
 
-ColumnFist2DArray toColumnWiseMatrix(Array *array);
-void columnFist2DArrayFree(ColumnFist2DArray *matrix);
-void columnFirst2DArrayPrint(ColumnFist2DArray *matrix);
-void columnFirst2DArrayPrintColumn(double *row, int length);
-ColumnFist2DArray columnFirst2DArrayAllocate(int length, int dimensionality);
+ArrayColumns getColumns(Array *array);
+void arrayColumnsFree(ArrayColumns *matrix);
+void arrayColumnsPrint(ArrayColumns *matrix);
 
 double* scalePattern(double* pattern, double* dataPoint, double* scaledPattern, int dimensionality, double windowWidth);
 

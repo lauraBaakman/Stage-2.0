@@ -4,31 +4,44 @@
 void computeCovarianceMatrix(Array *patterns, Array *covarianceMatrix) {
 //http://stackoverflow.com/a/3307381/1357229
     double covariance;
+    double* means;
 
-    ColumnFist2DArray matrix = toColumnWiseMatrix(covarianceMatrix);
+    ArrayColumns columns = getColumns(patterns);
 
-    columnFirst2DArrayPrint(&matrix);
+    means = computeMeans(&columns);
 
-    for(int colA = 0; colA < covarianceMatrix->dimensionality; colA++){
+    for(int colA = 0; colA < columns.numberOfColumns; colA++){
         arraySetElement(
                 covarianceMatrix, colA, colA,
-                computeVariance(matrix.data[colA], patterns->length)
+                computeVariance(columns.data[colA], means[colA], patterns->length)
         );
 
-        for(int colB = colA  + 1; colB < covarianceMatrix->dimensionality; colB++){
-            covariance = computeCovariance(matrix.data[colA], matrix.data[colB], patterns->length);
+        for(int colB = colA  + 1; colB < columns.numberOfColumns; colB++){
+            covariance = computeCovariance(
+                    columns.data[colA], means[colA],
+                    columns.data[colB], means[colB],
+                    columns.columnLength);
             arraySetElement(covarianceMatrix, colA, colB, covariance);
             arraySetElement(covarianceMatrix, colB, colA, covariance);
         }
     }
-    columnFist2DArrayFree(&matrix);
+    arrayColumnsFree(&columns);
+    free(means);
 }
 
-double computeCovariance(double *columnA, double *columnB, int length) {
+double* computeMeans(ArrayColumns* matrix){
+    double* means = malloc(matrix->numberOfColumns * sizeof(double));
+    for (int i = 0; i < matrix->numberOfColumns; ++i) {
+        means[i] = computeMean(matrix->data[i], matrix->columnLength);
+    }
+    return means;
+}
+
+double computeCovariance(double *columnA, double meanA, double *columnB, double meanB, int length) {
     double* someVector = elementWiseMultiplication(columnA, columnB, length);
-    double termA = computeMean(someVector, length);
-    double termB = computeMean(columnA, length) * computeMean(columnB, length);
-    return termA - termB;
+    double covariance = computeMean(someVector, length) - (meanA * meanB);
+    free(someVector);
+    return covariance;
 }
 
 double * elementWiseMultiplication(double *vectorA, double *vectorB, int length) {
@@ -39,9 +52,8 @@ double * elementWiseMultiplication(double *vectorA, double *vectorB, int length)
     return product;
 }
 
-double computeVariance(double *data, int length) {
+double computeVariance(double *data, double mean, int length) {
     double variance = 0;
-    double mean = computeMean(data, length);
     for(int i = 0; i<length; i++){
         variance += ((data[i]) - mean) * ((data[i]) - mean);
     }
