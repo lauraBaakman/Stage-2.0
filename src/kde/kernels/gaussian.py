@@ -13,7 +13,7 @@ class Gaussian(object):
 
 class _Gaussian(Kernel):
 
-    def __init__(self, mean, covariance_matrix):
+    def __init__(self, mean, covariance_matrix, *args, **kwargs):
         self._validate_parameters(mean, covariance_matrix)
         self._mean = mean
         self._covariance_matrix = covariance_matrix
@@ -56,10 +56,10 @@ class _Gaussian_C(_Gaussian):
         raise NotImplementedError()
 
 
-class _Gaussian_Python(Kernel):
+class _Gaussian_Python(_Gaussian):
     def __init__(self, *args, **kwargs):
         super(_Gaussian_Python, self).__init__(*args, **kwargs)
-        self._kernel = stats.multivariate_normal(mean = self._mean, cov= self._covariance_matrix)
+        self._kernel = stats.multivariate_normal(mean=self._mean, cov=self._covariance_matrix)
 
     def evaluate(self, xs):
         self._validate_xs_pdf_combination(xs)
