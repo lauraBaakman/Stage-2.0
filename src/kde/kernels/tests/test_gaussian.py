@@ -107,7 +107,7 @@ class Test_Gaussian(TestCase):
             ])
         )
         xs = np.array([0.1, 0.2])
-        actual = kernel._validate_eigen_values_pdf_combination(eigen_values)
+        actual = kernel._validate_eigen_values_pdf_combination(xs)
         self.assertIsNone(actual)
 
     def test__validate_xs_pdf_combination_1(self):
