@@ -1,4 +1,4 @@
-from unittest import TestCase
+from unittest import TestCase, skip
 
 import numpy as np
 
@@ -8,6 +8,7 @@ class TestEig(TestCase):
     def test_eig_Python(self):
         self.eig_test_helper(lambda data: eigenValuesAndVectors(data, _eig_Python))
 
+    @skip("The C implementation of the computation of eigenvalues has not yet been written.")
     def test_eig_C(self):
         self.eig_test_helper(lambda data: eigenValuesAndVectors(data, _eig_C))
 
@@ -63,6 +64,7 @@ class EigImpAbstractTest(object):
         np.testing.assert_array_almost_equal(expected_values, actual_values)
         np.testing.assert_array_almost_equal(expected_vectors, actual_vectors)
 
+@skip("The C implementation of the computation of eigenvalues has not yet been written.")
 class Test_Eig_C(EigImpAbstractTest, TestCase):
 
     def setUp(self):
