@@ -29,6 +29,16 @@ class Test_Gaussian(TestCase):
         super().setUp()
         _Gaussian.__init__ = mock_init
 
+    def test_dimension(self):
+        mean = np.array([0.5, 0.5])
+        covariance_matrix = np.array([
+            [1.2, 2.1],
+            [2.3, 3.2]
+        ])
+        actual = _Gaussian(mean, covariance_matrix).dimension
+        expected = 2
+        self.assertEqual(actual, expected)
+
     def test__validate_mean_covariance_combination_0(self):
         # valid combination
         mean = np.array([0.5, 0.5])

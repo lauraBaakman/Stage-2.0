@@ -18,6 +18,11 @@ class _Gaussian(Kernel):
         self._mean = mean
         self._covariance_matrix = covariance_matrix
 
+    @property
+    def dimension(self):
+        (dimension, _) = self._covariance_matrix.shape
+        return dimension
+
     def _validate_mean_covariance_combination(self, mean, covariance_matrix):
         raise NotImplementedError()
 
