@@ -11,6 +11,15 @@ class Kernel(object):
     def to_C_enum(self):
         raise NotImplementedError()
 
+    def _get_data_dimension(self, xs):
+        if xs.ndim == 1:
+            (dimension,) = xs.shape
+        elif xs.ndim == 2:
+            (_, dimension) = xs.shape
+        else:
+            raise TypeError("Expected a vector or a matrix, not a {}-dimensional array.".format(xs.ndim))
+        return dimension
+
 
 class KernelException(Exception):
 

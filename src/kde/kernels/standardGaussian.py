@@ -1,8 +1,8 @@
+import kde.kernels._kernels as _kernels
 import numpy as np
 import scipy.stats as stats
 
 from kde.kernels.kernel import Kernel, KernelException
-import kde.kernels._kernels as _kernels
 
 
 class StandardGaussian(Kernel):
@@ -68,15 +68,6 @@ class _StandardGaussian_Python(_StandardGaussian):
         mean = np.zeros(dimension)
         covariance = np.identity(dimension)
         return stats.multivariate_normal(mean=mean, cov=covariance).pdf(xs)
-
-    def _get_data_dimension(self, xs):
-        if xs.ndim == 1:
-            (dimension,) = xs.shape
-        elif xs.ndim == 2:
-            (_, dimension) = xs.shape
-        else:
-            raise TypeError("Expected a vector or a matrix, not a {}-dimensional array.".format(xs.ndim))
-        return dimension
 
     def scaling_factor(self, general_bandwidth, eigen_values=None):
         self._validate_scaling_factors_parameters(general_bandwidth=general_bandwidth, eigen_values=eigen_values)
