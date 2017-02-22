@@ -4,18 +4,26 @@ import numpy as np
 from kde.kernels.kernel import Kernel
 
 
-class TestKernel(Kernel):
-    def __init__(self, implementation=None):
+class TestKernel(object):
+
+    @staticmethod
+    def __new__(cls, implementation=None):
         implementation_class = implementation or _TestKernel_C
-        self._implementation = implementation_class()
+        return implementation_class()
+
+
+class _TestKernel(Kernel):
+
+    def __init__(self):
+        pass
 
     def to_C_enum(self):
         return 0
 
 
-class _TestKernel_Python(Kernel):
+class _TestKernel_Python(_TestKernel):
     def __init__(self):
-        pass
+        super(_TestKernel_Python, self).__init__()
 
     def evaluate(self, x):
         if x.ndim == 1:
@@ -36,9 +44,9 @@ class _TestKernel_Python(Kernel):
         return 0.5
 
 
-class _TestKernel_C(Kernel):
+class _TestKernel_C(_TestKernel):
     def __init__(self):
-        pass
+        super(_TestKernel_C, self).__init__()
 
     def evaluate(self, x):
         if x.ndim == 1:

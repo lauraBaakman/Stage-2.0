@@ -1,25 +1,31 @@
 import math
 
-import kde.kernels._kernels as _kernels
 import numpy as np
 import scipy.special
 
+import kde.kernels._kernels as _kernels
 from kde.kernels.kernel import Kernel
 
 
-class Epanechnikov(Kernel):
-    def __init__(self, implementation=None):
+class Epanechnikov(object):
+    def __new__(cls, implementation=None):
         implementation_class = implementation or _Epanechnikov_C
-        self._implementation = implementation_class()
+        return implementation_class()
+
+
+class _Epanechnikov(Kernel):
+
+    def __init__(self):
+        pass
 
     def to_C_enum(self):
         return 2
 
 
-class _Epanechnikov_Python(Epanechnikov):
+class _Epanechnikov_Python(_Epanechnikov):
 
     def __init__(self):
-        pass
+        super(_Epanechnikov_Python, self).__init__()
 
     def evaluate(self, x):
         if x.ndim == 1:
@@ -60,10 +66,10 @@ class _Epanechnikov_Python(Epanechnikov):
         raise NotImplementedError("This class does not have an implementation of the scaling factor computation method.")
 
 
-class _Epanechnikov_C(Epanechnikov):
+class _Epanechnikov_C(_Epanechnikov):
 
     def __init__(self):
-        pass
+        super(_Epanechnikov_C, self).__init__()
 
     def evaluate(self, x):
         if x.ndim == 1:
