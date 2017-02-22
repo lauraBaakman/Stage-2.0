@@ -39,7 +39,9 @@ class _Gaussian(Kernel):
                                   .format(dimension=self.dimension, eigen_values_dimension=eigen_values_dimension))
 
     def _validate_xs_pdf_combination(self, xs):
-        raise NotImplementedError()
+        xs_dimension = self._get_data_dimension(xs)
+        if xs_dimension is not self.dimension:
+            raise KernelException("Patterns should have dimension {}, not {}.".format(self.dimension, xs_dimension))
 
     def to_C_enum(self):
         return 3
@@ -50,10 +52,16 @@ class _Gaussian(Kernel):
         self._validate_mean_covariance_combination(mean, covariance_matrix)
 
     def _validate_mean(self, mean):
-        pass
+        if mean.ndim is not 1:
+            raise KernelException("The array with the mean should have 1 dimension, not {}.".format(mean.ndim))
 
     def _validate_covariance_matrix(self, covariance_matrix):
-        pass
+        if covariance_matrix.ndim is not 2:
+            raise KernelException("The covariance matrix should have 2 dimensions, not {}.".format(covariance_matrix.ndim))
+
+        (num_rows, num_cols) = covariance_matrix.shape
+        if num_rows is not num_cols:
+            raise KernelException("The covariance matrix should be square.")
 
 
 class _Gaussian_C(_Gaussian):
@@ -73,7 +81,10 @@ class _Gaussian_C(_Gaussian):
 class _Gaussian_Python(_Gaussian):
     def __init__(self, *args, **kwargs):
         super(_Gaussian_Python, self).__init__(*args, **kwargs)
-        self._kernel = stats.multivariate_normal(mean=self._mean, cov=self._covariance_matrix)
+        try:
+            self._kernel = stats.multivariate_normal(mean=self._mean, cov=self._covariance_matrix)
+        except ValueError as e:
+            print("Could not generate the multivariate normal, numpy error: {}".format(e.args[0]))
 
     def evaluate(self, xs):
         self._validate_xs_pdf_combination(xs)
@@ -81,4 +92,4 @@ class _Gaussian_Python(_Gaussian):
 
     def scaling_factor(self, general_bandwidth, eigen_values):
         self._validate_eigen_values_pdf_combination(eigen_values)
-        gmean(eigen_values)
+        return general_bandwidth * general_bandwidth / gmean(eigen_values)
