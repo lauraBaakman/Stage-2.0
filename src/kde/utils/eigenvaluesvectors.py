@@ -9,5 +9,5 @@ def _eig_Python(data):
     raise NotImplementedError()
 
 
-def _eig(data, implementation=_eig_Python):
+def eig(data, implementation=_eig_Python):
     return implementation(data)
