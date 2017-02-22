@@ -23,9 +23,15 @@ class TestTestKernel(TestCase):
         actual = TestKernel().to_C_enum()
         self.assertEqual(expected, actual)
 
-    def test_scaling_factor(self):
+    @skip("The function scaling_factor has not been implemented in C for the Test Kernel.")
+    def test_scaling_factor_default_implementation(self):
         expected = 0.5
-        actual = TestKernel().scaling_factor()
+        actual = TestKernel().scaling_factor(None, None)
+        self.assertEqual(actual, expected)
+
+    def test_scaling_factor_alternative_implementation(self):
+        expected = 0.5
+        actual = TestKernel(implementation=_TestKernel_Python).scaling_factor(None, None)
         self.assertEqual(actual, expected)
 
 
@@ -54,7 +60,7 @@ class TestTestKernel_C(TestKernelImpAbstractTest, TestCase):
         self._kernel_class = _TestKernel_C
 
     def test_scaling_factor(self):
-        self.skipTest("The function scaling_factor has not been implemented for the Test kernel.")
+        self.skipTest("The function scaling_factor has not been implemented in C for the Test Kernel.")
 
 class TestTestKernel_Python(TestKernelImpAbstractTest, TestCase):
     def setUp(self):
