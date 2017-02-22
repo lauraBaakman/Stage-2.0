@@ -2,19 +2,19 @@ from kde.kernels.kernel import Kernel
 
 
 class Gaussian(object):
-    def __new__(cls, mean, covariance_matrix, implementation=None, *args, **kwargs):
+    def __new__(cls, mean, covariance_matrix, implementation=None):
         implementation_class = implementation or _Gaussian_C
         return implementation_class(mean=mean, covariance_matrix=covariance_matrix)
 
 
 class _Gaussian(Kernel):
 
-    def to_C_enum(self):
-        return 3
-
     def __init__(self, mean, covariance_matrix):
         self._mean = mean
         self._covariance_matrix = covariance_matrix
+
+    def to_C_enum(self):
+        return 3
 
 
 class _Gaussian_C(_Gaussian):
