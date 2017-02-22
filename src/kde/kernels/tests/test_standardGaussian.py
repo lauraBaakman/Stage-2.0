@@ -133,3 +133,8 @@ class Test_StandardGaussian_C(StandardGaussianImpAbstractTest, TestCase):
     def setUp(self):
         super().setUp()
         self._kernel_class = _StandardGaussian_C
+
+    def test_scaling_factor_0(self):
+        self.skipTest("The function scaling_factor has not been implemented for the C implementation.")
+
+
