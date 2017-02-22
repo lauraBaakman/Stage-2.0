@@ -1,4 +1,5 @@
 import numpy as np
+import numpy.linalg as LA
 
 
 def _eig_C(data):
@@ -6,7 +7,8 @@ def _eig_C(data):
 
 
 def _eig_Python(data):
-    raise NotImplementedError()
+    eigen_values, eigen_vectors = LA.eig(data)
+    return eigen_values, eigen_vectors
 
 
 def eigenValuesAndVectors(data, implementation=_eig_Python):

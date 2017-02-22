@@ -12,21 +12,51 @@ class TestEig(TestCase):
         self.eig_test_helper(lambda data: eigenValuesAndVectors(data, _eig_C))
 
     def eig_test_helper(self, the_function):
-        data = np.array([
-            [0.0688, 0.0275, -0.0047, -0.0156],
-            [0.0275, 0.1025, -0.0146, 0.0211],
-            [-0.0047, -0.0146, 0.0841, -0.0420],
-            [-0.0156, 0.0211, -0.0420, 0.1017]
-        ])
-        expected_values = np.array([-0.6227, -0.4299, -0.1935, 0.6674])
+        data = np.diag((1.0, 2.0, 3.0))
+        expected_values = np.array([1.0, 2.0, 3.0])
         expected_vectors = np.array([
-            [-0.6227, 0.5103, -0.5884, 0.0743],
-            [0.3384, -0.4299, -0.6671, 0.5055],
-            [-0.4445, -0.6866, -0.1935, -0.5418],
-            [-0.5479, -0.2886, 0.4138, 0.6674],
+            [1.0,  0.0,  0.0],
+            [0.0,  1.0,  0.0],
+            [0.0,  0.0,  1.0]
         ])
+
 
         actual_values, actual_vectors = the_function(data)
 
         np.testing.assert_array_almost_equal(expected_values, actual_values)
         np.testing.assert_array_almost_equal(expected_vectors, actual_vectors)
+
+
+class EigImpAbstractTest(object):
+
+    def setUp(self):
+        super().setUp()
+        self._implementation = None
+
+    def test_eigenValuesAndVectors_0(self):
+        data = np.diag((1.0, 2.0, 3.0))
+        expected_values = np.array([1.0, 2.0, 3.0])
+        expected_vectors = np.array([
+            [1.0,  0.0,  0.0],
+            [0.0,  1.0,  0.0],
+            [0.0,  0.0,  1.0]
+        ])
+
+        actual_values, actual_vectors = self._implementation(data)
+
+        np.testing.assert_array_almost_equal(expected_values, actual_values)
+        np.testing.assert_array_almost_equal(expected_vectors, actual_vectors)
+
+
+class Test_Eig_C(EigImpAbstractTest, TestCase):
+
+    def setUp(self):
+        super().setUp()
+        self._implementation = _eig_C
+
+
+class Test_Eig_Python(EigImpAbstractTest, TestCase):
+
+    def setUp(self):
+        super().setUp()
+        self._implementation = _eig_Python
