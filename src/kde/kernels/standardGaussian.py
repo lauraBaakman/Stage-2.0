@@ -1,9 +1,8 @@
-import kde.kernels._kernels as _kernels
-from kde.kernels.kernel import KernelException
 import numpy as np
 import scipy.stats as stats
 
-from kde.kernels.kernel import Kernel
+from kde.kernels.kernel import Kernel, KernelException
+import kde.kernels._kernels as _kernels
 
 
 class StandardGaussian(Kernel):
