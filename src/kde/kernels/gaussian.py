@@ -1,7 +1,7 @@
 import scipy.stats as stats
 from scipy.stats.mstats import gmean
 
-from kde.kernels.kernel import Kernel
+from kde.kernels.kernel import Kernel, KernelException
 
 
 class Gaussian(object):
@@ -24,7 +24,12 @@ class _Gaussian(Kernel):
         return dimension
 
     def _validate_mean_covariance_combination(self, mean, covariance_matrix):
-        raise NotImplementedError()
+        (covariance_dimension, _) = covariance_matrix.shape
+        mean_dimension = self._get_data_dimension(mean)
+        if mean_dimension is not covariance_dimension:
+            raise KernelException("If the covariance matrix is {} x {}, the mean should be 1 x {}".format(
+                covariance_dimension, covariance_dimension, mean_dimension
+            ))
 
     def _validate_eigen_values_pdf_combination(self, eigen_values):
         raise NotImplementedError()
