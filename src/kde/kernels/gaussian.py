@@ -1,20 +1,25 @@
-from kde.kernels.kernel import KernelException, Kernel
+from kde.kernels.kernel import Kernel
 
 
-class Gaussian(Kernel):
-    def __init__(self, mean, covariance_matrix, implementation=None):
+class Gaussian(object):
+    def __new__(cls, mean, covariance_matrix, implementation=None, *args, **kwargs):
         implementation_class = implementation or _Gaussian_C
-        self._implementation = implementation_class()
-        self._mean = mean
-        self._covariance_matrix = covariance_matrix
+        return implementation_class(mean=mean, covariance_matrix=covariance_matrix)
+
+
+class _Gaussian(Kernel):
 
     def to_C_enum(self):
         return 3
 
+    def __init__(self, mean, covariance_matrix):
+        self._mean = mean
+        self._covariance_matrix = covariance_matrix
 
-class _Gaussian_C(Gaussian):
-    def __init__(self):
-        pass
+
+class _Gaussian_C(_Gaussian):
+    def __init__(self, *args, **kwargs):
+        super(_Gaussian_C, self).__init__(*args, **kwargs)
 
     def evaluate(self, xs):
         raise NotImplementedError()
@@ -23,9 +28,9 @@ class _Gaussian_C(Gaussian):
         raise NotImplementedError()
 
 
-class _Gaussian_Python(Gaussian):
-    def __init__(self, implementation=None):
-        pass
+class _Gaussian_Python(Kernel):
+    def __init__(self, *args, **kwargs):
+        super(_Gaussian_Python, self).__init__(*args, **kwargs)
 
     def evaluate(self, xs):
         raise NotImplementedError()

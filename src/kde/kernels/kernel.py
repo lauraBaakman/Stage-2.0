@@ -3,10 +3,10 @@ class Kernel(object):
         pass
 
     def evaluate(self, xs):
-        return self._implementation.evaluate(xs)
+        raise NotImplementedError()
 
     def scaling_factor(self, general_bandwidth, eigen_values):
-        return self._implementation.scaling_factor(general_bandwidth=general_bandwidth, eigen_values=eigen_values)
+        raise NotImplementedError()
 
     def to_C_enum(self):
         raise NotImplementedError()
