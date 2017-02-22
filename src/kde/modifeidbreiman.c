@@ -12,7 +12,7 @@ double modifiedBreimanFinalDensity(double *pattern, Array *dataPoints,
 
     for(int i = 0;
             i < dataPoints->length;
-            ++i, currentDataPoint+= dataPoints->stride){
+            ++i, currentDataPoint+= dataPoints->rowStride){
 
         bandwidth = globalBandwidth * localBandwidths->data[i];
         factor = pow(bandwidth, -1 * dataPoints->dimensionality);

@@ -47,6 +47,26 @@ static PyObject * knn(PyObject *self, PyObject *args){
     return Py_None;
 }
 
+static char utils_covarianceMatrix_docstring[] = "Compute the covariance matrix of the data.";
+static PyObject * covariance_matrix(PyObject *self, PyObject *args){
+
+    /* Handle input */
+    PyObject* inPatterns = NULL;
+    PyObject* outCovarianceMatrix = NULL;
+
+    if (!PyArg_ParseTuple(args, "OO",
+                          &inPatterns, &outCovarianceMatrix)) return NULL;
+
+    Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
+    Array covarianceMatrix = pyObjectToArray(outCovarianceMatrix, NPY_ARRAY_OUT_ARRAY);
+
+    /* Do stuff */
+    computeCovarianceMatrix(&patterns, &covarianceMatrix);
+
+    /* Create return object */
+    Py_INCREF(Py_None);
+    return Py_None;
+}
 
 Array pyObjectToArray(PyObject *pythonObject, int requirements){
     PyArrayObject* arrayObject = NULL;
@@ -63,6 +83,7 @@ Array pyObjectToArray(PyObject *pythonObject, int requirements){
 static PyMethodDef method_table[] = {
         {"distance_matrix",     distance_matrix,    METH_VARARGS,   utils_distanceMatrix_docstring},
         {"knn",                 knn,                METH_VARARGS,   utils_knn_docstring},
+        {"covariance_matrix",   covariance_matrix,  METH_VARARGS,   utils_covarianceMatrix_docstring},
         /* Sentinel */
         {NULL,                  NULL,               0,              NULL}
 };

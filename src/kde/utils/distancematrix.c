@@ -10,12 +10,12 @@ void computeDistanceMatrix(Array *patterns, Array *distanceMatrix){
 
     for(int i = 0;
             i < patterns->length;
-            i++, a+= patterns->stride)
+            i++, a+= patterns->rowStride)
     {
-        b = a + patterns->stride;
+        b = a + patterns->rowStride;
         for(int j = i + 1;
                 j < patterns->length;
-                j++, b+= patterns->stride){
+                j++, b+= patterns->rowStride){
             distance = squaredEuclidean(a, b, patterns->dimensionality);
             arraySetElement(distanceMatrix, i, j, distance);
             arraySetElement(distanceMatrix, j, i, distance);

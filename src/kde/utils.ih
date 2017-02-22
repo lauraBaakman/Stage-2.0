@@ -9,6 +9,9 @@
 
 int determine_dimensionality(PyArrayObject* arrayObject);
 
-void printElement(double* element, int dimension);
+void arrayPrintElement(double *element, int dimension);
+
+void arrayColumnsPrintColumn(double *row, int length);
+ArrayColumns arrayColumnsAllocate(int numberOfColumns, int columnLength);
 
 #endif //UTILS_IH
