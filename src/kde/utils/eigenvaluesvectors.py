@@ -3,7 +3,7 @@ import numpy.linalg as LA
 
 
 def _eig_C(data):
-    raise NotImplementedError()
+    raise NotImplementedError("There is no C implementation of the computation of eigen values.")
 
 
 def _eig_Python(data):
