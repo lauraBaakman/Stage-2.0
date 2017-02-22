@@ -67,7 +67,7 @@ void arraySetElement(Array* array, int rowIdx, int colIdx, double value){
     row[colIdx] = value;
 }
 
-double* arrayGetRow(Array* array, int rowIdx){
+double* arrayGetRowView(Array *array, int rowIdx){
     double* row = array->data + rowIdx * array->rowStride;
     return row;
 }
@@ -86,12 +86,52 @@ double* scalePattern(double* pattern, double* dataPoint, double* scaledPattern, 
     return scaledPattern;
 }
 
-double **arrayGetColumn(Array *array, int colIdx, double **column) {
-    double* data = array->data;
-    printf("\narrayGetColumn colIdx (%d).\n", colIdx);
-    for(int i = 0; i < array->length; i++, data+=array->rowStride){
-        printf("%d %d = %f\n", i, colIdx, data[colIdx]);
-        column[i] = &data[colIdx];
+ColumnFist2DArray toColumnWiseMatrix(Array *array) {
+    ColumnFist2DArray matrix = columnFirst2DArrayAllocate(array->length, array->dimensionality);
+    double* row = array->data;
+    for (int i = 0; i < array->length; ++i, row += array->rowStride) {
+        for (int j = 0; j < array->dimensionality; ++j) {
+            matrix.data[i][j] = row[j];
+            printf("matrix[%d][%d] = %f", i, j, row[j]);
+        }
     }
-    return column;
+    return matrix;
+}
+
+void columnFist2DArrayFree(ColumnFist2DArray *matrix) {
+    for(int i = 0; i < matrix->dimensionality; i++){
+        free(matrix->data[i]);
+    }
+    free(matrix->data);
+}
+
+ColumnFist2DArray columnFirst2DArrayAllocate(int length, int dimensionality) {
+    double** data = malloc(dimensionality * sizeof(double*));
+    for(int i = 0; i < dimensionality; i++){
+        data[i] = malloc(length * sizeof(double));
+    }
+    ColumnFist2DArray matrix= {
+            .data = data,
+            .dimensionality = dimensionality,
+            .length = length
+    };
+    return matrix;
+}
+
+
+void columnFirst2DArrayPrint(ColumnFist2DArray *matrix) {
+    printf("ColumnWiseMatrixPrint { data: %p, dimensionality: %2d, length: %4d}\n",
+           matrix->data, matrix->dimensionality, matrix->length);
+    for (int i = 0; i < matrix->dimensionality; ++i) {
+        columnFirst2DArrayPrintColumn(matrix->data[i], matrix->length);
+    }
+    printf("\n");
+}
+
+void columnFirst2DArrayPrintColumn(double *row, int length) {
+    printf("[ ");
+    for (int i = 0; i < length; ++i) {
+        printf("%f ", row[i]);
+    }
+    printf("]\n");
 }

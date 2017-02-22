@@ -2,7 +2,7 @@
 
 Array* compute_k_nearest_neighbours(int k, int patternIdx, Array *patterns, Array *distanceMatrix,
                                     Array *nearestNeighbours){
-    double* distances = arrayGetRow(distanceMatrix, patternIdx);
+    double* distances = arrayGetRowView(distanceMatrix, patternIdx);
 
     ListElement* elements = toArrayOfListElements(distances, distanceMatrix->dimensionality);
 
@@ -52,7 +52,7 @@ void getKNearestElements(ListElement* sortedDistances, int k, Array* patterns, A
     double* pattern;
     for (int i = 0; i < k; ++i) {
         idx = sortedDistances[i].index;
-        pattern = arrayGetRow(patterns, idx);
+        pattern = arrayGetRowView(patterns, idx);
         arraySetRow(neighbours, i, pattern);
     }
 }
