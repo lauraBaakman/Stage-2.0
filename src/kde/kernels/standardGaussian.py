@@ -6,16 +6,16 @@ import kde.kernels._kernels as _kernels
 
 
 class StandardGaussian(Kernel):
-    def __init__(self, implementation=None):
+
+    def __new__(cls, implementation=None):
         implementation_class = implementation or _StandardGaussian_C
-        self._implementation = implementation_class()
+        return implementation_class()
 
-    def to_C_enum(self):
-        return 1
 
-    def scaling_factor(self, general_bandwidth, eigen_values):
-        self._validate_scaling_factors_parameters(general_bandwidth=general_bandwidth, eigen_values=eigen_values)
-        return self._implementation.scaling_factor(general_bandwidth=general_bandwidth, eigen_values=eigen_values)
+class _StandardGaussian(Kernel):
+
+    def __init__(self):
+        pass
 
     @staticmethod
     def _validate_scaling_factors_parameters(general_bandwidth, eigen_values):
@@ -27,10 +27,13 @@ class StandardGaussian(Kernel):
                               "general_bandwidth * I. Thus the eigen values should all be equal to the general "
                               " bandwidth.")
 
+    def to_C_enum(self):
+        return 1
 
-class _StandardGaussian_C(StandardGaussian):
+
+class _StandardGaussian_C(_StandardGaussian):
     def __init__(self):
-        pass
+        super(_StandardGaussian_C, self).__init__()
 
     def evaluate(self, xs):
         if xs.ndim == 1:
@@ -52,12 +55,13 @@ class _StandardGaussian_C(StandardGaussian):
         return densities
 
     def scaling_factor(self, general_bandwidth, eigen_values=None):
+        self._validate_scaling_factors_parameters(general_bandwidth=general_bandwidth, eigen_values=eigen_values)
         raise NotImplementedError("This class does not have an implementation of the scaling factor computation method.")
 
 
-class _StandardGaussian_Python(StandardGaussian):
+class _StandardGaussian_Python(_StandardGaussian):
     def __init__(self):
-        pass
+        super(_StandardGaussian_Python, self).__init__()
 
     def evaluate(self, xs):
         dimension = self._get_data_dimension(xs)
@@ -75,4 +79,5 @@ class _StandardGaussian_Python(StandardGaussian):
         return dimension
 
     def scaling_factor(self, general_bandwidth, eigen_values=None):
+        self._validate_scaling_factors_parameters(general_bandwidth=general_bandwidth, eigen_values=eigen_values)
         return general_bandwidth * np.sqrt(general_bandwidth)
