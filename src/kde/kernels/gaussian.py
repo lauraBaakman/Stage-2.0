@@ -1,60 +1,34 @@
-import scipy.stats as stats
+from kde.kernels.kernel import KernelException, Kernel
 
 
-class Gaussian:
-    """Implementation of the Gaussian Kernel.
-    """
-
-    def __init__(self, mean=None, covariance_matrix=None):
-        """The init method of the Gaussian Kernel.
-
-        Note:
-            Although the mean and covariance are optional, not setting them means that the kernel cannot be evaluated.
-
-        :param mean: (array like) The mean of the kernel.
-        :param covariance_matrix: (array like) The covariance matrix of the kernel.
-        """
-        self._covariance_matrix = covariance_matrix
+class Gaussian(Kernel):
+    def __init__(self, mean, covariance_matrix, implementation=None):
+        implementation_class = implementation or _Gaussian_C
+        self._implementation = implementation_class()
         self._mean = mean
-        self._kernel = self._updated_kernel()
+        self._covariance_matrix = covariance_matrix
 
-    @property
-    def center(self):
-        """
-        :return: (array-like) The center, i.e. the mean, of the Gaussian kernel.
-        """
-        return self._mean
+    def to_C_enum(self):
+        return 3
 
-    @center.setter
-    def center(self, value):
-        self._mean = value
-        self._kernel = self._updated_kernel()
 
-    @property
-    def shape(self):
-        """
-        :return: (array-like) The covariance matrix of the kernel.
-        """
-        return self._covariance_matrix
+class _Gaussian_C(Gaussian):
+    def __init__(self):
+        pass
 
-    @shape.setter
-    def shape(self, value):
-        self._covariance_matrix = value
-        self._kernel = self._updated_kernel()
+    def evaluate(self, xs):
+        raise NotImplementedError()
 
-    def _updated_kernel(self):
-        if (self._mean is not None) and (self._covariance_matrix is not None):
-            return stats.multivariate_normal(
-                mean=self._mean,
-                cov=self._covariance_matrix
-            )
-        else:
-            return None
+    def scaling_factor(self, general_bandwidth, eigen_values):
+        raise NotImplementedError()
 
-    def evaluate(self, x):
-        """Evaluate the kernel for vector x.
 
-        :param x: (array like) The vector for which to evaluate the kernel.
-        :return: (int) The probability density of the kernel at x.
-        """
-        return self._kernel.pdf(x)
+class _Gaussian_Python(Gaussian):
+    def __init__(self, implementation=None):
+        pass
+
+    def evaluate(self, xs):
+        raise NotImplementedError()
+
+    def scaling_factor(self, general_bandwidth, eigen_values):
+        raise NotImplementedError()

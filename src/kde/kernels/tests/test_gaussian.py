@@ -1,80 +1,89 @@
-from unittest import TestCase
+from unittest import TestCase, skip
 
 import numpy as np
 
-from kde.kernels.gaussian import Gaussian
+from kde.kernels.gaussian import Gaussian, _Gaussian_C, _Gaussian_Python
 
 
 class TestGaussian(TestCase):
 
+    def test_to_C_enum(self):
+        actual = Gaussian(None, None).to_C_enum()
+        expected = 3
+        self.assertEqual(actual, expected)
+
+    def test_evaluate_default_implementation(self):
+        covariance_matrix = np.array([[1, 0], [0, 1]])
+        mean = np.array([0, 0])
+        pattern = np.array([0.5, 0.5])
+        expected = 0.123949994309653
+        actual = Gaussian(covariance_matrix, mean).evaluate(pattern)
+        self.assertAlmostEqual(expected, actual)
+
+    def test_scaling_factor(self):
+        eigen_values = np.array([4.0, 9.0, 16.0, 25.0])
+        h = 0.5
+        expected = 0.5 * np.sqrt(7.5)
+        actual = Gaussian(None, None).scaling_factor(general_bandwidth=h, eigen_values=eigen_values)
+        self.assertAlmostEqual(expected, actual)
+
+
+class GaussianImpAbstractTest(object):
+
+    def test_evaluate_0(self):
+        covariance_matrix = np.array([[1, 0], [0, 1]])
+        mean = np.array([0, 0])
+        pattern = np.array([0.5, 0.5])
+        expected = 0.123949994309653
+        actual = self._kernel_class(covariance_matrix, mean).evaluate(pattern)
+        self.assertAlmostEqual(expected, actual)
+
+    def test_evaluate_1(self):
+        covariance_matrix = np.array([[0.5, 0.5], [0.5, 1.5]])
+        mean = np.array([0, 0])
+        pattern = np.array([0.5, 0.5])
+        expected = 0.175291763008779
+        actual = self._kernel_class(covariance_matrix, mean).evaluate(pattern)
+        self.assertAlmostEqual(expected, actual)
+
+    def test_evaluate_2(self):
+        covariance_matrix = np.array([[1, 0], [0, 1]])
+        mean = np.array([2, 2])
+        pattern = np.array([0.5, 0.5])
+        expected = 0.016774807587073
+        actual = self._kernel_class(covariance_matrix, mean).evaluate(pattern)
+        self.assertAlmostEqual(expected, actual)
+
+    def test_evaluate_3(self):
+        covariance_matrix = np.array([[0.5, 0.5], [0.5, 1.5]])
+        mean = np.array([2, 2])
+        pattern = np.array([0.5, 0.5])
+        expected = 0.023723160395838
+        actual = self._kernel_class(covariance_matrix, mean).evaluate(pattern)
+        self.assertAlmostEqual(expected, actual)
+
+    def test_scaling_factor(self):
+        eigen_values = np.array([4.0, 9.0, 16.0, 25.0])
+        h = 0.5
+        expected = 0.5 * np.sqrt(7.5)
+        actual = self._kernel_class(None, None).scaling_factor(general_bandwidth=h, eigen_values=eigen_values)
+        self.assertAlmostEqual(expected, actual)
+
+
+class Test_Gaussian_Python(GaussianImpAbstractTest, TestCase):
+
     def setUp(self):
         super().setUp()
-        self.data = {
-            'cov_1': np.array([[1, 0], [0, 1]]),
-            'cov_2': np.array([[0.5, 0.5], [0.5, 1.5]]),
-            'mean_1': np.array([0, 0]),
-            'mean_2': np.array([2, 2]),
-            'pattern': np.array([0.5, 0.5]),
-            'density_mean_1_cov_1': 0.123949994309653,
-            'density_mean_1_cov_2': 0.175291763008779,
-            'density_mean_2_cov_1': 0.016774807587073,
-            'density_mean_2_cov_2': 0.023723160395838,
-        }
+        self._kernel_class = _Gaussian_Python
 
-    def test_center_get(self):
-        kernel = Gaussian(
-            mean=self.data['mean_1'],
-            covariance_matrix=self.data['cov_1'])
-        actual = kernel.center
-        expected = self.data['mean_1']
-        np.testing.assert_array_equal(actual, expected)
+    def setUp(self):
+        super().setUp()
+        self._kernel_class = _Gaussian_Python
 
-    def test_center_set_1(self):
-        kernel = Gaussian(
-            mean=self.data['mean_1'],
-            covariance_matrix=self.data['cov_1'])
-        kernel.center= self.data['mean_2']
-        actual_density = kernel._kernel.pdf(self.data['pattern'])
-        expected_density = self.data['density_mean_2_cov_1']
-        self.assertAlmostEqual(actual_density, expected_density)
 
-    def test_center_set_2(self):
-        kernel = Gaussian(
-            covariance_matrix=self.data['cov_1'])
-        kernel.center= self.data['mean_1']
-        actual_density = kernel._kernel.pdf(self.data['pattern'])
-        expected_density = self.data['density_mean_1_cov_1']
-        self.assertAlmostEqual(actual_density, expected_density)
+@skip("The C implementation of the Gaussian kernel has not yet been written.")
+class Test_Gaussian_C(GaussianImpAbstractTest, TestCase):
 
-    def test_shape_get(self):
-        kernel = Gaussian(
-            mean=self.data['mean_1'],
-            covariance_matrix=self.data['cov_1'])
-        actual = kernel.shape
-        expected = self.data['cov_1']
-        np.testing.assert_array_equal(actual, expected)
-
-    def test_shape_set_1(self):
-        kernel = Gaussian(
-            mean=self.data['mean_1'],
-            covariance_matrix=self.data['cov_1'])
-        kernel.shape = self.data['cov_2']
-        actual_density = kernel._kernel.pdf(self.data['pattern'])
-        expected_density = self.data['density_mean_1_cov_2']
-        self.assertAlmostEqual(actual_density, expected_density)
-
-    def test_shape_set_2(self):
-        kernel = Gaussian(
-            mean=self.data['mean_1'])
-        kernel.shape = self.data['cov_1']
-        actual_density = kernel._kernel.pdf(self.data['pattern'])
-        expected_density = self.data['density_mean_1_cov_1']
-        self.assertAlmostEqual(actual_density, expected_density)
-
-    def test_evaluate(self):
-        kernel = Gaussian(
-            mean=self.data['mean_1'],
-            covariance_matrix=self.data['cov_1'])
-        actual_density = kernel.evaluate(self.data['pattern'])
-        expected_density = self.data['density_mean_1_cov_1']
-        self.assertAlmostEqual(actual_density, expected_density)
+    def setUp(self):
+        super().setUp()
+        self._kernel_class = _Gaussian_C
