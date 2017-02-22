@@ -23,9 +23,10 @@ class TestTestKernel(TestCase):
         actual = TestKernel().to_C_enum()
         self.assertEqual(expected, actual)
 
-    @skip("The function scaling_factor has not been implemented for the Test kernel.")
     def test_scaling_factor(self):
-        self.fail()
+        expected = 0.5
+        actual = TestKernel().scaling_factor()
+        self.assertEqual(actual, expected)
 
 
 class TestKernelImpAbstractTest(object):
@@ -41,9 +42,10 @@ class TestKernelImpAbstractTest(object):
         expected = np.array([2.5, 3.5, 4.5])
         np.testing.assert_array_equal(actual, expected)
 
-    @skip("The function scaling_factor has not been implemented for the Test kernel.")
     def test_scaling_factor(self):
-        self.fail()
+        expected = 0.5
+        actual = self._kernel_class().scaling_factor()
+        self.assertEqual(actual, expected)
 
 
 class TestTestKernel_C(TestKernelImpAbstractTest, TestCase):
@@ -51,8 +53,11 @@ class TestTestKernel_C(TestKernelImpAbstractTest, TestCase):
         super().setUp()
         self._kernel_class = _TestKernel_C
 
+    def test_scaling_factor(self):
+        self.skipTest("The function scaling_factor has not been implemented for the Test kernel.")
 
 class TestTestKernel_Python(TestKernelImpAbstractTest, TestCase):
     def setUp(self):
         super().setUp()
         self._kernel_class = _TestKernel_Python
+
