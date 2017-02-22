@@ -55,7 +55,7 @@ class TestStandardGaussian(TestCase):
         expected = 8
         self.assertAlmostEqual(actual, expected)
 
-    @skip("The function scaling_factor has not been implemented for the C implementation.")
+    @skip("The function scaling_factor has not been implemented in C for the Standard Gaussian Kernel.")
     def test_scaling_factor_default_implementation(self):
         h = 4
         lambdas = None
@@ -135,6 +135,6 @@ class Test_StandardGaussian_C(StandardGaussianImpAbstractTest, TestCase):
         self._kernel_class = _StandardGaussian_C
 
     def test_scaling_factor_0(self):
-        self.skipTest("The function scaling_factor has not been implemented for the C implementation.")
+        self.skipTest("The function scaling_factor has not been implemented in C for the Standard Gaussian Kernel.")
 
 
