@@ -12,6 +12,58 @@ class TestGaussian(TestCase):
         expected = 3
         self.assertEqual(actual, expected)
 
+    def test__validate_mean_covariance_combination_0(self):
+        # valid combination
+        self.fail()
+
+    def test__validate_mean_covariance_combination_1(self):
+        # Invalid dimension of mean compared to covariance matrix
+        self.fail()
+
+    def test__validate_eigen_values_pdf_combination_0(self):
+        # Valid combination
+        self.fail()
+
+    def test__validate_eigen_values_pdf_combination_1(self):
+        # Invalid number of eigenvalues compared to dimension of the mean
+        self.fail()
+
+    def test__validate_xs_pdf_combination_0(self):
+        # valid combination
+        self.fail()
+
+    def test__validate_xs_pdf_combination_1(self):
+        # Invalid dimension of xs, if single pattern
+        self.fail()
+
+    def test__validate_xs_pdf_combination_2(self):
+        # Invalid dimension of xs, if multiple patterns
+        self.fail()
+
+    def test__validate_parameters_0(self):
+        # Valid combination
+        self.fail()
+
+    def test__validate_parameters_1(self):
+        # Invalid combination
+        self.fail()
+
+    def test__validate_mean_0(self):
+        # valid mean
+        self.fail()
+
+    def test__validate_mean_1(self):
+        # invalid mean
+        self.fail()
+
+    def test__validate_covariance_matrix_0(self):
+        # Valid covariance matrix
+        self.fail()
+
+    def test__validate_covariance_matrix_1(self):
+        # Invalid covariance matrix: not square
+        self.fail()
+
     def test_evaluate_default_implementation(self):
         covariance_matrix = np.array([[1, 0], [0, 1]])
         mean = np.array([0, 0])
