@@ -14,9 +14,9 @@ class Gaussian(object):
 class _Gaussian(Kernel):
 
     def __init__(self, mean, covariance_matrix, *args, **kwargs):
-        self._validate_parameters(mean, covariance_matrix)
         self._mean = mean
         self._covariance_matrix = covariance_matrix
+        self._validate_parameters(mean, covariance_matrix)
 
     @property
     def dimension(self):
@@ -32,7 +32,11 @@ class _Gaussian(Kernel):
             ))
 
     def _validate_eigen_values_pdf_combination(self, eigen_values):
-        raise NotImplementedError()
+        eigen_values_dimension = self._get_data_dimension(eigen_values)
+        if eigen_values_dimension is not self.dimension:
+            raise KernelException("Expected {dimension} eigen values, not {eigen_values_dimension}, given that the "
+                                  "covariance matrix is {dimension} x {dimension} and the mean is 1 x {dimension}."
+                                  .format(dimension=self.dimension, eigen_values_dimension=eigen_values_dimension))
 
     def _validate_xs_pdf_combination(self, xs):
         raise NotImplementedError()
