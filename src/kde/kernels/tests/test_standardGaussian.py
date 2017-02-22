@@ -2,6 +2,7 @@ from unittest import TestCase
 
 import numpy as np
 
+from kde.kernels.kernel import KernelException
 from kde.kernels.standardGaussian import StandardGaussian, _StandardGaussian_C, _StandardGaussian_Python
 
 
@@ -24,9 +25,17 @@ class TestStandardGaussian(TestCase):
         self.assertEqual(expected, actual)
 
     def test_scaling_factor(self):
-        self.fail()
+        h = 4
+        lambdas = None
+        actual = self._kernel_class().scaling_factor(general_bandwidth=h, lambdas=lambdas)
+        expected = 8
+        self.assertAlmostEqual(actual, expected)
 
 class StandardGaussianImpAbstractTest(object):
+
+    def __init__(self):
+        self._kernel_class = None
+
     def test_evaluate_2D_1(self):
         x = np.array([0.5, 0.5])
         actual = self._kernel_class().evaluate(x)
@@ -75,8 +84,31 @@ class StandardGaussianImpAbstractTest(object):
         expected = np.array([0.063493635934241, 0.043638495249061, 0.042084928316873])
         np.testing.assert_array_almost_equal(actual, expected)
 
-    def test_scaling_factor(self):
-        self.fail()
+    def test_scaling_factor_0(self):
+        h = 4
+        lambdas = None
+        actual = self._kernel_class().scaling_factor(general_bandwidth=h, lambdas=lambdas)
+        expected = 8
+        self.assertAlmostEqual(actual, expected)
+
+    def test_scaling_factor_1(self):
+        h = 4
+        lambdas = np.array([1, 1, 1, 1])
+        actual = self._kernel_class().scaling_factor(general_bandwidth=h, lambdas=lambdas)
+        expected = 8
+        self.assertAlmostEqual(actual, expected)
+
+    def test_scaling_factor_2(self):
+        h = 4
+        lambdas = np.array([1, 2, 3, 4])
+        try:
+            self._kernel_class().scaling_factor(general_bandwidth=h, lambdas=lambdas)
+        except KernelException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
 
 class Test_StandardGaussian_Python(StandardGaussianImpAbstractTest, TestCase):
 
