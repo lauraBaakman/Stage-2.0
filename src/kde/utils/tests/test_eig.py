@@ -47,6 +47,21 @@ class EigImpAbstractTest(object):
         np.testing.assert_array_almost_equal(expected_values, actual_values)
         np.testing.assert_array_almost_equal(expected_vectors, actual_vectors)
 
+    def test_eigenValuesAndVectors_1(self):
+        data = np.array([
+            [0, 1],
+            [-2, -3]
+        ])
+        expected_values = np.array([-1, -2])
+        expected_vectors = np.array([
+            [1.0 / np.sqrt(2), - 1.0 / np.sqrt(5)],
+            [-1.0 / np.sqrt(2), 2.0 / np.sqrt(5)],
+        ])
+
+        actual_values, actual_vectors = self._implementation(data)
+
+        np.testing.assert_array_almost_equal(expected_values, actual_values)
+        np.testing.assert_array_almost_equal(expected_vectors, actual_vectors)
 
 class Test_Eig_C(EigImpAbstractTest, TestCase):
 
