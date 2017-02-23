@@ -18,15 +18,15 @@ class TestShapeAdaptiveMBE(TestCase):
 
     def estimate_test_helper(self, pilot_implementation, final_implementation):
         self.fail("Test not yet implemented.")
-        xi_s = np.array([[0, 0], [1, 1]])
-        x_s = np.array([[0, 0]])
+        xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+        x_s = np.array([[0, 0], [1, 1]])
         pilot_kernel = TestKernel()
-        final_kerel = TestKernel()
+        final_kernel = TestKernel()
         number_of_grid_points = 2
         sensitivity = 0.5
-        estimator = ModifiedBreimanEstimator(
+        estimator = ShapeAdaptiveMBE(
             pilot_kernel=pilot_kernel, pilot_estimator_implementation=pilot_implementation,
-            kernel=final_kerel, final_estimator_implementation=final_implementation,
+            kernel=final_kernel, final_estimator_implementation=final_implementation,
             dimension=2, number_of_grid_points=number_of_grid_points,
             sensitivity=sensitivity,
             pilot_window_width_method=kde.utils.automaticWindowWidthMethods.ferdosi
