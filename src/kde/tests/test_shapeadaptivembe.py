@@ -56,8 +56,9 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
         super().setUp()
         self._estimator_class = None
 
+    @skip("The Epanechnikov kernel is not yet shape adaptive.")
     def test_estimate_epanechnikov(self):
-        self.fail("The Epanechnikov kernel is not yet shape adaptive.")
+        self.fail("Test not yet implemented.")
 
     def test_estimate_gaussian(self):
         self.fail("Test not yet implemented.")
