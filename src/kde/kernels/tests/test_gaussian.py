@@ -65,10 +65,10 @@ class TestGaussian(TestCase):
     def test_scaling_factor_alternative_implementation(self):
         eigen_values = np.array([4.0, 9.0, 16.0, 25.0])
         covariance_matrix = np.array([
-            [1, 0, 0, 1],
-            [0, 1, 1, 0],
-            [0, 1, 1, 0],
-            [0, 1, 1, 0],
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1],
         ])
         mean = np.array([2, 2, 3, 4])
         h = 0.5
@@ -324,10 +324,10 @@ class Test_Gaussian(TestCase):
     def test_scaling_factor_default_implementation(self):
         eigen_values = np.array([4.0, 9.0, 16.0, 25.0])
         covariance_matrix = np.array([
-            [1, 0, 0, 1],
-            [0, 1, 1, 0],
-            [0, 1, 1, 0],
-            [0, 1, 1, 0],
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1],
         ])
         h = 0.5
         expected = 0.022821773229382
@@ -337,10 +337,10 @@ class Test_Gaussian(TestCase):
     def test_scaling_factor_alternative_implementation(self):
         eigen_values = np.array([4.0, 9.0, 16.0, 25.0])
         covariance_matrix = np.array([
-            [1, 0, 0, 1],
-            [0, 1, 1, 0],
-            [0, 1, 1, 0],
-            [0, 1, 1, 0],
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1],
         ])
         h = 0.5
         expected = 0.022821773229382
