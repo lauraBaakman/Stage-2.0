@@ -76,7 +76,7 @@ class _ShapeAdaptiveModifiedBreimanEstimator_Python(_ShapeAdaptiveModifiedBreima
         eigen_values = eigenvalues.eigenvalues(covariance_matrix)
 
         # Compute the scaling factor
-        scaling_factor =self._kernel.scaling_factor(
+        scaling_factor = self._kernel.scaling_factor(
             general_bandwidth=self._general_bandwidth,
             eigen_values=eigen_values
         )
