@@ -59,13 +59,15 @@ class _KNN_C(_KNN):
 
     def _find_idx_of_pattern(self, pattern):
         (idx_array,) = np.where(np.all(self._patterns == pattern, axis=1))
-        if len(idx_array) != 1:
-            raise KNNException(
-                "The pattern {} occurred an unexpected number of times.".format(pattern),
-                len(idx_array)
-            )
+        self._validate_pattern_frequency(pattern, idx_array)
         return idx_array[0]
 
+    def _validate_pattern_frequency(self, pattern, pattern_idx):
+        if len(pattern_idx) != 1:
+            raise KNNException(
+                "The pattern {} occurred an unexpected number of times.".format(pattern),
+                len(pattern_idx)
+            )
 
 class _KNN_Python(_KNN):
 

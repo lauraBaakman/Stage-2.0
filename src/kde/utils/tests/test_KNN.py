@@ -170,6 +170,36 @@ class Test_KNN_C(KNNImpAbstractTest, TestCase):
         else:
             self.fail('ExpectedException not raised')
 
+    def test__validate_pattern_frequency_0(self):
+        pattern = np.array([0, 0], dtype=np.float64)
+        idx_array = np.array([0])
+        actual = self._implementation._validate_pattern_frequency(None, pattern, idx_array)
+        self.assertIsNone(actual)
+
+    def test__validate_pattern_frequency_1(self):
+        idx_array = np.array([0, 1])
+        pattern = np.array([2, 3])
+        try:
+            self._implementation._validate_pattern_frequency(None, pattern, idx_array)
+        except KNNException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test__validate_pattern_frequency_2(self):
+        idx_array = np.array([])
+        pattern = np.array([2, 3])
+        try:
+            self._implementation._validate_pattern_frequency(None, pattern, idx_array)
+        except KNNException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
 
 class Test_KNN_Python(KNNImpAbstractTest, TestCase):
     def setUp(self):
