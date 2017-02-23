@@ -118,7 +118,9 @@ class _MBEEstimator_Python(_MBEEstimator):
     def _estimate_pattern(self, x):
         factors = np.power(self._local_bandwidths * self._general_bandwidth, - self._dimension)
         terms = self._kernel.evaluate(
-            np.divide((x - self._xi_s).transpose(), self._general_bandwidth * self._local_bandwidths).transpose()
+            np.divide(
+                (x - self._xi_s).transpose(),
+                self._general_bandwidth * self._local_bandwidths).transpose()
         )
         terms *= factors
         density = terms.sum()
