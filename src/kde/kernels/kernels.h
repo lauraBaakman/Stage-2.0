@@ -12,6 +12,7 @@ typedef enum {
     TEST = 0,
     STANDARD_GAUSSIAN = 1,
     EPANECHNIKOV = 2,
+    GAUSSIAN = 3,
 } KernelType;
 
 Kernel selectKernel(KernelType type);

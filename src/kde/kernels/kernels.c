@@ -28,6 +28,9 @@ Kernel selectKernel(KernelType type){
             return standardGaussianKernel;
         case TEST:
             return testKernel;
+        case GAUSSIAN:
+            fprintf(stderr, "Not support, yet, for the Gaussian kernel.\n");
+            exit(-1);
         default:
             fprintf(stderr, "%d is an invalid kernel type.\n", type);
             exit(-1);

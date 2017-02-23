@@ -3,13 +3,22 @@ class Kernel(object):
         pass
 
     def evaluate(self, xs):
-        return self._implementation.evaluate(xs)
+        raise NotImplementedError()
 
     def scaling_factor(self, general_bandwidth, eigen_values):
-        return self._implementation.scaling_factor(general_bandwidth=general_bandwidth, eigen_values=eigen_values)
+        raise NotImplementedError()
 
     def to_C_enum(self):
         raise NotImplementedError()
+
+    def _get_data_dimension(self, xs):
+        if xs.ndim == 1:
+            (dimension,) = xs.shape
+        elif xs.ndim == 2:
+            (_, dimension) = xs.shape
+        else:
+            raise TypeError("Expected a vector or a matrix, not a {}-dimensional array.".format(xs.ndim))
+        return dimension
 
 
 class KernelException(Exception):
