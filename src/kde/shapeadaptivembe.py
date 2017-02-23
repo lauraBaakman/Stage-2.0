@@ -10,7 +10,7 @@ import kde.utils.eigenvalues as eigenvalues
 from kde.kernels.gaussian import Gaussian
 
 
-class ShapeAdaptiveModifiedBreimanEstimator(ModifiedBreimanEstimator):
+class ShapeAdaptiveMBE(ModifiedBreimanEstimator):
     """
     Implementation of the shape adaptive modified Breiman Estimator.
     """
@@ -23,10 +23,10 @@ class ShapeAdaptiveModifiedBreimanEstimator(ModifiedBreimanEstimator):
         super().__init__(dimension, kernel, sensitivity, pilot_kernel, pilot_window_width_method, number_of_grid_points,
                          pilot_estimator_implementation, final_estimator_implementation)
         self._pilot_estimator_implementation = pilot_estimator_implementation or ParzenEstimator
-        self._final_estimator_implementation = final_estimator_implementation or _ShapeAdaptiveModifiedBreimanEstimator_C
+        self._final_estimator_implementation = final_estimator_implementation or _ShapeAdaptiveMBE_C
 
 
-class _ShapeAdaptiveModifiedBreimanEstimator(EstimatorImplementation):
+class _ShapeAdaptiveMBE(EstimatorImplementation):
     def __init__(self, xi_s, x_s, dimension, kernel, local_bandwidths, general_bandwidth):
         kernel = kernel or Gaussian
         super().__init__(xi_s, x_s, dimension, kernel, general_bandwidth)
@@ -39,14 +39,14 @@ class _ShapeAdaptiveModifiedBreimanEstimator(EstimatorImplementation):
         raise NotImplementedError()
 
 
-class _ShapeAdaptiveModifiedBreimanEstimator_C(_ShapeAdaptiveModifiedBreimanEstimator):
+class _ShapeAdaptiveMBE_C(_ShapeAdaptiveMBE):
 
     def estimate(self):
         raise NotImplementedError("The C implementation of the Shape Adaptive Modified Breiman is estimator has not "
                               "yet been written.")
 
 
-class _ShapeAdaptiveModifiedBreimanEstimator_Python(_ShapeAdaptiveModifiedBreimanEstimator):
+class _ShapeAdaptiveMBE_Python(_ShapeAdaptiveMBE):
     def estimate(self):
         densities = np.empty(self.num_x_s)
         for idx, x in enumerate(self._x_s):

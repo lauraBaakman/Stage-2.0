@@ -8,10 +8,10 @@ from kde.kernels.epanechnikov import Epanechnikov
 from kde.kernels.gaussian import Gaussian
 from kde.parzen import _ParzenEstimator_Python, _ParzenEstimator_C
 from kde.shapeadaptivembe import \
-    ShapeAdaptiveModifiedBreimanEstimator, \
-    _ShapeAdaptiveModifiedBreimanEstimator, \
-    _ShapeAdaptiveModifiedBreimanEstimator_C, \
-    _ShapeAdaptiveModifiedBreimanEstimator_Python
+    ShapeAdaptiveMBE, \
+    _ShapeAdaptiveMBE, \
+    _ShapeAdaptiveMBE_C, \
+    _ShapeAdaptiveMBE_Python
 
 
 class TestShapeAdaptiveMBE(TestCase):
@@ -36,19 +36,19 @@ class TestShapeAdaptiveMBE(TestCase):
         np.testing.assert_array_almost_equal(actual, expected)
 
     def test_estimate_python_python(self):
-        self.estimate_test_helper(_ParzenEstimator_Python, _ShapeAdaptiveModifiedBreimanEstimator_Python)
+        self.estimate_test_helper(_ParzenEstimator_Python, _ShapeAdaptiveMBE_Python)
 
     @skip("The C implementation of SAMBE has not yet been written.")
     def test_estimate_python_C(self):
-        self.estimate_test_helper(_ParzenEstimator_Python, _ShapeAdaptiveModifiedBreimanEstimator_C)
+        self.estimate_test_helper(_ParzenEstimator_Python, _ShapeAdaptiveMBE_C)
 
     @skip("The C implementation of SAMBE has not yet been written.")
     def test_estimate_C_python(self):
-        self.estimate_test_helper(_ParzenEstimator_C, _ShapeAdaptiveModifiedBreimanEstimator_Python)
+        self.estimate_test_helper(_ParzenEstimator_C, _ShapeAdaptiveMBE_Python)
 
     @skip("The C implementation of SAMBE has not yet been written.")
     def test_estimate_C_C(self):
-        self.estimate_test_helper(_ParzenEstimator_C, _ShapeAdaptiveModifiedBreimanEstimator_C)
+        self.estimate_test_helper(_ParzenEstimator_C, _ShapeAdaptiveMBE_C)
 
 class ShapeAdaptiveMBEImpAbstractTest(object):
 
@@ -80,7 +80,7 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
 class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
     def setUp(self):
         super().setUp()
-        self._estimator_class = _ShapeAdaptiveModifiedBreimanEstimator_Python
+        self._estimator_class = _ShapeAdaptiveMBE_Python
 
     def test__determine_kernel_shape(self):
         self.fail("Test not yet implemented.")
@@ -93,4 +93,4 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
 class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
     def setUp(self):
         super().setUp()
-        self._estimator_class = _ShapeAdaptiveModifiedBreimanEstimator_C
+        self._estimator_class = _ShapeAdaptiveMBE_C
