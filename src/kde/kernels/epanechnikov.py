@@ -6,20 +6,32 @@ import scipy.special
 import kde.kernels._kernels as _kernels
 from kde.kernels.kernel import Kernel
 
+_as_C_enum = 2
+
+def _scaling_factor(general_bandwidth, eigen_values):
+    raise NotImplementedError("This class does not have an implementation of the scaling factor computation method.")
 
 class Epanechnikov(object):
     def __new__(cls, implementation=None):
         implementation_class = implementation or _Epanechnikov_C
         return implementation_class()
 
+    @staticmethod
+    def scaling_factor(general_bandwidth, eigen_values):
+        return _scaling_factor(general_bandwidth, eigen_values)
+
+    @staticmethod
+    def to_C_enum():
+        return _as_C_enum
 
 class _Epanechnikov(Kernel):
 
     def __init__(self):
         pass
 
-    def to_C_enum(self):
-        return 2
+    @staticmethod
+    def to_C_enum():
+        return _as_C_enum
 
 
 class _Epanechnikov_Python(_Epanechnikov):
@@ -64,7 +76,7 @@ class _Epanechnikov_Python(_Epanechnikov):
 
     @staticmethod
     def scaling_factor(general_bandwidth, eigen_values):
-        raise NotImplementedError("This class does not have an implementation of the scaling factor computation method.")
+        return _scaling_factor(general_bandwidth, eigen_values)
 
 
 class _Epanechnikov_C(_Epanechnikov):

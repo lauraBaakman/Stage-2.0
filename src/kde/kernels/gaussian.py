@@ -6,6 +6,9 @@ from kde.kernels.kernel import Kernel, KernelException
 
 _as_c_enum = 3
 
+def _scaling_factor(general_bandwidth, eigen_values):
+    return general_bandwidth * general_bandwidth / gmean(eigen_values)
+
 class Gaussian(object):
 
     def __new__(cls, mean, covariance_matrix, implementation=None):
@@ -14,7 +17,7 @@ class Gaussian(object):
 
     @staticmethod
     def scaling_factor(general_bandwidth, eigen_values):
-        return general_bandwidth * general_bandwidth / gmean(eigen_values)
+        return _scaling_factor(general_bandwidth, eigen_values)
 
     @staticmethod
     def to_C_enum():
@@ -95,4 +98,4 @@ class _Gaussian_Python(_Gaussian):
 
     @staticmethod
     def scaling_factor(general_bandwidth, eigen_values):
-        return general_bandwidth * general_bandwidth / gmean(eigen_values)
+        return _scaling_factor(general_bandwidth, eigen_values)

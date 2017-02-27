@@ -4,6 +4,10 @@ import scipy.stats as stats
 
 from kde.kernels.kernel import Kernel, KernelException
 
+_as_C_enum = 1
+
+def _scaling_factor(general_bandwidth):
+    return general_bandwidth * np.sqrt(general_bandwidth)
 
 class StandardGaussian(Kernel):
 
@@ -11,14 +15,23 @@ class StandardGaussian(Kernel):
         implementation_class = implementation or _StandardGaussian_C
         return implementation_class()
 
+    @staticmethod
+    def to_C_enum():
+        return _as_C_enum
+
+    @staticmethod
+    def scaling_factor(general_bandwidth, eigen_values=None):
+        return _scaling_factor(general_bandwidth)
+
 
 class _StandardGaussian(Kernel):
 
     def __init__(self):
         pass
 
-    def to_C_enum(self):
-        return 1
+    @staticmethod
+    def to_C_enum():
+        return _as_C_enum
 
 
 class _StandardGaussian_C(_StandardGaussian):
@@ -61,4 +74,4 @@ class _StandardGaussian_Python(_StandardGaussian):
 
     @staticmethod
     def scaling_factor(general_bandwidth, eigen_values=None):
-        return general_bandwidth * np.sqrt(general_bandwidth)
+        return _scaling_factor(general_bandwidth)
