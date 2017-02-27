@@ -60,7 +60,6 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
         self.fail("Test not yet implemented.")
 
     def test_estimate_gaussian(self):
-        self.fail("Test not yet implemented.")
         x_s = np.array([[0, 0], [1, 1], [0, 1]])
         local_bandwidths = np.array([10, 20, 50])
         general_bandwidth = 0.5
