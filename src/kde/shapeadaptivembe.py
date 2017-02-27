@@ -19,8 +19,8 @@ class ShapeAdaptiveMBE(ModifiedBreimanEstimator):
                  pilot_window_width_method=automaticWindowWidthMethods.ferdosi,
                  number_of_grid_points=ModifiedBreimanEstimator.default_number_of_grid_points,
                  pilot_kernel_class=None, pilot_estimator_implementation=None,
-                 kernel=None, final_estimator_implementation=None):
-        super().__init__(dimension, kernel, sensitivity, pilot_kernel_class, pilot_window_width_method, number_of_grid_points,
+                 kernel_class=None, final_estimator_implementation=None):
+        super().__init__(dimension, kernel_class, sensitivity, pilot_kernel_class, pilot_window_width_method, number_of_grid_points,
                          pilot_estimator_implementation, final_estimator_implementation)
         self._pilot_estimator_implementation = pilot_estimator_implementation or ParzenEstimator
         self._final_estimator_implementation = final_estimator_implementation or _ShapeAdaptiveMBE_C

@@ -25,7 +25,7 @@ class TestShapeAdaptiveMBE(TestCase):
         sensitivity = 0.5
         estimator = ShapeAdaptiveMBE(
             pilot_kernel_class=pilot_kernel, pilot_estimator_implementation=pilot_implementation,
-            kernel=final_kernel, final_estimator_implementation=final_implementation,
+            kernel_class=final_kernel, final_estimator_implementation=final_implementation,
             dimension=2, number_of_grid_points=number_of_grid_points,
             sensitivity=sensitivity,
             pilot_window_width_method=kde.utils.automaticWindowWidthMethods.ferdosi
