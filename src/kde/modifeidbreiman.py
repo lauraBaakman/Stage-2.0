@@ -79,7 +79,7 @@ class ModifiedBreimanEstimator(object):
         # Compute densities of the points on the grid
         pilot_estimator = ParzenEstimator(
             dimension=self._dimension,
-            bandwidth=general_bandwidth, kernel=self._pilot_kernel,
+            bandwidth=general_bandwidth, kernel_class=self._pilot_kernel,
             estimator_implementation=self._pilot_estimator_implementation)
         grid_densities = pilot_estimator.estimate(xi_s=xi_s, x_s=grid_points)
 

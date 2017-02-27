@@ -12,7 +12,7 @@ class TestParzenEstimator(TestCase):
         xi_s = np.array([[-1, -1], [0, 0], [1 / 2.0, 1 / 2.0]])
         x_s = np.array([[0, 0], [1 / 4.0, 1 / 2.0]])
         estimator = ParzenEstimator(dimension=2,
-                                    bandwidth=4, kernel=StandardGaussian(),
+                                    bandwidth=4, kernel_class=StandardGaussian(),
                                     estimator_implementation=_ParzenEstimator_Python)
         actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
         expected = np.array([0.0096947375, 0.0095360625])
@@ -22,7 +22,7 @@ class TestParzenEstimator(TestCase):
         xi_s = np.array([[-1, -1], [0, 0], [1 / 2.0, 1 / 2.0]])
         x_s = np.array([[0, 0], [1 / 4.0, 1 / 2.0]])
         estimator = ParzenEstimator(dimension=2,
-                                    bandwidth=4, kernel=StandardGaussian(),
+                                    bandwidth=4, kernel_class=StandardGaussian(),
                                     estimator_implementation=_ParzenEstimator_C)
         actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
         expected = np.array([0.0096947375, 0.0095360625])

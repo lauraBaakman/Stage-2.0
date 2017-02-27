@@ -8,10 +8,10 @@ from kde.kernels.standardGaussian import StandardGaussian
 
 
 class ParzenEstimator(object):
-    def __init__(self, dimension, bandwidth, kernel, estimator_implementation=None):
+    def __init__(self, dimension, bandwidth, kernel_class, estimator_implementation=None):
         self._dimension = dimension
         self._bandwidth = bandwidth
-        self._kernel = kernel or StandardGaussian()
+        self._kernel = kernel_class or StandardGaussian()
         self._estimator_implementation = estimator_implementation or _ParzenEstimator_C
 
     def estimate(self, xi_s, x_s=None):
