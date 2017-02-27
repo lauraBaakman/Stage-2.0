@@ -8,6 +8,7 @@ from kde.utils.knn import KNN
 import kde.utils.covariance as covariance
 import kde.utils.eigenvalues as eigenvalues
 from kde.kernels.gaussian import Gaussian
+from kde.kernels.epanechnikov import Epanechnikov
 
 
 class ShapeAdaptiveMBE(ModifiedBreimanEstimator):
@@ -18,22 +19,29 @@ class ShapeAdaptiveMBE(ModifiedBreimanEstimator):
     def __init__(self, dimension, sensitivity=1 / 2,
                  pilot_window_width_method=automaticWindowWidthMethods.ferdosi,
                  number_of_grid_points=ModifiedBreimanEstimator.default_number_of_grid_points,
-                 pilot_kernel=None, pilot_estimator_implementation=None,
-                 kernel=None, final_estimator_implementation=None):
-        super().__init__(dimension, kernel, sensitivity, pilot_kernel, pilot_window_width_method, number_of_grid_points,
-                         pilot_estimator_implementation, final_estimator_implementation)
+                 pilot_kernel_class=None, pilot_estimator_implementation=None,
+                 kernel_class=None, final_estimator_implementation=None):
+        # super().__init__(dimension, kernel_class, sensitivity, pilot_kernel_class, pilot_window_width_method, number_of_grid_points,
+        #                  pilot_estimator_implementation, final_estimator_implementation)
+        self._dimension = dimension
+        self._general_window_width_method = pilot_window_width_method
+        self._sensitivity = sensitivity
+        self._pilot_kernel_class = pilot_kernel_class or Epanechnikov
+        self._kernel = kernel_class or Gaussian
+        self._number_of_grid_points = number_of_grid_points or ModifiedBreimanEstimator.default_number_of_grid_points
+
         self._pilot_estimator_implementation = pilot_estimator_implementation or ParzenEstimator
         self._final_estimator_implementation = final_estimator_implementation or _ShapeAdaptiveMBE_C
 
 
 class _ShapeAdaptiveMBE(EstimatorImplementation):
     def __init__(self, xi_s, x_s, dimension, kernel, local_bandwidths, general_bandwidth):
-        kernel = kernel or Gaussian
         super().__init__(xi_s, x_s, dimension, kernel, general_bandwidth)
         self._local_bandwidths = local_bandwidths.astype(float, copy=False)
         self._knn = KNN(patterns=self._xi_s)
         self._k = np.sqrt(self.num_xi_s)
-        self._kernel = kernel
+        self._kernel = None
+        self._kernel_class = kernel or Gaussian
 
     def estimate(self):
         raise NotImplementedError()
@@ -56,7 +64,7 @@ class _ShapeAdaptiveMBE_Python(_ShapeAdaptiveMBE):
     def _estimate_pattern(self, pattern):
         kernel_shape = self._determine_kernel_shape(pattern)
         factors = (1 / self.num_xi_s) * np.power(self._local_bandwidths * self._general_bandwidth, - self._dimension)
-        kernel = self._kernel(
+        kernel = self._kernel_class(
             mean=np.ones([self.dimension], dtype=np.float64),
             covariance=kernel_shape
         )

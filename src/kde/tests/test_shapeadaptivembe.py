@@ -19,13 +19,13 @@ class TestShapeAdaptiveMBE(TestCase):
     def estimate_test_helper(self, pilot_implementation, final_implementation):
         xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
         x_s = np.array([[0, 0], [1, 1]])
-        pilot_kernel = TestKernel()
-        final_kernel = Gaussian()
+        pilot_kernel = TestKernel
+        final_kernel = Gaussian
         number_of_grid_points = 2
         sensitivity = 0.5
         estimator = ShapeAdaptiveMBE(
-            pilot_kernel=pilot_kernel, pilot_estimator_implementation=pilot_implementation,
-            kernel=final_kernel, final_estimator_implementation=final_implementation,
+            pilot_kernel_class=pilot_kernel, pilot_estimator_implementation=pilot_implementation,
+            kernel_class=final_kernel, final_estimator_implementation=final_implementation,
             dimension=2, number_of_grid_points=number_of_grid_points,
             sensitivity=sensitivity,
             pilot_window_width_method=kde.utils.automaticWindowWidthMethods.ferdosi
@@ -60,7 +60,7 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
         self.fail("Test not yet implemented.")
 
     def test_estimate_gaussian(self):
-        self.fail("Test not yet implemented.")
+        xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
         x_s = np.array([[0, 0], [1, 1], [0, 1]])
         local_bandwidths = np.array([10, 20, 50])
         general_bandwidth = 0.5
@@ -89,7 +89,7 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
                                      1.189207427458816,
                                      0.840896194313949])
         h = 0.721347520444482
-        kernel = Gaussian()
+        kernel = Gaussian
         estimator = self._estimator_class(
             xi_s=xi_s, x_s=x_s, dimension=2,
             kernel=kernel,
@@ -111,7 +111,7 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
                                      1.189207427458816,
                                      0.840896194313949])
         h = 0.721347520444482
-        kernel = Gaussian()
+        kernel = Gaussian
         estimator = self._estimator_class(
             xi_s=xi_s, x_s=x_s, dimension=2,
             kernel=kernel,
