@@ -24,7 +24,7 @@ class TestShapeAdaptiveMBE(TestCase):
         number_of_grid_points = 2
         sensitivity = 0.5
         estimator = ShapeAdaptiveMBE(
-            pilot_kernel=pilot_kernel, pilot_estimator_implementation=pilot_implementation,
+            pilot_kernel_class=pilot_kernel, pilot_estimator_implementation=pilot_implementation,
             kernel=final_kernel, final_estimator_implementation=final_implementation,
             dimension=2, number_of_grid_points=number_of_grid_points,
             sensitivity=sensitivity,
@@ -34,6 +34,7 @@ class TestShapeAdaptiveMBE(TestCase):
         expected = np.array([0.511743799443552, 0.511743799443552])
         np.testing.assert_array_almost_equal(actual, expected)
 
+    @skip("Needs the support of passing a kernel class instead of an instance.")
     def test_estimate_python_python(self):
         self.estimate_test_helper(_ParzenEstimator_Python, _ShapeAdaptiveMBE_Python)
 
@@ -74,6 +75,7 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
         np.testing.assert_array_almost_equal(actual, expected)
 
 
+@skip("Needs the support of passing a kernel class instead of an instance.")
 class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
     def setUp(self):
         super().setUp()
