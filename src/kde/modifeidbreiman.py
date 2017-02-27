@@ -18,7 +18,7 @@ class ModifiedBreimanEstimator(object):
     default_number_of_grid_points = 50
 
     def __init__(self, dimension, kernel=None, sensitivity=1/2,
-                 pilot_kernel=None,
+                 pilot_kernel_class=None,
                  pilot_window_width_method=automaticWindowWidthMethods.ferdosi,
                  number_of_grid_points=default_number_of_grid_points,
                  pilot_estimator_implementation=None, final_estimator_implementation=None):
@@ -26,7 +26,7 @@ class ModifiedBreimanEstimator(object):
         :param dimension: (int) The dimension of the data points of which the density is estimated.
         :param kernel: (kernel, optional) The kernel to use for the final density estimate, defaults to Gaussian.
         :param sensitivity: (int, optional) The sensitivity of the kernel method, defaults to 0.5.
-        :param pilot_kernel: (kernel, optional) The kernel to use for the pilot density estimate, defaults to Epanechnikov_Python.
+        :param pilot_kernel_class: (kernel, optional) The kernel to use for the pilot density estimate, defaults to Epanechnikov_Python.
         :param pilot_window_width_method: (function, optional) The method to use for the estimation of the automatic
             window width. Defaults to ferdosi.
         :param number_of_grid_points: (int or list, optional) The number of grid points per dimension. If an int is
@@ -37,7 +37,7 @@ class ModifiedBreimanEstimator(object):
         self._dimension = dimension
         self._general_window_width_method = pilot_window_width_method
         self._sensitivity = sensitivity
-        self._pilot_kernel = pilot_kernel or Epanechnikov()
+        self._pilot_kernel_class = pilot_kernel_class or Epanechnikov
         self._kernel = kernel or StandardGaussian()
         self._number_of_grid_points = number_of_grid_points
 
@@ -79,7 +79,7 @@ class ModifiedBreimanEstimator(object):
         # Compute densities of the points on the grid
         pilot_estimator = ParzenEstimator(
             dimension=self._dimension,
-            bandwidth=general_bandwidth, kernel_class=self._pilot_kernel,
+            bandwidth=general_bandwidth, kernel_class=self._pilot_kernel_class,
             estimator_implementation=self._pilot_estimator_implementation)
         grid_densities = pilot_estimator.estimate(xi_s=xi_s, x_s=grid_points)
 

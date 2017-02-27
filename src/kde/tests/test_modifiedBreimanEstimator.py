@@ -14,12 +14,12 @@ class TestModifiedBreimanEstimator(TestCase):
     def estimate_test_helper(self, pilot_implementation, final_implementation):
         xi_s = np.array([[0, 0], [1, 1]])
         x_s = np.array([[0, 0]])
-        pilot_kernel = TestKernel()
+        pilot_kernel = TestKernel
         final_kerel = TestKernel()
         number_of_grid_points = 2
         sensitivity = 0.5
         estimator = ModifiedBreimanEstimator(
-            pilot_kernel=pilot_kernel, pilot_estimator_implementation=pilot_implementation,
+            pilot_kernel_class=pilot_kernel, pilot_estimator_implementation=pilot_implementation,
             kernel=final_kerel, final_estimator_implementation=final_implementation,
             dimension=2, number_of_grid_points=number_of_grid_points,
             sensitivity=sensitivity,
@@ -47,7 +47,7 @@ class TestModifiedBreimanEstimator(TestCase):
             [1, 1]
         ])
         estimator = ModifiedBreimanEstimator(
-            pilot_kernel=StandardGaussian(), pilot_estimator_implementation=_parzen_implementation,
+            pilot_kernel_class=StandardGaussian, pilot_estimator_implementation=_parzen_implementation,
             dimension=2, sensitivity=0.5
         )
         actual = estimator._estimate_pilot_densities(0.5, xi_s)
