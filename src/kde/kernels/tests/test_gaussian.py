@@ -9,12 +9,7 @@ from kde.kernels.kernel import KernelException
 class TestGaussian(TestCase):
 
     def test_to_C_enum(self):
-        mean = np.array([0.5, 0.5])
-        covariance_matrix = np.array([
-            [1.2, 2.1],
-            [2.3, 3.2]
-        ])
-        actual = Gaussian(mean, covariance_matrix).to_C_enum()
+        actual = Gaussian.to_C_enum()
         expected = 3
         self.assertEqual(actual, expected)
 
