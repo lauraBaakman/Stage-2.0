@@ -66,9 +66,9 @@ class _ShapeAdaptiveMBE_Python(_ShapeAdaptiveMBE):
         factors = (1 / self.num_xi_s) * np.power(self._local_bandwidths * self._general_bandwidth, - self._dimension)
         kernel = self._kernel_class(
             mean=np.ones([self.dimension], dtype=np.float64),
-            covariance=kernel_shape
+            covariance_matrix=kernel_shape
         )
-        terms = kernel.evaluate((pattern - self._xi_s).transpose())
+        terms = kernel.evaluate((pattern - self._xi_s))
         terms *= factors
         density = terms.sum()
         return density
@@ -84,7 +84,7 @@ class _ShapeAdaptiveMBE_Python(_ShapeAdaptiveMBE):
         eigen_values = eigenvalues.eigenvalues(covariance_matrix)
 
         # Compute the scaling factor
-        scaling_factor = self._kernel.scaling_factor(
+        scaling_factor = self._kernel_class.scaling_factor(
             general_bandwidth=self._general_bandwidth,
             eigen_values=eigen_values
         )
