@@ -17,11 +17,10 @@ from kde.shapeadaptivembe import \
 class TestShapeAdaptiveMBE(TestCase):
 
     def estimate_test_helper(self, pilot_implementation, final_implementation):
-        self.fail("Test not yet implemented.")
         xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
         x_s = np.array([[0, 0], [1, 1]])
         pilot_kernel = TestKernel()
-        final_kernel = TestKernel()
+        final_kernel = Gaussian()
         number_of_grid_points = 2
         sensitivity = 0.5
         estimator = ShapeAdaptiveMBE(
@@ -32,7 +31,7 @@ class TestShapeAdaptiveMBE(TestCase):
             pilot_window_width_method=kde.utils.automaticWindowWidthMethods.ferdosi
         )
         actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
-        expected = None
+        expected = np.array([0.511743799443552, 0.511743799443552])
         np.testing.assert_array_almost_equal(actual, expected)
 
     def test_estimate_python_python(self):
@@ -62,7 +61,6 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
 
     def test_estimate_gaussian(self):
         self.fail("Test not yet implemented.")
-        xi_s = np.array([[-1, -1], [1, 1], [0, 0]])
         x_s = np.array([[0, 0], [1, 1], [0, 1]])
         local_bandwidths = np.array([10, 20, 50])
         general_bandwidth = 0.5
@@ -73,7 +71,7 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
         actual = estimator.estimate()
-        expected = None
+        expected = np.array([0.511743799443552, 0.511743799443552])
         np.testing.assert_array_almost_equal(actual, expected)
 
 
@@ -83,10 +81,45 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
         self._estimator_class = _ShapeAdaptiveMBE_Python
 
     def test__determine_kernel_shape(self):
-        self.fail("Test not yet implemented.")
+        xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+        x_s = np.array([0, 0])
+        pattern = x_s[0]
+        local_bandwidths = np.array([0.840896194313949,
+                                     1.189207427458816,
+                                     1.189207427458816,
+                                     0.840896194313949])
+        h = 0.721347520444482
+        kernel = Gaussian()
+        estimator = self._estimator_class(
+            xi_s=xi_s, x_s=x_s, dimension=2,
+            kernel=kernel,
+            local_bandwidths=local_bandwidths, general_bandwidth=h
+        )
+        actual = estimator._determine_kernel_shape(pattern)
+        expected = np.array([
+            [0.263583071129392,  -0.131791535564696],
+            [-0.131791535564696,   0.263583071129392]
+        ])
+        np.testing.assert_array_almost_equal(actual, expected)
 
     def test__estimate_pattern(self):
-        self.fail("Test not yet implemented.")
+        xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+        x_s = np.array([0, 0])
+        pattern = x_s[0]
+        local_bandwidths = np.array([0.840896194313949,
+                                     1.189207427458816,
+                                     1.189207427458816,
+                                     0.840896194313949])
+        h = 0.721347520444482
+        kernel = Gaussian()
+        estimator = self._estimator_class(
+            xi_s=xi_s, x_s=x_s, dimension=2,
+            kernel=kernel,
+            local_bandwidths=local_bandwidths, general_bandwidth=h
+        )
+        actual = estimator._estimate_pattern(pattern=pattern)
+        expected = 0.511743799443552
+        self.assertAlmostEqual(actual, expected)
 
 
 @skip("The C implementation of SAMBE has not yet been written.")
