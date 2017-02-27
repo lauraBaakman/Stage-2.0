@@ -15,7 +15,7 @@ class TestModifiedBreimanEstimator(TestCase):
         xi_s = np.array([[0, 0], [1, 1]])
         x_s = np.array([[0, 0]])
         pilot_kernel = TestKernel
-        final_kerel = TestKernel    
+        final_kerel = TestKernel
         number_of_grid_points = 2
         sensitivity = 0.5
         estimator = ModifiedBreimanEstimator(

@@ -19,8 +19,8 @@ class TestShapeAdaptiveMBE(TestCase):
     def estimate_test_helper(self, pilot_implementation, final_implementation):
         xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
         x_s = np.array([[0, 0], [1, 1]])
-        pilot_kernel = TestKernel()
-        final_kernel = Gaussian()
+        pilot_kernel = TestKernel
+        final_kernel = Gaussian
         number_of_grid_points = 2
         sensitivity = 0.5
         estimator = ShapeAdaptiveMBE(
@@ -34,7 +34,6 @@ class TestShapeAdaptiveMBE(TestCase):
         expected = np.array([0.511743799443552, 0.511743799443552])
         np.testing.assert_array_almost_equal(actual, expected)
 
-    @skip("Needs the support of passing a kernel class instead of an instance.")
     def test_estimate_python_python(self):
         self.estimate_test_helper(_ParzenEstimator_Python, _ShapeAdaptiveMBE_Python)
 
@@ -61,6 +60,7 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
         self.fail("Test not yet implemented.")
 
     def test_estimate_gaussian(self):
+        xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
         x_s = np.array([[0, 0], [1, 1], [0, 1]])
         local_bandwidths = np.array([10, 20, 50])
         general_bandwidth = 0.5
@@ -75,7 +75,6 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
         np.testing.assert_array_almost_equal(actual, expected)
 
 
-@skip("Needs the support of passing a kernel class instead of an instance.")
 class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
     def setUp(self):
         super().setUp()
@@ -90,7 +89,7 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
                                      1.189207427458816,
                                      0.840896194313949])
         h = 0.721347520444482
-        kernel = Gaussian()
+        kernel = Gaussian
         estimator = self._estimator_class(
             xi_s=xi_s, x_s=x_s, dimension=2,
             kernel=kernel,
@@ -112,7 +111,7 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
                                      1.189207427458816,
                                      0.840896194313949])
         h = 0.721347520444482
-        kernel = Gaussian()
+        kernel = Gaussian
         estimator = self._estimator_class(
             xi_s=xi_s, x_s=x_s, dimension=2,
             kernel=kernel,
