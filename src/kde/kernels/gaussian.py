@@ -4,11 +4,21 @@ from scipy.stats.mstats import gmean
 from kde.kernels.kernel import Kernel, KernelException
 
 
+_as_c_enum = 3
+
 class Gaussian(object):
 
     def __new__(cls, mean, covariance_matrix, implementation=None):
-        implementation_class = implementation or _Gaussian_C
+        implementation_class = implementation or _Gaussian_Python
         return implementation_class(mean=mean, covariance_matrix=covariance_matrix)
+
+    @staticmethod
+    def scaling_factor(general_bandwidth, eigen_values):
+        return general_bandwidth * general_bandwidth / gmean(eigen_values)
+
+    @staticmethod
+    def to_C_enum():
+        return _as_c_enum
 
 
 class _Gaussian(Kernel):
@@ -36,8 +46,9 @@ class _Gaussian(Kernel):
         if xs_dimension is not self.dimension:
             raise KernelException("Patterns should have dimension {}, not {}.".format(self.dimension, xs_dimension))
 
+    @staticmethod
     def to_C_enum(self):
-        return 3
+        return _as_c_enum
 
     def _validate_parameters(self, mean, covariance_matrix):
         self._validate_mean(mean)
@@ -76,7 +87,7 @@ class _Gaussian_Python(_Gaussian):
         try:
             self._kernel = stats.multivariate_normal(mean=self._mean, cov=self._covariance_matrix)
         except ValueError as e:
-            print("Could not generate the multivariate normal, numpy error: {}".format(e.args[0]))
+            raise  KernelException("Could not generate the multivariate normal, numpy error: {}".format(e.args[0]))
 
     def evaluate(self, xs):
         self._validate_xs_pdf_combination(xs)
