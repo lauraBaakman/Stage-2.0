@@ -31,13 +31,6 @@ class _Gaussian(Kernel):
                 covariance_dimension, covariance_dimension, mean_dimension
             ))
 
-    def _validate_eigen_values_pdf_combination(self, eigen_values):
-        eigen_values_dimension = self._get_data_dimension(eigen_values)
-        if eigen_values_dimension is not self.dimension:
-            raise KernelException("Expected {dimension} eigen values, not {eigen_values_dimension}, given that the "
-                                  "covariance matrix is {dimension} x {dimension} and the mean is 1 x {dimension}."
-                                  .format(dimension=self.dimension, eigen_values_dimension=eigen_values_dimension))
-
     def _validate_xs_pdf_combination(self, xs):
         xs_dimension = self._get_data_dimension(xs)
         if xs_dimension is not self.dimension:
@@ -73,7 +66,6 @@ class _Gaussian_C(_Gaussian):
         raise NotImplementedError()
 
     def scaling_factor(self, general_bandwidth, eigen_values):
-        self._validate_eigen_values_pdf_combination(eigen_values)
         raise NotImplementedError()
 
 
@@ -90,5 +82,4 @@ class _Gaussian_Python(_Gaussian):
         return self._kernel.pdf(xs)
 
     def scaling_factor(self, general_bandwidth, eigen_values):
-        self._validate_eigen_values_pdf_combination(eigen_values)
         return general_bandwidth * general_bandwidth / gmean(eigen_values)

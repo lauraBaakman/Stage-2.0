@@ -123,38 +123,6 @@ class Test_Gaussian(TestCase):
         else:
             self.fail('ExpectedException not raised')
 
-    def test__validate_eigen_values_pdf_combination_0(self):
-        # Valid combination
-        kernel = _Gaussian(
-            mean=np.array([0.5, 0.5]),
-            covariance_matrix=np.array([
-                [1.2, 2.1],
-                [2.3, 3.2]
-            ])
-        )
-        eigen_values = np.array([0.1, 0.2])
-        actual = kernel._validate_eigen_values_pdf_combination(eigen_values)
-        self.assertIsNone(actual)
-
-    def test__validate_eigen_values_pdf_combination_1(self):
-        # Invalid number of eigenvalues compared to dimension of the mean
-        kernel = _Gaussian(
-            mean=np.array([0.5, 0.5]),
-            covariance_matrix=np.array([
-                [1.2, 2.1],
-                [2.3, 3.2]
-            ])
-        )
-        eigen_values = np.array([0.1, 0.2, 0.3])
-        try:
-            kernel._validate_eigen_values_pdf_combination(eigen_values)
-        except KernelException:
-            pass
-        except Exception as e:
-            self.fail('Unexpected exception raised: {}'.format(e))
-        else:
-            self.fail('ExpectedException not raised')
-
     def test__validate_xs_pdf_combination_0(self):
         # valid combination 1D
         kernel = _Gaussian(
@@ -165,7 +133,7 @@ class Test_Gaussian(TestCase):
             ])
         )
         xs = np.array([0.1, 0.2])
-        actual = kernel._validate_eigen_values_pdf_combination(xs)
+        actual = kernel._validate_xs_pdf_combination(xs)
         self.assertIsNone(actual)
 
     def test__validate_xs_pdf_combination_1(self):
