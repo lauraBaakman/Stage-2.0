@@ -61,7 +61,7 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
 
     def test_estimate_gaussian(self):
         xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-        x_s = np.array([[0, 0], [1, 1], [0, 1]])
+        x_s = np.array([[0, 0], [1, 1]])
         local_bandwidths = np.array([10, 20, 50])
         general_bandwidth = 0.5
         kernel = Gaussian
@@ -82,7 +82,7 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
 
     def test__determine_kernel_shape(self):
         xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-        x_s = np.array([0, 0])
+        x_s = np.array([[0, 0], [1, 1]])
         pattern = x_s[0]
         local_bandwidths = np.array([0.840896194313949,
                                      1.189207427458816,
@@ -104,7 +104,7 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
 
     def test__estimate_pattern(self):
         xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-        x_s = np.array([0, 0])
+        x_s = np.array([[0, 0], [1, 1]])
         pattern = x_s[0]
         local_bandwidths = np.array([0.840896194313949,
                                      1.189207427458816,
