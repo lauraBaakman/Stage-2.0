@@ -62,7 +62,8 @@ class _Epanechnikov_Python(_Epanechnikov):
         denominator = scipy.special.gamma(dimension / 2.0 + 1)
         return numerator / denominator
 
-    def scaling_factor(self, general_bandwidth, eigen_values):
+    @staticmethod
+    def scaling_factor(general_bandwidth, eigen_values):
         raise NotImplementedError("This class does not have an implementation of the scaling factor computation method.")
 
 
@@ -84,5 +85,6 @@ class _Epanechnikov_C(_Epanechnikov):
         else:
             raise TypeError("Expected a vector or a matrix, not a {}-dimensional array.".format(x.ndim))
 
-    def scaling_factor(self, general_bandwidth, eigen_values):
+    @staticmethod
+    def scaling_factor(general_bandwidth, eigen_values):
         raise NotImplementedError("This class does not have an implementation of the scaling factor computation method.")

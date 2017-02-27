@@ -65,7 +65,8 @@ class _Gaussian_C(_Gaussian):
         self._validate_xs_pdf_combination(xs)
         raise NotImplementedError()
 
-    def scaling_factor(self, general_bandwidth, eigen_values):
+    @staticmethod
+    def scaling_factor(general_bandwidth, eigen_values):
         raise NotImplementedError()
 
 
@@ -81,5 +82,6 @@ class _Gaussian_Python(_Gaussian):
         self._validate_xs_pdf_combination(xs)
         return self._kernel.pdf(xs)
 
-    def scaling_factor(self, general_bandwidth, eigen_values):
+    @staticmethod
+    def scaling_factor(general_bandwidth, eigen_values):
         return general_bandwidth * general_bandwidth / gmean(eigen_values)
