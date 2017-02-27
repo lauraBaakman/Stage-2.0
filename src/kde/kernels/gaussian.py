@@ -74,7 +74,6 @@ class _Gaussian_C(_Gaussian):
 
     def scaling_factor(self, general_bandwidth, eigen_values):
         self._validate_eigen_values_pdf_combination(eigen_values)
-        # TODO Implement validation of eigen_values in combination with dimension of mean
         raise NotImplementedError()
 
 
