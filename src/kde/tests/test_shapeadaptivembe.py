@@ -62,8 +62,8 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
     def test_estimate_gaussian(self):
         xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
         x_s = np.array([[0, 0], [1, 1]])
-        local_bandwidths = np.array([10, 20, 50])
-        general_bandwidth = 0.5
+        local_bandwidths = np.array([0.84089642, 1.18920712, 1.18920712, 0.84089642])
+        general_bandwidth = 0.721347520444482
         kernel = Gaussian
         estimator = self._estimator_class(
             xi_s=xi_s, x_s=x_s, dimension=2,
