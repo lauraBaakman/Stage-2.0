@@ -63,14 +63,14 @@ class _ShapeAdaptiveMBE_Python(_ShapeAdaptiveMBE):
 
     def _estimate_pattern(self, pattern):
         kernel_shape = self._determine_kernel_shape(pattern)
-        factors = (1 / self.num_xi_s) * np.power(self._local_bandwidths * self._general_bandwidth, - self._dimension)
+        factors = np.power(self._local_bandwidths * self._general_bandwidth, - self._dimension)
         kernel = self._kernel_class(
-            mean=np.ones([self.dimension], dtype=np.float64),
+            mean=np.zeros([self.dimension], dtype=np.float64),
             covariance_matrix=kernel_shape
         )
         terms = kernel.evaluate((pattern - self._xi_s))
         terms *= factors
-        density = terms.sum()
+        density = (1 / self.num_xi_s) * terms.sum()
         return density
 
     def _determine_kernel_shape(self, pattern):
