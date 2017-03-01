@@ -5,7 +5,8 @@ class Kernel(object):
     def evaluate(self, xs):
         raise NotImplementedError()
 
-    def scaling_factor(self, general_bandwidth, eigen_values):
+    @staticmethod
+    def scaling_factor(general_bandwidth, eigen_values):
         raise NotImplementedError()
 
     def to_C_enum(self):

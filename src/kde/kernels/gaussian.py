@@ -1,14 +1,30 @@
 import scipy.stats as stats
 from scipy.stats.mstats import gmean
+import numpy as np
 
 from kde.kernels.kernel import Kernel, KernelException
+
+
+_as_c_enum = 3
+
+
+def _scaling_factor(general_bandwidth, eigen_values):
+    return (general_bandwidth * general_bandwidth) / gmean(np.power(eigen_values, (1.0 / 2)))
 
 
 class Gaussian(object):
 
     def __new__(cls, mean, covariance_matrix, implementation=None):
-        implementation_class = implementation or _Gaussian_C
+        implementation_class = implementation or _Gaussian_Python
         return implementation_class(mean=mean, covariance_matrix=covariance_matrix)
+
+    @staticmethod
+    def scaling_factor(general_bandwidth, eigen_values):
+        return _scaling_factor(general_bandwidth, eigen_values)
+
+    @staticmethod
+    def to_C_enum():
+        return _as_c_enum
 
 
 class _Gaussian(Kernel):
@@ -31,20 +47,18 @@ class _Gaussian(Kernel):
                 covariance_dimension, covariance_dimension, mean_dimension
             ))
 
-    def _validate_eigen_values_pdf_combination(self, eigen_values):
-        eigen_values_dimension = self._get_data_dimension(eigen_values)
-        if eigen_values_dimension is not self.dimension:
-            raise KernelException("Expected {dimension} eigen values, not {eigen_values_dimension}, given that the "
-                                  "covariance matrix is {dimension} x {dimension} and the mean is 1 x {dimension}."
-                                  .format(dimension=self.dimension, eigen_values_dimension=eigen_values_dimension))
-
     def _validate_xs_pdf_combination(self, xs):
         xs_dimension = self._get_data_dimension(xs)
         if xs_dimension is not self.dimension:
             raise KernelException("Patterns should have dimension {}, not {}.".format(self.dimension, xs_dimension))
 
+    def evaluate(self, xs):
+        raise NotImplementedError("No functions should be called on objects of this type, it is an abstract class "
+                                  "for the specific implementations.")
+
+    @staticmethod
     def to_C_enum(self):
-        return 3
+        return _as_c_enum
 
     def _validate_parameters(self, mean, covariance_matrix):
         self._validate_mean(mean)
@@ -70,12 +84,11 @@ class _Gaussian_C(_Gaussian):
 
     def evaluate(self, xs):
         self._validate_xs_pdf_combination(xs)
-        raise NotImplementedError()
+        raise NotImplementedError("Gaussian kernel is not yet implemented in C.")
 
-    def scaling_factor(self, general_bandwidth, eigen_values):
-        self._validate_eigen_values_pdf_combination(eigen_values)
-        # TODO Implement validation of eigen_values in combination with dimension of mean
-        raise NotImplementedError()
+    @staticmethod
+    def scaling_factor(general_bandwidth, eigen_values):
+        raise NotImplementedError("Gaussian kernel is not yet implemented in C.")
 
 
 class _Gaussian_Python(_Gaussian):
@@ -84,12 +97,12 @@ class _Gaussian_Python(_Gaussian):
         try:
             self._kernel = stats.multivariate_normal(mean=self._mean, cov=self._covariance_matrix)
         except ValueError as e:
-            print("Could not generate the multivariate normal, numpy error: {}".format(e.args[0]))
+            raise KernelException("Could not generate the multivariate normal, numpy error: {}".format(e.args[0]))
 
     def evaluate(self, xs):
         self._validate_xs_pdf_combination(xs)
         return self._kernel.pdf(xs)
 
-    def scaling_factor(self, general_bandwidth, eigen_values):
-        self._validate_eigen_values_pdf_combination(eigen_values)
-        return general_bandwidth * general_bandwidth / gmean(eigen_values)
+    @staticmethod
+    def scaling_factor(general_bandwidth, eigen_values):
+        return _scaling_factor(general_bandwidth, eigen_values)

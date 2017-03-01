@@ -9,12 +9,7 @@ from kde.kernels.kernel import KernelException
 class TestGaussian(TestCase):
 
     def test_to_C_enum(self):
-        mean = np.array([0.5, 0.5])
-        covariance_matrix = np.array([
-            [1.2, 2.1],
-            [2.3, 3.2]
-        ])
-        actual = Gaussian(mean, covariance_matrix).to_C_enum()
+        actual = Gaussian.to_C_enum()
         expected = 3
         self.assertEqual(actual, expected)
 
@@ -59,20 +54,33 @@ class TestGaussian(TestCase):
         else:
             self.fail('ExpectedException not raised')
 
+    @skip("The C implementation of the Gaussian kernel has not yet been written.")
     def test_scaling_factor_default_implementation(self):
-        self.skipTest("The C implementation of the Gaussian kernel has not yet been written.")
+        eigen_values = np.array([4.0, 9.0, 16.0, 25.0])
+        covariance_matrix = np.array([
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1],
+        ])
+        mean = np.array([2, 2, 3, 4])
+        h = 0.5
+        expected = 0.075534384933919
+        kernel = Gaussian(mean, covariance_matrix, implementation=_Gaussian_C)
+        actual = kernel.scaling_factor(general_bandwidth=h, eigen_values=eigen_values)
+        self.assertAlmostEqual(expected, actual)
 
     def test_scaling_factor_alternative_implementation(self):
         eigen_values = np.array([4.0, 9.0, 16.0, 25.0])
         covariance_matrix = np.array([
-            [1, 0, 0, 1],
-            [0, 1, 1, 0],
-            [0, 1, 1, 0],
-            [0, 1, 1, 0],
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1],
         ])
         mean = np.array([2, 2, 3, 4])
         h = 0.5
-        expected = 0.022821773229382
+        expected = 0.075534384933919
         kernel = Gaussian(mean, covariance_matrix, implementation=_Gaussian_Python)
         actual = kernel.scaling_factor(general_bandwidth=h, eigen_values=eigen_values)
         self.assertAlmostEqual(expected, actual)
@@ -123,38 +131,6 @@ class Test_Gaussian(TestCase):
         else:
             self.fail('ExpectedException not raised')
 
-    def test__validate_eigen_values_pdf_combination_0(self):
-        # Valid combination
-        kernel = _Gaussian(
-            mean=np.array([0.5, 0.5]),
-            covariance_matrix=np.array([
-                [1.2, 2.1],
-                [2.3, 3.2]
-            ])
-        )
-        eigen_values = np.array([0.1, 0.2])
-        actual = kernel._validate_eigen_values_pdf_combination(eigen_values)
-        self.assertIsNone(actual)
-
-    def test__validate_eigen_values_pdf_combination_1(self):
-        # Invalid number of eigenvalues compared to dimension of the mean
-        kernel = _Gaussian(
-            mean=np.array([0.5, 0.5]),
-            covariance_matrix=np.array([
-                [1.2, 2.1],
-                [2.3, 3.2]
-            ])
-        )
-        eigen_values = np.array([0.1, 0.2, 0.3])
-        try:
-            kernel._validate_eigen_values_pdf_combination(eigen_values)
-        except KernelException:
-            pass
-        except Exception as e:
-            self.fail('Unexpected exception raised: {}'.format(e))
-        else:
-            self.fail('ExpectedException not raised')
-
     def test__validate_xs_pdf_combination_0(self):
         # valid combination 1D
         kernel = _Gaussian(
@@ -165,7 +141,7 @@ class Test_Gaussian(TestCase):
             ])
         )
         xs = np.array([0.1, 0.2])
-        actual = kernel._validate_eigen_values_pdf_combination(xs)
+        actual = kernel._validate_xs_pdf_combination(xs)
         self.assertIsNone(actual)
 
     def test__validate_xs_pdf_combination_1(self):
@@ -324,26 +300,26 @@ class Test_Gaussian(TestCase):
     def test_scaling_factor_default_implementation(self):
         eigen_values = np.array([4.0, 9.0, 16.0, 25.0])
         covariance_matrix = np.array([
-            [1, 0, 0, 1],
-            [0, 1, 1, 0],
-            [0, 1, 1, 0],
-            [0, 1, 1, 0],
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1],
         ])
         h = 0.5
-        expected = 0.022821773229382
+        expected = 0.075534384933919
         actual = Gaussian(None, covariance_matrix).scaling_factor(general_bandwidth=h, eigen_values=eigen_values)
         self.assertAlmostEqual(expected, actual)
 
     def test_scaling_factor_alternative_implementation(self):
         eigen_values = np.array([4.0, 9.0, 16.0, 25.0])
         covariance_matrix = np.array([
-            [1, 0, 0, 1],
-            [0, 1, 1, 0],
-            [0, 1, 1, 0],
-            [0, 1, 1, 0],
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1],
         ])
         h = 0.5
-        expected = 0.022821773229382
+        expected = 0.075534384933919
         kernel = Gaussian(None, covariance_matrix, implementation=_Gaussian_Python)
         actual = kernel.scaling_factor(general_bandwidth=h, eigen_values=eigen_values)
         self.assertAlmostEqual(expected, actual)
@@ -383,12 +359,20 @@ class GaussianImpAbstractTest(object):
         actual = self._kernel_class(mean, covariance_matrix).evaluate(pattern)
         self.assertAlmostEqual(expected, actual)
 
+    def test_evaluate_4(self):
+        covariance_matrix = np.array([[0.26358307, -0.13179154], [-0.13179154,  0.26358307]])
+        mean = np.array([0, 0])
+        pattern = np.array([0, 0])
+        expected =  0.697223462789203
+        actual = self._kernel_class(mean, covariance_matrix).evaluate(pattern)
+        self.assertAlmostEqual(expected, actual)
+
     def test_scaling_factor(self):
         eigen_values = np.array([4.0, 9.0])
         h = 0.5
         covariance_matrix = np.array([[0.5, 0.5], [0.5, 1.5]])
         mean = np.array([2, 2])
-        expected = 0.041666666666667
+        expected = 0.102062072615966
         kernel = self._kernel_class(mean, covariance_matrix)
         actual = kernel.scaling_factor(general_bandwidth=h, eigen_values=eigen_values)
         self.assertAlmostEqual(expected, actual)

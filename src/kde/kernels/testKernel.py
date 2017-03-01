@@ -4,6 +4,8 @@ import numpy as np
 from kde.kernels.kernel import Kernel
 
 
+_as_c_enum = 0
+
 class TestKernel(object):
 
     @staticmethod
@@ -11,14 +13,18 @@ class TestKernel(object):
         implementation_class = implementation or _TestKernel_C
         return implementation_class()
 
+    @staticmethod
+    def to_C_enum():
+        return _as_c_enum
 
 class _TestKernel(Kernel):
 
     def __init__(self):
         pass
 
-    def to_C_enum(self):
-        return 0
+    @staticmethod
+    def to_C_enum():
+        return _as_c_enum
 
 
 class _TestKernel_Python(_TestKernel):
@@ -40,7 +46,8 @@ class _TestKernel_Python(_TestKernel):
     def _evaluate_multiple_patterns(self, x):
         return np.abs(np.mean(x, axis=1))
 
-    def scaling_factor(self, general_bandwidth=None, eigen_values=None):
+    @staticmethod
+    def scaling_factor(general_bandwidth=None, eigen_values=None):
         return 0.5
 
 
@@ -61,5 +68,6 @@ class _TestKernel_C(_TestKernel):
         else:
             raise TypeError("Expected a vector or a matrix, not a {}-dimensional array.".format(x.ndim))
 
-    def scaling_factor(self, general_bandwidth, eigen_values):
+    @staticmethod
+    def scaling_factor(general_bandwidth, eigen_values):
         raise NotImplementedError("This class does not have an implementation of the scaling factor computation method.")

@@ -4,12 +4,24 @@ import scipy.stats as stats
 
 from kde.kernels.kernel import Kernel, KernelException
 
+_as_C_enum = 1
+
+def _scaling_factor(general_bandwidth):
+    return general_bandwidth * np.sqrt(general_bandwidth)
 
 class StandardGaussian(Kernel):
 
     def __new__(cls, implementation=None):
         implementation_class = implementation or _StandardGaussian_C
         return implementation_class()
+
+    @staticmethod
+    def to_C_enum():
+        return _as_C_enum
+
+    @staticmethod
+    def scaling_factor(general_bandwidth, eigen_values=None):
+        return _scaling_factor(general_bandwidth)
 
 
 class _StandardGaussian(Kernel):
@@ -18,17 +30,8 @@ class _StandardGaussian(Kernel):
         pass
 
     @staticmethod
-    def _validate_scaling_factors_parameters(general_bandwidth, eigen_values):
-        if eigen_values is None:
-            return
-        if np.all(eigen_values == general_bandwidth):
-            return
-        raise KernelException("The StandardGaussian can only have a covariance matrix of the form:"
-                              "general_bandwidth * I. Thus the eigen values should all be equal to the general "
-                              " bandwidth.")
-
-    def to_C_enum(self):
-        return 1
+    def to_C_enum():
+        return _as_C_enum
 
 
 class _StandardGaussian_C(_StandardGaussian):
@@ -54,8 +57,8 @@ class _StandardGaussian_C(_StandardGaussian):
         _kernels.standard_gaussian_multi_pattern(xs, densities)
         return densities
 
-    def scaling_factor(self, general_bandwidth, eigen_values=None):
-        self._validate_scaling_factors_parameters(general_bandwidth=general_bandwidth, eigen_values=eigen_values)
+    @staticmethod
+    def scaling_factor(general_bandwidth, eigen_values=None):
         raise NotImplementedError("This class does not have an implementation of the scaling factor computation method.")
 
 
@@ -69,6 +72,6 @@ class _StandardGaussian_Python(_StandardGaussian):
         covariance = np.identity(dimension)
         return stats.multivariate_normal(mean=mean, cov=covariance).pdf(xs)
 
-    def scaling_factor(self, general_bandwidth, eigen_values=None):
-        self._validate_scaling_factors_parameters(general_bandwidth=general_bandwidth, eigen_values=eigen_values)
-        return general_bandwidth * np.sqrt(general_bandwidth)
+    @staticmethod
+    def scaling_factor(general_bandwidth, eigen_values=None):
+        return _scaling_factor(general_bandwidth)
