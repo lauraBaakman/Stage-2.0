@@ -52,6 +52,10 @@ class _Gaussian(Kernel):
         if xs_dimension is not self.dimension:
             raise KernelException("Patterns should have dimension {}, not {}.".format(self.dimension, xs_dimension))
 
+    def evaluate(self, xs):
+        raise NotImplementedError("No functions should be called on objects of this type, it is an abstract class "
+                                  "for the specific implementations.")
+
     @staticmethod
     def to_C_enum(self):
         return _as_c_enum
