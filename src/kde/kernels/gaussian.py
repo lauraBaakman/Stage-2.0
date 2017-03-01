@@ -97,7 +97,7 @@ class _Gaussian_Python(_Gaussian):
         try:
             self._kernel = stats.multivariate_normal(mean=self._mean, cov=self._covariance_matrix)
         except ValueError as e:
-            raise  KernelException("Could not generate the multivariate normal, numpy error: {}".format(e.args[0]))
+            raise KernelException("Could not generate the multivariate normal, numpy error: {}".format(e.args[0]))
 
     def evaluate(self, xs):
         self._validate_xs_pdf_combination(xs)
