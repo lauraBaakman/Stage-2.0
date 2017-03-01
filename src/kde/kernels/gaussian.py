@@ -84,11 +84,11 @@ class _Gaussian_C(_Gaussian):
 
     def evaluate(self, xs):
         self._validate_xs_pdf_combination(xs)
-        raise NotImplementedError()
+        raise NotImplementedError("Gaussian kernel is not yet implemented in C.")
 
     @staticmethod
     def scaling_factor(general_bandwidth, eigen_values):
-        raise NotImplementedError()
+        raise NotImplementedError("Gaussian kernel is not yet implemented in C.")
 
 
 class _Gaussian_Python(_Gaussian):
