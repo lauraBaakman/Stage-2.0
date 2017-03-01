@@ -1,13 +1,16 @@
 import scipy.stats as stats
 from scipy.stats.mstats import gmean
+import numpy as np
 
 from kde.kernels.kernel import Kernel, KernelException
 
 
 _as_c_enum = 3
 
+
 def _scaling_factor(general_bandwidth, eigen_values):
-    return general_bandwidth * general_bandwidth / gmean(eigen_values)
+    return (general_bandwidth * general_bandwidth) / gmean(np.power(eigen_values, (1.0 / 2)))
+
 
 class Gaussian(object):
 
