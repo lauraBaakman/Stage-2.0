@@ -25,4 +25,5 @@ include_directories(
         /Library/Frameworks/Python.framework/Headers
         /usr/include
         /usr/local/include
+        /usr/local/include/gsl
 )
