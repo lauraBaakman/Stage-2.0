@@ -1,11 +1,33 @@
 #ifndef KERNELS_KERNELS_H
 #define KERNELS_KERNELS_H
 
-typedef double (*KernelDensityFunction)(double* data, int dimensionality, double factor);
-typedef double (*KernelConstantFunction)(int dimensionality);
+#include <gsl/gsl_matrix.h>
+#include <stdbool.h>
+
+typedef double (*SymmetricKernelDensityFunction)(double* data, int dimensionality, double factor);
+typedef double (*SymmetricKernelConstantFunction)(int dimensionality);
+
+typedef double (*ASymmetricKernelDensityFunction)(double* data, int dimensionality, gsl_matrix* shapeMatrix);
+typedef gsl_matrix* (*ASymmetricKernelConstantFunction)(int dimensionality);
+
+typedef struct SymmetricKernel {
+    SymmetricKernelConstantFunction factorFunction;
+    SymmetricKernelDensityFunction densityFunction;
+} SymmetricKernel;
+
+typedef struct ASymmetricKernel {
+    ASymmetricKernelConstantFunction factorFunction;
+    ASymmetricKernelDensityFunction densityFunction;
+} ASymmetricKernel;
+
+typedef union {
+    SymmetricKernel symmetricKernel;
+    ASymmetricKernel aSymmetricKernel;
+} kernelUnion;
+
 typedef struct Kernel {
-    KernelConstantFunction factorFunction;
-    KernelDensityFunction densityFunction;
+    bool isSymmetric;
+    kernelUnion kernel;
 } Kernel;
 
 typedef enum {
@@ -16,6 +38,8 @@ typedef enum {
 } KernelType;
 
 Kernel selectKernel(KernelType type);
+SymmetricKernel selectSymmetricKernel(KernelType type);
+ASymmetricKernel selectASymmetricKernel(KernelType type);
 
 extern Kernel standardGaussianKernel;
 extern Kernel epanechnikovKernel;

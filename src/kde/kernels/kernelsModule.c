@@ -3,6 +3,7 @@
 //
 
 #include "kernelsModule.h"
+#include "kernels.h"
 
 static PyObject * multi_pattern(PyObject *args, KernelType kernelType){
     PyObject* inPatterns = NULL;
@@ -13,22 +14,39 @@ static PyObject * multi_pattern(PyObject *args, KernelType kernelType){
     Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
     Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
 
-    double* current_pattern = patterns.data;
-
     Kernel kernel = selectKernel(kernelType);
-    double kernelConstant = kernel.factorFunction(patterns.dimensionality);
-
-    for(
-            int j = 0;
-            j < patterns.length;
-            j++, current_pattern += patterns.rowStride)
-    {
-        densities.data[j] = kernel.densityFunction(current_pattern, patterns.dimensionality, kernelConstant);
+    if(kernel.isSymmetric){
+        multi_pattern_symmetric(kernel.kernel.symmetricKernel, &patterns, &densities);
+    } else {
+        multi_pattern_asymmetric(kernel.kernel.aSymmetricKernel, &patterns, &densities);
     }
 
     /* Create return object */
     Py_INCREF(Py_None);
     return Py_None;
+}
+
+
+void multi_pattern_symmetric(SymmetricKernel kernel, Array *patterns, Array *densities) {
+    double* current_pattern = patterns->data;
+
+    double kernelConstant = kernel.factorFunction(patterns->dimensionality);
+
+    for( int j = 0; j < patterns->length; j++, current_pattern += patterns->rowStride) {
+        densities->data[j] = kernel.densityFunction(
+                current_pattern, patterns->dimensionality, kernelConstant);
+    }
+}
+
+void multi_pattern_asymmetric(ASymmetricKernel kernel, Array *patterns, Array *densities) {
+    double* current_pattern = patterns->data;
+
+    gsl_matrix* kernelConstant = kernel.factorFunction(patterns->dimensionality);
+
+    for( int j = 0; j < patterns->length; j++, current_pattern += patterns->rowStride) {
+        densities->data[j] = kernel.densityFunction(
+                current_pattern, patterns->dimensionality, kernelConstant);
+    }
 }
 
 static PyObject* single_pattern(PyObject* args, KernelType kernelType){
@@ -38,9 +56,16 @@ static PyObject* single_pattern(PyObject* args, KernelType kernelType){
 
     Array pattern = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
 
+    double density;
+
     Kernel kernel = selectKernel(kernelType);
-    double kernelConstant = kernel.factorFunction(pattern.dimensionality);
-    double density = kernel.densityFunction(pattern.data, pattern.dimensionality, kernelConstant);
+    if(kernel.isSymmetric){
+        double kernelConstant = kernel.kernel.symmetricKernel.factorFunction(pattern.dimensionality);
+        density = kernel.kernel.symmetricKernel.densityFunction(pattern.data, pattern.dimensionality, kernelConstant);
+    } else {
+        gsl_matrix* kernelConstant = kernel.kernel.aSymmetricKernel.factorFunction(pattern.dimensionality);
+        density = kernel.kernel.aSymmetricKernel.densityFunction(pattern.data, pattern.dimensionality, kernelConstant);
+    }
 
     /* Create return object */
     PyObject *returnObject = Py_BuildValue("d", density);

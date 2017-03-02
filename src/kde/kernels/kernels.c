@@ -3,29 +3,34 @@
 //
 
 #include "kernels.ih"
+#include "kernels.h"
 
 Kernel standardGaussianKernel = {
-        .factorFunction = standardGaussianConstant,
-        .densityFunction = standardGaussianPDF,
+        .isSymmetric = true,
+        .kernel.symmetricKernel.densityFunction = standardGaussianPDF,
+        .kernel.symmetricKernel.factorFunction = standardGaussianConstant,
 };
 
 Kernel epanechnikovKernel = {
-        .factorFunction = epanechnikovConstant,
-        .densityFunction = epanechnikovPDF,
+        .isSymmetric = true,
+        .kernel.symmetricKernel.densityFunction = epanechnikovPDF,
+        .kernel.symmetricKernel.factorFunction = epanechnikovConstant,
 };
 
 Kernel testKernel = {
-        .factorFunction = testKernelConstant,
-        .densityFunction = testKernelPDF,
+        .isSymmetric = true,
+        .kernel.symmetricKernel.densityFunction = testKernelPDF,
+        .kernel.symmetricKernel.factorFunction = testKernelConstant,
 };
 
 Kernel gaussianKernel = {
-        .factorFunction = gaussianConstant,
-        .densityFunction = gaussianPDF,
+        .isSymmetric = false,
+        .kernel.aSymmetricKernel.densityFunction = gaussianPDF,
+        .kernel.aSymmetricKernel.factorFunction= gaussianConstant,
 };
 
 
-Kernel selectKernel(KernelType type){
+Kernel selectKernel(KernelType type) {
     switch (type) {
         case EPANECHNIKOV:
             return epanechnikovKernel;
@@ -41,19 +46,43 @@ Kernel selectKernel(KernelType type){
     }
 }
 
-double standardGaussianConstant(int patternDimensionality){
-    return pow(2 * M_PI, - 1 * patternDimensionality * 0.5);
+SymmetricKernel selectSymmetricKernel(KernelType type) {
+    switch (type) {
+        case EPANECHNIKOV:
+            return epanechnikovKernel.kernel.symmetricKernel;
+        case STANDARD_GAUSSIAN:
+            return standardGaussianKernel.kernel.symmetricKernel;
+        case TEST:
+            return testKernel.kernel.symmetricKernel;
+        default:
+            fprintf(stderr, "%d is an invalid  symmetric kernel type.\n", type);
+            exit(-1);
+    }
 }
 
-double standardGaussianPDF(double *pattern, int patternDimensionality, double constant){
+ASymmetricKernel selectASymmetricKernel(KernelType type) {
+    switch (type) {
+        case GAUSSIAN:
+            return gaussianKernel.kernel.aSymmetricKernel;
+        default:
+            fprintf(stderr, "%d is an invalid asymmetric kernel type.\n", type);
+            exit(-1);
+    }
+}
+
+double standardGaussianConstant(int patternDimensionality) {
+    return pow(2 * M_PI, -1 * patternDimensionality * 0.5);
+}
+
+double standardGaussianPDF(double *pattern, int patternDimensionality, double constant) {
     double dotProduct = 0.0;
-    for(int i = 0; i < patternDimensionality; i++) {
+    for ( int i = 0; i < patternDimensionality; i++ ) {
         dotProduct += pattern[i] * pattern[i];
     }
     return constant * exp(-0.5 * dotProduct);
 }
 
-double epanechnikovConstant(int dimensionality){
+double epanechnikovConstant(int dimensionality) {
     double numerator = pow(M_PI, dimensionality / 2.0);
     double denominator = gamma(dimensionality / 2.0 + 1);
     return 2 * (numerator / denominator);
@@ -68,32 +97,35 @@ double epanechnikovPDF(double *data, int dimensionality, double constant) {
     return (numerator / constant) * (1 - patternDotPattern);
 }
 
-double testKernelConstant(int patternDimensionality){
+double testKernelConstant(int patternDimensionality) {
     return 1.0 / patternDimensionality;
 }
 
-double testKernelPDF(double *data, int dimensionality, double constant){
+double testKernelPDF(double *data, int dimensionality, double constant) {
     double density = 0;
-    for (int i = 0; i < dimensionality; i++){
+    for ( int i = 0; i < dimensionality; i++ ) {
         density += data[i];
     }
     double mean = density * constant;
     return fabs(mean);
 }
 
-//Only here for consistency
-double gaussianConstant(int dimensionality){
-    return 1.0;
+gsl_matrix *gaussianConstant(int dimensionality) {
+    //Compute cholesky factorisation of the covariance matrix
+    gsl_matrix *matrix = gsl_matrix_alloc((size_t) dimensionality, (size_t) dimensionality);
+    return matrix;
 }
 
-double gaussianPDF(double* data, int dimensionality, double constant){
+double gaussianPDF(double *data, int dimensionality, gsl_matrix *choleskyFactorCovarianceMatrix) {
+
+    //Do something with: gsl_ran_multivariate_gaussian_pdf
     return 42.0;
 }
 
 
 double dotProduct(double *a, double *b, int length) {
     double dotProduct = 0;
-    for (int i = 0; i < length; ++i) {
+    for ( int i = 0; i < length; ++i ) {
         dotProduct += (a[i] * b[i]);
     }
     return dotProduct;

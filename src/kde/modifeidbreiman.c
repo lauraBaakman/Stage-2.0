@@ -2,7 +2,7 @@
 
 double modifiedBreimanFinalDensity(double *pattern, Array *dataPoints,
                                    double globalBandwidth, Array *localBandwidths,
-                                   double kernelConstant, KernelDensityFunction kernel){
+                                   double kernelConstant, SymmetricKernelDensityFunction kernel){
     double* currentDataPoint = dataPoints->data;
 
     double* scaledPattern = (double *)malloc(sizeof(double) * dataPoints->dimensionality);

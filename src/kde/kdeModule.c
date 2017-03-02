@@ -26,7 +26,7 @@ static PyObject * kdeParzen(PyObject *self, PyObject *args){
 
     double parzenFactor = 1.0 / (dataPoints.length * pow(inWindowWidth, patterns.dimensionality));
 
-    Kernel kernel = selectKernel(inKernelType);
+    SymmetricKernel kernel = selectSymmetricKernel(inKernelType);
     double kernelConstant = kernel.factorFunction(dataPoints.dimensionality);
 
     double* current_pattern = patterns.data;
@@ -69,7 +69,7 @@ static PyObject *kde_modified_breiman(PyObject *self, PyObject *args){
     Array localBandwidths = pyObjectToArray(inLocalBandwidths, NPY_ARRAY_IN_ARRAY);
     Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
 
-    Kernel kernel = selectKernel(inKernelType);
+    SymmetricKernel kernel = selectSymmetricKernel(inKernelType);
     double kernelConstant = kernel.factorFunction(dataPoints.dimensionality);
 
     double* current_pattern = patterns.data;
