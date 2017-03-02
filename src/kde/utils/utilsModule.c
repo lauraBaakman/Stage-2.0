@@ -68,6 +68,27 @@ static PyObject * covariance_matrix(PyObject *self, PyObject *args){
     return Py_None;
 }
 
+static char utils_eigenValues_docstring[] = "Compute the eigen values of the input matrix.";
+static PyObject * eigenValues(PyObject *self, PyObject *args){
+
+    /* Handle input */
+    PyObject* inMatrix = NULL;
+    PyObject* outEigenValues = NULL;
+
+    if (!PyArg_ParseTuple(args, "OO",
+                          &inMatrix, &outEigenValues)) return NULL;
+
+    Array matrix = pyObjectToArray(inMatrix, NPY_ARRAY_IN_ARRAY);
+    Array covarianceMatrix = pyObjectToArray(outEigenValues, NPY_ARRAY_OUT_ARRAY);
+
+    /* Do stuff */
+    printf("We are going to stuff here!");
+
+    /* Create return object */
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 Array pyObjectToArray(PyObject *pythonObject, int requirements){
     PyArrayObject* arrayObject = NULL;
     arrayObject = (PyArrayObject *)PyArray_FROM_OTF(pythonObject, NPY_DOUBLE, requirements);
@@ -84,6 +105,7 @@ static PyMethodDef method_table[] = {
         {"distance_matrix",     distance_matrix,    METH_VARARGS,   utils_distanceMatrix_docstring},
         {"knn",                 knn,                METH_VARARGS,   utils_knn_docstring},
         {"covariance_matrix",   covariance_matrix,  METH_VARARGS,   utils_covarianceMatrix_docstring},
+        {"eigen_values",        eigenValues,        METH_VARARGS,   utils_eigenValues_docstring},
         /* Sentinel */
         {NULL,                  NULL,               0,              NULL}
 };
