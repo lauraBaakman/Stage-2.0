@@ -42,9 +42,4 @@ def _eigenvalues_Python(data):
 
 
 def eigenvalues(data, implementation=_eigenvalues_Python):
-    """
-    :param data:
-    :param implementation:
-    :return: Array with eigenvalues.
-    """
     return implementation(data)
