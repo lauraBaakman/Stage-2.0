@@ -15,7 +15,7 @@ def _eigenvalues_C(data):
 def _validate_input_matrix(data):
     _has_two_dimensions(data)
     _is_square(data)
-    _is_at_least_2_times_2(data)
+    _order_greater_than_two(data)
 
 
 def _has_two_dimensions(data):
@@ -29,7 +29,7 @@ def _is_square(data):
         raise ValueError("Expected a square matrix, not a {} x {} matrix.".format(num_rows, num_cols))
 
 
-def _is_at_least_2_times_2(data):
+def _order_greater_than_two(data):
     (num_rows, num_cols) = data.shape
     if num_rows < 2 or num_cols < 2:
         raise ValueError("The matrix needs to be at least 2 x 2, the input matrix is {} x {}.".format(num_rows, num_cols))

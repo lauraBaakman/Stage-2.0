@@ -112,13 +112,13 @@ class Test_Eig_C(EigImpAbstractTest, TestCase):
 
     def test__is_at_least_2_times_2_1(self):
         data = np.array([[2, 2, 2], [3, 3, 3], [4, 4, 4]])
-        actual = ev._is_at_least_2_times_2(data)
+        actual = ev._order_greater_than_two(data)
         self.assertIsNone(actual)
 
     def test__is_at_least_2_times_2_2(self):
         data = np.array([1])
         try:
-            ev._is_at_least_2_times_2(data)
+            ev._order_greater_than_two(data)
         except ValueError:
             pass
         except Exception as e:
@@ -129,7 +129,7 @@ class Test_Eig_C(EigImpAbstractTest, TestCase):
     def test__is_at_least_2_times_2_3(self):
         data = np.array([[1]])
         try:
-            ev._is_at_least_2_times_2(data)
+            ev._order_greater_than_two(data)
         except ValueError:
             pass
         except Exception as e:
@@ -139,7 +139,7 @@ class Test_Eig_C(EigImpAbstractTest, TestCase):
 
     def test__is_at_least_2_times_2_4(self):
         data = np.array([[1, 1], [2, 2]])
-        actual = ev._is_at_least_2_times_2(data)
+        actual = ev._order_greater_than_two(data)
         self.assertIsNone(actual)
 
     def test__validate_input_matrix_1(self):
