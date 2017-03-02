@@ -13,7 +13,7 @@ set(SOURCE_FILES
         utils/utilsModule.c utils/utilsModule.h
         utils/distancematrix.c utils/distancematrix.h utils/distancematrix.ih
         utils/knn.c utils/knn.h utils/knn.ih
-        utils/covariancematrix.c utils/covariancematrix.h utils/covariancematrix.ih)
+        utils/covariancematrix.c utils/covariancematrix.h utils/covariancematrix.ih utils/eigenvalues.cpp utils/eigenvalues.h)
 add_executable(kde ${SOURCE_FILES})
 
 find_package(PythonLibs REQUIRED)
