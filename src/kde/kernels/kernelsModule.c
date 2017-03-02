@@ -48,6 +48,50 @@ static PyObject * standard_gaussian_single_pattern(PyObject *self, PyObject *arg
     return returnObject;
 }
 
+static char kernels_gaussian_docstring[] = "Evaluate the Gaussian PDF for each row in the input matrix.";
+static PyObject * gaussian_multi_pattern(PyObject *self, PyObject *args){
+    PyObject* inPatterns = NULL;
+    PyObject* outDensities = NULL;
+
+    if (!PyArg_ParseTuple(args, "OO", &inPatterns, &outDensities)) return NULL;
+
+    Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
+    Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
+
+    double* current_pattern = patterns.data;
+
+    Kernel kernel = selectKernel(GAUSSIAN);
+    double kernelConstant = kernel.factorFunction(patterns.dimensionality);
+
+    for(
+            int j = 0;
+            j < patterns.length;
+            j++, current_pattern += patterns.rowStride)
+    {
+        densities.data[j] = kernel.densityFunction(current_pattern, patterns.dimensionality, kernelConstant);
+    }
+
+    /* Create return object */
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static PyObject * gaussian_single_pattern(PyObject *self, PyObject *args){
+    PyObject* inPatterns = NULL;
+
+    if (!PyArg_ParseTuple(args, "O", &inPatterns)) return NULL;
+
+    Array pattern = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
+
+    Kernel kernel = selectKernel(GAUSSIAN);
+    double kernelConstant = kernel.factorFunction(pattern.dimensionality);
+    double density = kernel.densityFunction(pattern.data, pattern.dimensionality, kernelConstant);
+
+    /* Create return object */
+    PyObject *returnObject = Py_BuildValue("d", density);
+    return returnObject;
+}
+
 static char kernels_epanechnikov_docstring[] = "Evaluate the Epanechnikov kernel for each row in the input matrix.";
 static PyObject * epanechnikov_single_pattern(PyObject *self, PyObject *args){
     PyObject* inPatterns = NULL;
@@ -150,6 +194,8 @@ Array pyObjectToArray(PyObject *pythonObject, int requirements){
 static PyMethodDef method_table[] = {
         {"standard_gaussian_multi_pattern",     standard_gaussian_multi_pattern,    METH_VARARGS,   kernels_standardGaussian_docstring},
         {"standard_gaussian_single_pattern",    standard_gaussian_single_pattern,   METH_VARARGS,   kernels_standardGaussian_docstring},
+        {"gaussian_multi_pattern",              gaussian_multi_pattern,             METH_VARARGS,   kernels_gaussian_docstring},
+        {"gaussian_single_pattern",             gaussian_single_pattern,            METH_VARARGS,   kernels_gaussian_docstring},
         {"epanechnikov_single_pattern",         epanechnikov_single_pattern,        METH_VARARGS,   kernels_epanechnikov_docstring},
         {"epanechnikov_multi_pattern",          epanechnikov_multi_pattern,         METH_VARARGS,   kernels_epanechnikov_docstring},
         {"test_kernel_single_pattern",          testKernel_single_pattern,          METH_VARARGS,   kernels_testKernel_docstring},
