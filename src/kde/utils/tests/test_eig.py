@@ -7,13 +7,13 @@ import kde.utils.eigenvalues as ev
 
 
 class TestEig(TestCase):
-    def test_eig_Python(self):
-        self.eig_test_helper(lambda data: eigenvalues(data, _eigenvalues_Python))
+    def test_eig_Python_0(self):
+        self.eig_test_helper_0(lambda data: eigenvalues(data, _eigenvalues_Python))
 
-    def test_eig_C(self):
-        self.eig_test_helper(lambda data: eigenvalues(data, _eigenvalues_C))
+    def test_eig_C_0(self):
+        self.eig_test_helper_0(lambda data: eigenvalues(data, _eigenvalues_C))
 
-    def eig_test_helper(self, the_function):
+    def eig_test_helper_0(self, the_function):
         data = np.diag((1.0, 2.0, 3.0))
         expected_values = np.array([1.0, 2.0, 3.0])
 
@@ -21,6 +21,24 @@ class TestEig(TestCase):
 
         np.testing.assert_array_almost_equal(expected_values, actual_values)
 
+    def test_eig_Python_1(self):
+        self.eig_test_helper_1(lambda data: eigenvalues(data, _eigenvalues_Python))
+
+    def test_eig_C_1(self):
+        self.eig_test_helper_1(lambda data: eigenvalues(data, _eigenvalues_C))
+
+    def eig_test_helper_1(self, the_function):
+        data = np.array([
+            [1.0, 1/2.0, 1/3.0, 1/4.0],
+            [1/2.0, 1/3.0, 1/4.0, 1/5.0],
+            [1/3.0, 1/4.0, 1/5.0, 1/6.0],
+            [1/4.0, 1/5.0, 1/6.0, 1/7.0]
+        ])
+        expected_values = np.array([9.6702e-05, 6.7383e-03, 1.6914e-01, 1.5002e+00])
+
+        actual_values = the_function(data)
+
+        np.testing.assert_array_almost_equal(expected_values, actual_values)
 
 class EigImpAbstractTest(object):
 
