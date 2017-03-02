@@ -20,5 +20,6 @@ Kernel selectKernel(KernelType type);
 extern Kernel standardGaussianKernel;
 extern Kernel epanechnikovKernel;
 extern Kernel testKernel;
+extern Kernel gaussianKernel;
 
 #endif //KERNELS_KERNELS_H

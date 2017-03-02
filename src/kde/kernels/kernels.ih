@@ -15,6 +15,9 @@ double epanechnikovPDF(double *data, int dimensionality, double constant);
 double testKernelConstant(int patternDimensionality);
 double testKernelPDF(double *data, int dimensionality, double constant);
 
+double gaussianConstant(int patternDimensionality);
+double gaussianPDF(double *data, int dimensionality, double constant);
+
 double dotProduct(double *a, double *b, int length);
 
 #endif //KERNELS_KERNELS_IH

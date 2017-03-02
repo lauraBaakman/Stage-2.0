@@ -19,6 +19,11 @@ Kernel testKernel = {
         .densityFunction = testKernelPDF,
 };
 
+Kernel gaussianKernel = {
+        .factorFunction = gaussianConstant,
+        .densityFunction = gaussianPDF,
+};
+
 
 Kernel selectKernel(KernelType type){
     switch (type) {
@@ -29,8 +34,7 @@ Kernel selectKernel(KernelType type){
         case TEST:
             return testKernel;
         case GAUSSIAN:
-            fprintf(stderr, "Not support, yet, for the Gaussian kernel.\n");
-            exit(-1);
+            return gaussianKernel;
         default:
             fprintf(stderr, "%d is an invalid kernel type.\n", type);
             exit(-1);
@@ -76,6 +80,16 @@ double testKernelPDF(double *data, int dimensionality, double constant){
     double mean = density * constant;
     return fabs(mean);
 }
+
+//Only here for consistency
+double gaussianConstant(int dimensionality){
+    return 1.0;
+}
+
+double gaussianPDF(double* data, int dimensionality, double constant){
+    return 42.0;
+}
+
 
 double dotProduct(double *a, double *b, int length) {
     double dotProduct = 0;
