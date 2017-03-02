@@ -1,15 +1,14 @@
-def configuration(parent_package='', top_path=None):
-    from numpy.distutils.misc_util import Configuration
+from distutils.core import setup, Extension
 
-    config = Configuration('',
-                           parent_package,
-                           top_path)
-    config.add_extension(
-        '_utils',  # Name of the extension
-        sources=['utilsModule.c', '../utils.c', 'distancematrix.c', 'knn.c', 'covariancematrix.c']
-    )
-    return config
+import globalConfigParameters
+
+sources = ['utilsModule.c', '../utils.c', 'distancematrix.c', 'knn.c', 'covariancematrix.c']
 
 if __name__ == "__main__":
-    from numpy.distutils.core import setup
-    setup(configuration=configuration, requires=['numpy'])
+    module = Extension('_utils',
+                       library_dirs=globalConfigParameters.library_dirs,
+                       libraries=globalConfigParameters.libraries,
+                       include_dirs=globalConfigParameters.include_dirs,
+                       sources=sources
+                       )
+    setup(name='_utils', version='1.0', ext_modules=[module])
