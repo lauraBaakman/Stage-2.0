@@ -20,20 +20,20 @@ The simulated datasets are based on the simulated datasets used by \textcite{fer
 	Dataset 1, shown in \cref{fig:3:simulated:datasets:ferdosi1}, is the most simple set in this group. It is an unimodal Gaussian distribution with random noise added. 
 
 %Data Set 2
-	The second dataset, depicted in \cref{fig:3:simulated:datasets:ferdosi2}, contains two Gaussian distributions with different covariance matrices and uniform noise. The means and covariance matrices of the Normal distributions are such that they do not overlap. 
+	The second dataset, depicted in \cref{fig:3:simulated:datasets:ferdosi2}, contains two Gaussian distributions with different covariance matrices and uniform noise. The means and covariance matrices of the Normal distributions are such that the two distribtions are very unlikely to overlap. 
 
 %Data Set 3
-	Dataset 3, represented in \cref{fig:3:simulated:datasets:ferdosi3}, consists of four different normal distributions and uniformly distributed noise. The four Gaussian distributions are placed in such a way that it is unlikely that any overlap occurs.
+	Dataset 3, represented in \cref{fig:3:simulated:datasets:ferdosi3}, consists of four different normal distributions and uniformly distributed noise. The four Gaussian distributions are placed in such a way that it is unlikely that among them any overlap occurs.
 
 %Data Set 4
 	\Cref{fig:3:simulated:datasets:ferdosi4} illustrates dataset 4. This set consists of a horizontal wall-like structure and a vertical filament-like structure. 
 
 %Data Set 5
-	The fifth dataset, shown in \cref{fig:3:simulated:datasets:ferdosi5}, contains three intersecting walls, each of which has two dimensions that are drawn from a uniform distribution and one that is drawn from a Gaussian distribution.
+	The fifth dataset, shown in \cref{fig:3:simulated:datasets:ferdosi5}, contains three intersecting walls. For each point in these walls its position in two of the three dimensions is drawn from a uniform distubtion, the third coordiante is sampled from a Gaussian distribution.
 
 
 %Expectations for the datasets
-Although dataset one through three differ in complexity, we do not expect any type of estimator to perform better than the other on these datasets, as the spread in all dimensions is approximately equal for all dimensions. Dataset four and five clearly are spread more in one dimension than in others, thus we expect that the shape adaptive estimator and the estimator on the whitened data will perform better on these sets than the MBE estimator.
+We expect comparable performance from alle estimators on dataset one through three, as other than the randomly sampled noise these sets only contain data sampled from a Gaussian distribution with a diagonal covariance matrix. Which results in an equal spread of the data in all dimensions for the non-noise data. Dataset four and five are clearly spread more in one dimension than in others, thus we expect that the shape adaptive estimator and the estimator on the whitened data will perform better on these sets than the MBE estimator.
 
 %Conclusion
-The increasing complexity of these dataset allow us to investigate the performance of the classifier on simple situations, one cluster of data with some noise, to complex density fields that should better approximate real world data. The advantage of using simulated data is that the true densities of the data points are known, which allows us to clearly test how well the different methods estimate the densities.
+The increasing complexity of these datasets allows us to investigate the performance of the classifier on simple situations, one cluster of data with some noise, to complex density fields that should better approximate real world data. The advantage of using simulated data is that the true densities of the data points are known, which allows us to test how well the different methods estimate the densities.
