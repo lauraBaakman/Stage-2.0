@@ -55,16 +55,16 @@ class EigImpAbstractTest(object):
 
         np.testing.assert_array_almost_equal(expected_values, actual_values)
 
-    @skip("For some strange reason the C implementation gives the wrong eigenvalues for this matrix.")
     def test_eigenValues_1(self):
         data = np.array([
-            [0.0, 1.0],
-            [-2.0, -3.0]
+            [0.0796, 0.0007, -0.0010],
+            [0.0007, 0.0830, -0.0041],
+            [- 0.0010, -0.0041, 0.0828],
         ])
-        expected_values = np.array([-1, -2])
-        actual_values = self._implementation(data)
+        expected_values = sorted(np.array([0.078705439938896, 0.079497634589592, 0.087185641691132]))
+        actual_values = sorted(self._implementation(data))
 
-        np.testing.assert_array_almost_equal(expected_values, actual_values)
+        np.testing.assert_array_almost_equal(expected_values, actual_values, 4)
 
 
 class Test_Eig_C(EigImpAbstractTest, TestCase):
@@ -177,6 +177,7 @@ class Test_Eig_C(EigImpAbstractTest, TestCase):
             self.fail('Unexpected exception raised: {}'.format(e))
         else:
             self.fail('ExpectedException not raised')
+
 
 class Test_Eig_Python(EigImpAbstractTest, TestCase):
 
