@@ -13,7 +13,6 @@ class TestGaussian(TestCase):
         expected = 3
         self.assertEqual(actual, expected)
 
-    @skip("The C implementation of the Gaussian kernel has not yet been written.")
     def test_default_implementation(self):
         covariance_matrix = np.array([[1, 0], [0, 1]])
         mean = np.array([0, 0])
@@ -287,7 +286,6 @@ class Test_Gaussian(TestCase):
         else:
             self.fail('ExpectedException not raised')
 
-    @skip("The C implementation of the Gaussian kernel has not yet been written.")
     def test_evaluate_default_implementation(self):
         covariance_matrix = np.array([[1, 0], [0, 1]])
         mean = np.array([0, 0])
@@ -389,7 +387,6 @@ class Test_Gaussian_Python(GaussianImpAbstractTest, TestCase):
         self._kernel_class = _Gaussian_Python
 
 
-@skip("The C implementation of the Gaussian kernel has not yet been written.")
 class Test_Gaussian_C(GaussianImpAbstractTest, TestCase):
 
     def setUp(self):
