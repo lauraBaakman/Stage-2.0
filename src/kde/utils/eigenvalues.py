@@ -18,16 +18,21 @@ def _validate_input_matrix(data):
     _is_at_least_2_times_2(data)
 
 
-def _is_square(data):
-    raise NotImplementedError()
-
-
 def _has_two_dimensions(data):
-    raise NotImplementedError()
+    if data.ndim is not 2:
+        raise ValueError("Expected an array with two dimensions, not {}.".format(data.ndim))
+
+
+def _is_square(data):
+    (num_rows, num_cols) = data.shape
+    if num_rows is not num_cols:
+        raise ValueError("Expected a square matrix, not a {} x {} matrix.".format(num_rows, num_cols))
 
 
 def _is_at_least_2_times_2(data):
-    raise NotImplementedError()
+    (num_rows, num_cols) = data.shape
+    if num_rows < 2 or num_cols < 2:
+        raise ValueError("The matrix needs to be at least 2 x 2, the input matrix is {} x {}.".format(num_rows, num_cols))
 
 
 def _eigenvalues_Python(data):
@@ -39,6 +44,6 @@ def eigenvalues(data, implementation=_eigenvalues_Python):
     """
     :param data:
     :param implementation:
-    :return: Each column of the matrix with eigenvectors is a eigenvector.
+    :return: Array with eigenvalues.
     """
     return implementation(data)
