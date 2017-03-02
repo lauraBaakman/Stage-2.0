@@ -45,7 +45,7 @@ class EigImpAbstractTest(object):
 
         np.testing.assert_array_almost_equal(expected_values, actual_values)
 
-@skip("The C implementation of the computation of eigenvalues has not yet been written.")
+
 class Test_Eig_C(EigImpAbstractTest, TestCase):
 
     def setUp(self):
