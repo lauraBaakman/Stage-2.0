@@ -5,11 +5,11 @@ import numpy as np
 from kde.utils.eigenvalues import eigenvalues, _eigenvalues_C, _eigenvalues_Python
 import kde.utils.eigenvalues as ev
 
+
 class TestEig(TestCase):
     def test_eig_Python(self):
         self.eig_test_helper(lambda data: eigenvalues(data, _eigenvalues_Python))
 
-    @skip("The C implementation of the computation of eigenvalues has not yet been written.")
     def test_eig_C(self):
         self.eig_test_helper(lambda data: eigenvalues(data, _eigenvalues_C))
 
@@ -38,8 +38,8 @@ class EigImpAbstractTest(object):
 
     def test_eigenValues_1(self):
         data = np.array([
-            [0, 1],
-            [-2, -3]
+            [0.0, 1.0],
+            [-2.0, -3.0]
         ])
         expected_values = np.array([-1, -2])
         actual_values = self._implementation(data)
