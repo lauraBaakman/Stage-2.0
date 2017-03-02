@@ -19,12 +19,17 @@ if __name__ == "__main__":
 
     # Source: https://github.com/ezbc/class_work/blob/261e1545aabcaabbfe1e1922b5e198d45cfa88c3/classes/machine_learning/project/gausspy_module/gausspy/tvc/code.c/setup.py
 
+    include_dirs =['/Users/laura/.virtualenvs/stage/include/python3.5m',
+                   '/Users/laura/.virtualenvs/stage/lib/python3.5/site-packages/numpy/core/include/numpy',
+                   '/Users/laura/.virtualenvs/stage/include']
+    include_dirs.extend(npdisutils.get_numpy_include_dirs())
+    library_dirs = ['/Users/laura/.virtualenvs/stage/lib']
+
+    print(include_dirs)
+
     module = Extension('_kde',
-                       library_dirs='/Users/laura/.virtualenvs/stage/lib',
-                       include_dirs=['/Users/laura/.virtualenvs/stage/include/python3.5m',
-                                     '/Users/laura/.virtualenvs/stage/lib/python3.5/site-packages/numpy/core/include'
-                                     '/Users/laura/.virtualenvs/stage/include',
-                                     npdisutils.get_numpy_include_dirs()],
+                       library_dirs= library_dirs,
+                       include_dirs=include_dirs,
                        sources=['utils.c',
                                 'kdeModule.c',
                                 'parzen.c',
