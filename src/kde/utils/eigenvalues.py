@@ -8,7 +8,7 @@ def _eigenvalues_C(data):
     _validate_input_matrix(data)
     (matrix_order, _) = data.shape
 
-    eigenvalues = np.zeros([matrix_order, 1], dtype=np.float64)
+    eigenvalues = np.zeros([matrix_order], dtype=np.float64)
     _utils.eigen_values(data, eigenvalues)
     return eigenvalues
 
