@@ -138,11 +138,13 @@ class Test_Eig_C(EigImpAbstractTest, TestCase):
             self.fail('ExpectedException not raised')
 
     def test__is_at_least_2_times_2_4(self):
-        actual = np.array([[1, 1], [2, 2]])
+        data = np.array([[1, 1], [2, 2]])
+        actual = ev._is_at_least_2_times_2(data)
         self.assertIsNone(actual)
 
     def test__validate_input_matrix_1(self):
-        actual = np.array([[1, 1], [2, 2]])
+        data = np.array([[1, 1], [2, 2]])
+        actual = ev._validate_input_matrix(data)
         self.assertIsNone(actual)
 
     def test__validate_input_matrix_2(self):
