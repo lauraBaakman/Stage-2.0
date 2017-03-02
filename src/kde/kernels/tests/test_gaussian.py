@@ -1,3 +1,4 @@
+from sys import implementation
 from unittest import TestCase, skip
 
 import numpy as np
@@ -286,15 +287,23 @@ class Test_Gaussian(TestCase):
         else:
             self.fail('ExpectedException not raised')
 
-    def test_evaluate_default_implementation(self):
+    def test_evaluate_C_implementation(self):
         covariance_matrix = np.array([[1, 0], [0, 1]])
         mean = np.array([0, 0])
         pattern = np.array([0.5, 0.5])
         expected = 0.123949994309653
-        actual = Gaussian(covariance_matrix, mean).evaluate(pattern)
+        actual = Gaussian(mean, covariance_matrix, implementation=_Gaussian_C).evaluate(pattern)
         self.assertAlmostEqual(expected, actual)
 
-    @skip("The C implementation of the Gaussian kernel has not yet been written.")
+    def test_evaluate_python_implementation(self):
+        covariance_matrix = np.array([[1, 0], [0, 1]])
+        mean = np.array([0, 0])
+        pattern = np.array([0.5, 0.5])
+        expected = 0.123949994309653
+        actual = Gaussian(mean, covariance_matrix, implementation=_Gaussian_Python).evaluate(pattern)
+        self.assertAlmostEqual(expected, actual)
+
+    @skip("The C implementation of the scaling of the Gaussian kernel has not yet been written.")
     def test_scaling_factor_default_implementation(self):
         eigen_values = np.array([4.0, 9.0, 16.0, 25.0])
         covariance_matrix = np.array([
@@ -392,3 +401,6 @@ class Test_Gaussian_C(GaussianImpAbstractTest, TestCase):
     def setUp(self):
         super().setUp()
         self._kernel_class = _Gaussian_C
+
+    def test_scaling_factor(self):
+        self.skipTest("The C implementation of the scaling of the Gaussian kernel has not yet been written.")
