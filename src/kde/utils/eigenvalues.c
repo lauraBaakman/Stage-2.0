@@ -1,6 +1,4 @@
 #include <gsl/gsl_eigen.h>
-#include <gsl/gsl_matrix.h>
-#include <gsl/gsl_vector_double.h>
 #include "eigenvalues.h"
 
 void computeEigenValues(Array *data, Array *eigenValues) {
