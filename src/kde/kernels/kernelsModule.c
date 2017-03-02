@@ -4,8 +4,7 @@
 
 #include "kernelsModule.h"
 
-static char kernels_standardGaussian_docstring[] = "Evaluate the Standard Gaussian (zero vector mean and identity covariance matrix) for each row in the input matrix.";
-static PyObject * standard_gaussian_multi_pattern(PyObject *self, PyObject *args){
+static PyObject * multi_pattern(PyObject *args, KernelType kernelType){
     PyObject* inPatterns = NULL;
     PyObject* outDensities = NULL;
 
@@ -16,7 +15,7 @@ static PyObject * standard_gaussian_multi_pattern(PyObject *self, PyObject *args
 
     double* current_pattern = patterns.data;
 
-    Kernel kernel = selectKernel(STANDARD_GAUSSIAN);
+    Kernel kernel = selectKernel(kernelType);
     double kernelConstant = kernel.factorFunction(patterns.dimensionality);
 
     for(
@@ -30,6 +29,11 @@ static PyObject * standard_gaussian_multi_pattern(PyObject *self, PyObject *args
     /* Create return object */
     Py_INCREF(Py_None);
     return Py_None;
+}
+
+static char kernels_standardGaussian_docstring[] = "Evaluate the Standard Gaussian (zero vector mean and identity covariance matrix) for each row in the input matrix.";
+static PyObject * standard_gaussian_multi_pattern(PyObject *self, PyObject *args){
+    return multi_pattern(args, STANDARD_GAUSSIAN);
 }
 
 static PyObject * standard_gaussian_single_pattern(PyObject *self, PyObject *args){
@@ -50,30 +54,7 @@ static PyObject * standard_gaussian_single_pattern(PyObject *self, PyObject *arg
 
 static char kernels_gaussian_docstring[] = "Evaluate the Gaussian PDF for each row in the input matrix.";
 static PyObject * gaussian_multi_pattern(PyObject *self, PyObject *args){
-    PyObject* inPatterns = NULL;
-    PyObject* outDensities = NULL;
-
-    if (!PyArg_ParseTuple(args, "OO", &inPatterns, &outDensities)) return NULL;
-
-    Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
-    Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
-
-    double* current_pattern = patterns.data;
-
-    Kernel kernel = selectKernel(GAUSSIAN);
-    double kernelConstant = kernel.factorFunction(patterns.dimensionality);
-
-    for(
-            int j = 0;
-            j < patterns.length;
-            j++, current_pattern += patterns.rowStride)
-    {
-        densities.data[j] = kernel.densityFunction(current_pattern, patterns.dimensionality, kernelConstant);
-    }
-
-    /* Create return object */
-    Py_INCREF(Py_None);
-    return Py_None;
+    return multi_pattern(args, GAUSSIAN);
 }
 
 static PyObject * gaussian_single_pattern(PyObject *self, PyObject *args){
@@ -94,45 +75,23 @@ static PyObject * gaussian_single_pattern(PyObject *self, PyObject *args){
 
 static char kernels_epanechnikov_docstring[] = "Evaluate the Epanechnikov kernel for each row in the input matrix.";
 static PyObject * epanechnikov_single_pattern(PyObject *self, PyObject *args){
-    PyObject* inPatterns = NULL;
+        PyObject* inPatterns = NULL;
 
-    if (!PyArg_ParseTuple(args, "O", &inPatterns)) return NULL;
+        if (!PyArg_ParseTuple(args, "O", &inPatterns)) return NULL;
 
-    Array pattern = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
+        Array pattern = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
 
-    Kernel kernel = epanechnikovKernel;
-    double kernelConstant = kernel.factorFunction(pattern.dimensionality);
-    double density = kernel.densityFunction(pattern.data, pattern.dimensionality, kernelConstant);
+        Kernel kernel = epanechnikovKernel;
+        double kernelConstant = kernel.factorFunction(pattern.dimensionality);
+        double density = kernel.densityFunction(pattern.data, pattern.dimensionality, kernelConstant);
 
-    /* Create return object */
-    PyObject *returnObject = Py_BuildValue("d", density);
-    return returnObject;
+        /* Create return object */
+        PyObject *returnObject = Py_BuildValue("d", density);
+        return returnObject;
 }
 
 static PyObject * epanechnikov_multi_pattern(PyObject *self, PyObject *args){
-    PyObject* inPatterns = NULL;
-    PyObject* outDensities = NULL;
-
-    if (!PyArg_ParseTuple(args, "OO", &inPatterns, &outDensities)) return NULL;
-
-    Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
-    Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
-
-    double* currentPattern = patterns.data;
-
-    Kernel kernel = selectKernel(EPANECHNIKOV);
-    double kernelConstant = kernel.factorFunction(patterns.dimensionality);
-
-    for (int i = 0;
-         i < patterns.length;
-         ++i, currentPattern += patterns.rowStride)
-    {
-        densities.data[i] = kernel.densityFunction(currentPattern, patterns.dimensionality, kernelConstant);
-    }
-
-    /* Create return object */
-    Py_INCREF(Py_None);
-    return Py_None;
+    return multi_pattern(args, EPANECHNIKOV);
 }
 
 static char kernels_testKernel_docstring[] = "Evaluate the TestKernel for each row in the input matrix. This kernel returns the absolute value of the mean of the elements of the patterns.";
@@ -153,29 +112,7 @@ static PyObject * testKernel_single_pattern(PyObject *self, PyObject *args){
 }
 
 static PyObject * testKernel_multi_pattern(PyObject *self, PyObject *args){
-    PyObject* inPatterns = NULL;
-    PyObject* outDensities = NULL;
-
-    if (!PyArg_ParseTuple(args, "OO", &inPatterns, &outDensities)) return NULL;
-
-    Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
-    Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
-
-    Kernel kernel = selectKernel(TEST);
-    double kernelConstant = kernel.factorFunction(patterns.dimensionality);
-
-    double* currentPattern = patterns.data;
-
-    for (int i = 0;
-         i < patterns.length;
-         ++i, currentPattern += patterns.rowStride)
-    {
-        densities.data[i] = kernel.densityFunction(currentPattern, patterns.dimensionality, kernelConstant);
-    }
-
-    /* Create return object */
-    Py_INCREF(Py_None);
-    return Py_None;
+    return multi_pattern(args, TEST);
 }
 
 
