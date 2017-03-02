@@ -3,6 +3,7 @@ from unittest import TestCase, skip
 import numpy as np
 
 from kde.utils.eigenvalues import eigenvalues, _eigenvalues_C, _eigenvalues_Python
+import kde.utils.eigenvalues as ev
 
 class TestEig(TestCase):
     def test_eig_Python(self):
@@ -52,6 +53,108 @@ class Test_Eig_C(EigImpAbstractTest, TestCase):
         super().setUp()
         self._implementation = _eigenvalues_C
 
+    def test__is_square_1(self):
+        data = np.array([[2, 2], [3, 3]])
+        actual = ev._is_square(data)
+        self.assertIsNone(actual)
+
+    def test__is_square_2(self):
+        data = np.array([[2, 2, 2], [3, 3, 3]])
+        try:
+            ev._is_square(data)
+        except ValueError:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test__is_square_3(self):
+        data = np.array([[2, 2], [3, 3], [4, 4]])
+        try:
+            ev._is_square(data)
+        except ValueError:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test__has_two_dimensions_1(self):
+        data = np.array([[2, 2], [3, 3]])
+        actual = ev._has_two_dimensions(data)
+        self.assertIsNone(actual)
+
+    def test__has_two_dimensions_2(self):
+        data = np.array([1])
+        try:
+            ev._has_two_dimensions(data)
+        except ValueError:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test__has_two_dimensions_3(self):
+        data = np.array([
+            [[2, 2], [3, 3]],
+            [[2, 2], [3, 3]]
+        ])
+        try:
+            ev._has_two_dimensions(data)
+        except ValueError:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test__is_at_least_2_times_2_1(self):
+        data = np.array([[2, 2, 2], [3, 3, 3], [4, 4, 4]])
+        actual = ev._is_at_least_2_times_2(data)
+        self.assertIsNone(actual)
+
+    def test__is_at_least_2_times_2_2(self):
+        data = np.array([1])
+        try:
+            ev._is_at_least_2_times_2(data)
+        except ValueError:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test__is_at_least_2_times_2_3(self):
+        data = np.array([[1]])
+        try:
+            ev._is_at_least_2_times_2(data)
+        except ValueError:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test__is_at_least_2_times_2_4(self):
+        actual = np.array([[1, 1], [2, 2]])
+        self.assertIsNone(actual)
+
+    def test__validate_input_matrix_1(self):
+        actual = np.array([[1, 1], [2, 2]])
+        self.assertIsNone(actual)
+
+    def test__validate_input_matrix_2(self):
+        data = np.array([[1]])
+        try:
+            ev._validate_input_matrix(data)
+        except ValueError:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
 
 class Test_Eig_Python(EigImpAbstractTest, TestCase):
 
