@@ -2,7 +2,14 @@ from distutils.core import setup, Extension
 
 import globalConfigParameters
 
-sources = ['utilsModule.c', '../utils.c', 'distancematrix.c', 'knn.c', 'covariancematrix.c']
+sources = [
+    'utilsModule.c',
+    '../utils.c',
+    'distancematrix.c',
+    'knn.c',
+    'covariancematrix.c',
+    'eigenvalues.c'
+    ]
 
 if __name__ == "__main__":
     module = Extension('_utils',

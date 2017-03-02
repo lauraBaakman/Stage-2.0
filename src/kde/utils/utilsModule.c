@@ -79,10 +79,10 @@ static PyObject * eigenValues(PyObject *self, PyObject *args){
                           &inMatrix, &outEigenValues)) return NULL;
 
     Array matrix = pyObjectToArray(inMatrix, NPY_ARRAY_IN_ARRAY);
-    Array covarianceMatrix = pyObjectToArray(outEigenValues, NPY_ARRAY_OUT_ARRAY);
+    Array eigenValues = pyObjectToArray(outEigenValues, NPY_ARRAY_OUT_ARRAY);
 
     /* Do stuff */
-    printf("We are going to stuff here!");
+    computeEigenValues(&matrix, &eigenValues);
 
     /* Create return object */
     Py_INCREF(Py_None);
