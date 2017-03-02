@@ -1,7 +1,7 @@
-import kde.kernels._kernels as _kernels
 import numpy as np
 import scipy.stats as stats
 
+import kde.kernels._kernels as _kernels
 from kde.kernels.kernel import Kernel, KernelException
 
 _as_C_enum = 1
