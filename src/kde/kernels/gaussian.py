@@ -100,7 +100,7 @@ class _Gaussian_C(_Gaussian):
     def _handle_multiple_patterns(self, xs):
         (num_patterns, _) = xs.shape
         densities = np.empty(num_patterns, dtype=float)
-        _kernels.gaussian_multi_pattern(xs, densities)
+        _kernels.gaussian_multi_pattern(xs, self._mean, self._covariance_matrix, densities)
         return densities
 
     @staticmethod
