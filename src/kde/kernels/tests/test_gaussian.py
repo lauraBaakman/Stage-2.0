@@ -54,7 +54,7 @@ class TestGaussian(TestCase):
         else:
             self.fail('ExpectedException not raised')
 
-    @skip("The C implementation of the Gaussian kernel has not yet been written.")
+    @skip("The C implementation of the scaling of the Gaussian kernel has not yet been written.")
     def test_scaling_factor_default_implementation(self):
         eigen_values = np.array([4.0, 9.0, 16.0, 25.0])
         covariance_matrix = np.array([
