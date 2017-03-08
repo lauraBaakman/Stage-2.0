@@ -83,7 +83,7 @@ static PyObject * gaussian_multi_pattern(PyObject *self, PyObject *args){
 
     gsl_vector* current_pattern = gsl_vector_alloc((size_t) covarianceMatrix.dimensionality);
 
-    for(size_t i = 0; i < patterns.length; i++){
+    for(int i = 0; i < patterns.length; i++){
         gsl_matrix_get_row(current_pattern, &patterns_view.matrix, i);
         densities.data[i] = kernel.densityFunction(current_pattern, &mean_view.vector, kernelConstant);
     }
