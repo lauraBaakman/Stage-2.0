@@ -77,6 +77,21 @@ static PyObject * gaussian_multi_pattern(PyObject *self, PyObject *args){
     gsl_vector_view mean_view = arrayGetGSLVectorView(&mean);
     gsl_matrix_view patterns_view = arrayGetGSLMatrixView(&patterns);
 
+    /* Do computations */
+    ASymmetricKernel kernel = selectASymmetricKernel(GAUSSIAN);
+    gsl_matrix* kernelConstant = kernel.factorFunction(&covarianceMatrix);
+
+    gsl_vector* current_pattern = gsl_vector_alloc((size_t) covarianceMatrix.dimensionality);
+
+    for(size_t i = 0; i < patterns.length; i++){
+        gsl_matrix_get_row(current_pattern, &patterns_view.matrix, i);
+        densities.data[i] = kernel.densityFunction(current_pattern, &mean_view.vector, kernelConstant);
+    }
+
+    /* Free memory */
+    gsl_vector_free(current_pattern);
+    gsl_matrix_free(kernelConstant);
+
     /* Create return object */
     Py_INCREF(Py_None);
     return Py_None;
