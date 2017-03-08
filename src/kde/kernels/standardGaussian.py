@@ -59,7 +59,7 @@ class _StandardGaussian_C(_StandardGaussian):
 
     @staticmethod
     def scaling_factor(general_bandwidth, eigen_values=None):
-        _kernels.standard_gaussian_scaling_factor(general_bandwidth)
+        return _kernels.standard_gaussian_scaling_factor(general_bandwidth)
 
 
 class _StandardGaussian_Python(_StandardGaussian):
