@@ -34,6 +34,7 @@ void arrayColumnsPrint(ArrayColumns *matrix);
 
 
 int gsl_matrix_print(FILE *f, const gsl_matrix *m);
+int gsl_vector_print(FILE *f, const gsl_vector *vector);
 
 double* scalePattern(double* pattern, double* dataPoint, double* scaledPattern, int dimensionality, double windowWidth);
 

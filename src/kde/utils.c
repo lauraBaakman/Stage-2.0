@@ -1,6 +1,7 @@
 //
 // Created by Laura Baakman on 20/01/2017.
 //
+#include <gsl/gsl_vector_double.h>
 #include "utils.ih"
 
 Array arrayBuildFromPyArray(PyArrayObject *arrayObject){
@@ -144,6 +145,15 @@ int gsl_matrix_print(FILE *f, const gsl_matrix *m) {
     return n;
 }
 
+int gsl_vector_print(FILE *f, const gsl_vector *vector) {
+    int status, n = 0;
+
+    for (size_t i = 0; i < vector->size; i++) {
+        if ((status = fprintf(f, "%g ", gsl_vector_get(vector, i))) < 0) return -1;
+        n += status;
+    }
+    return n;
+}
 void arrayColumnsPrintColumn(double *row, int length) {
     printf("[ ");
     for (int i = 0; i < length; ++i) {
