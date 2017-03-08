@@ -125,8 +125,7 @@ double testKernelPDF(double *data, int dimensionality, double constant) {
 }
 
 double testKernelScalingFactor(double generalBandwidth) {
-    fprintf(stderr, "The function testKernelScalingFactor is not implemented.");
-    exit(-1);
+    return 0.5;
 }
 
 /* Asymmetric Kernels */
