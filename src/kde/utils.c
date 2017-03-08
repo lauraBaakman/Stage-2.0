@@ -132,7 +132,7 @@ int gsl_matrix_print(FILE *f, const gsl_matrix *m) {
 
     for (size_t i = 0; i < m->size1; i++) {
         for (size_t j = 0; j < m->size2; j++) {
-            if ((status = fprintf(f, "%g ", gsl_matrix_get(m, i, j))) < 0)
+            if ((status = fprintf(f, "%# .3g ", gsl_matrix_get(m, i, j))) < 0)
                 return -1;
             n += status;
         }
@@ -149,7 +149,7 @@ int gsl_vector_print(FILE *f, const gsl_vector *vector) {
     int status, n = 0;
 
     for (size_t i = 0; i < vector->size; i++) {
-        if ((status = fprintf(f, "%g ", gsl_vector_get(vector, i))) < 0) return -1;
+        if ((status = fprintf(f, "%# .3g ", gsl_vector_get(vector, i))) < 0) return -1;
         n += status;
     }
     return n;
