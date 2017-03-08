@@ -59,7 +59,7 @@ class _StandardGaussian_C(_StandardGaussian):
 
     @staticmethod
     def scaling_factor(general_bandwidth, eigen_values=None):
-        raise NotImplementedError("This class does not have an implementation of the scaling factor computation method.")
+        _kernels.standard_gaussian_scaling_factor(general_bandwidth)
 
 
 class _StandardGaussian_Python(_StandardGaussian):
