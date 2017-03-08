@@ -25,7 +25,7 @@ class TestTestKernel(TestCase):
 
     def test_scaling_factor_default_implementation(self):
         expected = 0.5
-        actual = TestKernel().scaling_factor(None, None)
+        actual = TestKernel().scaling_factor(0.3, None)
         self.assertEqual(actual, expected)
 
     def test_scaling_factor_alternative_implementation(self):
@@ -49,7 +49,7 @@ class TestKernelImpAbstractTest(object):
 
     def test_scaling_factor(self):
         expected = 0.5
-        actual = self._kernel_class().scaling_factor()
+        actual = self._kernel_class().scaling_factor(0.2, None)
         self.assertEqual(actual, expected)
 
 
