@@ -61,7 +61,25 @@ static PyObject * standard_gaussian_single_pattern(PyObject *self, PyObject *arg
 
 static char kernels_gaussian_docstring[] = "Evaluate the Gaussian PDF for each row in the input matrix.";
 static PyObject * gaussian_multi_pattern(PyObject *self, PyObject *args){
-    return multi_pattern(args, GAUSSIAN);
+    /* Read input */
+    PyObject* inPattern = NULL;
+    PyObject* inMean = NULL;
+    PyObject* inCovarianceMatrix = NULL;
+    PyObject* outDensities = NULL;
+
+    if (!PyArg_ParseTuple(args, "OOOO", &inPattern, &inMean, &inCovarianceMatrix, &outDensities)) return NULL;
+
+    Array patterns = pyObjectToArray(inPattern, NPY_ARRAY_IN_ARRAY);
+    Array mean = pyObjectToArray(inMean, NPY_ARRAY_IN_ARRAY);
+    Array covarianceMatrix = pyObjectToArray(inCovarianceMatrix, NPY_ARRAY_IN_ARRAY);
+    Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
+
+    gsl_vector_view mean_view = arrayGetGSLVectorView(&mean);
+    gsl_matrix_view patterns_view = arrayGetGSLMatrixView(&patterns);
+
+    /* Create return object */
+    Py_INCREF(Py_None);
+    return Py_None;
 }
 
 static PyObject * gaussian_single_pattern(PyObject *self, PyObject *args){
