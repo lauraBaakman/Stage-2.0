@@ -87,8 +87,7 @@ double standardGaussianPDF(double *pattern, int patternDimensionality, double co
 }
 
 double standardGaussianScalingFactor(double generalBandwidth) {
-    fprintf(stderr, "The function standardGaussianScalingFactor is not implemented.");
-    exit(-1);
+    return  generalBandwidth * sqrt(generalBandwidth);
 }
 
 double epanechnikovConstant(int dimensionality) {
