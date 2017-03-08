@@ -214,7 +214,7 @@ static PyMethodDef method_table[] = {
 
         {"gaussian_multi_pattern",              gaussian_multi_pattern,             METH_VARARGS,   kernels_gaussian_docstring},
         {"gaussian_single_pattern",             gaussian_single_pattern,            METH_VARARGS,   kernels_gaussian_docstring},
-        {"gaussian_scaling_factor",             gaussian_multi_pattern,             METH_VARARGS,   kernels_gaussian_scaling_docstring},
+        {"gaussian_scaling_factor",             gaussian_scaling_factor,            METH_VARARGS,   kernels_gaussian_scaling_docstring},
 
         {"epanechnikov_single_pattern",         epanechnikov_single_pattern,        METH_VARARGS,   kernels_epanechnikov_docstring},
         {"epanechnikov_multi_pattern",          epanechnikov_multi_pattern,         METH_VARARGS,   kernels_epanechnikov_docstring},
