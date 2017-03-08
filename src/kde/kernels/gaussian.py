@@ -105,7 +105,7 @@ class _Gaussian_C(_Gaussian):
 
     @staticmethod
     def scaling_factor(general_bandwidth, eigen_values):
-        raise NotImplementedError("Gaussian kernel is not yet implemented in C.")
+        return _kernels.gaussian_scaling_factor(general_bandwidth, eigen_values)
 
 
 class _Gaussian_Python(_Gaussian):
