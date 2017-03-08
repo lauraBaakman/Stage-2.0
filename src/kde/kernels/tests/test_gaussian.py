@@ -370,9 +370,18 @@ class GaussianImpAbstractTest(object):
         covariance_matrix = np.array([[0.26358307, -0.13179154], [-0.13179154,  0.26358307]])
         mean = np.array([0, 0])
         pattern = np.array([0, 0])
-        expected =  0.697223462789203
+        expected = 0.697223462789203
         actual = self._kernel_class(mean, covariance_matrix).evaluate(pattern)
         self.assertAlmostEqual(expected, actual)
+
+    def test_evaluate_5(self):
+        covariance_matrix = np.array([[0.5, 0.5], [0.5, 1.5]])
+        mean = np.array([1, 0.5])
+        pattern = np.array([[0, 0], [1, 1.5], [-0.5, 1.5]])
+        expected = np.array([0.073072478360846, 0.136517362297204,  0.001042322923649])
+        actual = self._kernel_class(mean, covariance_matrix).evaluate(pattern)
+        np.testing.assert_array_almost_equal(actual, expected)
+
 
     def test_scaling_factor(self):
         eigen_values = np.array([4.0, 9.0])
