@@ -66,10 +66,12 @@ static PyObject * gaussian_single_pattern(PyObject *self, PyObject *args){
     /* Read input */
     PyObject* inPatterns = NULL;
     PyObject* inCovarianceMatrix = NULL;
+    PyObject* inMean = NULL;
 
-    if (!PyArg_ParseTuple(args, "OO", &inPatterns, &inCovarianceMatrix)) return NULL;
+    if (!PyArg_ParseTuple(args, "OOO", &inPatterns, &inMean, &inCovarianceMatrix)) return NULL;
 
     Array pattern = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
+    Array mean = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
     Array covarianceMatrix = pyObjectToArray(inCovarianceMatrix, NPY_ARRAY_IN_ARRAY);
 
     /* Do computations */
@@ -77,7 +79,7 @@ static PyObject * gaussian_single_pattern(PyObject *self, PyObject *args){
 
     ASymmetricKernel kernel = selectASymmetricKernel(GAUSSIAN);
     gsl_matrix* kernelConstant = kernel.factorFunction(&covarianceMatrix);
-    density = kernel.densityFunction(pattern.data, pattern.dimensionality, kernelConstant);
+    density = kernel.densityFunction(pattern.data, &mean, kernelConstant);
 
     /* Create return object */
     PyObject *returnObject = Py_BuildValue("d", density);
