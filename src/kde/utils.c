@@ -154,6 +154,14 @@ int gsl_vector_print(FILE *f, const gsl_vector *vector) {
     }
     return n;
 }
+
+
+gsl_vector_view arrayGetGSLVectorView(Array *array) {
+    size_t vector_length = (size_t) ((array->dimensionality > array->length) ? array->dimensionality : array->length);
+    gsl_vector_view result = gsl_vector_view_array(array->data, vector_length);
+    return result;
+}
+
 void arrayColumnsPrintColumn(double *row, int length) {
     printf("[ ");
     for (int i = 0; i < length; ++i) {
