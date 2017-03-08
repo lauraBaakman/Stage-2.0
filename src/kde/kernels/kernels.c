@@ -1,5 +1,6 @@
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_linalg.h>
+#include <gsl/gsl_vector_double.h>
 #include "kernels.ih"
 
 Kernel standardGaussianKernel = {
@@ -121,9 +122,14 @@ gsl_matrix *gaussianConstant(Array* covarianceMatrix) {
 }
 
 double gaussianPDF(double *data, gsl_vector * mean, gsl_matrix *choleskyFactorCovarianceMatrix) {
-    //See here for an example of how to: https://github.com/getsiddd/GSL_AVR/blob/abf3e784da3d7fd5b4a60df457da46d0a5db4e7a/randist/test.c
-    //Do something with: gsl_ran_multivariate_gaussian_pdf
-    return 42.0;
+    double density;
+    gsl_vector_view pattern = gsl_vector_view_array(data, mean->size);
+    gsl_vector* work = gsl_vector_alloc(mean->size);
+
+    gsl_ran_multivariate_gaussian_pdf(&pattern.vector, mean, choleskyFactorCovarianceMatrix, &density, work);
+
+    gsl_vector_free(work);
+    return density;
 }
 
 
