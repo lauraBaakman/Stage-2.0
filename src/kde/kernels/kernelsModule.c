@@ -27,23 +27,21 @@ PyObject *multi_pattern_symmetric(PyObject *args, KernelType kernelType) {
     return Py_None;
 }
 
-static PyObject* single_pattern(PyObject* args, KernelType kernelType){
+PyObject *single_pattern_symmetric(PyObject *args, KernelType kernelType) {
+    /* Parse input data */
     PyObject* inPatterns = NULL;
 
     if (!PyArg_ParseTuple(args, "O", &inPatterns)) return NULL;
 
     Array pattern = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
 
+    /* Do computations */
     double density;
 
-    Kernel kernel = selectKernel(kernelType);
-    if(kernel.isSymmetric){
-        double kernelConstant = kernel.kernel.symmetricKernel.factorFunction(pattern.dimensionality);
-        density = kernel.kernel.symmetricKernel.densityFunction(pattern.data, pattern.dimensionality, kernelConstant);
-    } else {
-        gsl_matrix* kernelConstant = kernel.kernel.aSymmetricKernel.factorFunction(pattern.dimensionality);
-        density = kernel.kernel.aSymmetricKernel.densityFunction(pattern.data, pattern.dimensionality, kernelConstant);
-    }
+    SymmetricKernel kernel = selectSymmetricKernel(kernelType);
+
+    double kernelConstant = kernel.factorFunction(pattern.dimensionality);
+    density = kernel.densityFunction(pattern.data, pattern.dimensionality, kernelConstant);
 
     /* Create return object */
     PyObject *returnObject = Py_BuildValue("d", density);
@@ -56,7 +54,7 @@ static PyObject * standard_gaussian_multi_pattern(PyObject *self, PyObject *args
 }
 
 static PyObject * standard_gaussian_single_pattern(PyObject *self, PyObject *args){
-    return single_pattern(args, STANDARD_GAUSSIAN);
+    return single_pattern_symmetric(args, STANDARD_GAUSSIAN);
 }
 
 static char kernels_gaussian_docstring[] = "Evaluate the Gaussian PDF for each row in the input matrix.";
@@ -87,7 +85,7 @@ static PyObject * gaussian_single_pattern(PyObject *self, PyObject *args){
 
 static char kernels_epanechnikov_docstring[] = "Evaluate the Epanechnikov kernel for each row in the input matrix.";
 static PyObject * epanechnikov_single_pattern(PyObject *self, PyObject *args){
-    return single_pattern(args, EPANECHNIKOV);
+    return single_pattern_symmetric(args, EPANECHNIKOV);
 }
 
 static PyObject * epanechnikov_multi_pattern(PyObject *self, PyObject *args){
@@ -96,7 +94,7 @@ static PyObject * epanechnikov_multi_pattern(PyObject *self, PyObject *args){
 
 static char kernels_testKernel_docstring[] = "Evaluate the TestKernel for each row in the input matrix. This kernel returns the absolute value of the mean of the elements of the patterns.";
 static PyObject * testKernel_single_pattern(PyObject *self, PyObject *args){
-    return single_pattern(args, TEST);
+    return single_pattern_symmetric(args, TEST);
 }
 
 static PyObject * testKernel_multi_pattern(PyObject *self, PyObject *args){
