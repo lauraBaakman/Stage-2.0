@@ -14,6 +14,7 @@
 #include "knn.h"
 #include "covariancematrix.h"
 #include "eigenvalues.h"
+#include "geometricmean.h"
 
 Array pyObjectToArray(PyObject *pythonObject, int requirements);
 

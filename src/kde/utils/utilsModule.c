@@ -89,6 +89,24 @@ static PyObject * eigenValues(PyObject *self, PyObject *args){
     return Py_None;
 }
 
+static char utils_geometricmean_docstring[] = "Compute the geometric mean of a set of values.";
+static PyObject * geometric_mean(PyObject *self, PyObject *args){
+
+    /* Handle input */
+    PyObject* inValues = NULL;
+
+    if (!PyArg_ParseTuple(args, "O", &inValues)) return NULL;
+
+    Array values = pyObjectToArray(inValues, NPY_ARRAY_IN_ARRAY);
+
+    /* Do stuff */
+    double geometricMean = computeGeometricMean(values.data, (size_t) values.length);
+
+    /* Create return object */
+    PyObject *returnObject = Py_BuildValue("d", geometricMean);
+    return returnObject;
+}
+
 Array pyObjectToArray(PyObject *pythonObject, int requirements){
     PyArrayObject* arrayObject = NULL;
     arrayObject = (PyArrayObject *)PyArray_FROM_OTF(pythonObject, NPY_DOUBLE, requirements);
@@ -106,6 +124,7 @@ static PyMethodDef method_table[] = {
         {"knn",                 knn,                METH_VARARGS,   utils_knn_docstring},
         {"covariance_matrix",   covariance_matrix,  METH_VARARGS,   utils_covarianceMatrix_docstring},
         {"eigen_values",        eigenValues,        METH_VARARGS,   utils_eigenValues_docstring},
+        {"geometric_mean",      geometric_mean,     METH_VARARGS,   utils_geometricmean_docstring},
         /* Sentinel */
         {NULL,                  NULL,               0,              NULL}
 };
