@@ -145,9 +145,8 @@ double gaussianPDF(gsl_vector * pattern, gsl_vector * mean, gsl_matrix *cholesky
     return density;
 }
 
-double gaussianScalingFactor(double generalBandwidth, gsl_matrix *covarianceMatrix) {
-    fprintf(stderr, "The function gaussianScalingFactor is not implemented.");
-    exit(-1);
+double gaussianScalingFactor(double generalBandwidth, gsl_vector *eigenValues) {
+    return 42.0;
 }
 
 double dotProduct(double *a, double *b, int length) {

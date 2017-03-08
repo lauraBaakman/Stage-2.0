@@ -313,7 +313,8 @@ class Test_Gaussian(TestCase):
         ])
         h = 0.5
         expected = 0.075534384933919
-        actual = Gaussian(None, covariance_matrix, implementation=_Gaussian_C).scaling_factor(general_bandwidth=h, eigen_values=eigen_values)
+        kernel = Gaussian(None, covariance_matrix, implementation=_Gaussian_C)
+        actual = kernel.scaling_factor(general_bandwidth=h, eigen_values=eigen_values)
         self.assertAlmostEqual(expected, actual)
 
     def test_scaling_factor_python_implementation(self):

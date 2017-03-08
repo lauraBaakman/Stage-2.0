@@ -21,7 +21,7 @@ double testKernelScalingFactor(double generalBandwidth);
 
 gsl_matrix* gaussianConstant(Array* covarianceMatrix);
 double gaussianPDF(gsl_vector* pattern, gsl_vector * mean, gsl_matrix * choleskyFactorCovarianceMatrix);
-double gaussianScalingFactor(double generalBandwidth, gsl_matrix* covarianceMatrix);
+double gaussianScalingFactor(double generalBandwidth, gsl_vector* eigenValues);
 
 double dotProduct(double *a, double *b, int length);
 

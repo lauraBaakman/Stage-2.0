@@ -11,7 +11,7 @@ typedef double (*SymmetricKernelScalingFactorFunction)(double generalBandwidth);
 
 typedef double (*ASymmetricKernelDensityFunction)(gsl_vector* pattern, gsl_vector* mean, gsl_matrix* shapeMatrix);
 typedef gsl_matrix* (*ASymmetricKernelConstantFunction)(Array* covarianceMatrix);
-typedef double (*ASymmetricKernelScalingFactorFunction)(double generalBandwidth, gsl_matrix* covarianceMatrix);
+typedef double (*ASymmetricKernelScalingFactorFunction)(double generalBandwidth, gsl_vector* eigenvalues);
 
 typedef struct SymmetricKernel {
     SymmetricKernelConstantFunction factorFunction;

@@ -148,9 +148,22 @@ static PyObject * gaussian_single_pattern(PyObject *self, PyObject *args){
 
 static char kernels_gaussian_scaling_docstring[] = "Compute the scaling factor for the Gaussian kernel.";
 static PyObject * gaussian_scaling_factor(PyObject *self, PyObject *args){
-    /* Create temporary return object */
-    Py_INCREF(Py_None);
-    return Py_None;
+    /* Read input */
+    PyObject* inEigenValues = NULL;
+    double generalBandwidth;
+
+    if (!PyArg_ParseTuple(args, "dO", &generalBandwidth, &inEigenValues)) return NULL;
+
+    Array eigenValues = pyObjectToArray(inEigenValues, NPY_ARRAY_IN_ARRAY);
+    gsl_vector_view eigenValuesView = arrayGetGSLVectorView(&eigenValues);
+
+    /* Do computations */
+    ASymmetricKernel kernel = selectASymmetricKernel(GAUSSIAN);
+    double scalingFactor = kernel.scalingFactorFunction(generalBandwidth, &eigenValuesView.vector);
+
+    /* Create return object */
+    PyObject *returnObject = Py_BuildValue("d", scalingFactor);
+    return returnObject;
 }
 
 static char kernels_epanechnikov_docstring[] = "Evaluate the Epanechnikov kernel for each row in the input matrix.";
