@@ -2,6 +2,7 @@
 // Created by Laura Baakman on 20/01/2017.
 //
 #include <gsl/gsl_vector_double.h>
+#include <gsl/gsl_matrix.h>
 #include "utils.ih"
 
 Array arrayBuildFromPyArray(PyArrayObject *arrayObject){
@@ -157,6 +158,11 @@ int gsl_vector_print(FILE *f, const gsl_vector *vector) {
     return n;
 }
 
+gsl_matrix* gsl_matrix_view_copy_to_gsl_matrix(gsl_matrix_view origin) {
+    gsl_matrix *copy = gsl_matrix_alloc(origin.matrix.size1, origin.matrix.size2);
+    gsl_matrix_memcpy(copy, &origin.matrix);
+    return copy;
+}
 
 gsl_vector_view arrayGetGSLVectorView(Array *array) {
     size_t vector_length = (size_t) ((array->dimensionality > array->length) ? array->dimensionality : array->length);
@@ -169,6 +175,11 @@ gsl_matrix_view arrayGetGSLMatrixView(Array* array){
     size_t num_cols = (size_t) array->dimensionality;
 
     return gsl_matrix_view_array(array->data, num_rows, num_cols);
+}
+
+gsl_matrix *arrayCopyToGSLMatrix(Array *array) {
+    gsl_matrix_view arrayView = arrayGetGSLMatrixView(array);
+    return gsl_matrix_view_copy_to_gsl_matrix(arrayView);
 }
 
 void arrayColumnsPrintColumn(double *row, int length) {

@@ -109,15 +109,8 @@ double testKernelPDF(double *data, int dimensionality, double constant) {
 }
 
 gsl_matrix *gaussianConstant(Array* covarianceMatrix) {
-    size_t matrixOrder = (size_t) covarianceMatrix->dimensionality;
-
-    //Avoid changing the original covariance matrix
-    gsl_matrix_view covarianceView = gsl_matrix_view_array (covarianceMatrix->data, matrixOrder, matrixOrder);
-    gsl_matrix *choleskyDecomposition = gsl_matrix_alloc(matrixOrder, matrixOrder);
-    gsl_matrix_memcpy(choleskyDecomposition, &covarianceView.matrix);
-
+    gsl_matrix* choleskyDecomposition = arrayCopyToGSLMatrix(covarianceMatrix);
     gsl_linalg_cholesky_decomp1(choleskyDecomposition);
-
     return choleskyDecomposition;
 }
 

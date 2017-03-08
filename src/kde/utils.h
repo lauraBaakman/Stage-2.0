@@ -25,8 +25,11 @@ void arrayPrint(Array *array);
 void arraySetDiagonalToZero(Array *array);
 void arraySetElement(Array* array, int rowIdx, int colIdx, double value);
 void arraySetRow(Array* array, int rowIdx, double* values);
+
 gsl_vector_view arrayGetGSLVectorView(Array* array);
+
 gsl_matrix_view arrayGetGSLMatrixView(Array* array);
+gsl_matrix* arrayCopyToGSLMatrix(Array* array);
 
 double* arrayGetRowView(Array *array, int rowIdx);
 
@@ -35,7 +38,10 @@ void arrayColumnsFree(ArrayColumns *matrix);
 void arrayColumnsPrint(ArrayColumns *matrix);
 
 
+gsl_matrix* gsl_matrix_view_copy_to_gsl_matrix(gsl_matrix_view origin);
+
 int gsl_matrix_print(FILE *f, const gsl_matrix *m);
+
 int gsl_vector_print(FILE *f, const gsl_vector *vector);
 
 double* scalePattern(double* pattern, double* dataPoint, double* scaledPattern, int dimensionality, double windowWidth);
