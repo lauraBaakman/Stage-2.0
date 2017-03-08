@@ -2,6 +2,7 @@
 #include <gsl/gsl_vector_double.h>
 #include "kernelsModule.h"
 #include "../../../../../.virtualenvs/stage/include/python3.5m/object.h"
+#include "../../../../../.virtualenvs/stage/include/python3.5m/Python.h"
 
 PyObject *multi_pattern_symmetric(PyObject *args, KernelType kernelType) {
     /* Parse input data */
