@@ -71,6 +71,7 @@ static PyObject * gaussian_single_pattern(PyObject *self, PyObject *args){
 
     Array pattern = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
     Array covarianceMatrix = pyObjectToArray(inCovarianceMatrix, NPY_ARRAY_IN_ARRAY);
+
     /* Do computations */
     double density;
 
