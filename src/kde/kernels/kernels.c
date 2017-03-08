@@ -1,3 +1,5 @@
+#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_linalg.h>
 #include "kernels.ih"
 
 Kernel standardGaussianKernel = {
@@ -106,16 +108,16 @@ double testKernelPDF(double *data, int dimensionality, double constant) {
 }
 
 gsl_matrix *gaussianConstant(Array* covarianceMatrix) {
-    //Compute cholesky factorisation of the covariance matrix
-    //See here for an example of how to: https://github.com/getsiddd/GSL_AVR/blob/abf3e784da3d7fd5b4a60df457da46d0a5db4e7a/randist/test.c
-
     size_t matrixOrder = (size_t) covarianceMatrix->dimensionality;
 
+    //Avoid changing the original covariance matrix
     gsl_matrix_view covarianceView = gsl_matrix_view_array (covarianceMatrix->data, matrixOrder, matrixOrder);
-    gsl_matrix *matrix = gsl_matrix_alloc(matrixOrder, matrixOrder);
-    gsl_matrix_memcpy(matrix, &covarianceView.matrix);
-    
-    return matrix;
+    gsl_matrix *choleskyDecomposition = gsl_matrix_alloc(matrixOrder, matrixOrder);
+    gsl_matrix_memcpy(choleskyDecomposition, &covarianceView.matrix);
+
+    gsl_linalg_cholesky_decomp1(choleskyDecomposition);
+
+    return choleskyDecomposition;
 }
 
 double gaussianPDF(double *data, int dimensionality, gsl_matrix *choleskyFactorCovarianceMatrix) {
