@@ -117,6 +117,9 @@ static PyObject * gaussian_single_pattern(PyObject *self, PyObject *args){
     gsl_matrix* kernelConstant = kernel.factorFunction(&covarianceMatrix);
     double density = kernel.densityFunction(&pattern_view.vector, &mean_view.vector, kernelConstant);
 
+    /* Free memory */
+    gsl_matrix_free(kernelConstant);
+
     /* Create return object */
     PyObject *returnObject = Py_BuildValue("d", density);
     return returnObject;
