@@ -120,7 +120,7 @@ gsl_matrix *gaussianConstant(Array* covarianceMatrix) {
     return choleskyDecomposition;
 }
 
-double gaussianPDF(double *data, Array* mean, gsl_matrix *choleskyFactorCovarianceMatrix) {
+double gaussianPDF(double *data, gsl_vector * mean, gsl_matrix *choleskyFactorCovarianceMatrix) {
     //See here for an example of how to: https://github.com/getsiddd/GSL_AVR/blob/abf3e784da3d7fd5b4a60df457da46d0a5db4e7a/randist/test.c
     //Do something with: gsl_ran_multivariate_gaussian_pdf
     return 42.0;

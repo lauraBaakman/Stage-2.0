@@ -1,3 +1,5 @@
+#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_vector_double.h>
 #include "kernelsModule.h"
 
 PyObject *multi_pattern_symmetric(PyObject *args, KernelType kernelType) {
@@ -64,22 +66,23 @@ static PyObject * gaussian_multi_pattern(PyObject *self, PyObject *args){
 
 static PyObject * gaussian_single_pattern(PyObject *self, PyObject *args){
     /* Read input */
-    PyObject* inPatterns = NULL;
-    PyObject* inCovarianceMatrix = NULL;
+    PyObject* inPattern = NULL;
     PyObject* inMean = NULL;
+    PyObject* inCovarianceMatrix = NULL;
 
-    if (!PyArg_ParseTuple(args, "OOO", &inPatterns, &inMean, &inCovarianceMatrix)) return NULL;
+    if (!PyArg_ParseTuple(args, "OOO", &inPattern, &inMean, &inCovarianceMatrix)) return NULL;
 
-    Array pattern = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
-    Array mean = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
+    Array pattern = pyObjectToArray(inPattern, NPY_ARRAY_IN_ARRAY);
+    Array mean = pyObjectToArray(inMean, NPY_ARRAY_IN_ARRAY);
     Array covarianceMatrix = pyObjectToArray(inCovarianceMatrix, NPY_ARRAY_IN_ARRAY);
 
+    gsl_vector_view mean_view = arrayGetGSLVectorView(&mean);
     /* Do computations */
     double density;
 
     ASymmetricKernel kernel = selectASymmetricKernel(GAUSSIAN);
     gsl_matrix* kernelConstant = kernel.factorFunction(&covarianceMatrix);
-    density = kernel.densityFunction(pattern.data, &mean, kernelConstant);
+    density = kernel.densityFunction(pattern.data, &mean_view.vector, kernelConstant);
 
     /* Create return object */
     PyObject *returnObject = Py_BuildValue("d", density);
