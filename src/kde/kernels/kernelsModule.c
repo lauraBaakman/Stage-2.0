@@ -94,7 +94,7 @@ static PyObject * gaussian_single_pattern(PyObject *self, PyObject *args){
     double density;
 
     ASymmetricKernel kernel = selectASymmetricKernel(GAUSSIAN);
-    gsl_matrix* kernelConstant = kernel.factorFunction(pattern.dimensionality);
+    gsl_matrix* kernelConstant = kernel.factorFunction(&covarianceMatrix);
     density = kernel.densityFunction(pattern.data, pattern.dimensionality, kernelConstant);
 
     /* Create return object */

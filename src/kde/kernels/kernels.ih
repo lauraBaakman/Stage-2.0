@@ -16,7 +16,7 @@ double epanechnikovPDF(double *data, int dimensionality, double constant);
 double testKernelConstant(int patternDimensionality);
 double testKernelPDF(double *data, int dimensionality, double constant);
 
-gsl_matrix* gaussianConstant(int patternDimensionality);
+gsl_matrix* gaussianConstant(Array* covarianceMatrix);
 double gaussianPDF(double *data, int dimensionality, gsl_matrix * choleskyFactorCovarianceMatrix);
 
 double dotProduct(double *a, double *b, int length);

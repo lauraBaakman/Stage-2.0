@@ -3,12 +3,13 @@
 
 #include <gsl/gsl_matrix.h>
 #include <stdbool.h>
+#include "../utils.h"
 
 typedef double (*SymmetricKernelDensityFunction)(double* data, int dimensionality, double factor);
 typedef double (*SymmetricKernelConstantFunction)(int dimensionality);
 
 typedef double (*ASymmetricKernelDensityFunction)(double* data, int dimensionality, gsl_matrix* shapeMatrix);
-typedef gsl_matrix* (*ASymmetricKernelConstantFunction)(int dimensionality);
+typedef gsl_matrix* (*ASymmetricKernelConstantFunction)(Array* covarianceMatrix);
 
 typedef struct SymmetricKernel {
     SymmetricKernelConstantFunction factorFunction;

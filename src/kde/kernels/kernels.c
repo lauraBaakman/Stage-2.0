@@ -105,10 +105,10 @@ double testKernelPDF(double *data, int dimensionality, double constant) {
     return fabs(mean);
 }
 
-gsl_matrix *gaussianConstant(int dimensionality) {
+gsl_matrix *gaussianConstant(Array* covarianceMatrix) {
     //Compute cholesky factorisation of the covariance matrix
     //See here for an example of how to: https://github.com/getsiddd/GSL_AVR/blob/abf3e784da3d7fd5b4a60df457da46d0a5db4e7a/randist/test.c
-    gsl_matrix *matrix = gsl_matrix_alloc((size_t) dimensionality, (size_t) dimensionality);
+    gsl_matrix *matrix = gsl_matrix_alloc((size_t) covarianceMatrix->length, (size_t) covarianceMatrix->dimensionality);
     return matrix;
 }
 
