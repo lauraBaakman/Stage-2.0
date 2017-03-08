@@ -1,6 +1,5 @@
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_linalg.h>
-#include <gsl/gsl_vector_double.h>
 #include "kernels.ih"
 
 Kernel standardGaussianKernel = {
