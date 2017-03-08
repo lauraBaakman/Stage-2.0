@@ -1,6 +1,8 @@
 #include "kernelsModule.h"
 
-static PyObject * multi_pattern(PyObject *args, KernelType kernelType){
+PyObject *multi_pattern_symmetric(PyObject *args, KernelType kernelType) {
+    /* Parse input data */
+
     PyObject* inPatterns = NULL;
     PyObject* outDensities = NULL;
 
@@ -9,39 +11,20 @@ static PyObject * multi_pattern(PyObject *args, KernelType kernelType){
     Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
     Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
 
-    Kernel kernel = selectKernel(kernelType);
-    if(kernel.isSymmetric){
-        multi_pattern_symmetric(kernel.kernel.symmetricKernel, &patterns, &densities);
-    } else {
-        multi_pattern_asymmetric(kernel.kernel.aSymmetricKernel, &patterns, &densities);
+    /* Do computations */
+    SymmetricKernel kernel = selectSymmetricKernel(kernelType);
+
+    double* current_pattern = patterns.data;
+    double kernelConstant = kernel.factorFunction(patterns.dimensionality);
+
+    for( int j = 0; j < patterns.length; j++, current_pattern += patterns.rowStride) {
+        densities.data[j] = kernel.densityFunction(
+                current_pattern, patterns.dimensionality, kernelConstant);
     }
 
     /* Create return object */
     Py_INCREF(Py_None);
     return Py_None;
-}
-
-
-void multi_pattern_symmetric(SymmetricKernel kernel, Array *patterns, Array *densities) {
-    double* current_pattern = patterns->data;
-
-    double kernelConstant = kernel.factorFunction(patterns->dimensionality);
-
-    for( int j = 0; j < patterns->length; j++, current_pattern += patterns->rowStride) {
-        densities->data[j] = kernel.densityFunction(
-                current_pattern, patterns->dimensionality, kernelConstant);
-    }
-}
-
-void multi_pattern_asymmetric(ASymmetricKernel kernel, Array *patterns, Array *densities) {
-    double* current_pattern = patterns->data;
-
-    gsl_matrix* kernelConstant = kernel.factorFunction(patterns->dimensionality);
-
-    for( int j = 0; j < patterns->length; j++, current_pattern += patterns->rowStride) {
-        densities->data[j] = kernel.densityFunction(
-                current_pattern, patterns->dimensionality, kernelConstant);
-    }
 }
 
 static PyObject* single_pattern(PyObject* args, KernelType kernelType){
@@ -69,7 +52,7 @@ static PyObject* single_pattern(PyObject* args, KernelType kernelType){
 
 static char kernels_standardGaussian_docstring[] = "Evaluate the Standard Gaussian (zero vector mean and identity covariance matrix) for each row in the input matrix.";
 static PyObject * standard_gaussian_multi_pattern(PyObject *self, PyObject *args){
-    return multi_pattern(args, STANDARD_GAUSSIAN);
+    return multi_pattern_symmetric(args, STANDARD_GAUSSIAN);
 }
 
 static PyObject * standard_gaussian_single_pattern(PyObject *self, PyObject *args){
@@ -108,7 +91,7 @@ static PyObject * epanechnikov_single_pattern(PyObject *self, PyObject *args){
 }
 
 static PyObject * epanechnikov_multi_pattern(PyObject *self, PyObject *args){
-    return multi_pattern(args, EPANECHNIKOV);
+    return multi_pattern_symmetric(args, EPANECHNIKOV);
 }
 
 static char kernels_testKernel_docstring[] = "Evaluate the TestKernel for each row in the input matrix. This kernel returns the absolute value of the mean of the elements of the patterns.";
@@ -117,7 +100,7 @@ static PyObject * testKernel_single_pattern(PyObject *self, PyObject *args){
 }
 
 static PyObject * testKernel_multi_pattern(PyObject *self, PyObject *args){
-    return multi_pattern(args, TEST);
+    return multi_pattern_symmetric(args, TEST);
 }
 
 

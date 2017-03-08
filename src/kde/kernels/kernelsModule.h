@@ -10,7 +10,6 @@
 
 Array pyObjectToArray(PyObject *pythonObject, int requirements);
 
-static void multi_pattern_symmetric(SymmetricKernel kernel, Array* patterns, Array* densities);
-static void multi_pattern_asymmetric(ASymmetricKernel kernel, Array* patterns, Array* densities);
+static PyObject * multi_pattern(PyObject *args, KernelType kernelType);
 
 #endif //KERNELS_KERNELS_MODULE_H
