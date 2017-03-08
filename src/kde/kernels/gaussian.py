@@ -94,7 +94,7 @@ class _Gaussian_C(_Gaussian):
 
     def _handle_single_pattern(self, xs):
         data = np.array([xs])
-        density = _kernels.gaussian_single_pattern(data)
+        density = _kernels.gaussian_single_pattern(data, self._covariance_matrix)
         return density
 
     def _handle_multiple_patterns(self, xs):

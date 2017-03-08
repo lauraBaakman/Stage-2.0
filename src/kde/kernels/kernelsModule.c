@@ -82,7 +82,24 @@ static PyObject * gaussian_multi_pattern(PyObject *self, PyObject *args){
 }
 
 static PyObject * gaussian_single_pattern(PyObject *self, PyObject *args){
-    return single_pattern(args, GAUSSIAN);
+    /* Read input */
+    PyObject* inPatterns = NULL;
+    PyObject* inCovarianceMatrix = NULL;
+
+    if (!PyArg_ParseTuple(args, "OO", &inPatterns, &inCovarianceMatrix)) return NULL;
+
+    Array pattern = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
+    Array covarianceMatrix = pyObjectToArray(inCovarianceMatrix, NPY_ARRAY_IN_ARRAY);
+    /* Do computations */
+    double density;
+
+    ASymmetricKernel kernel = selectASymmetricKernel(GAUSSIAN);
+    gsl_matrix* kernelConstant = kernel.factorFunction(pattern.dimensionality);
+    density = kernel.densityFunction(pattern.data, pattern.dimensionality, kernelConstant);
+
+    /* Create return object */
+    PyObject *returnObject = Py_BuildValue("d", density);
+    return returnObject;
 }
 
 static char kernels_epanechnikov_docstring[] = "Evaluate the Epanechnikov kernel for each row in the input matrix.";
