@@ -152,6 +152,8 @@ int gsl_vector_print(FILE *f, const gsl_vector *vector) {
         if ((status = fprintf(f, "%# .3g ", gsl_vector_get(vector, i))) < 0) return -1;
         n += status;
     }
+    if ((status = fprintf(f, "\n")) < 0)
+        return -1;
     return n;
 }
 
