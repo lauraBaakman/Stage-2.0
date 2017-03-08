@@ -1,9 +1,4 @@
-//
-// Created by Laura Baakman on 19/12/2016.
-//
-
 #include "kernels.ih"
-#include "kernels.h"
 
 Kernel standardGaussianKernel = {
         .isSymmetric = true,
@@ -112,12 +107,13 @@ double testKernelPDF(double *data, int dimensionality, double constant) {
 
 gsl_matrix *gaussianConstant(int dimensionality) {
     //Compute cholesky factorisation of the covariance matrix
+    //See here for an example of how to: https://github.com/getsiddd/GSL_AVR/blob/abf3e784da3d7fd5b4a60df457da46d0a5db4e7a/randist/test.c
     gsl_matrix *matrix = gsl_matrix_alloc((size_t) dimensionality, (size_t) dimensionality);
     return matrix;
 }
 
 double gaussianPDF(double *data, int dimensionality, gsl_matrix *choleskyFactorCovarianceMatrix) {
-
+    //See here for an example of how to: https://github.com/getsiddd/GSL_AVR/blob/abf3e784da3d7fd5b4a60df457da46d0a5db4e7a/randist/test.c
     //Do something with: gsl_ran_multivariate_gaussian_pdf
     return 42.0;
 }

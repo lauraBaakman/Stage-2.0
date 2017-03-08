@@ -1,9 +1,4 @@
-//
-// Created by Laura Baakman on 19/12/2016.
-//
-
 #include "kernelsModule.h"
-#include "kernels.h"
 
 static PyObject * multi_pattern(PyObject *args, KernelType kernelType){
     PyObject* inPatterns = NULL;
