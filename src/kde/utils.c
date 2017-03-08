@@ -1,6 +1,8 @@
 //
 // Created by Laura Baakman on 20/01/2017.
 //
+#include <gsl/gsl_vector_double.h>
+#include <gsl/gsl_matrix.h>
 #include "utils.ih"
 
 Array arrayBuildFromPyArray(PyArrayObject *arrayObject){
@@ -124,6 +126,60 @@ void arrayColumnsPrint(ArrayColumns *matrix) {
         arrayColumnsPrintColumn(matrix->data[i], matrix->columnLength);
     }
     printf("\n");
+}
+
+int gsl_matrix_print(FILE *f, const gsl_matrix *m) {
+    int status, n = 0;
+
+    for (size_t i = 0; i < m->size1; i++) {
+        for (size_t j = 0; j < m->size2; j++) {
+            if ((status = fprintf(f, "%# .3g ", gsl_matrix_get(m, i, j))) < 0)
+                return -1;
+            n += status;
+        }
+
+        if ((status = fprintf(f, "\n")) < 0)
+            return -1;
+        n += status;
+    }
+
+    return n;
+}
+
+int gsl_vector_print(FILE *f, const gsl_vector *vector) {
+    int status, n = 0;
+
+    for (size_t i = 0; i < vector->size; i++) {
+        if ((status = fprintf(f, "%# .3g ", gsl_vector_get(vector, i))) < 0) return -1;
+        n += status;
+    }
+    if ((status = fprintf(f, "\n")) < 0)
+        return -1;
+    return n;
+}
+
+gsl_matrix* gsl_matrix_view_copy_to_gsl_matrix(gsl_matrix_view origin) {
+    gsl_matrix *copy = gsl_matrix_alloc(origin.matrix.size1, origin.matrix.size2);
+    gsl_matrix_memcpy(copy, &origin.matrix);
+    return copy;
+}
+
+gsl_vector_view arrayGetGSLVectorView(Array *array) {
+    size_t vector_length = (size_t) ((array->dimensionality > array->length) ? array->dimensionality : array->length);
+    gsl_vector_view result = gsl_vector_view_array(array->data, vector_length);
+    return result;
+}
+
+gsl_matrix_view arrayGetGSLMatrixView(Array* array){
+    size_t num_rows = (size_t) array->length;
+    size_t num_cols = (size_t) array->dimensionality;
+
+    return gsl_matrix_view_array(array->data, num_rows, num_cols);
+}
+
+gsl_matrix *arrayCopyToGSLMatrix(Array *array) {
+    gsl_matrix_view arrayView = arrayGetGSLMatrixView(array);
+    return gsl_matrix_view_copy_to_gsl_matrix(arrayView);
 }
 
 void arrayColumnsPrintColumn(double *row, int length) {

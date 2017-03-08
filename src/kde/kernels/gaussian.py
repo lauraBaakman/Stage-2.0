@@ -3,6 +3,7 @@ from scipy.stats.mstats import gmean
 import numpy as np
 
 from kde.kernels.kernel import Kernel, KernelException
+import kde.kernels._kernels as _kernels
 
 
 _as_c_enum = 3
@@ -84,7 +85,23 @@ class _Gaussian_C(_Gaussian):
 
     def evaluate(self, xs):
         self._validate_xs_pdf_combination(xs)
-        raise NotImplementedError("Gaussian kernel is not yet implemented in C.")
+        if xs.ndim == 1:
+            return self._handle_single_pattern(xs)
+        elif xs.ndim == 2:
+            return self._handle_multiple_patterns(xs)
+        else:
+            raise TypeError("Expected a vector or a matrix, not a {}-dimensional array.".format(xs.ndim))
+
+    def _handle_single_pattern(self, xs):
+        data = np.array([xs])
+        density = _kernels.gaussian_single_pattern(data, self._mean, self._covariance_matrix)
+        return density
+
+    def _handle_multiple_patterns(self, xs):
+        (num_patterns, _) = xs.shape
+        densities = np.empty(num_patterns, dtype=float)
+        _kernels.gaussian_multi_pattern(xs, self._mean, self._covariance_matrix, densities)
+        return densities
 
     @staticmethod
     def scaling_factor(general_bandwidth, eigen_values):
