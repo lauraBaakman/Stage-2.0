@@ -162,6 +162,13 @@ gsl_vector_view arrayGetGSLVectorView(Array *array) {
     return result;
 }
 
+gsl_matrix_view arrayGetGSLMatrixView(Array* array){
+    size_t num_rows = (size_t) array->length;
+    size_t num_cols = (size_t) array->dimensionality;
+
+    return gsl_matrix_view_array(array->data, num_rows, num_cols);
+}
+
 void arrayColumnsPrintColumn(double *row, int length) {
     printf("[ ");
     for (int i = 0; i < length; ++i) {

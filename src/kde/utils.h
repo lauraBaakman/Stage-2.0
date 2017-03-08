@@ -26,6 +26,7 @@ void arraySetDiagonalToZero(Array *array);
 void arraySetElement(Array* array, int rowIdx, int colIdx, double value);
 void arraySetRow(Array* array, int rowIdx, double* values);
 gsl_vector_view arrayGetGSLVectorView(Array* array);
+gsl_matrix_view arrayGetGSLMatrixView(Array* array);
 
 double* arrayGetRowView(Array *array, int rowIdx);
 
