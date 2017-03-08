@@ -77,11 +77,12 @@ static PyObject * gaussian_single_pattern(PyObject *self, PyObject *args){
     Array covarianceMatrix = pyObjectToArray(inCovarianceMatrix, NPY_ARRAY_IN_ARRAY);
 
     gsl_vector_view mean_view = arrayGetGSLVectorView(&mean);
+    gsl_vector_view pattern_view = arrayGetGSLVectorView(&pattern);
 
     /* Do computations */
     ASymmetricKernel kernel = selectASymmetricKernel(GAUSSIAN);
     gsl_matrix* kernelConstant = kernel.factorFunction(&covarianceMatrix);
-    double density = kernel.densityFunction(pattern.data, &mean_view.vector, kernelConstant);
+    double density = kernel.densityFunction(&pattern_view.vector, &mean_view.vector, kernelConstant);
 
     /* Create return object */
     PyObject *returnObject = Py_BuildValue("d", density);

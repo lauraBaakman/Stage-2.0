@@ -8,7 +8,7 @@
 typedef double (*SymmetricKernelDensityFunction)(double* data, int dimensionality, double factor);
 typedef double (*SymmetricKernelConstantFunction)(int dimensionality);
 
-typedef double (*ASymmetricKernelDensityFunction)(double* data, gsl_vector* mean, gsl_matrix* shapeMatrix);
+typedef double (*ASymmetricKernelDensityFunction)(gsl_vector* pattern, gsl_vector* mean, gsl_matrix* shapeMatrix);
 typedef gsl_matrix* (*ASymmetricKernelConstantFunction)(Array* covarianceMatrix);
 
 typedef struct SymmetricKernel {

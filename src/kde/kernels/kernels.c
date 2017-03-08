@@ -121,12 +121,11 @@ gsl_matrix *gaussianConstant(Array* covarianceMatrix) {
     return choleskyDecomposition;
 }
 
-double gaussianPDF(double *data, gsl_vector * mean, gsl_matrix *choleskyFactorCovarianceMatrix) {
+double gaussianPDF(gsl_vector * pattern, gsl_vector * mean, gsl_matrix *choleskyFactorCovarianceMatrix) {
     double density;
-    gsl_vector_view pattern = gsl_vector_view_array(data, mean->size);
     gsl_vector* work = gsl_vector_alloc(mean->size);
 
-    gsl_ran_multivariate_gaussian_pdf(&pattern.vector, mean, choleskyFactorCovarianceMatrix, &density, work);
+    gsl_ran_multivariate_gaussian_pdf(pattern, mean, choleskyFactorCovarianceMatrix, &density, work);
 
     gsl_vector_free(work);
     return density;

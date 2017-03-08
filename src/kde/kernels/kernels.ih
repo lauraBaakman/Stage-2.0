@@ -17,7 +17,7 @@ double testKernelConstant(int patternDimensionality);
 double testKernelPDF(double *data, int dimensionality, double constant);
 
 gsl_matrix* gaussianConstant(Array* covarianceMatrix);
-double gaussianPDF(double *data, gsl_vector * mean, gsl_matrix * choleskyFactorCovarianceMatrix);
+double gaussianPDF(gsl_vector* pattern, gsl_vector * mean, gsl_matrix * choleskyFactorCovarianceMatrix);
 
 double dotProduct(double *a, double *b, int length);
 
