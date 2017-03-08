@@ -10,6 +10,8 @@
 
 Array pyObjectToArray(PyObject *pythonObject, int requirements);
 
+PyObject *scaling_factor_symmetric(PyObject *args, KernelType kernelType);
+
 static PyObject * multi_pattern_symmetric(PyObject *args, KernelType kernelType);
 static PyObject* single_pattern_symmetric(PyObject *args, KernelType kernelType);
 
