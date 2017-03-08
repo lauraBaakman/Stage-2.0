@@ -4,6 +4,7 @@
 #include <Python.h>
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include <numpy/arrayobject.h>
+#include <gsl/gsl_matrix.h>
 
 typedef struct Array{
     double* data;
@@ -30,6 +31,9 @@ double* arrayGetRowView(Array *array, int rowIdx);
 ArrayColumns getColumns(Array *array);
 void arrayColumnsFree(ArrayColumns *matrix);
 void arrayColumnsPrint(ArrayColumns *matrix);
+
+
+int gsl_matrix_print(FILE *f, const gsl_matrix *m);
 
 double* scalePattern(double* pattern, double* dataPoint, double* scaledPattern, int dimensionality, double windowWidth);
 

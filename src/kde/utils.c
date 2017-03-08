@@ -126,6 +126,24 @@ void arrayColumnsPrint(ArrayColumns *matrix) {
     printf("\n");
 }
 
+int gsl_matrix_print(FILE *f, const gsl_matrix *m) {
+    int status, n = 0;
+
+    for (size_t i = 0; i < m->size1; i++) {
+        for (size_t j = 0; j < m->size2; j++) {
+            if ((status = fprintf(f, "%g ", gsl_matrix_get(m, i, j))) < 0)
+                return -1;
+            n += status;
+        }
+
+        if ((status = fprintf(f, "\n")) < 0)
+            return -1;
+        n += status;
+    }
+
+    return n;
+}
+
 void arrayColumnsPrintColumn(double *row, int length) {
     printf("[ ");
     for (int i = 0; i < length; ++i) {
