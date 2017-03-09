@@ -43,9 +43,23 @@
 \def\@withoutPattern{\ensuremath{\vec{x}}\xspace}
 \makeatother
 
-\newcommand{\varDensityFunction}[1]{\ensuremath{f\left( #1 \right)}\xspace}
-\newcommand{\varPilotDensityFunction}[1]{\ensuremath{\tilde{f}\left( #1 \right)}\xspace}
-\newcommand{\varEstimatedDensityFunction}[1]{\ensuremath{\hat{f}\left( #1 \right)}\xspace}
+\newcommand{\varDensityFunction}[1]{%
+	\ifthenelse{\isempty{#1}}%
+	{\ensuremath{f}\xspace}%
+	{\ensuremath{f\left( #1 \right)}\xspace}%
+}
+
+\newcommand{\varPilotDensityFunction}[1]{%
+	\ifthenelse{\isempty{#1}}%
+	{\ensuremath{\tilde{f}}\xspace}%
+	{\ensuremath{\tilde{f}\left( #1 \right)}\xspace}%
+}
+
+\newcommand{\varEstimatedDensityFunction}[1]{%
+	\ifthenelse{\isempty{#1}}%
+	{\ensuremath{\hat{f}}\xspace}%
+	{\ensuremath{\hat{f}\left( #1 \right)}\xspace}%
+}
 \newcommand{\varScalingFactor}{\ensuremath{S}\xspace}
 \newcommand{\varMBESensitivityParam}{\ensuremath{\beta}\xspace}
 
