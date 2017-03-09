@@ -70,4 +70,4 @@ class _TestKernel_C(_TestKernel):
 
     @staticmethod
     def scaling_factor(general_bandwidth, eigen_values):
-        raise NotImplementedError("This class does not have an implementation of the scaling factor computation method.")
+        return _kernels.test_kernel_scaling_factor(general_bandwidth)

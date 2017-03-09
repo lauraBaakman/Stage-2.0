@@ -8,7 +8,8 @@ sources = [
     'distancematrix.c',
     'knn.c',
     'covariancematrix.c',
-    'eigenvalues.c'
+    'eigenvalues.c',
+    'geometricmean.c'
     ]
 
 if __name__ == "__main__":

@@ -303,8 +303,7 @@ class Test_Gaussian(TestCase):
         actual = Gaussian(mean, covariance_matrix, implementation=_Gaussian_Python).evaluate(pattern)
         self.assertAlmostEqual(expected, actual)
 
-    @skip("The C implementation of the scaling of the Gaussian kernel has not yet been written.")
-    def test_scaling_factor_default_implementation(self):
+    def test_scaling_factor_C_implementation(self):
         eigen_values = np.array([4.0, 9.0, 16.0, 25.0])
         covariance_matrix = np.array([
             [1, 0, 0, 0],
@@ -314,10 +313,11 @@ class Test_Gaussian(TestCase):
         ])
         h = 0.5
         expected = 0.075534384933919
-        actual = Gaussian(None, covariance_matrix).scaling_factor(general_bandwidth=h, eigen_values=eigen_values)
+        kernel = Gaussian(None, covariance_matrix, implementation=_Gaussian_C)
+        actual = kernel.scaling_factor(general_bandwidth=h, eigen_values=eigen_values)
         self.assertAlmostEqual(expected, actual)
 
-    def test_scaling_factor_alternative_implementation(self):
+    def test_scaling_factor_python_implementation(self):
         eigen_values = np.array([4.0, 9.0, 16.0, 25.0])
         covariance_matrix = np.array([
             [1, 0, 0, 0],
@@ -424,6 +424,3 @@ class Test_Gaussian_C(GaussianImpAbstractTest, TestCase):
     def setUp(self):
         super().setUp()
         self._kernel_class = _Gaussian_C
-
-    def test_scaling_factor(self):
-        self.skipTest("The C implementation of the scaling of the Gaussian kernel has not yet been written.")

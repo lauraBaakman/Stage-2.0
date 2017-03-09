@@ -1,30 +1,33 @@
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_linalg.h>
-#include <gsl/gsl_vector_double.h>
 #include "kernels.ih"
 
 Kernel standardGaussianKernel = {
         .isSymmetric = true,
         .kernel.symmetricKernel.densityFunction = standardGaussianPDF,
         .kernel.symmetricKernel.factorFunction = standardGaussianConstant,
+        .kernel.symmetricKernel.scalingFactorFunction = standardGaussianScalingFactor,
 };
 
 Kernel epanechnikovKernel = {
         .isSymmetric = true,
         .kernel.symmetricKernel.densityFunction = epanechnikovPDF,
         .kernel.symmetricKernel.factorFunction = epanechnikovConstant,
+        .kernel.symmetricKernel.scalingFactorFunction = epanechnikovScalingFactor,
 };
 
 Kernel testKernel = {
         .isSymmetric = true,
         .kernel.symmetricKernel.densityFunction = testKernelPDF,
         .kernel.symmetricKernel.factorFunction = testKernelConstant,
+        .kernel.symmetricKernel.scalingFactorFunction = testKernelScalingFactor,
 };
 
 Kernel gaussianKernel = {
         .isSymmetric = false,
         .kernel.aSymmetricKernel.densityFunction = gaussianPDF,
         .kernel.aSymmetricKernel.factorFunction= gaussianConstant,
+        .kernel.aSymmetricKernel.scalingFactorFunction = gaussianScalingFactor,
 };
 
 
@@ -68,6 +71,9 @@ ASymmetricKernel selectASymmetricKernel(KernelType type) {
     }
 }
 
+
+/* Symmetric Kernels */
+
 double standardGaussianConstant(int patternDimensionality) {
     return pow(2 * M_PI, -1 * patternDimensionality * 0.5);
 }
@@ -78,6 +84,10 @@ double standardGaussianPDF(double *pattern, int patternDimensionality, double co
         dotProduct += pattern[i] * pattern[i];
     }
     return constant * exp(-0.5 * dotProduct);
+}
+
+double standardGaussianScalingFactor(double generalBandwidth) {
+    return  generalBandwidth * sqrt(generalBandwidth);
 }
 
 double epanechnikovConstant(int dimensionality) {
@@ -95,6 +105,11 @@ double epanechnikovPDF(double *data, int dimensionality, double constant) {
     return (numerator / constant) * (1 - patternDotPattern);
 }
 
+double epanechnikovScalingFactor(double generalBandwidth) {
+    fprintf(stderr, "The function epanechnikovPDFScalingFactor is not implemented.");
+    exit(-1);
+}
+
 double testKernelConstant(int patternDimensionality) {
     return 1.0 / patternDimensionality;
 }
@@ -107,6 +122,12 @@ double testKernelPDF(double *data, int dimensionality, double constant) {
     double mean = density * constant;
     return fabs(mean);
 }
+
+double testKernelScalingFactor(double generalBandwidth) {
+    return 0.5;
+}
+
+/* Asymmetric Kernels */
 
 gsl_matrix *gaussianConstant(Array* covarianceMatrix) {
     gsl_matrix* choleskyDecomposition = arrayCopyToGSLMatrix(covarianceMatrix);
@@ -124,6 +145,9 @@ double gaussianPDF(gsl_vector * pattern, gsl_vector * mean, gsl_matrix *cholesky
     return density;
 }
 
+double gaussianScalingFactor(double generalBandwidth, gsl_vector *eigenValues) {
+    return 42.0;
+}
 
 double dotProduct(double *a, double *b, int length) {
     double dotProduct = 0;
