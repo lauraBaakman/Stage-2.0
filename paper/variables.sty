@@ -10,7 +10,13 @@
 \newcommand{\varEigenValue}{\ensuremath{\lambda}\xspace}
 \newcommand{\varEpan}{\ensuremath{\mathcal{E}}}
 \newcommand{\varGaussian}{\ensuremath{\mathcal{G}}}
-\newcommand{\varGeometricMeanFunction}[1]{\ensuremath{\text{GM}\left(#1\right)}\xspace}
+%\newcommand{\varGeometricMeanFunction}[1]{\ensuremath{\text{GM}\left(#1\right)}\xspace}
+\newcommand{\varGeometricMeanFunction}[1]{%
+	\ifthenelse{\isempty{#1}}%
+	{\ensuremath{\text{GM}}\xspace}%
+	{\ensuremath{\text{GM}\left(#1\right)}\xspace}%
+}
+
 
 % \varKernel
 \makeatletter
@@ -23,7 +29,7 @@
 \def\@without#1{
 	\ifthenelse{\isempty{#1}}% 
 	{\ensuremath{K}\xspace}% #1 is empty
-	{\ensuremath{K_{#1}\left( #1 \right)}\xspace}% #1 is not empty
+	{\ensuremath{K\left( #1 \right)}\xspace}% #1 is not empty
 }
 \makeatother
 
