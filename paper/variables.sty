@@ -15,8 +15,16 @@
 % \varKernel
 \makeatletter
 \def\varKernel{\@ifnextchar[{\@with}{\@without}}
-\def\@with[#1]#2{\ensuremath{K_{#1}\left( #2 \right)}\xspace}
-\def\@without#1{\ensuremath{K\left( #1 \right)}\xspace}
+\def\@with[#1]#2{
+	\ifthenelse{\isempty{#2}}% 
+	{\ensuremath{K_{#1}}\xspace}% #2 is empty
+	{\ensuremath{K_{#1}\left( #2 \right)}\xspace}% #2 is not empty
+}
+\def\@without#1{
+	\ifthenelse{\isempty{#1}}% 
+	{\ensuremath{K}\xspace}% #1 is empty
+	{\ensuremath{K_{#1}\left( #1 \right)}\xspace}% #1 is not empty
+}
 \makeatother
 
 \newcommand{\varKNNDistance}[2]{\ensuremath{D_{#1, #2}}\xspace}
