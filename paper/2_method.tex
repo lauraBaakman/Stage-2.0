@@ -3,14 +3,14 @@
 %General Idea
 	We use our shape adaptive kernels in combination with the Modified Breiman Estimator introduced by \textcite{wilkinson1995dataplot}.
 	%Pilot Densities
-	The grid that the pilot densities are computed on \todo{Iets over hoe het grid bepaald wordt, of de standaard grootte van het grid.} 
+	The grid that the pilot densities are computed on a uniform gird that covers all data points with twenty vertices in each dimension.  
 	%General bandwidth
 	We choose to use the method proposed by \textcite{ferdosi2011comparison} for computing the general bandwidth because of its lower complexity, compared to the method used by \textcite{wilkinson1995dataplot}. 
 	%Local bandwidths
 	We have empirically determined \todo{hoe hebben we dat vastgesteld} that using \varMBESensitivityParam = \todo{Een of andere waarde} works best in our case. 
 	%Final densities
 	The final densities are estimated according to \cref{eq:1:adaptiveKernelEstimateWithLocalBandwidths} with a reshaped and scaled Epanechnikov kernel. The Epanechnikov kernel reshaped with the matrix \varCovarianceMatrix is defined as:
-	\todo[inline]{Ik verwacht dat hier nog een factor bij moet}
+	\todo[inline]{As of now incorrect and incomplete}
 	\begin{equation}\label{eq:1:epanechnikovKernelWithCovarianceMatrix}
 		\varKernel[\varEpan]{\varPattern} = 
 		\begin{cases}
@@ -18,7 +18,9 @@
 			0 & \text{otherwise.}
 		\end{cases}
 	\end{equation}
-	The matrix \varCovarianceMatrix determines the shape of the kernel. The shape of the kernel is determined based on the neighborhood of the pattern, \varPattern, whose density we are estimating. 
+	The shape of the kernel is determined based on the neighborhood of the pattern, \varPattern, whose density we are estimating. For each data point \varPattern the matrix \varCovarianceMatrix is determined according to these \todo{Stapjes, en daarna verwijzen!}
+
+
 
 % The shape matrix
 

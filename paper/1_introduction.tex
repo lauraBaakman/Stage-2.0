@@ -53,7 +53,7 @@ Kernel density estimation methods approximate \varDensityFunction{\varPattern} b
 % Wilkinson and Meijer
 	One disadvantage of the approach taken by \citeauthor{breiman1977variable} is that it is computationally expensive, this is partially due to the Gaussian kernel. Because of the infinite base of this kernel an exponential function has to be evaluated \varNumPatterns times to estimate the density of one data point. 
 	% First Change
-	\textcite{wilkinson1995dataplot} propose to reduce this computational complexity in two ways. Firstly they replace the infinite base Gaussian kernel with a symmetric Epanechnikov kernel in both \cref{eq:1:parzen} and \cref{eq:1:adaptiveKernelEstimateWithLocalBandwidths}, \ie in the computation of the pilot densities and the final densities. This kernel is defined by:
+	\textcite{wilkinson1995dataplot} propose to reduce this computational complexity in two ways. Firstly they replace the infinite base Gaussian kernel with a speherical Epanechnikov kernel in both \cref{eq:1:parzen} and \cref{eq:1:adaptiveKernelEstimateWithLocalBandwidths}, \ie in the computation of the pilot densities and the final densities. This kernel is defined by:
 	\begin{equation}\label{eq:1:epanechnikovKernelNoCovarianceMatrix}
 		\varKernel[\varEpan]{\varPattern} = 
 		\begin{cases}
