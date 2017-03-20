@@ -1,5 +1,4 @@
 #include <gsl/gsl_matrix.h>
-#include <gsl/gsl_vector_double.h>
 #include "kernelsModule.h"
 
 PyObject *multi_pattern_symmetric(PyObject *args, KernelType kernelType) {

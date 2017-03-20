@@ -1,9 +1,5 @@
 #include <gsl/gsl_eigen.h>
-#include <gsl/gsl_math.h>
-#include <gsl/gsl_vector_double.h>
-
 #include "eigenvalues.h"
-#include "../../../../../../../usr/local/include/gsl/gsl_matrix.h"
 
 void computeEigenValues(Array *data, Array *eigenValues) {
     size_t matrixOrder = (size_t) data->dimensionality;
@@ -19,7 +15,7 @@ void computeEigenValues(Array *data, Array *eigenValues) {
 }
 
 gsl_vector *computeEigenValues2(gsl_matrix *matrix) {
-    size_t matrixOrder = matrixOrder = matrix->size1;
+    size_t matrixOrder = matrix->size1;
 
     gsl_vector* eigenValues = gsl_vector_alloc(matrixOrder);
     gsl_eigen_symm_workspace * w = gsl_eigen_symm_alloc(matrixOrder);

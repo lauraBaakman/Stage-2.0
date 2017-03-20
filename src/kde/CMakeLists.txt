@@ -16,14 +16,18 @@ set(SOURCE_FILES
         utils/covariancematrix.c utils/covariancematrix.h utils/covariancematrix.ih utils/eigenvalues.c utils/eigenvalues.h utils/geometricmean.c utils/geometricmean.h)
 add_executable(kde ${SOURCE_FILES})
 
+set(GSL_INCLUDE_DIR /usr/local/include/gsl)
+set(GSL_LIBRARY_DIR /usr/local/include/gsl/lib)
+find_package(gsl COMPONENTS system filesystem REQUIRED)
+
 find_package(PythonLibs REQUIRED)
 include_directories(
         SYSTEM
+        ${GSL_INCLUDE_DIR}
         /Users/laura/.virtualenvs/stage/lib/python3.5/site-packages/numpy/core/include
         /Users/laura/.virtualenvs/stage/include/python3.5m
         /Users/laura/.virtualenvs/stage/include/python3.5m/Python.h
         /Library/Frameworks/Python.framework/Headers
         /usr/include
         /usr/local/include
-        /usr/local/include/gsl
 )
