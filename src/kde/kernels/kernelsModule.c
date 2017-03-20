@@ -145,6 +145,26 @@ static PyObject * testKernel_multi_pattern(PyObject *self, PyObject *args){
     return multi_pattern_symmetric(args, TEST);
 }
 
+static char kernels_scalingFactor_docstring[] = "Compute the scaling factor for the asymmetric kernel.";
+static PyObject* scaling_factor(PyObject* self, PyObject *args){
+    /* Read input */
+    double generalBandwidth;
+    PyObject* inCovarianceMatrix = NULL;
+
+    if (!PyArg_ParseTuple(args, "dO", &generalBandwidth, &inCovarianceMatrix)) return NULL;
+
+    gsl_matrix_view covarianceMatrix = pyObjectToGSLMatrixView(inCovarianceMatrix, NPY_ARRAY_IN_ARRAY);
+
+    /* Do computations */
+    double scalingFactor = computeScalingFactor(generalBandwidth, covarianceMatrix);
+
+    /* Free memory */
+
+    /* Create return object */
+    PyObject *returnObject = Py_BuildValue("d", scalingFactor);
+    return returnObject;
+}
+
 Array pyObjectToArray(PyObject *pythonObject, int requirements){
     PyArrayObject* arrayObject = NULL;
     arrayObject = (PyArrayObject *)PyArray_FROM_OTF(pythonObject, NPY_DOUBLE, requirements);
@@ -182,7 +202,9 @@ static PyMethodDef method_table[] = {
         {"epanechnikov_multi_pattern",          epanechnikov_multi_pattern,         METH_VARARGS,   kernels_epanechnikov_docstring},
 
         {"test_kernel_single_pattern",          testKernel_single_pattern,          METH_VARARGS,   kernels_testKernel_docstring},
-        {"test_kernel_multi_pattern",           testKernel_multi_pattern,           METH_VARARGS,   kernels_testKernel_docstring},
+        {"test_kernel_multi_pattern",           testKernel_multi_pattern,  /**/     METH_VARARGS,   kernels_testKernel_docstring},
+
+        {"scaling_factor",                      scaling_factor,                     METH_VARARGS,   kernels_scalingFactor_docstring},
         /* Sentinel */
         {NULL,                              NULL,                                   0,              NULL}
 };
