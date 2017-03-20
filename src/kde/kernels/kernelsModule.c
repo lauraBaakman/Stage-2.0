@@ -157,6 +157,19 @@ Array pyObjectToArray(PyObject *pythonObject, int requirements){
     return array;
 }
 
+gsl_matrix_view pyObjectToGSLMatrixView(PyObject *pythonObject, int requirements) {
+    PyArrayObject* arrayObject = NULL;
+    arrayObject = (PyArrayObject *)PyArray_FROM_OTF(pythonObject, NPY_DOUBLE, requirements);
+    if (arrayObject == NULL){
+        fprintf(stderr, "Error converting PyObject to PyArrayObject\n");
+        exit(-1);
+    }
+    double* data = (double *)PyArray_DATA(arrayObject);
+    size_t num_rows = PyArray_DIM(arrayObject, 0);
+    size_t num_cols = PyArray_DIM(arrayObject, 1);
+    Py_XDECREF(arrayObject);
+    return gsl_matrix_view_array(data, num_rows, num_cols);
+}
 
 static PyMethodDef method_table[] = {
         {"standard_gaussian_multi_pattern",     standard_gaussian_multi_pattern,    METH_VARARGS,   kernels_standardGaussian_docstring},
