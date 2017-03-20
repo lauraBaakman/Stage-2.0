@@ -1,3 +1,5 @@
+#include <gsl/gsl_vector.h>
+#include <gsl/gsl_vector_double.h>
 #include "geometricmean.h"
 #include "math.h"
 
@@ -8,4 +10,8 @@ double computeGeometricMean(double *values, size_t length) {
         product += log(values[i]);
     }
     return exp(product / length);
+}
+
+double gsl_geometric_mean(const gsl_vector *vector) {
+    return computeGeometricMean(vector->data, vector->size);
 }

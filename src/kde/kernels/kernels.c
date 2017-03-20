@@ -1,6 +1,8 @@
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_linalg.h>
+#include <gsl/gsl_vector_double.h>
 #include "kernels.ih"
+#include "../utils/geometricmean.h"
 
 Kernel standardGaussianKernel = {
         .isSymmetric = true,
@@ -146,7 +148,9 @@ double gaussianPDF(gsl_vector * pattern, gsl_vector * mean, gsl_matrix *cholesky
 }
 
 double gaussianScalingFactor(double generalBandwidth, gsl_vector *eigenValues) {
-    return 42.0;
+    double denominator = sqrt(gsl_geometric_mean(eigenValues));
+    double numerator = (generalBandwidth * generalBandwidth);
+    return numerator / denominator;
 }
 
 double dotProduct(double *a, double *b, int length) {
