@@ -302,7 +302,7 @@ class Test_Gaussian(TestCase):
         actual = Gaussian(mean, covariance_matrix, implementation=_Gaussian_Python).evaluate(pattern)
         self.assertAlmostEqual(expected, actual)
 
-    def test_scaling_factor_C_implementation(self):
+    def scaling_factor_auxilary_1(self, implementation):
         eigen_values = np.array([4.0, 9.0, 16.0, 25.0])
         covariance_matrix = np.array([
             [1, 0, 0, 0],
@@ -312,23 +312,15 @@ class Test_Gaussian(TestCase):
         ])
         h = 0.5
         expected = 0.075534384933919
-        kernel = Gaussian(None, covariance_matrix, implementation=_Gaussian_C)
+        kernel = Gaussian(None, covariance_matrix, implementation=implementation)
         actual = kernel.scaling_factor(general_bandwidth=h, eigen_values=eigen_values)
         self.assertAlmostEqual(expected, actual)
 
+    def test_scaling_factor_C_implementation(self):
+        self.scaling_factor_auxilary_1(_Gaussian_C)
+
     def test_scaling_factor_python_implementation(self):
-        eigen_values = np.array([4.0, 9.0, 16.0, 25.0])
-        covariance_matrix = np.array([
-            [1, 0, 0, 0],
-            [0, 1, 0, 0],
-            [0, 0, 1, 0],
-            [0, 0, 0, 1],
-        ])
-        h = 0.5
-        expected = 0.075534384933919
-        kernel = Gaussian(None, covariance_matrix, implementation=_Gaussian_Python)
-        actual = kernel.scaling_factor(general_bandwidth=h, eigen_values=eigen_values)
-        self.assertAlmostEqual(expected, actual)
+        self.scaling_factor_auxilary_1(_Gaussian_Python)
 
 
 class GaussianImpAbstractTest(object):
@@ -393,7 +385,6 @@ class GaussianImpAbstractTest(object):
         np.testing.assert_array_almost_equal(actual, expected)
         np.testing.assert_array_almost_equal(covariance_matrix, expected_covariance_matrix)
 
-
     def test_scaling_factor(self):
         eigen_values = np.array([4.0, 9.0])
         h = 0.5
@@ -408,10 +399,6 @@ class GaussianImpAbstractTest(object):
 
 
 class Test_Gaussian_Python(GaussianImpAbstractTest, TestCase):
-
-    def setUp(self):
-        super().setUp()
-        self._kernel_class = _Gaussian_Python
 
     def setUp(self):
         super().setUp()
