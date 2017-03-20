@@ -1,6 +1,7 @@
 import numpy as np
 
 import kde.utils.eigenvalues as eig
+import kde.kernels._kernels as _kernels
 
 
 def _scaling_factor_python(general_bandwidth, covariance_matrix):
@@ -12,7 +13,7 @@ def _scaling_factor_python(general_bandwidth, covariance_matrix):
 
 
 def _scaling_factor_c(general_bandwidth, covariance_matrix):
-    raise NotImplementedError()
+    return _kernels.scaling_factor(general_bandwidth, covariance_matrix);
 
 
 def scaling_factor(general_bandwidth, covariance_matrix, implementation=_scaling_factor_python):
