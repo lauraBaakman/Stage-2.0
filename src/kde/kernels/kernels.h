@@ -7,22 +7,18 @@
 
 typedef double (*SymmetricKernelDensityFunction)(double* data, int dimensionality, double factor);
 typedef double (*SymmetricKernelConstantFunction)(int dimensionality);
-typedef double (*SymmetricKernelScalingFactorFunction)(double generalBandwidth);
 
 typedef double (*ASymmetricKernelDensityFunction)(gsl_vector* pattern, gsl_vector* mean, gsl_matrix* shapeMatrix);
 typedef gsl_matrix* (*ASymmetricKernelConstantFunction)(Array* covarianceMatrix);
-typedef double (*ASymmetricKernelScalingFactorFunction)(double generalBandwidth, gsl_vector* eigenvalues);
 
 typedef struct SymmetricKernel {
     SymmetricKernelConstantFunction factorFunction;
     SymmetricKernelDensityFunction densityFunction;
-    SymmetricKernelScalingFactorFunction scalingFactorFunction;
 } SymmetricKernel;
 
 typedef struct ASymmetricKernel {
     ASymmetricKernelConstantFunction factorFunction;
     ASymmetricKernelDensityFunction densityFunction;
-    ASymmetricKernelScalingFactorFunction scalingFactorFunction;
 } ASymmetricKernel;
 
 typedef union {

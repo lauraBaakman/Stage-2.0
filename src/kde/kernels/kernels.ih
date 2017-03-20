@@ -9,19 +9,15 @@
 
 double standardGaussianConstant(int patternDimensionality);
 double standardGaussianPDF(double *pattern, int patternDimensionality, double constant);
-double standardGaussianScalingFactor(double generalBandwidth);
 
 double epanechnikovConstant(int dimensionality);
 double epanechnikovPDF(double *data, int dimensionality, double constant);
-double epanechnikovScalingFactor(double generalBandwidth);
 
 double testKernelConstant(int patternDimensionality);
 double testKernelPDF(double *data, int dimensionality, double constant);
-double testKernelScalingFactor(double generalBandwidth);
 
 gsl_matrix* gaussianConstant(Array* covarianceMatrix);
 double gaussianPDF(gsl_vector* pattern, gsl_vector * mean, gsl_matrix * choleskyFactorCovarianceMatrix);
-double gaussianScalingFactor(double generalBandwidth, gsl_vector* eigenValues);
 
 double dotProduct(double *a, double *b, int length);
 

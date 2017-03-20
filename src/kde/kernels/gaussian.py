@@ -9,19 +9,11 @@ import kde.kernels._kernels as _kernels
 _as_c_enum = 3
 
 
-def _scaling_factor(general_bandwidth, eigen_values):
-    return (general_bandwidth * general_bandwidth) / gmean(np.power(eigen_values, (1.0 / 2)))
-
-
 class Gaussian(object):
 
     def __new__(cls, mean, covariance_matrix, implementation=None):
         implementation_class = implementation or _Gaussian_Python
         return implementation_class(mean=mean, covariance_matrix=covariance_matrix)
-
-    @staticmethod
-    def scaling_factor(general_bandwidth, eigen_values):
-        return _scaling_factor(general_bandwidth, eigen_values)
 
     @staticmethod
     def to_C_enum():
@@ -103,10 +95,6 @@ class _Gaussian_C(_Gaussian):
         _kernels.gaussian_multi_pattern(xs, self._mean, self._covariance_matrix, densities)
         return densities
 
-    @staticmethod
-    def scaling_factor(general_bandwidth, eigen_values):
-        return _kernels.gaussian_scaling_factor(general_bandwidth, eigen_values)
-
 
 class _Gaussian_Python(_Gaussian):
     def __init__(self, *args, **kwargs):
@@ -119,7 +107,3 @@ class _Gaussian_Python(_Gaussian):
     def evaluate(self, xs):
         self._validate_xs_pdf_combination(xs)
         return self._kernel.pdf(xs)
-
-    @staticmethod
-    def scaling_factor(general_bandwidth, eigen_values):
-        return _scaling_factor(general_bandwidth, eigen_values)
