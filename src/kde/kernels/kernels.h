@@ -42,6 +42,8 @@ Kernel selectKernel(KernelType type);
 SymmetricKernel selectSymmetricKernel(KernelType type);
 ASymmetricKernel selectASymmetricKernel(KernelType type);
 
+double computeScalingFactor(double generalBandwidth, gsl_matrix_view covarianceMatrix);
+
 extern Kernel standardGaussianKernel;
 extern Kernel epanechnikovKernel;
 extern Kernel testKernel;

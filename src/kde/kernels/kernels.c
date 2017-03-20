@@ -1,7 +1,10 @@
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_linalg.h>
 #include <gsl/gsl_vector_double.h>
+#include <gsl/gsl_vector.h>
 #include "kernels.ih"
+#include "../utils/eigenvalues.h"
+#include "../../../../../../../usr/local/include/gsl/gsl_vector_double.h"
 
 Kernel standardGaussianKernel = {
         .isSymmetric = true,
@@ -66,6 +69,19 @@ ASymmetricKernel selectASymmetricKernel(KernelType type) {
             fprintf(stderr, "%d is an invalid asymmetric kernel type.\n", type);
             exit(-1);
     }
+}
+
+double computeScalingFactor(double generalBandwidth, gsl_matrix_view covarianceMatrix) {
+    gsl_vector* eigenvalues = computeEigenValues2(&covarianceMatrix.matrix);
+    size_t dimension = eigenvalues->size;
+
+    double generalBandWidthTerm = dimension * log(generalBandwidth);
+    double eigenValuesTerm = 0.0;
+    for(size_t i = 0; i < dimension; i++){
+        eigenValuesTerm += log(gsl_vector_get(eigenvalues, i));
+    }
+    gsl_vector_free(eigenvalues);
+    return exp(generalBandWidthTerm - 0.5 * eigenValuesTerm);
 }
 
 
