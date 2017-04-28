@@ -83,20 +83,70 @@ class Test_ShapeAdaptiveGaussian(TestCase):
         self.assertEqual(actual, expected)
 
     def test_validate_patterns_0(self):
-        # Multiple patterns, correct dimension
-        raise NotImplementedError()
+        dimension = 3
+        bandwidth_matrix = np.random.rand(dimension, dimension)
+        patterns = np.random.rand(10, dimension)
+        actual = ShapeAdaptiveGaussian(bandwidth_matrix)._validate_patterns(patterns)
+        self.assertIsNone(actual)
 
     def test_validate_patterns_1(self):
-        # Single pattern, correct dimension
-        raise NotImplementedError()
+        dimension = 3
+        bandwidth_matrix = np.random.rand(dimension, dimension)
+        patterns = np.random.rand(1, dimension)
+        actual = ShapeAdaptiveGaussian(bandwidth_matrix)._validate_patterns(patterns)
+        self.assertIsNone(actual)
 
     def test_validate_patterns_2(self):
-        # Multiple patterns, wrong dimension
-        raise NotImplementedError()
+        dimension = 3
+        bandwidth_matrix = np.random.rand(dimension, dimension)
+        patterns = np.random.rand(10, 4)
+        try:
+            ShapeAdaptiveGaussian(bandwidth_matrix)._validate_patterns(patterns)
+        except KernelException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
 
     def test_validate_patterns_3(self):
-        # Single patterns, wrong dimension
-        raise NotImplementedError()
+        dimension = 3
+        bandwidth_matrix = np.random.rand(dimension, dimension)
+        patterns = np.random.rand(10, 2)
+        try:
+            ShapeAdaptiveGaussian(bandwidth_matrix)._validate_patterns(patterns)
+        except KernelException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test_validate_patterns_4(self):
+        dimension = 3
+        bandwidth_matrix = np.random.rand(dimension, dimension)
+        patterns = np.random.rand(1, 4)
+        try:
+            ShapeAdaptiveGaussian(bandwidth_matrix)._validate_patterns(patterns)
+        except KernelException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test_validate_patterns_5(self):
+        dimension = 3
+        bandwidth_matrix = np.random.rand(dimension, dimension)
+        patterns = np.random.rand(1, 2)
+        try:
+            ShapeAdaptiveGaussian(bandwidth_matrix)._validate_patterns(patterns)
+        except KernelException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
 
     def test_evaluate_0(self):
         # Single pattern, local bandwidth = 1
