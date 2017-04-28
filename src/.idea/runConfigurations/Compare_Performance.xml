@@ -15,6 +15,7 @@
     <option name="SCRIPT_NAME" value="$PROJECT_DIR$/benchmark.py" />
     <option name="PARAMETERS" value="" />
     <option name="SHOW_COMMAND_LINE" value="false" />
+    <option name="EMULATE_TERMINAL" value="false" />
     <method>
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="Build Kernel Extension" run_configuration_type="PythonConfigurationType" />
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="Build KDE Extension" run_configuration_type="PythonConfigurationType" />
