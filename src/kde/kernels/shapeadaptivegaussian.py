@@ -40,7 +40,8 @@ class _ShapeAdaptiveGaussian(Kernel):
 
     @property
     def dimension(self):
-        raise NotImplementedError()
+        (dimension, _) = self._bandwidth_matrix.shape
+        return dimension
 
     def evaluate(self, xs, local_bandwidth=1):
         raise NotImplementedError("No functions should be called on objects of this type, it is an abstract class "

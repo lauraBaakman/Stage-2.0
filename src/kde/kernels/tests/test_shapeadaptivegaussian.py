@@ -77,7 +77,10 @@ class Test_ShapeAdaptiveGaussian(TestCase):
         super().setUp()
 
     def test_dimension(self):
-        raise NotImplementedError()
+        matrix = np.random.rand(3, 3)
+        actual = ShapeAdaptiveGaussian(matrix).dimension
+        expected = 3
+        self.assertEqual(actual, expected)
 
     def test_validate_patterns_0(self):
         # Multiple patterns, correct dimension
