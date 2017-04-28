@@ -221,9 +221,6 @@ class Test_ShapeAdaptiveGaussian(TestCase):
 
 class ShapeAdaptiveGaussianImpAbstractTest(object):
 
-    def __init__(self, kernel_class = None):
-        self._kernel_class = kernel_class
-
     def test_evaluate_0(self):
         # Single pattern, local bandwidth = 1
         H = np.array([
@@ -279,7 +276,7 @@ class ShapeAdaptiveGaussianImpAbstractTest(object):
         np.testing.assert_array_almost_equal(actual, expected)
 
 
-class Test_Gaussian_Python(ShapeAdaptiveGaussianImpAbstractTest, TestCase):
+class ShapeAdaptiveGaussian_Python(ShapeAdaptiveGaussianImpAbstractTest, TestCase):
 
     def setUp(self):
         super().setUp()
@@ -287,7 +284,7 @@ class Test_Gaussian_Python(ShapeAdaptiveGaussianImpAbstractTest, TestCase):
 
 
 @skip("There is no C implementation of ShapeAdaptiveGaussian.")
-class Test_Gaussian_C(ShapeAdaptiveGaussianImpAbstractTest, TestCase):
+class ShapeAdaptiveGaussian_C(ShapeAdaptiveGaussianImpAbstractTest, TestCase):
 
     def setUp(self):
         super().setUp()
