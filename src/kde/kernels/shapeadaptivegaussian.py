@@ -49,7 +49,9 @@ class _ShapeAdaptiveGaussian(Kernel):
                                   "for the specific implementations.")
 
     def _validate_patterns(self, xs):
-        raise NotImplementedError()
+        xs_dimension = self._get_data_dimension(xs)
+        if xs_dimension is not self.dimension:
+            raise KernelException("Patterns should have dimension {}, not {}.".format(self.dimension, xs_dimension))
 
     def to_C_enum(self):
         return _as_c_enum
