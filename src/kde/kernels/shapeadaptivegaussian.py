@@ -1,4 +1,6 @@
 import numpy.linalg as LA
+import scipy.stats as stats
+import numpy as np
 
 from kde.kernels.kernel import Kernel, KernelException
 
@@ -8,7 +10,7 @@ _as_c_enum = 4
 class ShapeAdaptiveGaussian(object):
 
     def __new__(cls, bandwidth_matrix, implementation=None):
-        implementation_class = implementation or _ShapeAdaptiveGaussian_C
+        implementation_class = implementation or _ShapeAdaptiveGaussian_Python
         cls._validate_bandwidth_matrix(bandwidth_matrix)
         return implementation_class(bandwidth_matrix=bandwidth_matrix)
 
@@ -80,8 +82,12 @@ class _ShapeAdaptiveGaussian_C(_ShapeAdaptiveGaussian):
 class _ShapeAdaptiveGaussian_Python(_ShapeAdaptiveGaussian):
 
     def __init__(self, *args, **kwargs):
-        super(_ShapeAdaptiveGaussian_C, self).__init__(*args, **kwargs)
+        super(_ShapeAdaptiveGaussian_Python, self).__init__(*args, **kwargs)
 
     def evaluate(self, xs, local_bandwidth=1):
         self._validate_patterns(xs)
-        raise NotImplementedError()
+        scaling_factor = 1.0 / self._bandwidth_matrix_determinant
+        distribution = stats.multivariate_normal(mean=np.zeros([self.dimension]))
+        normalized_xs = np.matmul(xs, self._bandwidth_matrix_inverse)
+        density = distribution.pdf(normalized_xs)
+        return scaling_factor * density
