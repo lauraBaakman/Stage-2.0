@@ -50,8 +50,7 @@ class _ShapeAdaptiveGaussian(Kernel):
     def _validate_patterns(self, xs):
         raise NotImplementedError()
 
-    @staticmethod
-    def to_C_enum():
+    def to_C_enum(self):
         return _as_c_enum
 
 
