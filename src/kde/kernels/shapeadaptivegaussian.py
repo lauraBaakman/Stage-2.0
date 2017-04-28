@@ -37,13 +37,12 @@ class _ShapeAdaptiveGaussian(Kernel):
 
     def __init__(self, bandwidth_matrix, *args, **kwargs):
         super(_ShapeAdaptiveGaussian, self).__init__()
-        self._bandwidth_matrix = bandwidth_matrix
         self._bandwidth_matrix_inverse = LA.inv(bandwidth_matrix)
-        self._bandwidth_matrix_determinant = LA.det(bandwidth_matrix)
+        self._scaling_factor = 1 / LA.det(bandwidth_matrix)
 
     @property
     def dimension(self):
-        (dimension, _) = self._bandwidth_matrix.shape
+        (dimension, _) = self._bandwidth_matrix_inverse.shape
         return dimension
 
     def evaluate(self, xs, local_bandwidth=1):
@@ -83,11 +82,19 @@ class _ShapeAdaptiveGaussian_Python(_ShapeAdaptiveGaussian):
 
     def __init__(self, *args, **kwargs):
         super(_ShapeAdaptiveGaussian_Python, self).__init__(*args, **kwargs)
+        self._distribution = stats.multivariate_normal(mean=np.zeros([self.dimension]))
 
     def evaluate(self, xs, local_bandwidth=1):
         self._validate_patterns(xs)
-        scaling_factor = 1.0 / self._bandwidth_matrix_determinant
-        distribution = stats.multivariate_normal(mean=np.zeros([self.dimension]))
-        normalized_xs = np.matmul(xs, self._bandwidth_matrix_inverse)
-        density = distribution.pdf(normalized_xs)
-        return scaling_factor * density
+        
+        local_inverse = self._compute_local_inverse(local_bandwidth)
+        local_scaling_factor = self._compute_local_scaling_factor(local_bandwidth)
+        
+        density = self._distribution.pdf(np.matmul(xs, local_inverse))
+        return local_scaling_factor * density
+
+    def _compute_local_scaling_factor(self, local_bandwidth):
+        return (1 / np.power(local_bandwidth, self.dimension)) * self._scaling_factor
+
+    def _compute_local_inverse(self, local_bandwidth):
+        return (1.0 / local_bandwidth) * self._bandwidth_matrix_inverse
