@@ -2,7 +2,11 @@ from distutils.core import setup, Extension
 
 import globalConfigParameters
 
-sources = ['kernelsModule.c', 'kernels.c', '../utils.c', '../utils/geometricmean.c']
+sources = ['kernelsModule.c',
+           'kernels.c',
+           '../utils.c',
+           '../utils/geometricmean.c',
+           '../utils/eigenvalues.c']
 
 if __name__ == "__main__":
     module = Extension('_kernels',

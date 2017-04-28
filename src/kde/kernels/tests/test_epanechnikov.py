@@ -23,10 +23,6 @@ class TestEpanechnikov(TestCase):
         actual = Epanechnikov().to_C_enum()
         self.assertEqual(expected, actual)
 
-    @skip("The function scaling_factor has not been implemented for the Epanechnikov kernel.")
-    def test_scaling_factor(self):
-        self.fail()
-
 
 class EpanechnikovImpAbstractTest(object):
 
@@ -89,10 +85,6 @@ class EpanechnikovImpAbstractTest(object):
         actual = self._kernel_class().evaluate(x)
         expected = np.array([0.079790432118341])
         np.testing.assert_array_almost_equal(actual, expected)
-
-    @skip("The function scaling_factor has not been implemented for the Epanechnikov kernel.")
-    def test_scaling_factor(self):
-        self.fail()
 
 
 class TestEpanechnikov_Python(EpanechnikovImpAbstractTest, TestCase):

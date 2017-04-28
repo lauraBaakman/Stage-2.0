@@ -23,16 +23,6 @@ class TestTestKernel(TestCase):
         actual = TestKernel().to_C_enum()
         self.assertEqual(expected, actual)
 
-    def test_scaling_factor_default_implementation(self):
-        expected = 0.5
-        actual = TestKernel().scaling_factor(0.3, None)
-        self.assertEqual(actual, expected)
-
-    def test_scaling_factor_alternative_implementation(self):
-        expected = 0.5
-        actual = TestKernel(implementation=_TestKernel_Python).scaling_factor(None, None)
-        self.assertEqual(actual, expected)
-
 
 class TestKernelImpAbstractTest(object):
     def test_evaluate_1(self):
@@ -46,11 +36,6 @@ class TestKernelImpAbstractTest(object):
         actual = self._kernel_class().evaluate(x)
         expected = np.array([2.5, 3.5, 4.5])
         np.testing.assert_array_equal(actual, expected)
-
-    def test_scaling_factor(self):
-        expected = 0.5
-        actual = self._kernel_class().scaling_factor(0.2, None)
-        self.assertEqual(actual, expected)
 
 
 class TestTestKernel_C(TestKernelImpAbstractTest, TestCase):

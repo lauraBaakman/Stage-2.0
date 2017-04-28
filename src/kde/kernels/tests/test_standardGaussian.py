@@ -24,20 +24,6 @@ class TestStandardGaussian(TestCase):
         actual = StandardGaussian().to_C_enum()
         self.assertEqual(expected, actual)
 
-    def test_scaling_factor_alternative_implementation(self):
-        h = 4
-        lambdas = None
-        actual = StandardGaussian(implementation=_StandardGaussian_Python).scaling_factor(general_bandwidth=h, eigen_values=lambdas)
-        expected = 8
-        self.assertAlmostEqual(actual, expected)
-
-    def test_scaling_factor_default_implementation(self):
-        h = 4
-        lambdas = None
-        actual = StandardGaussian().scaling_factor(general_bandwidth=h, eigen_values=lambdas)
-        expected = 8
-        self.assertAlmostEqual(actual, expected)
-
 class StandardGaussianImpAbstractTest(object):
 
     def test_evaluate_2D_1(self):
@@ -87,13 +73,6 @@ class StandardGaussianImpAbstractTest(object):
         actual = self._kernel_class().evaluate(x)
         expected = np.array([0.063493635934241, 0.043638495249061, 0.042084928316873])
         np.testing.assert_array_almost_equal(actual, expected)
-
-    def test_scaling_factor_0(self):
-        h = 4
-        lambdas = None
-        actual = self._kernel_class().scaling_factor(general_bandwidth=h, eigen_values=lambdas)
-        expected = 8
-        self.assertAlmostEqual(actual, expected)
 
 
 class Test_StandardGaussian_Python(StandardGaussianImpAbstractTest, TestCase):

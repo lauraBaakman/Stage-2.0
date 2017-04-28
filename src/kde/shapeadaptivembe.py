@@ -1,4 +1,5 @@
 import numpy as np
+from numpy.ma.extras import cov
 
 from kde.modifeidbreiman import ModifiedBreimanEstimator
 import kde.utils.automaticWindowWidthMethods as automaticWindowWidthMethods
@@ -9,6 +10,7 @@ import kde.utils.covariance as covariance
 import kde.utils.eigenvalues as eigenvalues
 from kde.kernels.gaussian import Gaussian
 from kde.kernels.epanechnikov import Epanechnikov
+import kde.kernels.scaling
 
 
 class ShapeAdaptiveMBE(ModifiedBreimanEstimator):
@@ -80,13 +82,10 @@ class _ShapeAdaptiveMBE_Python(_ShapeAdaptiveMBE):
         # Compute the covariance matrix
         covariance_matrix = covariance.covariance(neighbours)
 
-        # Compute the eigenvalues of the covariance matrix
-        eigen_values = eigenvalues.eigenvalues(covariance_matrix)
-
         # Compute the scaling factor
-        scaling_factor = self._kernel_class.scaling_factor(
+        scaling_factor = kde.kernels.scaling.scaling_factor(
             general_bandwidth=self._general_bandwidth,
-            eigen_values=eigen_values
+            covariance_matrix=covariance_matrix
         )
 
         # Compute the Kernel covariance matrix

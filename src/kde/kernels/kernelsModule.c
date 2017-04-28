@@ -1,8 +1,5 @@
 #include <gsl/gsl_matrix.h>
-#include <gsl/gsl_vector_double.h>
 #include "kernelsModule.h"
-#include "../../../../../.virtualenvs/stage/include/python3.5m/object.h"
-#include "../../../../../.virtualenvs/stage/include/python3.5m/Python.h"
 
 PyObject *multi_pattern_symmetric(PyObject *args, KernelType kernelType) {
     /* Parse input data */
@@ -52,21 +49,6 @@ PyObject *single_pattern_symmetric(PyObject *args, KernelType kernelType) {
     return returnObject;
 }
 
-PyObject *scaling_factor_symmetric(PyObject *args, KernelType kernelType) {
-    /* Parse input data */
-    double generalBandwidth;
-
-    if (!PyArg_ParseTuple(args, "d", &generalBandwidth)) return NULL;
-
-    /* Do computations */
-    SymmetricKernel kernel = selectSymmetricKernel(kernelType);
-    double scalingFactor = kernel.scalingFactorFunction(generalBandwidth);
-
-    /* Create return object */
-    PyObject *returnObject = Py_BuildValue("d", scalingFactor);
-    return returnObject;
-}
-
 static char kernels_standardGaussian_docstring[] = "Evaluate the Standard Gaussian (zero vector mean and identity covariance matrix) for each row in the input matrix.";
 static PyObject * standard_gaussian_multi_pattern(PyObject *self, PyObject *args){
     return multi_pattern_symmetric(args, STANDARD_GAUSSIAN);
@@ -74,11 +56,6 @@ static PyObject * standard_gaussian_multi_pattern(PyObject *self, PyObject *args
 
 static PyObject * standard_gaussian_single_pattern(PyObject *self, PyObject *args){
     return single_pattern_symmetric(args, STANDARD_GAUSSIAN);
-}
-
-static char kernels_standardGaussian_scaling_docstring[] = "Compute the scaling factor for the Standard Gaussian (zero vector mean and identity covariance matrix) kernel.";
-static PyObject * standard_gaussian_scaling_factor(PyObject *self, PyObject *args){
-    return scaling_factor_symmetric(args, STANDARD_GAUSSIAN);
 }
 
 static char kernels_gaussian_docstring[] = "Evaluate the Gaussian PDF for each row in the input matrix.";
@@ -147,26 +124,6 @@ static PyObject * gaussian_single_pattern(PyObject *self, PyObject *args){
     return returnObject;
 }
 
-static char kernels_gaussian_scaling_docstring[] = "Compute the scaling factor for the Gaussian kernel.";
-static PyObject * gaussian_scaling_factor(PyObject *self, PyObject *args){
-    /* Read input */
-    PyObject* inEigenValues = NULL;
-    double generalBandwidth;
-
-    if (!PyArg_ParseTuple(args, "dO", &generalBandwidth, &inEigenValues)) return NULL;
-
-    Array eigenValues = pyObjectToArray(inEigenValues, NPY_ARRAY_IN_ARRAY);
-    gsl_vector_view eigenValuesView = arrayGetGSLVectorView(&eigenValues);
-
-    /* Do computations */
-    ASymmetricKernel kernel = selectASymmetricKernel(GAUSSIAN);
-    double scalingFactor = kernel.scalingFactorFunction(generalBandwidth, &eigenValuesView.vector);
-
-    /* Create return object */
-    PyObject *returnObject = Py_BuildValue("d", scalingFactor);
-    return returnObject;
-}
-
 static char kernels_epanechnikov_docstring[] = "Evaluate the Epanechnikov kernel for each row in the input matrix.";
 static PyObject * epanechnikov_single_pattern(PyObject *self, PyObject *args){
     return single_pattern_symmetric(args, EPANECHNIKOV);
@@ -174,11 +131,6 @@ static PyObject * epanechnikov_single_pattern(PyObject *self, PyObject *args){
 
 static PyObject * epanechnikov_multi_pattern(PyObject *self, PyObject *args){
     return multi_pattern_symmetric(args, EPANECHNIKOV);
-}
-
-static char kernels_epanechnikov_scaling_docstring[] = "Compute the scaling factor for the Epanechnikov kernel.";
-static PyObject * epanechnikov_scaling_factor(PyObject *self, PyObject *args){
-    return scaling_factor_symmetric(args, EPANECHNIKOV);
 }
 
 static char kernels_testKernel_docstring[] = "Evaluate the TestKernel for each row in the input matrix. This kernel returns the absolute value of the mean of the elements of the patterns.";
@@ -190,9 +142,24 @@ static PyObject * testKernel_multi_pattern(PyObject *self, PyObject *args){
     return multi_pattern_symmetric(args, TEST);
 }
 
-static char kernels_testKernel_scaling_docstring[] = "Compute the scaling factor for the Test kernel.";
-static PyObject * testKernel_scaling_factor(PyObject *self, PyObject *args){
-    return scaling_factor_symmetric(args, TEST);
+static char kernels_scalingFactor_docstring[] = "Compute the scaling factor for the asymmetric kernel.";
+static PyObject* scaling_factor(PyObject* self, PyObject *args){
+    /* Read input */
+    double generalBandwidth;
+    PyObject* inCovarianceMatrix = NULL;
+
+    if (!PyArg_ParseTuple(args, "dO", &generalBandwidth, &inCovarianceMatrix)) return NULL;
+
+    gsl_matrix_view covarianceMatrix = pyObjectToGSLMatrixView(inCovarianceMatrix, NPY_ARRAY_IN_ARRAY);
+
+    /* Do computations */
+    double scalingFactor = computeScalingFactor(generalBandwidth, covarianceMatrix);
+
+    /* Free memory */
+
+    /* Create return object */
+    PyObject *returnObject = Py_BuildValue("d", scalingFactor);
+    return returnObject;
 }
 
 Array pyObjectToArray(PyObject *pythonObject, int requirements){
@@ -207,23 +174,34 @@ Array pyObjectToArray(PyObject *pythonObject, int requirements){
     return array;
 }
 
+gsl_matrix_view pyObjectToGSLMatrixView(PyObject *pythonObject, int requirements) {
+    PyArrayObject* arrayObject = NULL;
+    arrayObject = (PyArrayObject *)PyArray_FROM_OTF(pythonObject, NPY_DOUBLE, requirements);
+    if (arrayObject == NULL){
+        fprintf(stderr, "Error converting PyObject to PyArrayObject\n");
+        exit(-1);
+    }
+    double* data = (double *)PyArray_DATA(arrayObject);
+    size_t num_rows = PyArray_DIM(arrayObject, 0);
+    size_t num_cols = PyArray_DIM(arrayObject, 1);
+    Py_XDECREF(arrayObject);
+    return gsl_matrix_view_array(data, num_rows, num_cols);
+}
 
 static PyMethodDef method_table[] = {
         {"standard_gaussian_multi_pattern",     standard_gaussian_multi_pattern,    METH_VARARGS,   kernels_standardGaussian_docstring},
         {"standard_gaussian_single_pattern",    standard_gaussian_single_pattern,   METH_VARARGS,   kernels_standardGaussian_docstring},
-        {"standard_gaussian_scaling_factor",    standard_gaussian_scaling_factor,   METH_VARARGS,   kernels_standardGaussian_scaling_docstring},
 
         {"gaussian_multi_pattern",              gaussian_multi_pattern,             METH_VARARGS,   kernels_gaussian_docstring},
         {"gaussian_single_pattern",             gaussian_single_pattern,            METH_VARARGS,   kernels_gaussian_docstring},
-        {"gaussian_scaling_factor",             gaussian_scaling_factor,            METH_VARARGS,   kernels_gaussian_scaling_docstring},
 
         {"epanechnikov_single_pattern",         epanechnikov_single_pattern,        METH_VARARGS,   kernels_epanechnikov_docstring},
         {"epanechnikov_multi_pattern",          epanechnikov_multi_pattern,         METH_VARARGS,   kernels_epanechnikov_docstring},
-        {"epanechnikov_scaling_factor",         epanechnikov_scaling_factor,        METH_VARARGS,   kernels_epanechnikov_scaling_docstring},
 
         {"test_kernel_single_pattern",          testKernel_single_pattern,          METH_VARARGS,   kernels_testKernel_docstring},
-        {"test_kernel_multi_pattern",           testKernel_multi_pattern,           METH_VARARGS,   kernels_testKernel_docstring},
-        {"test_kernel_scaling_factor",          testKernel_scaling_factor,          METH_VARARGS,   kernels_testKernel_scaling_docstring},
+        {"test_kernel_multi_pattern",           testKernel_multi_pattern,  /**/     METH_VARARGS,   kernels_testKernel_docstring},
+
+        {"scaling_factor",                      scaling_factor,                     METH_VARARGS,   kernels_scalingFactor_docstring},
         /* Sentinel */
         {NULL,                              NULL,                                   0,              NULL}
 };

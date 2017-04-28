@@ -31,7 +31,7 @@ class TestShapeAdaptiveMBE(TestCase):
             pilot_window_width_method=kde.utils.automaticWindowWidthMethods.ferdosi
         )
         actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
-        expected = np.array([0.511743799443552, 0.511743799443552])
+        expected = np.array([0.28379406489797937, 0.28379406489797937])
         np.testing.assert_array_almost_equal(actual, expected)
 
     def test_estimate_python_python(self):
@@ -62,7 +62,10 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
     def test_estimate_gaussian(self):
         xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
         x_s = np.array([[0, 0], [1, 1]])
-        local_bandwidths = np.array([0.84089642, 1.18920712, 1.18920712, 0.84089642])
+        local_bandwidths = np.array([0.84089642,
+                                     1.18920712,
+                                     1.18920712,
+                                     0.84089642])
         general_bandwidth = 0.721347520444482
         kernel = Gaussian
         estimator = self._estimator_class(
@@ -71,7 +74,7 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
         actual = estimator.estimate()
-        expected = np.array([0.511743799443552, 0.511743799443552])
+        expected = np.array([0.28379406489797937, 0.28379406489797937])
         np.testing.assert_array_almost_equal(actual, expected)
 
 
@@ -97,8 +100,8 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
         )
         actual = estimator._determine_kernel_shape(pattern)
         expected = np.array([
-            [0.263583071129392,  -0.131791535564696],
-            [-0.131791535564696,   0.263583071129392]
+            [0.60083947, -0.30041974],
+            [-0.30041974, 0.60083947]
         ])
         np.testing.assert_array_almost_equal(actual, expected)
 
@@ -118,8 +121,8 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
             local_bandwidths=local_bandwidths, general_bandwidth=h
         )
         actual = estimator._estimate_pattern(pattern=pattern)
-        expected = 0.511743799443552
-        self.assertAlmostEqual(actual, expected)
+        expected = 0.28379406489797937
+        self.assertAlmostEqual(actual, expected, 5)
 
 
 @skip("The C implementation of SAMBE has not yet been written.")

@@ -6,8 +6,6 @@ from kde.kernels.kernel import Kernel, KernelException
 
 _as_C_enum = 1
 
-def _scaling_factor(general_bandwidth):
-    return general_bandwidth * np.sqrt(general_bandwidth)
 
 class StandardGaussian(Kernel):
 
@@ -18,10 +16,6 @@ class StandardGaussian(Kernel):
     @staticmethod
     def to_C_enum():
         return _as_C_enum
-
-    @staticmethod
-    def scaling_factor(general_bandwidth, eigen_values=None):
-        return _scaling_factor(general_bandwidth)
 
 
 class _StandardGaussian(Kernel):
@@ -57,10 +51,6 @@ class _StandardGaussian_C(_StandardGaussian):
         _kernels.standard_gaussian_multi_pattern(xs, densities)
         return densities
 
-    @staticmethod
-    def scaling_factor(general_bandwidth, eigen_values=None):
-        return _kernels.standard_gaussian_scaling_factor(general_bandwidth)
-
 
 class _StandardGaussian_Python(_StandardGaussian):
     def __init__(self):
@@ -71,7 +61,3 @@ class _StandardGaussian_Python(_StandardGaussian):
         mean = np.zeros(dimension)
         covariance = np.identity(dimension)
         return stats.multivariate_normal(mean=mean, cov=covariance).pdf(xs)
-
-    @staticmethod
-    def scaling_factor(general_bandwidth, eigen_values=None):
-        return _scaling_factor(general_bandwidth)

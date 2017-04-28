@@ -46,10 +46,6 @@ class _TestKernel_Python(_TestKernel):
     def _evaluate_multiple_patterns(self, x):
         return np.abs(np.mean(x, axis=1))
 
-    @staticmethod
-    def scaling_factor(general_bandwidth=None, eigen_values=None):
-        return 0.5
-
 
 class _TestKernel_C(_TestKernel):
     def __init__(self):
@@ -67,7 +63,3 @@ class _TestKernel_C(_TestKernel):
             return densities
         else:
             raise TypeError("Expected a vector or a matrix, not a {}-dimensional array.".format(x.ndim))
-
-    @staticmethod
-    def scaling_factor(general_bandwidth, eigen_values):
-        return _kernels.test_kernel_scaling_factor(general_bandwidth)
