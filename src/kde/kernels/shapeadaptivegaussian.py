@@ -34,6 +34,7 @@ class ShapeAdaptiveGaussian(object):
 class _ShapeAdaptiveGaussian(Kernel):
 
     def __init__(self, bandwidth_matrix, *args, **kwargs):
+        super(_ShapeAdaptiveGaussian, self).__init__()
         self._bandwidth_matrix = bandwidth_matrix
         self._bandwidth_matrix_inverse = LA.inv(bandwidth_matrix)
         self._bandwidth_matrix_determinant = LA.det(bandwidth_matrix)
