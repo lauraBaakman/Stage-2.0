@@ -1,5 +1,4 @@
 import scipy.stats as stats
-from scipy.stats.mstats import gmean
 import numpy as np
 
 from kde.kernels.kernel import Kernel, KernelException
