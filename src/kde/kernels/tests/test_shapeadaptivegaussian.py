@@ -2,6 +2,7 @@ from unittest import TestCase, skip
 
 import numpy as np
 
+from kde.kernels.kernel import KernelException
 from kde.kernels.shapeadaptivegaussian import \
     ShapeAdaptiveGaussian, \
     _ShapeAdaptiveGaussian_C, \
@@ -21,9 +22,54 @@ class TestShapeAdaptiveGaussian(TestCase):
     def test_alternative_implementation(self):
         raise NotImplementedError()
 
-    def test_evaluate_bandwidth_matrix(self):
-        raise NotImplementedError()
+    def test_evaluate_bandwidth_matrix_0(self):
+        matrix = np.random.rand(3, 3)
+        actual = ShapeAdaptiveGaussian._validate_bandwidth_matrix(matrix)
+        self.assertIsNone(actual)
 
+    def test_evaluate_bandwidth_matrix_1(self):
+        matrix = np.random.rand(3)
+        try:
+            ShapeAdaptiveGaussian._validate_bandwidth_matrix(matrix)
+        except KernelException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test_evaluate_bandwidth_matrix_2(self):
+        matrix = np.random.rand(3, 4, 5)
+        try:
+            ShapeAdaptiveGaussian._validate_bandwidth_matrix(matrix)
+        except KernelException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test_evaluate_bandwidth_matrix_3(self):
+        matrix = np.random.rand(3, 6)
+        try:
+            ShapeAdaptiveGaussian._validate_bandwidth_matrix(matrix)
+        except KernelException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test_evaluate_bandwidth_matrix_4(self):
+        matrix = np.random.rand(6, 3)
+        try:
+            ShapeAdaptiveGaussian._validate_bandwidth_matrix(matrix)
+        except KernelException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
 
 class Test_ShapeAdaptiveGaussian(TestCase):
 

@@ -9,12 +9,22 @@ class ShapeAdaptiveGaussian(object):
 
     def __new__(cls, bandwidth_matrix, implementation=None):
         implementation_class = implementation or _ShapeAdaptiveGaussian_C
-        cls._evaluate_bandwidth_matrix(bandwidth_matrix)
+        cls._validate_bandwidth_matrix(bandwidth_matrix)
         return implementation_class(bandwidth_matrix=bandwidth_matrix)
 
     @classmethod
-    def _evaluate_bandwidth_matrix(self, bandwidth_matrix):
-        raise NotImplementedError()
+    def _validate_bandwidth_matrix(self, bandwidth_matrix):
+        def _is_square(matrix):
+            (rows, cols) = matrix.shape
+            return rows == cols
+
+        def _is_2D(matrix):
+            return matrix.ndim == 2
+
+        if not _is_2D(bandwidth_matrix):
+            raise KernelException("The bandwidth matrix should be 2D.")
+        if not _is_square(bandwidth_matrix):
+            raise KernelException("The bandwidth matrix should be square.")
 
     @staticmethod
     def to_C_enum():
