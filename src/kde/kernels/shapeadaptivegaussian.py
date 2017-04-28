@@ -2,7 +2,7 @@ import numpy.linalg as LA
 
 from kde.kernels.kernel import Kernel, KernelException
 
-_as_c_enum = 3
+_as_c_enum = 4
 
 
 class ShapeAdaptiveGaussian(object):
