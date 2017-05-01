@@ -28,7 +28,7 @@
 		"FuzzyFilePath":
 		{
 		},
-		"spell_check": false,
+		"spell_check": true,
 		"tab_size": 4
 	}
 }
