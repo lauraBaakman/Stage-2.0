@@ -10,8 +10,16 @@
 \newcommand{\KNNK}{\ensuremath{k}\xspace}
 \newcommand{\KNN}{\KNNK-NN\xspace}
 
-\newcommand{\varBandwidth}{\ensuremath{\sigma}\xspace}
+\newcommand{\identityMatrix}[1]{%
+	\ifthenelse{\isempty{#1}}%
+	{\ensuremath{\mathbb{I}}\xspace}%
+	{\ensuremath{\mathbb{I}_{#1 \times #1}\xspace}}%
+}
+
+\newcommand{\varBandwidth}{\ensuremath{\mathit{h}}\xspace}
+\newcommand{\varBandwidthMatrix}{\ensuremath{\mathbf{H}}\xspace}
 \newcommand{\varBMLconstant}{\ensuremath{\alpha}\xspace}
+\newcommand{\varWilkinsonConstant}{\ensuremath{\sigma}\xspace}
 \newcommand{\varCovarianceMatrix}{\ensuremath{\Sigma}\xspace}
 \newcommand{\varMean}{\ensuremath{\mu}\xspace}
 
