@@ -151,7 +151,7 @@ class Test_DataSetReader(TestCase):
     def test__read_labels(self):
         reader = _DataSetReader(self._input_file)
         reader._num_patterns = 5
-        actual = reader._read_labels()
+        actual = reader._read_densities()
         expected = np.array([
             7.539699219e-05,
             1.240164051e-05,

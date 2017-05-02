@@ -2,9 +2,10 @@ import numpy as np
 
 
 class DataSet(object):
-    def __init__(self, patterns):
+    def __init__(self, patterns, densities):
         self._patterns = patterns
-        _DataSetValidator(patterns=patterns).validate()
+        self._densities = densities
+        _DataSetValidator(patterns=patterns, densities=densities).validate()
 
     @property
     def num_patterns(self):
@@ -44,6 +45,8 @@ class DataSet(object):
             data_set = _DataSetReader(in_file).read()
         return data_set
 
+    def to_file(self):
+        raise NotImplementedError()
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -66,7 +69,8 @@ class _DataSetReader(object):
     def read(self):
         self._num_patterns = self._read_pattern_count()
         patterns = self._read_patterns()
-        return DataSet(patterns=patterns)
+        densities = self._read_densities()
+        return DataSet(patterns=patterns, densities=densities)
 
     def _read_pattern_count(self):
         line = self.in_file.readline()
@@ -75,7 +79,7 @@ class _DataSetReader(object):
     def _read_patterns(self):
         return self._abstract_read(num_rows_to_skip=self._header_size)
 
-    def _read_labels(self):
+    def _read_densities(self):
         return self._abstract_read(num_rows_to_skip=self._header_size + self._num_patterns)
 
     def _abstract_read(self, num_rows_to_skip):
@@ -87,11 +91,15 @@ class _DataSetReader(object):
 
 
 class _DataSetValidator(object):
-    def __init__(self, patterns):
+    def __init__(self, patterns, densities):
         self._patterns = patterns
+        self._densities = densities
 
     def validate(self):
         self._patterns_is_2D_array()
+        self._densities_is_1D_array()
+        self._num_labels_equals_num_patterns()
+        self._densities_is_probability_densities()
 
     def _patterns_is_2D_array(self):
         if self._patterns.ndim is not 2:
@@ -99,6 +107,15 @@ class _DataSetValidator(object):
                 '''2D arrays are expected as input, the input array has {} dimensions.'''
                     .format(self._patterns.ndim)
             )
+
+    def _densities_is_1D_array(self):
+        raise NotImplementedError()
+
+    def _num_labels_equals_num_patterns(self):
+        raise NotImplementedError()
+
+    def _densities_is_probability_densities(self):
+        raise NotImplementedError()
 
 
 class InvalidDataSetException(Exception):
