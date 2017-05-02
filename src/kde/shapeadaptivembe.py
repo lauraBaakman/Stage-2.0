@@ -41,9 +41,13 @@ class _ShapeAdaptiveMBE(EstimatorImplementation):
         super().__init__(xi_s, x_s, dimension, kernel, general_bandwidth)
         self._local_bandwidths = local_bandwidths.astype(float, copy=False)
         self._knn = KNN(patterns=self._xi_s)
-        self._k = int(round(max(np.sqrt(self.num_xi_s), self.dimension))) + 1
+        self._k = self._compute_k(self.num_xi_s, self.dimension)
         self._kernel = None
         self._kernel_class = kernel or Gaussian
+
+    def _compute_k(self, num_patterns, dimension):
+        potential_k = round(np.sqrt(num_patterns))
+        return int(max(potential_k, dimension)) + 1
 
     def estimate(self):
         raise NotImplementedError()
