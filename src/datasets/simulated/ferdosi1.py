@@ -1,11 +1,15 @@
 import scipy.stats as stats
 import numpy as np
 
+from inputoutput.dataset import DataSet
+
 
 def ferdosi_1(num_patterns):
     patterns = _compute_patterns(num_patterns)
     densities = _compute_densities(patterns)
-    return patterns, densities
+    dataset = DataSet(patterns=patterns,
+                      densities=densities)
+    return dataset
 
 
 def _compute_patterns(num_patterns):
