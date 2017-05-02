@@ -31,9 +31,9 @@
 			% Why do we use KNN instead of fixed-radius
 			Step \ref{it:1:bandwidthmatrix:findNeighbours} determines the local neighborhood of \varPattern with the \KNNK nearest neighbors algorithm (\KNN) with Euclidean distance. We use this approach rather than a fixed-radius neighborhood to ensure that, independent of the sparsity of the data, the kernel shape is always based on a reasonable number of data points. 
 			% How do we choose K
-			We follow \citeauthor{silverman1986density}'s \cite{silverman1986density} recommendation of choosing $k = \sqrt{\varNumPatterns}$. To ensure that \varCovarianceMatrix is nonsingular we also need $\KNNK \geq \varDim$, therefore
+			We follow \citeauthor{silverman1986density}'s \cite{silverman1986density} recommendation of choosing $k = \sqrt{\varNumPatterns}$. To ensure that \varCovarianceMatrix is nonsingular we also need $\KNNK > \varDim$, therefore
 			\begin{equation*}
-				\KNNK = \max\left(\left\lfloor \sqrt{\varNumPatterns} \right\rceil,\, \varDim \right).	
+				\KNNK = \max\left(\left\lfloor \sqrt{\varNumPatterns} \right\rceil,\, \varDim \right) + 1.	
 			\end{equation*}
 		%  Discuss step 2
 			Step \ref{it:1:bandwidthmatrix:initialBandwidthMatrix} determines the basic shape of the bandwidth covariance matrix. 
