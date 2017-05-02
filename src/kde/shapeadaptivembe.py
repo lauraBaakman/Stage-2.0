@@ -7,8 +7,7 @@ from kde.estimatorimplementation import EstimatorImplementation
 from kde.parzen import ParzenEstimator
 from kde.utils.knn import KNN
 import kde.utils.covariance as covariance
-import kde.utils.eigenvalues as eigenvalues
-from kde.kernels.gaussian import Gaussian
+from kde.kernels.shapeadaptivegaussian import ShapeAdaptiveGaussian
 from kde.kernels.epanechnikov import Epanechnikov
 import kde.kernels.scaling
 
@@ -23,13 +22,11 @@ class ShapeAdaptiveMBE(ModifiedBreimanEstimator):
                  number_of_grid_points=ModifiedBreimanEstimator.default_number_of_grid_points,
                  pilot_kernel_class=None, pilot_estimator_implementation=None,
                  kernel_class=None, final_estimator_implementation=None):
-        # super().__init__(dimension, kernel_class, sensitivity, pilot_kernel_class, pilot_window_width_method, number_of_grid_points,
-        #                  pilot_estimator_implementation, final_estimator_implementation)
         self._dimension = dimension
         self._general_window_width_method = pilot_window_width_method
         self._sensitivity = sensitivity
         self._pilot_kernel_class = pilot_kernel_class or Epanechnikov
-        self._kernel = kernel_class or Gaussian
+        self._kernel = kernel_class or ShapeAdaptiveGaussian
         self._number_of_grid_points = number_of_grid_points or ModifiedBreimanEstimator.default_number_of_grid_points
 
         self._pilot_estimator_implementation = pilot_estimator_implementation or ParzenEstimator
@@ -43,7 +40,7 @@ class _ShapeAdaptiveMBE(EstimatorImplementation):
         self._knn = KNN(patterns=self._xi_s)
         self._k = self._compute_k(self.num_xi_s, self.dimension)
         self._kernel = None
-        self._kernel_class = kernel or Gaussian
+        self._kernel_class = kernel or ShapeAdaptiveGaussian
 
     def _compute_k(self, num_patterns, dimension):
         potential_k = round(np.sqrt(num_patterns))
@@ -69,15 +66,16 @@ class _ShapeAdaptiveMBE_Python(_ShapeAdaptiveMBE):
 
     def _estimate_pattern(self, pattern, kernel_shape=None):
         kernel_shape = kernel_shape if kernel_shape is not None else self._determine_kernel_shape(pattern)
-        factors = np.power(self._local_bandwidths * self._general_bandwidth, - self._dimension)
-        kernel = self._kernel_class(
-            mean=np.zeros([self.dimension], dtype=np.float64),
-            covariance_matrix=kernel_shape
-        )
-        terms = kernel.evaluate((pattern - self._xi_s))
-        terms *= factors
-        density = (1 / self.num_xi_s) * terms.sum()
+
+        # Define the kernel
+        kernel = self._kernel_class(kernel_shape)
+
+        #Density estimation
+        density = sum(map(kernel.evaluate, pattern - self._xi_s, self._local_bandwidths))
+
+        density *= (1 / self.num_xi_s)
         return density
+
 
     def _determine_kernel_shape(self, pattern):
         # Find the K nearest neighbours

@@ -4,8 +4,7 @@ import numpy as np
 
 import kde
 from kde.kernels.testKernel import TestKernel
-from kde.kernels.epanechnikov import Epanechnikov
-from kde.kernels.gaussian import Gaussian
+from kde.kernels.shapeadaptivegaussian import ShapeAdaptiveGaussian
 from kde.parzen import _ParzenEstimator_Python, _ParzenEstimator_C
 from kde.shapeadaptivembe import \
     ShapeAdaptiveMBE, \
@@ -22,7 +21,7 @@ class TestShapeAdaptiveMBE(TestCase):
         xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
         x_s = np.array([[0, 0], [1, 1]])
         pilot_kernel = TestKernel
-        final_kernel = Gaussian
+        final_kernel = ShapeAdaptiveGaussian
         number_of_grid_points = 2
         sensitivity = 0.5
         estimator = ShapeAdaptiveMBE(
@@ -74,7 +73,7 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
                                      1.18920712,
                                      0.84089642])
         general_bandwidth = 0.721347520444482
-        kernel = Gaussian
+        kernel = ShapeAdaptiveGaussian
         estimator = self._estimator_class(
             xi_s=xi_s, x_s=x_s, dimension=2,
             kernel=kernel,
@@ -124,7 +123,7 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
                                      1.189207427458816,
                                      0.840896194313949])
         h = 0.721347520444482
-        kernel = Gaussian
+        kernel = ShapeAdaptiveGaussian
         kernel_shape = np.array([
             [0.60083947, -0.30041974],
             [-0.30041974, 0.60083947]
