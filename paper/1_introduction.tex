@@ -80,7 +80,7 @@ Kernel density estimation methods approximate \varDensityFunction{\varPattern} b
 			\varBandwidth_\itDim = \frac{\varPercentile{80}{\itDim} - \varPercentile{20}{\itDim}}{\log \varNumPatterns}, \, \itDim = 1, \dotsc, \varDim,
 		\end{equation}
 	where \varPercentile{20}{\itDim} and \varPercentile{80}{\itDim} are the twentieth and eightieth percentile of the data in dimension \itDim, respectively. 
-	To avoid oversmoothing the pilot window width is defined:
+	To avoid oversmoothing the pilot window width is defined as:
 	\begin{equation*}
 	 	\varBandwidth = \min_\itDim \; \varBandwidth_\itDim.
 	 \end{equation*}
