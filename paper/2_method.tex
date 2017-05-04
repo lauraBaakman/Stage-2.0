@@ -24,7 +24,7 @@
 			\item \label{it:1:bandwidthmatrix:scaleBandwidhtMatrix}
 				To determine \varBandwidthMatrix, scale \varCovarianceMatrix with
 				\begin{equation}\label{eq:method:scalingFactor}
-					\varScalingFactor = \varBandwidth^{\varDim} \cdot \left({\displaystyle\prod_{\itDim = 1}^{\varDim} \sqrt{\varEigenValue_\itDim}}\right)^{-1}.
+					\varScalingFactor = \varBandwidth \left( \displaystyle\prod_{\itDim = 1}^{\varDim} \varEigenValue_\itDim \right)^{-\frac{1}{\varDim}}
 				\end{equation}
 		\end{enumerate}	
 	% Discuss step 1
@@ -39,4 +39,4 @@
 			Step \ref{it:1:bandwidthmatrix:initialBandwidthMatrix} determines the basic shape of the bandwidth covariance matrix. 
 
 		% 	Discuss step 3
-			Step \ref{it:1:bandwidthmatrix:scaleBandwidhtMatrix} ensures that the kernels used in the density estimation of different patterns have the same domain, modulo the local bandwidths. \Cref{eq:method:scalingFactor} scales the bandwidth matrix in such a way that the volume of the eigenellipse of \varBandwidthMatrix is equal to that of the eigenellipse of the bandwidth matrix that is implicitly used in \cref{eq:1:parzen}. 
+			Step \ref{it:1:bandwidthmatrix:scaleBandwidhtMatrix} ensures that the kernels used in the density estimation of different patterns have the same domain, modulo the local bandwidths. \Cref{eq:method:scalingFactor} scales the bandwidth matrix in such a way that the volume of the eigenellipse of \varBandwidthMatrix is equal to that of the eigenellipse of the bandwidth matrix that is implicitly used in \cref{eq:1:parzen}. It should be noted that \varBandwidthMatrix is scaled with the local bandwidth if an adaptive-width method is used. 
