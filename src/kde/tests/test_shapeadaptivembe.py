@@ -30,7 +30,7 @@ class TestShapeAdaptiveMBE(TestCase):
             pilot_window_width_method=kde.utils.automaticWindowWidthMethods.ferdosi
         )
         actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
-        expected = np.array([0.28379406489797937, 0.28379406489797937])
+        expected = np.array([0.163158160880809, 0.28379406489797937])
         np.testing.assert_array_almost_equal(actual, expected)
 
     def test_estimate_python_python(self):
@@ -122,18 +122,14 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
                                      0.840896194313949])
         h = 0.721347520444482
         kernel = ShapeAdaptiveGaussian
-        kernel_shape = np.array([
-            [0.60083947, -0.30041974],
-            [-0.30041974, 0.60083947]
-        ])
         estimator = self._estimator_class(
             xi_s=xi_s, x_s=x_s, dimension=2,
             kernel=kernel,
             local_bandwidths=local_bandwidths, general_bandwidth=h
         )
-        actual = estimator._estimate_pattern(pattern=pattern, kernel_shape=kernel_shape)
-        expected = 0.28379406489797937
-        self.assertAlmostEqual(actual, expected, 5)
+        actual = estimator._estimate_pattern(pattern=pattern)
+        expected = 0.163158160880809
+        self.assertAlmostEqual(actual, expected)
 
 
 @skip("The C implementation of SAMBE has not yet been written.")

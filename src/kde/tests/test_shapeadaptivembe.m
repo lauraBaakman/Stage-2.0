@@ -21,12 +21,12 @@ covarianceMatrix = cov(ck, 1);
 
 eigenValues = eig(covarianceMatrix);
 
-S = (h^d) / prod(sqrt(eigenValues));
+S = h * (prod(eigenValues)^(-1/d));
 
-H(:, :, 1) = h * localBandwidths(1) * S * covarianceMatrix;
-H(:, :, 2) = h * localBandwidths(2) * S * covarianceMatrix;
-H(:, :, 3) = h * localBandwidths(3) * S * covarianceMatrix;
-H(:, :, 4) = h * localBandwidths(4) * S * covarianceMatrix;
+H(:, :, 1) = localBandwidths(1) * S * covarianceMatrix;
+H(:, :, 2) = localBandwidths(2) * S * covarianceMatrix;
+H(:, :, 3) = localBandwidths(3) * S * covarianceMatrix;
+H(:, :, 4) = localBandwidths(4) * S * covarianceMatrix;
 
 fhatTerm = @(H, x, xi) 1 / det(H) * mvnpdf((xi - x) * inv(H));
 
