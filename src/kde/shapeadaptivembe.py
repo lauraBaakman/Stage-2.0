@@ -63,8 +63,8 @@ class _ShapeAdaptiveMBE_Python(_ShapeAdaptiveMBE):
             densities[idx] = self._estimate_pattern(x)
         return densities
 
-    def _estimate_pattern(self, pattern):
-        kernel_shape = self._determine_kernel_shape(pattern)
+    def _estimate_pattern(self, pattern, kernel_shape=None):
+        kernel_shape = kernel_shape if kernel_shape is not None else self._determine_kernel_shape(pattern)
         factors = np.power(self._local_bandwidths * self._general_bandwidth, - self._dimension)
         kernel = self._kernel_class(
             mean=np.zeros([self.dimension], dtype=np.float64),

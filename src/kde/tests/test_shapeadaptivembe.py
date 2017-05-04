@@ -14,6 +14,8 @@ from kde.shapeadaptivembe import \
     _ShapeAdaptiveMBE_Python
 
 
+@skip("These tests need to be rewritten when the new method of kernel scaling is used, fixing "
+      "them earlier doesn't make sense.")
 class TestShapeAdaptiveMBE(TestCase):
 
     def estimate_test_helper(self, pilot_implementation, final_implementation):
@@ -49,6 +51,7 @@ class TestShapeAdaptiveMBE(TestCase):
     def test_estimate_C_C(self):
         self.estimate_test_helper(_ParzenEstimator_C, _ShapeAdaptiveMBE_C)
 
+
 class ShapeAdaptiveMBEImpAbstractTest(object):
 
     def setUp(self):
@@ -60,6 +63,10 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
         self.fail("Test not yet implemented.")
 
     def test_estimate_gaussian(self):
+        def mock_determine_kernel_shape(pattern):
+            return np.array([[0.60083947, -0.30041974],
+                             [-0.30041974, 0.60083947]])
+
         xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
         x_s = np.array([[0, 0], [1, 1]])
         local_bandwidths = np.array([0.84089642,
@@ -73,6 +80,7 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
             kernel=kernel,
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
+        estimator._determine_kernel_shape = mock_determine_kernel_shape
         actual = estimator.estimate()
         expected = np.array([0.28379406489797937, 0.28379406489797937])
         np.testing.assert_array_almost_equal(actual, expected)
@@ -93,15 +101,17 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
                                      0.840896194313949])
         h = 0.721347520444482
         kernel = Gaussian
+
         estimator = self._estimator_class(
             xi_s=xi_s, x_s=x_s, dimension=2,
             kernel=kernel,
             local_bandwidths=local_bandwidths, general_bandwidth=h
         )
+
         actual = estimator._determine_kernel_shape(pattern)
         expected = np.array([
-            [0.60083947, -0.30041974],
-            [-0.30041974, 0.60083947]
+            [0.832940370215782, -0.416470185107891],
+            [- 0.416470185107891, 0.832940370215782]
         ])
         np.testing.assert_array_almost_equal(actual, expected)
 
@@ -115,12 +125,16 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
                                      0.840896194313949])
         h = 0.721347520444482
         kernel = Gaussian
+        kernel_shape = np.array([
+            [0.60083947, -0.30041974],
+            [-0.30041974, 0.60083947]
+        ])
         estimator = self._estimator_class(
             xi_s=xi_s, x_s=x_s, dimension=2,
             kernel=kernel,
             local_bandwidths=local_bandwidths, general_bandwidth=h
         )
-        actual = estimator._estimate_pattern(pattern=pattern)
+        actual = estimator._estimate_pattern(pattern=pattern, kernel_shape=kernel_shape)
         expected = 0.28379406489797937
         self.assertAlmostEqual(actual, expected, 5)
 
