@@ -75,13 +75,13 @@ double computeScalingFactor(double generalBandwidth, gsl_matrix_view covarianceM
     gsl_vector* eigenvalues = computeEigenValues2(&covarianceMatrix.matrix);
     size_t dimension = eigenvalues->size;
 
-    double generalBandWidthTerm = dimension * log(generalBandwidth);
+    double generalBandWidthTerm = log(generalBandwidth);
     double eigenValuesTerm = 0.0;
     for(size_t i = 0; i < dimension; i++){
         eigenValuesTerm += log(gsl_vector_get(eigenvalues, i));
     }
     gsl_vector_free(eigenvalues);
-    return exp(generalBandWidthTerm - 0.5 * eigenValuesTerm);
+    return exp(generalBandWidthTerm - (1.0 / dimension) * eigenValuesTerm);
 }
 
 
