@@ -4,6 +4,7 @@ import numpy as np
 
 import kde
 from kde.kernels.testKernel import TestKernel
+from kde.kernels.gaussian import Gaussian
 from kde.kernels.shapeadaptivegaussian import ShapeAdaptiveGaussian
 from kde.parzen import _ParzenEstimator_Python, _ParzenEstimator_C
 from kde.shapeadaptivembe import \
@@ -12,9 +13,6 @@ from kde.shapeadaptivembe import \
     _ShapeAdaptiveMBE_C, \
     _ShapeAdaptiveMBE_Python
 
-
-@skip("These tests need to be rewritten when the new method of kernel scaling is used, fixing "
-      "them earlier doesn't make sense.")
 class TestShapeAdaptiveMBE(TestCase):
 
     def estimate_test_helper(self, pilot_implementation, final_implementation):
