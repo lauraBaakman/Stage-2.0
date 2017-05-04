@@ -49,6 +49,7 @@ class TestShapeAdaptiveMBE(TestCase):
     def test_estimate_C_C(self):
         self.estimate_test_helper(_ParzenEstimator_C, _ShapeAdaptiveMBE_C)
 
+
 class ShapeAdaptiveMBEImpAbstractTest(object):
 
     def setUp(self):
