@@ -30,7 +30,7 @@ class TestShapeAdaptiveMBE(TestCase):
             pilot_window_width_method=kde.utils.automaticWindowWidthMethods.ferdosi
         )
         actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
-        expected = np.array([0.163158160880809, 0.28379406489797937])
+        expected = np.array([.143018801263046, 0.143018801263046])
         np.testing.assert_array_almost_equal(actual, expected)
 
     def test_estimate_python_python(self):
@@ -60,10 +60,6 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
         self.fail("Test not yet implemented.")
 
     def test_estimate_gaussian(self):
-        def mock_determine_kernel_shape(pattern):
-            return np.array([[0.60083947, -0.30041974],
-                             [-0.30041974, 0.60083947]])
-
         xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
         x_s = np.array([[0, 0], [1, 1]])
         local_bandwidths = np.array([0.84089642,
@@ -77,9 +73,8 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
             kernel=kernel,
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
-        estimator._determine_kernel_shape = mock_determine_kernel_shape
         actual = estimator.estimate()
-        expected = np.array([0.28379406489797937, 0.28379406489797937])
+        expected = np.array([0.143018801263046, 0.143018801263046])
         np.testing.assert_array_almost_equal(actual, expected)
 
 
@@ -128,7 +123,7 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
             local_bandwidths=local_bandwidths, general_bandwidth=h
         )
         actual = estimator._estimate_pattern(pattern=pattern)
-        expected = 0.163158160880809
+        expected = 0.143018801263046
         self.assertAlmostEqual(actual, expected)
 
 
