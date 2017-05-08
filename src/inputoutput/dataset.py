@@ -115,9 +115,13 @@ class _DataSetValidator(object):
                     .format(self._patterns.ndim)
             )
 
-
     def _num_labels_equals_num_patterns(self):
-        raise NotImplementedError()
+        (num_patterns, _) = self._patterns.shape
+        (num_labels,) = self._densities.shape
+        if not (num_patterns == num_labels):
+            raise InvalidDataSetException(
+                "The number of densities should be the same as the number of labels."
+            )
 
     def _densities_is_probability_densities(self):
         raise NotImplementedError()

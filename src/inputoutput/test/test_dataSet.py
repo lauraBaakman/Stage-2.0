@@ -28,8 +28,8 @@ class TestDataSet(TestCase):
             ])
         )
         data_set.results = np.array([
-                1.0, 2.0, 3.0, 4.0, 5.1234567891011121314
-            ])
+            1.0, 2.0, 3.0, 4.0, 5.1234567891011121314
+        ])
         actual = data_set.num_patterns
         expected = 5
 
@@ -217,7 +217,7 @@ class Test_DataSetValidator(TestCase):
                 [[54.0, 56.0, 47.0],
                  [51.0, 46.0, 47.0]],
             ])
-            densities=np.array([
+            densities = np.array([
                 7.539699219e-05,
                 1.240164051e-05,
                 1.227518586e-05,
@@ -261,7 +261,7 @@ class Test_DataSetValidator(TestCase):
                 [[54.0, 56.0, 47.0],
                  [51.0, 46.0, 47.0]],
             ])
-            densities=np.array([
+            densities = np.array([
                 7.539699219e-05,
                 1.240164051e-05,
                 1.227518586e-05,
@@ -305,13 +305,84 @@ class Test_DataSetValidator(TestCase):
              [51.0, 46.0, 47.0]],
         ])
         densities = np.array([
-            [7.539699219e-05, 1.240164051e-05,],
+            [7.539699219e-05, 1.240164051e-05, ],
             [7.288289757e-05, 0.0001832763582],
         ])
 
         try:
             validator = _DataSetValidator(patterns=patterns, densities=densities)
             validator._densities_is_1D_array()
+        except InvalidDataSetException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test__num_labels_equals_num_patterns_0(self):
+        patterns = np.array([
+            [52.0, 45.0, 56.0],
+            [60.0, 52.0, 41.0],
+            [37.0, 44.0, 49.0],
+            [54.0, 56.0, 47.0],
+            [51.0, 46.0, 47.0],
+        ])
+        densities = np.array([
+            7.539699219e-05,
+            1.240164051e-05,
+            1.227518586e-05,
+            7.288289757e-05,
+            0.0001832763582,
+        ])
+        validator = _DataSetValidator(patterns=patterns, densities=densities)
+        actual = validator._num_labels_equals_num_patterns()
+        self.assertIsNone(actual)
+
+    def test__num_labels_equals_num_patterns_1(self):
+        patterns = np.array([
+            [52.0, 45.0, 56.0],
+            [60.0, 52.0, 41.0],
+            [37.0, 44.0, 49.0],
+            [54.0, 56.0, 47.0],
+            [51.0, 46.0, 47.0],
+        ])
+        densities = np.array([
+            7.539699219e-05,
+            1.240164051e-05,
+            1.227518586e-05,
+        ])
+
+        try:
+            validator = _DataSetValidator(patterns=patterns, densities=densities)
+            validator._num_labels_equals_num_patterns()
+        except InvalidDataSetException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test__num_labels_equals_num_patterns_2(self):
+        patterns = np.array([
+            [52.0, 45.0, 56.0],
+            [60.0, 52.0, 41.0],
+            [37.0, 44.0, 49.0],
+            [54.0, 56.0, 47.0],
+            [51.0, 46.0, 47.0],
+        ])
+        densities = np.array([
+            7.539699219e-05,
+            1.240164051e-05,
+            1.227518586e-05,
+            7.288289757e-05,
+            0.0001832763582,
+            7.288289757e-05,
+            0.0001832763582,
+        ])
+
+        try:
+            validator = _DataSetValidator(patterns=patterns, densities=densities)
+            validator._num_labels_equals_num_patterns()
         except InvalidDataSetException:
             pass
         except Exception as e:
