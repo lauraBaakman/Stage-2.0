@@ -15,13 +15,6 @@ class SimulatedDataSet(DataSet):
     def _init_components(self):
         raise NotImplementedError()
 
-    @property
-    def number_of_elements(self):
-        num_elements = 0
-        for component in self._components.values:
-            num_elements += component['num elements']
-        return num_elements
-
     def _compute_patterns(self):
         for component in self._components.values():
             component_patterns = component['component'].patterns(component['num elements'])
