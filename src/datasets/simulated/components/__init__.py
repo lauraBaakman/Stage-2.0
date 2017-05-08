@@ -1,2 +1,2 @@
-from datasets.simulated.components.trivariategaussian import TrivariateGaussian
-from datasets.simulated.components.uniformrandomnoise import UniformRandomNoise
+from datasets.simulated.components.gaussian import TrivariateGaussian
+from datasets.simulated.components.uniformrandomnoise import TrivariateUniformRandomNoise

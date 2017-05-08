@@ -2,7 +2,7 @@ from unittest import TestCase
 
 import numpy as np
 
-from datasets.simulated.components import UniformRandomNoise
+from datasets.simulated.components import TrivariateUniformRandomNoise
 
 
 class TestUniformRandomNoise(TestCase):
@@ -11,8 +11,8 @@ class TestUniformRandomNoise(TestCase):
         super().setUp()
         self._min_value = 2
         self._max_value = 4
-        self._component = UniformRandomNoise(minimum_value=self._min_value,
-                                             maximum_value=self._max_value)
+        self._component = TrivariateUniformRandomNoise(minimum_value=self._min_value,
+                                                       maximum_value=self._max_value)
 
     def test_patterns_shape_0(self):
         expected_num_patterns = 1
