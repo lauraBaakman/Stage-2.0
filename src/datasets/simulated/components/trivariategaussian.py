@@ -23,7 +23,8 @@ class TrivariateGaussian(Component):
             x=patterns,
             mean=self._mean,
             cov=self._covariance_matrix)
-        return densities
+        return np.array(densities, ndmin=1)
+
 
     def __repr__(self):
         return "%s(%r)" % (self.__class__, self.__dict__)
