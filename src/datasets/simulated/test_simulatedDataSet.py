@@ -76,8 +76,8 @@ class TestSimulatedDataSet(TestCase):
         actual_densities = SimulatedDataSet._compute_densities(None, self._components, patterns)
         expected_densities = np.array([
             0.0,
-            1/40.0,
-            1/80.0,
-            3/80.0,
+            0.0000625,
+            0.0000078125,
+            0.0000703125
         ])
         np.testing.assert_array_almost_equal(expected_densities, actual_densities)
