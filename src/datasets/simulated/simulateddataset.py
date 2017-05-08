@@ -31,10 +31,10 @@ class SimulatedDataSet(DataSet):
         return patterns
 
     def _compute_densities(self, components, patterns):
-        individual_densities = map(
+        individual_densities = list(map(
             lambda component:
-            component.densities(patterns), components.values()
-        )
+            component['component'].densities(patterns), components.values()
+        ))
         return np.mean(individual_densities, axis=0)
 
     def __repr__(self):
