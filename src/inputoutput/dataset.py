@@ -21,6 +21,10 @@ class DataSet(object):
     def patterns(self):
         return self._patterns
 
+    @property
+    def densities(self):
+        return self._densities
+
     @classmethod
     def from_file(cls, in_file):
         """
@@ -41,8 +45,8 @@ class DataSet(object):
         try:
             data_set = _DataSetReader(in_file).read()
         except AttributeError:
-            in_file = open(input_file, mode='rb')
-            data_set = _DataSetReader(in_file).read()
+            input_file_handle = open(in_file, mode='rb')
+            data_set = _DataSetReader(input_file_handle).read()
         return data_set
 
     def to_file(self):

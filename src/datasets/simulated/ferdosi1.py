@@ -7,9 +7,9 @@ from inputoutput.dataset import DataSet
 def ferdosi_1(num_patterns):
     patterns = _compute_patterns(num_patterns)
     densities = _compute_densities(patterns)
-    dataset = DataSet(patterns=patterns,
-                      densities=densities)
-    return dataset
+    data_set = DataSet(patterns=patterns,
+                       densities=densities)
+    return data_set
 
 
 def _compute_patterns(num_patterns):
