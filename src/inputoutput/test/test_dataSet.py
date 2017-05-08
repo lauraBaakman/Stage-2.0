@@ -270,6 +270,41 @@ class Test_DataSetValidator(TestCase):
             ])
             validator = _DataSetValidator(patterns=patterns, densities=densities)
             actual = validator._patterns_is_2D_array()
+    def test__densities_is_1D_array_1(self):
+        patterns = np.array([
+            [52.0, 45.0, 56.0],
+            [60.0, 52.0, 41.0],
+            [37.0, 44.0, 49.0],
+            [54.0, 56.0, 47.0],
+            [51.0, 46.0, 47.0],
+        ])
+        densities = np.array([
+            7.539699219e-05,
+            1.240164051e-05,
+            1.227518586e-05,
+            7.288289757e-05,
+            0.0001832763582,
+        ])
+        validator = _DataSetValidator(patterns=patterns, densities=densities)
+        actual = validator._densities_is_1D_array()
+        self.assertIsNone(actual)
+
+    def test__densities_is_1D_array_2(self):
+        patterns = np.array([
+            [[52.0, 45.0, 56.0],
+             [60.0, 52.0, 41.0],
+             [37.0, 44.0, 49.0]],
+            [[54.0, 56.0, 47.0],
+             [51.0, 46.0, 47.0]],
+        ])
+        densities = np.array([
+            [7.539699219e-05, 1.240164051e-05,],
+            [7.288289757e-05, 0.0001832763582],
+        ])
+
+        try:
+            validator = _DataSetValidator(patterns=patterns, densities=densities)
+            validator._densities_is_1D_array()
         except InvalidDataSetException:
             pass
         except Exception as e:

@@ -109,7 +109,12 @@ class _DataSetValidator(object):
             )
 
     def _densities_is_1D_array(self):
-        raise NotImplementedError()
+        if self._patterns.ndim is not 2:
+            raise InvalidDataSetException(
+                '''1D arrays are expected for the densities, the input array has {} dimensions.'''
+                    .format(self._patterns.ndim)
+            )
+
 
     def _num_labels_equals_num_patterns(self):
         raise NotImplementedError()
