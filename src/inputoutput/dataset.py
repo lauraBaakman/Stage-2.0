@@ -49,7 +49,7 @@ class DataSet(object):
             data_set = _DataSetReader(input_file_handle).read()
         return data_set
 
-    def to_file(self):
+    def to_file(self, out_file):
         raise NotImplementedError()
 
     def __eq__(self, other):
