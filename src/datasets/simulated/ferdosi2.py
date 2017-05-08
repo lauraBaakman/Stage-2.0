@@ -4,10 +4,10 @@ from datasets.simulated.simulateddataset import SimulatedDataSet
 import datasets.simulated.components as components
 
 
-class Ferdosi3(SimulatedDataSet):
+class Ferdosi2(SimulatedDataSet):
 
     def __init__(self):
-        super(Ferdosi3, self).__init__()
+        super(Ferdosi2, self).__init__()
 
     def _init_components(self):
         self._components['trivariate gaussian 1'] = {
