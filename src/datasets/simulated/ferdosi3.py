@@ -10,44 +10,38 @@ class Ferdosi3(SimulatedDataSet):
         super(Ferdosi3, self).__init__()
 
     def _init_components(self):
-        return {
-            'trivariate gaussian 1': {
+        self._components['trivariate gaussian 1'] = {
                 'component': components.TrivariateGaussian(
                     mean=np.array([24, 10, 10]),
                     covariance_matrix=np.diag(np.array([2, 2, 2]))
                 ),
                 'num elements': 20000,
-            },
-
-            'trivariate gaussian 2': {
+            }
+        self._components['trivariate gaussian 2'] = {
                 'component': components.TrivariateGaussian(
                     mean=np.array([33, 70, 40]),
                     covariance_matrix=np.diag(np.array([10, 10, 10]))
                 ),
                 'num elements': 20000,
-            },
-
-            'trivariate gaussian 3': {
+        }
+        self._components['trivariate gaussian 3'] = {
                 'component': components.TrivariateGaussian(
                     mean=np.array([90, 20, 80]),
                     covariance_matrix=np.diag(np.array([1, 1, 1]))
                 ),
                 'num elements': 20000,
-            },
-
-            'trivariate gaussian 4': {
+        }
+        self._components['trivariate gaussian 4'] = {
                 'component': components.TrivariateGaussian(
                     mean=np.array([60, 80, 23]),
                     covariance_matrix=np.diag(np.array([5, 5, 5]))
                 ),
                 'num elements': 20000,
-            },
-
-            'uniform random noise': {
+        }
+        self._components['uniform random noise'] = {
                 'component': components.UniformRandomNoise(
                     minimum_value=0,
                     maximum_value=100
                 ),
                 'num elements': 40000,
-            },
         }
