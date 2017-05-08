@@ -4,7 +4,7 @@ import numpy as np
 from inputoutput.dataset import DataSet
 
 
-def ferdosi_1(num_patterns):
+def ferdosi_1(num_patterns=60000):
     patterns = _compute_patterns(num_patterns)
     densities = _compute_densities(patterns)
     data_set = DataSet(patterns=patterns,
