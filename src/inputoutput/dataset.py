@@ -124,7 +124,11 @@ class _DataSetValidator(object):
             )
 
     def _densities_is_probability_densities(self):
-        raise NotImplementedError()
+        if not np.all(self._densities <= 1):
+            raise InvalidDataSetException("Densities should be smaller than or equal to 1.")
+
+        if not np.all(self._densities >= 0):
+            raise InvalidDataSetException("Densities should be greater than or equal to 0.")
 
 
 class InvalidDataSetException(Exception):

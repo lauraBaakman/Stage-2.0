@@ -389,3 +389,80 @@ class Test_DataSetValidator(TestCase):
             self.fail('Unexpected exception raised: {}'.format(e))
         else:
             self.fail('ExpectedException not raised')
+
+    def test__densities_is_probability_densities_0(self):
+        patterns = np.array([
+            [52.0, 45.0, 56.0],
+            [60.0, 52.0, 41.0],
+            [37.0, 44.0, 49.0],
+            [54.0, 56.0, 47.0],
+            [51.0, 46.0, 47.0],
+        ])
+        densities = np.array([
+            7.539699219e-05,
+            0.0,
+            1.227518586e-05,
+            7.288289757e-05,
+            0.0001832763582,
+            7.288289757e-05,
+            1.0,
+        ])
+        validator = _DataSetValidator(patterns=patterns, densities=densities)
+        actual = validator._densities_is_probability_densities()
+        self.assertIsNone(actual)
+
+    def test__densities_is_probability_densities_1(self):
+        patterns = np.array([
+            [52.0, 45.0, 56.0],
+            [60.0, 52.0, 41.0],
+            [37.0, 44.0, 49.0],
+            [54.0, 56.0, 47.0],
+            [51.0, 46.0, 47.0],
+        ])
+        densities = np.array([
+            7.539699219e-05,
+            1.240164051e-05,
+            1.227518586e-05,
+            7.288289757e-05,
+            0.0001832763582,
+            7.288289757,
+            0.0001832763582,
+        ])
+
+        try:
+            validator = _DataSetValidator(patterns=patterns, densities=densities)
+            validator._densities_is_probability_densities()
+        except InvalidDataSetException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test__densities_is_probability_densities_2(self):
+        patterns = np.array([
+            [52.0, 45.0, 56.0],
+            [60.0, 52.0, 41.0],
+            [37.0, 44.0, 49.0],
+            [54.0, 56.0, 47.0],
+            [51.0, 46.0, 47.0],
+        ])
+        densities = np.array([
+            7.539699219e-05,
+            1.240164051e-05,
+            1.227518586e-05,
+            7.288289757e-05,
+            0.0001832763582,
+            7.288289757e-05,
+            -0.0001832763582,
+        ])
+
+        try:
+            validator = _DataSetValidator(patterns=patterns, densities=densities)
+            validator._densities_is_probability_densities()
+        except InvalidDataSetException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
