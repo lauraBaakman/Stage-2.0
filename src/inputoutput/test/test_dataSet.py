@@ -269,7 +269,14 @@ class Test_DataSetValidator(TestCase):
                 0.0001832763582,
             ])
             validator = _DataSetValidator(patterns=patterns, densities=densities)
-            actual = validator._patterns_is_2D_array()
+            validator._patterns_is_2D_array()
+        except InvalidDataSetException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
     def test__densities_is_1D_array_1(self):
         patterns = np.array([
             [52.0, 45.0, 56.0],
