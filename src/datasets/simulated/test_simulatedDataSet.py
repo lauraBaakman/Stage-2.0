@@ -1,4 +1,5 @@
 from unittest import TestCase
+from collections import OrderedDict
 
 import numpy as np
 
@@ -6,35 +7,28 @@ from datasets.simulated.simulateddataset import SimulatedDataSet
 import datasets.simulated.components as components
 
 
-class SimulatedDataSetsForTest(SimulatedDataSet):
+class TestSimulatedDataSet(TestCase):
 
-    def _init_components(self):
-        return {
-            'a': {
+    def setUp(self):
+        super().setUp()
+        self._components = OrderedDict()
+        self._components['a'] = {
                 'component': components.UniformRandomNoise(
                     minimum_value=0,
                     maximum_value=20
                 ),
                 'num elements': 10,
-            },
-            'b': {
-                'component': components.UniformRandomNoise(
-                    minimum_value=10,
-                    maximum_value=50
-                ),
-                'num elements': 5,
-            },
+            }
+        self._components['b'] = {
+            'component': components.UniformRandomNoise(
+                minimum_value=10,
+                maximum_value=50
+            ),
+            'num elements': 5,
         }
 
-
-class TestSimulatedDataSet(TestCase):
-
-    def setUp(self):
-        super().setUp()
-        self._data_set = SimulatedDataSetsForTest()
-
     def test__compute_patterns_shape(self):
-        actual_patterns = self._data_set.patterns
+        actual_patterns = SimulatedDataSet._compute_patterns(None, self._components)
         (actual_num_patterns, actual_dimension) = actual_patterns.shape
 
         expected_num_patterns = 15
@@ -44,7 +38,7 @@ class TestSimulatedDataSet(TestCase):
         self.assertEqual(actual_dimension, expected_dimension)
 
     def test__compute_patterns_range(self):
-        actual_patterns = self._data_set.patterns
+        actual_patterns = SimulatedDataSet._compute_patterns(None, self._components)
 
         first_component_patterns = actual_patterns[0:10]
         self._in_range(first_component_patterns, 0, 20)
@@ -58,24 +52,32 @@ class TestSimulatedDataSet(TestCase):
         self.assertTrue(np.all(values <= max_value))
 
     def test__compute_densities_shape(self):
-        actual_densities = self._data_set.densities
+        SimulatedDataSet.__init__ = None
+        patterns = np.array([
+            [-10, -10, -10],
+            [5, 5, 5],
+            [40, 40, 40],
+            [15, 15, 15]
+        ])
+
+        actual_densities = SimulatedDataSet._compute_densities(None, self._components, patterns)
         (actual_num_densities, ) = actual_densities.shape
 
-        expected_num_densities = 15
+        expected_num_densities = 4
         self.assertEqual(actual_num_densities, expected_num_densities)
 
     def test__compute_densities_values(self):
         patterns = np.array([
-            [0, 0, 0], #In neither component
-            [5, 5, 5],  # In the first component
-            [40, 40, 40],  # In the second component
-            [15, 15, 15] #In both components
+            [-10, -10, -10],    # In neither component
+            [5, 5, 5],          # In the first component
+            [40, 40, 40],       # In the second component
+            [15, 15, 15]        # In both components
         ])
-
+        actual_densities = SimulatedDataSet._compute_densities(None, self._components, patterns)
         expected_densities = np.array([
             0.0,
-            0.000125000000000,
-            0.000015625000000,
-            0.000000001953125,
+            1/40.0,
+            1/80.0,
+            3/80.0,
         ])
-        actual_densities = self._data_set._compute_densities(patterns)
+        np.testing.assert_array_almost_equal(expected_densities, actual_densities)
