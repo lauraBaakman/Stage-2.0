@@ -18,8 +18,8 @@ def _compute_patterns(num_patterns):
 
     return np.vstack((
         trivariate_gaussian,
-        background)
-    )
+        background
+    ))
 
 
 def _trivariate_gaussian(num_patterns):
