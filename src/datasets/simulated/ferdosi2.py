@@ -11,14 +11,14 @@ class Ferdosi2(SimulatedDataSet):
 
     def _init_components(self):
         self._components['trivariate gaussian 1'] = {
-                'component': components.TrivariateGaussian(
+                'component': components.MultivariateGaussian(
                     mean=np.array([25, 25, 25]),
                     covariance_matrix=np.diag(np.array([5, 5, 5]))
                 ),
                 'num elements': 20000,
             }
         self._components['trivariate gaussian 2'] = {
-                'component': components.TrivariateGaussian(
+                'component': components.MultivariateGaussian(
                     mean=np.array([65, 65, 65]),
                     covariance_matrix=np.diag(np.array([20, 20, 20]))
                 ),

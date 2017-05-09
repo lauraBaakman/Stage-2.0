@@ -4,10 +4,10 @@ import scipy.stats as stats
 from datasets.simulated.components.component import Component
 
 
-class TrivariateGaussian(Component):
+class MultivariateGaussian(Component):
 
     def __init__(self, mean, covariance_matrix):
-        super(TrivariateGaussian, self).__init__()
+        super(MultivariateGaussian, self).__init__()
         self._mean = mean
         self._covariance_matrix = covariance_matrix
 
@@ -25,6 +25,6 @@ class TrivariateGaussian(Component):
             cov=self._covariance_matrix)
         return np.array(densities, ndmin=1)
 
-
     def __repr__(self):
         return "%s(%r)" % (self.__class__, self.__dict__)
+

@@ -11,7 +11,7 @@ class Ferdosi1(SimulatedDataSet):
 
     def _init_components(self):
         self._components['trivariate gaussian 1'] = {
-                'component': components.TrivariateGaussian(
+                'component': components.MultivariateGaussian(
                     mean=np.array([50, 50, 50]),
                     covariance_matrix=np.diag(np.array([30, 30, 30]))
                 ),
