@@ -11,8 +11,12 @@ class TestWallLikeStructure(TestCase):
         super().setUp()
         self._min_value = 10
         self._max_value = 20
-        x_component = components.UniformRandomNoise(minimum_value=self._min_value, maximum_value=self._max_value, dimension=1)
-        y_component = components.UniformRandomNoise(minimum_value=self._min_value, maximum_value=self._max_value, dimension=1)
+        x_component = components.UniformRandomNoise(
+            minimum_value=self._min_value, maximum_value=self._max_value,
+            dimension=1)
+        y_component = components.UniformRandomNoise(
+            minimum_value=self._min_value, maximum_value=self._max_value,
+            dimension=1)
         z_component = components.UnivariateGaussian(mean=15, variance=2.0)
         self._component3D = components.WallLikeStructure(
             one_dimensional_components=[x_component, y_component, z_component]
