@@ -95,7 +95,7 @@ class TestUnivariateGaussian(TestCase):
         actual_patterns = self._component.patterns(expected_num_patterns)
         (actual_num_patterns, actual_dimension) = actual_patterns.shape
 
-        self.assertEqual(expected_num_patterns, actual_patterns)
+        self.assertEqual(expected_num_patterns, actual_num_patterns)
         self.assertEqual(expected_dimension, actual_dimension)
 
     def test_patterns_shape_1(self):
@@ -105,17 +105,18 @@ class TestUnivariateGaussian(TestCase):
         actual_patterns = self._component.patterns(expected_num_patterns)
         (actual_num_patterns, actual_dimension) = actual_patterns.shape
 
-        self.assertEqual(expected_num_patterns, actual_patterns)
+        self.assertEqual(expected_num_patterns, actual_num_patterns)
         self.assertEqual(expected_dimension, actual_dimension)
 
     def test_densities_shape_0(self):
-        expected_num_densities = 1
-        patterns = np.random.random((expected_num_densities, 1))
+        expected_num_patterns = 1
+
+        patterns = np.random.random((expected_num_patterns, 1))
 
         actual_densities = self._component.densities(patterns)
-        (actual_num_densities,) = actual_densities.shape
+        (actual_num_patterns,) = actual_densities.shape
 
-        self.assertEqual(expected_num_densities, actual_num_densities)
+        self.assertEqual(actual_num_patterns, expected_num_patterns)
 
     def test_densities_shape_1(self):
         expected_num_densities = 8
