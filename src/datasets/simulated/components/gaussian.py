@@ -5,7 +5,6 @@ from datasets.simulated.components.component import Component
 
 
 class MultivariateGaussian(Component):
-
     def __init__(self, mean, covariance_matrix):
         super(MultivariateGaussian, self).__init__()
         self._mean = mean
@@ -30,7 +29,6 @@ class MultivariateGaussian(Component):
 
 
 class UnivariateGaussian(Component):
-
     def __init__(self, mean, variance):
         super(UnivariateGaussian, self).__init__()
         self._mean = mean
