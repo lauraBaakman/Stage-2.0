@@ -4,12 +4,13 @@ import scipy.stats as stats
 from datasets.simulated.components.component import Component
 
 
-class TrivariateUniformRandomNoise(Component):
+class UniformRandomNoise(Component):
 
-    def __init__(self, minimum_value, maximum_value):
-        super(TrivariateUniformRandomNoise, self).__init__()
+    def __init__(self, minimum_value, maximum_value, dimension=3):
+        super(UniformRandomNoise, self).__init__()
         self._min_value = minimum_value
         self._max_value = maximum_value
+        self._dimension = dimension
 
     @property
     def location(self):
@@ -20,75 +21,14 @@ class TrivariateUniformRandomNoise(Component):
         return self._max_value - self._min_value
 
     def patterns(self, num_patterns):
-        x = np.random.uniform(self._min_value, self._max_value, num_patterns)
-        y = np.random.uniform(self._min_value, self._max_value, num_patterns)
-        z = np.random.uniform(self._min_value, self._max_value, num_patterns)
-
-        patterns = np.stack((x, y, z), 1)
+        patterns = np.random.uniform(self._min_value, self._max_value,
+                                     size=(num_patterns, self._dimension))
         return patterns
 
     def densities(self, patterns):
-        densities_1D = stats.uniform.pdf(patterns, loc=self.location, scale=self.scale)
+        densities_one_d = stats.uniform.pdf(patterns, loc=self.location, scale=self.scale)
 
-        densities = np.prod(densities_1D, axis=1)
-        return np.array(densities, ndmin=1)
-
-    def __repr__(self):
-        return "%s(%r)" % (self.__class__, self.__dict__)
-
-
-class BivariateUniformRandomNoise(Component):
-
-    def __init__(self, minimum_value, maximum_value):
-        super(BivariateUniformRandomNoise, self).__init__()
-        self._min_value = minimum_value
-        self._max_value = maximum_value
-
-    @property
-    def location(self):
-        return self._min_value
-
-    @property
-    def scale(self):
-        return self._max_value - self._min_value
-
-    def patterns(self, num_patterns):
-        x = np.random.uniform(self._min_value, self._max_value, num_patterns)
-        y = np.random.uniform(self._min_value, self._max_value, num_patterns)
-
-        patterns = np.stack((x, y), 1)
-        return patterns
-
-    def densities(self, patterns):
-        densities_1D = stats.uniform.pdf(patterns, loc=self.location, scale=self.scale)
-
-        densities = np.prod(densities_1D, axis=1)
-        return np.array(densities, ndmin=1)
-
-    def __repr__(self):
-        return "%s(%r)" % (self.__class__, self.__dict__)
-
-class UnivariateUniformRandomNoise(Component):
-
-    def __init__(self, minimum_value, maximum_value):
-        super(UnivariateUniformRandomNoise, self).__init__()
-        self._min_value = minimum_value
-        self._max_value = maximum_value
-
-    @property
-    def location(self):
-        return self._min_value
-
-    @property
-    def scale(self):
-        return self._max_value - self._min_value
-
-    def patterns(self, num_patterns):
-        patterns = np.random.uniform(self._min_value, self._max_value, num_patterns)
-        return patterns
-
-    def densities(self, patterns):
-        densities = stats.uniform.pdf(patterns, loc=self.location, scale=self.scale)
+        densities = np.prod(densities_one_d, axis=1)
         return np.array(densities, ndmin=1)
 
     def __repr__(self):

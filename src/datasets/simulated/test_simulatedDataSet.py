@@ -13,14 +13,14 @@ class TestSimulatedDataSet(TestCase):
         super().setUp()
         self._components = OrderedDict()
         self._components['a'] = {
-                'component': components.TrivariateUniformRandomNoise(
+                'component': components.UniformRandomNoise(
                     minimum_value=0,
                     maximum_value=20
                 ),
                 'num elements': 10,
             }
         self._components['b'] = {
-            'component': components.TrivariateUniformRandomNoise(
+            'component': components.UniformRandomNoise(
                 minimum_value=10,
                 maximum_value=50
             ),

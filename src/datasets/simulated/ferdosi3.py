@@ -39,7 +39,7 @@ class Ferdosi3(SimulatedDataSet):
                 'num elements': 20000,
         }
         self._components['uniform random noise'] = {
-                'component': components.TrivariateUniformRandomNoise(
+                'component': components.UniformRandomNoise(
                     minimum_value=0,
                     maximum_value=100
                 ),
