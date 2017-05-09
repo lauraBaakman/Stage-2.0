@@ -28,3 +28,16 @@ class MultivariateGaussian(Component):
     def __repr__(self):
         return "%s(%r)" % (self.__class__, self.__dict__)
 
+
+class UnivariateGaussian(Component):
+
+    def __init__(self, mean, variance):
+        super(UnivariateGaussian, self).__init__()
+        self._mean = mean
+        self._variance = variance
+
+    def patterns(self, num_patterns):
+        raise NotImplementedError()
+
+    def densities(self, patterns):
+        raise NotImplementedError()

@@ -1,2 +1,4 @@
 from datasets.simulated.components.gaussian import MultivariateGaussian
+from datasets.simulated.components.gaussian import UnivariateGaussian
 from datasets.simulated.components.uniformrandomnoise import UniformRandomNoise
+from datasets.simulated.components.walllikestructure import WallLikeStructure
