@@ -34,8 +34,17 @@ class UnivariateGaussian(Component):
         self._mean = mean
         self._variance = variance
 
+    @property
+    def standard_deviation(self):
+        return np.sqrt(self._variance)
+
     def patterns(self, num_patterns):
-        raise NotImplementedError()
+        patterns = np.random.normal(
+            self._mean,
+            self.standard_deviation,
+            num_patterns)
+        return np.array([np.array(x, ndmin=1) for x in patterns])
 
     def densities(self, patterns):
-        raise NotImplementedError()
+        densities = stats.norm.pdf(patterns, self._mean, self.standard_deviation)
+        return np.array(np.squeeze(densities), ndmin=1)
