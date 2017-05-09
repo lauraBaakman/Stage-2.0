@@ -3,10 +3,10 @@ import numpy as np
 from datasets.simulated.components.component import Component
 
 
-class WallLikeStructure(Component):
+class CombinationStructure(Component):
 
     def __init__(self, one_dimensional_components):
-        super(WallLikeStructure, self).__init__()
+        super(CombinationStructure, self).__init__()
         self._one_dimensional_components = one_dimensional_components
 
     def patterns(self, num_patterns):
@@ -35,3 +35,11 @@ class WallLikeStructure(Component):
 
         densities = np.prod(one_dimensional_densities, axis=0)
         return densities
+
+
+class WallLikeStructure(CombinationStructure):
+    pass
+
+
+class FilamentLikeStructure(CombinationStructure):
+    pass

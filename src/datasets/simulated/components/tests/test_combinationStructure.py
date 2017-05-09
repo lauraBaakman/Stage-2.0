@@ -3,6 +3,7 @@ from unittest import TestCase
 import numpy as np
 
 import datasets.simulated.components as components
+from datasets.simulated.components.combinationstructure import CombinationStructure
 
 
 class TestWallLikeStructure(TestCase):
@@ -18,10 +19,10 @@ class TestWallLikeStructure(TestCase):
             minimum_value=self._min_value, maximum_value=self._max_value,
             dimension=1)
         z_component = components.UnivariateGaussian(mean=15, variance=2.0)
-        self._component3D = components.WallLikeStructure(
+        self._component3D = CombinationStructure(
             one_dimensional_components=[x_component, y_component, z_component]
         )
-        self._component2D = components.WallLikeStructure(
+        self._component2D = CombinationStructure(
             one_dimensional_components=[x_component, z_component]
         )
 
