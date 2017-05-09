@@ -9,16 +9,21 @@ class TestMultivariateGaussian(TestCase):
 
     def setUp(self):
         super().setUp()
-        self._mean = np.array([50, 50, 50])
-        self._covariance = np.diag(np.array([30, 30, 30]))
-        self._component = MultivariateGaussian(mean=self._mean,
-                                               covariance_matrix=self._covariance)
+        mean3D = np.array([50, 50, 50])
+        covariance3D = np.diag(np.array([30, 30, 30]))
+        self._component3D = MultivariateGaussian(mean=mean3D,
+                                                 covariance_matrix=covariance3D)
+
+        mean2D = np.array([10, 20])
+        covariance2D = np.diag(np.array([5, 10]))
+        self._component2D = MultivariateGaussian(mean=mean2D,
+                                                 covariance_matrix=covariance2D)
 
     def test_patterns_patterns_shape_0(self):
         expected_num_patterns = 1
         expected_dimension = 3
 
-        actual_patterns = self._component.patterns(expected_num_patterns)
+        actual_patterns = self._component3D.patterns(expected_num_patterns)
         (actual_num_patterns, actual_dimension) = actual_patterns.shape
 
         self.assertEqual(expected_num_patterns, actual_num_patterns)
@@ -28,7 +33,17 @@ class TestMultivariateGaussian(TestCase):
         expected_num_patterns = 10
         expected_dimension = 3
 
-        actual_patterns = self._component.patterns(expected_num_patterns)
+        actual_patterns = self._component3D.patterns(expected_num_patterns)
+        (actual_num_patterns, actual_dimension) = actual_patterns.shape
+
+        self.assertEqual(expected_num_patterns, actual_num_patterns)
+        self.assertEqual(expected_dimension, actual_dimension)
+
+    def test_patterns_patterns_shape_2(self):
+        expected_num_patterns = 10
+        expected_dimension = 2
+
+        actual_patterns = self._component2D.patterns(expected_num_patterns)
         (actual_num_patterns, actual_dimension) = actual_patterns.shape
 
         self.assertEqual(expected_num_patterns, actual_num_patterns)
@@ -39,7 +54,7 @@ class TestMultivariateGaussian(TestCase):
 
         patterns = np.random.random((expected_num_patterns, 3))
 
-        actual_densities = self._component.densities(patterns)
+        actual_densities = self._component3D.densities(patterns)
         (actual_num_patterns,) = actual_densities.shape
         self.assertEqual(actual_num_patterns, expected_num_patterns)
 
@@ -49,7 +64,17 @@ class TestMultivariateGaussian(TestCase):
 
         patterns = np.random.random((expected_num_patterns, 3))
 
-        actual_densities = self._component.densities(patterns)
+        actual_densities = self._component3D.densities(patterns)
+        (actual_num_patterns, ) = actual_densities.shape
+        self.assertEqual(actual_num_patterns, expected_num_patterns)
+
+    def test_densities_shape_2(self):
+
+        expected_num_patterns = 10
+
+        patterns = np.random.random((expected_num_patterns, 2))
+
+        actual_densities = self._component2D.densities(patterns)
         (actual_num_patterns, ) = actual_densities.shape
         self.assertEqual(actual_num_patterns, expected_num_patterns)
 
@@ -59,7 +84,7 @@ class TestMultivariateGaussian(TestCase):
         expected_densities = np.array([
             0.105040766084006e-55,
         ])
-        actual_densities = self._component.densities(patterns)
+        actual_densities = self._component3D.densities(patterns)
         np.testing.assert_array_almost_equal(expected_densities, actual_densities)
 
     def test_densities_values_1(self):
@@ -76,7 +101,26 @@ class TestMultivariateGaussian(TestCase):
             0.098033561414839e-55,
             0.105040766084006e-55,
         ])
-        actual_densities = self._component.densities(patterns)
+        actual_densities = self._component3D.densities(patterns)
+        np.testing.assert_array_almost_equal(expected_densities, actual_densities)
+
+    def test_densities_values_2(self):
+        patterns = np.array([
+            [18.001538807704019, 19.800602983147598],
+            [16.192649458227702, 22.260215517533140],
+            [6.981561039870828, 19.351840412745855],
+            [16.786295177227323, 19.607421100999392],
+            [11.622053158145041, 24.710837465506252],
+        ])
+
+        expected_densities = np.array([
+            0.000037232115220,
+            0.000376644792486,
+            0.008861923068881,
+            0.000223304398417,
+            0.005703965209363,
+        ])
+        actual_densities = self._component2D.densities(patterns)
         np.testing.assert_array_almost_equal(expected_densities, actual_densities)
 
 
