@@ -39,12 +39,12 @@ class _ShapeAdaptiveGaussian(Kernel):
 
     def __init__(self, bandwidth_matrix, *args, **kwargs):
         super(_ShapeAdaptiveGaussian, self).__init__()
-        self._bandwidth_matrix_inverse = LA.inv(bandwidth_matrix)
+        self._global_bandwidth_matrix_inverse = LA.inv(bandwidth_matrix)
         self._scaling_factor = 1 / LA.det(bandwidth_matrix)
 
     @property
     def dimension(self):
-        (dimension, _) = self._bandwidth_matrix_inverse.shape
+        (dimension, _) = self._global_bandwidth_matrix_inverse.shape
         return dimension
 
     def evaluate(self, xs, local_bandwidth=None):
@@ -110,7 +110,7 @@ class _ShapeAdaptiveGaussian_C(_ShapeAdaptiveGaussian):
 
     def _handle_single_pattern(self, x):
         data = np.array([x])
-        density = _kernels.sa_gaussian_single_pattern(data)
+        density = _kernels.sa_gaussian_single_pattern(data, self._global_bandwidth_matrix)
         return density
 
     def _handle_multiple_patterns(self, xs):
@@ -151,4 +151,4 @@ class _ShapeAdaptiveGaussian_Python(_ShapeAdaptiveGaussian):
         return (1 / np.power(local_bandwidth, self.dimension)) * self._scaling_factor
 
     def _compute_local_inverse(self, local_bandwidth):
-        return (1.0 / local_bandwidth) * self._bandwidth_matrix_inverse
+        return (1.0 / local_bandwidth) * self._global_bandwidth_matrix_inverse
