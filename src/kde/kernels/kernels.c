@@ -5,29 +5,41 @@
 #include "kernels.ih"
 #include "../utils/eigenvalues.h"
 #include "../../../../../../../usr/local/include/gsl/gsl_vector_double.h"
+#include "kernels.h"
 
 Kernel standardGaussianKernel = {
         .isSymmetric = true,
+        .isShapeAdaptive = false,
         .kernel.symmetricKernel.densityFunction = standardGaussianPDF,
         .kernel.symmetricKernel.factorFunction = standardGaussianConstant,
 };
 
 Kernel epanechnikovKernel = {
         .isSymmetric = true,
+        .isShapeAdaptive = false,
         .kernel.symmetricKernel.densityFunction = epanechnikovPDF,
         .kernel.symmetricKernel.factorFunction = epanechnikovConstant,
 };
 
 Kernel testKernel = {
         .isSymmetric = true,
+        .isShapeAdaptive = false,
         .kernel.symmetricKernel.densityFunction = testKernelPDF,
         .kernel.symmetricKernel.factorFunction = testKernelConstant,
 };
 
 Kernel gaussianKernel = {
         .isSymmetric = false,
+        .isShapeAdaptive = false,
         .kernel.aSymmetricKernel.densityFunction = gaussianPDF,
         .kernel.aSymmetricKernel.factorFunction= gaussianConstant,
+};
+
+Kernel shapeAdaptiveGaussianKernel = {
+        .isSymmetric = false,
+        .isShapeAdaptive = true,
+        .kernel.shapeAdaptiveKernel.densityFunction = shapeAdaptiveGaussianPDF,
+        .kernel.shapeAdaptiveKernel.factorFunction= shapeAdaptiveConstant,
 };
 
 
@@ -41,6 +53,8 @@ Kernel selectKernel(KernelType type) {
             return testKernel;
         case GAUSSIAN:
             return gaussianKernel;
+        case SHAPE_ADAPTIVE_GAUSSIAN:
+            return shapeAdaptiveGaussianKernel;
         default:
             fprintf(stderr, "%d is an invalid kernel type.\n", type);
             exit(-1);
@@ -67,6 +81,16 @@ ASymmetricKernel selectASymmetricKernel(KernelType type) {
             return gaussianKernel.kernel.aSymmetricKernel;
         default:
             fprintf(stderr, "%d is an invalid asymmetric kernel type.\n", type);
+            exit(-1);
+    }
+}
+
+ShapeAdaptiveKernel selectShapeAdaptiveKernel(KernelType type){
+    switch(type) {
+        case SHAPE_ADAPTIVE_GAUSSIAN:
+            return shapeAdaptiveGaussianKernel.kernel.shapeAdaptiveKernel;
+        default:
+            fprintf(stderr, "%d is an invalid shape adaptive kernel type.\n", type);
             exit(-1);
     }
 }
