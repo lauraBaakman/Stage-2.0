@@ -36,6 +36,7 @@ typedef enum {
     STANDARD_GAUSSIAN = 1,
     EPANECHNIKOV = 2,
     GAUSSIAN = 3,
+    SHAPE_ADAPTIVE_GAUSSIAN = 4,
 } KernelType;
 
 Kernel selectKernel(KernelType type);
