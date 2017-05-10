@@ -8,6 +8,7 @@ from inputoutput.dataset import DataSet
 class SimulatedDataSet(DataSet):
 
     def __init__(self):
+        np.random.seed(0)
         self._components = OrderedDict()
         self._init_components()
         patterns = self._compute_patterns(self._components)
