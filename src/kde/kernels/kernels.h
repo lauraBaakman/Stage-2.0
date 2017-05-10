@@ -11,7 +11,10 @@ typedef double (*SymmetricKernelConstantFunction)(int dimensionality);
 typedef double (*ASymmetricKernelDensityFunction)(gsl_vector* pattern, gsl_vector* mean, gsl_matrix* shapeMatrix);
 typedef gsl_matrix* (*ASymmetricKernelConstantFunction)(Array* covarianceMatrix);
 
-typedef double (*ShapeAdaptiveKernelDensityFunction)(gsl_vector* pattern, double localBandwidth, gsl_matrix* choleskyFactorGlobalBandwidthMatrix);
+typedef double (*ShapeAdaptiveKernelDensityFunction)(gsl_vector* pattern,
+                                                     double localBandwidth,
+                                                     gsl_matrix* globalBandwidthMatrix,
+                                                     gsl_matrix* choleskyFactorGlobalBandwidthMatrix);
 typedef gsl_matrix* (*ShapeAdaptiveKernelConstantFunction)(Array* globalBandwidthMatrix);
 
 typedef struct SymmetricKernel {

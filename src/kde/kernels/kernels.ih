@@ -29,7 +29,10 @@ double gaussianPDF(gsl_vector* pattern, gsl_vector * mean, gsl_matrix * cholesky
 
 gsl_matrix* shapeAdaptiveConstant(Array* globalBandwidthMatrix);
 
-double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth, gsl_matrix * choleskyFactorGlobalBandwidthMatrix);
+double shapeAdaptiveGaussianPDF(gsl_vector* pattern,
+                                double localBandwidth,
+                                gsl_matrix * globalBandwidthMatrix,
+                                gsl_matrix * choleskyFactorGlobalBandwidthMatrix);
 
 double dotProduct(double *a, double *b, int length);
 
