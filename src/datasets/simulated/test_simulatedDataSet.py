@@ -7,25 +7,25 @@ from datasets.simulated.simulateddataset import SimulatedDataSet
 import datasets.simulated.components as components
 
 
+component_a = {
+    'component': components.UniformRandomNoise(
+        minimum_value=0,maximum_value=20),
+    'num elements': 3,
+}
+component_b = {
+    'component': components.UniformRandomNoise(
+        minimum_value=10, maximum_value=50),
+    'num elements': 2,
+}
+
+
 class TestSimulatedDataSet(TestCase):
 
     def setUp(self):
         super().setUp()
         self._components = OrderedDict()
-        self._components['a'] = {
-                'component': components.UniformRandomNoise(
-                    minimum_value=0,
-                    maximum_value=20
-                ),
-                'num elements': 3,
-            }
-        self._components['b'] = {
-            'component': components.UniformRandomNoise(
-                minimum_value=10,
-                maximum_value=50
-            ),
-            'num elements': 2,
-        }
+        self._components['a'] = component_a
+        self._components['b'] = component_b
 
     def test__compute_patterns_shape(self):
         actual_patterns = SimulatedDataSet._compute_patterns(None, self._components)
