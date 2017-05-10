@@ -180,9 +180,60 @@ gsl_matrix* shapeAdaptiveConstant(Array* covarianceMatrix){
     return globalBandwidthMatrixCholeskyFactorization;
 }
 
-double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth, gsl_matrix * globalBandwidthMatrix){
-    /* TODO Evaluate the kernel */
-    return 42.0;
+double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth, gsl_matrix * bandwidthMatrix){
+    //Compute local bandwidth matrix
+    gsl_matrix_scale(bandwidthMatrix, localBandwidth);
+
+    //Compute the LU factorization of the local bandwidth matrix
+    gsl_matrix* luDecomposition = gsl_matrix_alloc(bandwidthMatrix->size1, bandwidthMatrix->size2);
+    gsl_matrix_memcpy(luDecomposition, bandwidthMatrix);
+
+    gsl_permutation* permutation = gsl_permutation_calloc(luDecomposition->size2);
+    int signum = 0;
+    gsl_linalg_LU_decomp(luDecomposition, permutation, &signum);
+
+    // Compute inverse of local bandwidth matrix
+    gsl_matrix* inverse = gsl_matrix_alloc(bandwidthMatrix->size1, bandwidthMatrix->size2);
+    gsl_linalg_LU_invert(luDecomposition,permutation, inverse);
+
+    // Compute determinant of local bandwidth matrix
+    double determinant = gsl_linalg_LU_det(luDecomposition, signum);
+
+    // Multiply the inverse with the pattern INPLACE!!
+    gsl_matrix_transpose(inverse);
+    gsl_vector* scaled_pattern = gsl_vector_calloc(pattern->size);
+    gsl_blas_dsymv(CblasLower, 1.0, inverse, pattern, 1.0, scaled_pattern);
+
+    //Evaluate the pdf
+    gsl_vector* mean = gsl_vector_calloc(bandwidthMatrix->size1);
+    gsl_matrix* covarianceMatrix = gsl_matrix_alloc(bandwidthMatrix->size1, bandwidthMatrix->size2);
+    gsl_matrix_set_identity(covarianceMatrix);
+
+    gsl_matrix* choleskyDecompositionCovarianceMatrix = gsl_matrix_alloc(covarianceMatrix->size1, covarianceMatrix->size2);
+    gsl_matrix_memcpy(choleskyDecompositionCovarianceMatrix, covarianceMatrix);
+
+    gsl_linalg_cholesky_decomp1(choleskyDecompositionCovarianceMatrix);
+
+    gsl_vector* work = gsl_vector_alloc(mean->size);
+
+    double density = 1.0; //Skipping initialization of this value breaks the evaluation of the pdf
+    gsl_ran_multivariate_gaussian_pdf(scaled_pattern, mean, choleskyDecompositionCovarianceMatrix, &density, work);
+
+    //Determine the result of the kernel.
+    double scalingFactor = 1.0 / determinant;
+    density *= scalingFactor;
+
+    //Free memory
+    gsl_matrix_free(luDecomposition);
+    gsl_matrix_free(inverse);
+    gsl_vector_free(mean);
+    gsl_vector_free(scaled_pattern);
+    gsl_matrix_free(covarianceMatrix);
+    gsl_matrix_free(choleskyDecompositionCovarianceMatrix);
+    gsl_vector_free(work);
+    gsl_permutation_free(permutation);
+
+    return density;
 }
 
 
