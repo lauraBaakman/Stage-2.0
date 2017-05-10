@@ -1,4 +1,5 @@
 from unittest import TestCase
+import warnings
 
 import numpy as np
 
@@ -16,6 +17,13 @@ class TestResults(TestCase):
                     [37.0, 44.1, 49.0],
                     [54.0, 56.0, 47.0],
                     [51.0, 46.0, 47.0],
+                ]),
+                densities=np.array([
+                    7.539699219e-05,
+                    1.240164051e-05,
+                    1.227518586e-05,
+                    7.288289757e-05,
+                    0.0001832763582,
                 ])
             ),
             results_array=np.array([1.0, 2.0, 3.0, 4.0, 5.1234567891011121314])
@@ -34,6 +42,13 @@ class Test_ResultsValidator(TestCase):
                 [54.0, 56.0, 47.0],
                 [51.0, 46.0, 47.0],
             ]),
+            densities=np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+                1.227518586e-05,
+                7.288289757e-05,
+                0.0001832763582,
+            ])
         )
 
     def test_validate_1(self):
@@ -115,3 +130,47 @@ class Test_ResultsValidator(TestCase):
             self.fail('Unexpected exception raised: {}'.format(e))
         else:
             self.fail('ExpectedException not raised')
+
+    def test__results_are_densities_0(self):
+        results_array = np.array([
+            0.0, 0.2, 0.33, 0.444, 0.55, 1.0
+        ])
+        validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
+        actual = validator._results_is_1D_array()
+        self.assertIsNone(actual)
+
+    def test__results_are_densities_1(self):
+        results_array = np.array([
+            0.0, 0.2, 33.0, 0.444, 0.55, 0.66
+        ])
+        validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
+        with warnings.catch_warnings(record=True) as warning:
+            warnings.simplefilter("always")
+
+            validator._results_are_densities()
+
+            self.assertEqual(len(warning), 1)
+
+            expected_message = "Not all values in the results are in the range [0, 1]."
+            actual_message = str(warning[-1].message)
+            self.assertEqual(expected_message, actual_message)
+
+            assert issubclass(warning[-1].category, UserWarning)
+
+    def test__results_are_densities_2(self):
+        results_array = np.array([
+            0.0, 0.2, 0.33, 0.444, -0.55, 0.66
+        ])
+        validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
+        with warnings.catch_warnings(record=True) as warning:
+            warnings.simplefilter("always")
+
+            validator._results_are_densities()
+
+            self.assertEqual(len(warning), 1)
+
+            expected_message = "Not all values in the results are in the range [0, 1]."
+            actual_message = str(warning[-1].message)
+            self.assertEqual(expected_message, actual_message)
+
+            assert issubclass(warning[-1].category, UserWarning)
