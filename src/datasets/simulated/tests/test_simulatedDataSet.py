@@ -1,6 +1,6 @@
 from unittest import TestCase
 from collections import OrderedDict
-from io import StringIO
+import io
 
 import numpy as np
 
@@ -123,7 +123,7 @@ class TestSimulatedDataSet(TestCase):
                            "7.812500000000001857e-06\n").encode()
 
         # See: http://stackoverflow.com/a/3945057/1357229
-        actual_file_buffer = StringIO()
+        actual_file_buffer = io.BytesIO()
         data_set.to_file(actual_file_buffer)
         actual_file_buffer.seek(0)
         actual_output = actual_file_buffer.read()
@@ -134,9 +134,9 @@ class TestSimulatedDataSet(TestCase):
         data_set = SimulatedDataSetForTests()
 
         expected_output = ("5 3\n"
-                           "3 2\n")
+                           "3 2\n").encode()
 
-        actual_file_buffer = StringIO()
+        actual_file_buffer = io.BytesIO()
         data_set._header_to_file(actual_file_buffer)
         actual_file_buffer.seek(0)
         actual_output = actual_file_buffer.read()
@@ -153,7 +153,7 @@ class TestSimulatedDataSet(TestCase):
                            "3.272178244375729150e+01 4.702386553170644135e+01 1.284144232791547680e+01\n").encode()
 
         # See: http://stackoverflow.com/a/3945057/1357229
-        actual_file_buffer = StringIO()
+        actual_file_buffer = io.BytesIO()
         data_set._patterns_to_file(actual_file_buffer)
         actual_file_buffer.seek(0)
         actual_output = actual_file_buffer.read()
@@ -171,7 +171,7 @@ class TestSimulatedDataSet(TestCase):
                            "7.812500000000001857e-06\n").encode()
 
         # See: http://stackoverflow.com/a/3945057/1357229
-        actual_file_buffer = StringIO()
+        actual_file_buffer = io.BytesIO()
         data_set._densities_to_file(actual_file_buffer)
         actual_file_buffer.seek(0)
         actual_output = actual_file_buffer.read()
