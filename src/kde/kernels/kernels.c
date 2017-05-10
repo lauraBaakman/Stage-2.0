@@ -146,6 +146,26 @@ double gaussianPDF(gsl_vector * pattern, gsl_vector * mean, gsl_matrix *cholesky
     return density;
 }
 
+/* Shape Adaptive Kernels */
+
+gsl_matrix* shapeAdaptiveConstant(Array* covarianceMatrix){
+    gsl_matrix* globalBandwidthMatrixCholeskyFactorization = arrayCopyToGSLMatrix(covarianceMatrix);
+
+    gsl_matrix_print(stdout, globalBandwidthMatrixCholeskyFactorization);
+
+    gsl_linalg_cholesky_decomp1(globalBandwidthMatrixCholeskyFactorization);
+
+    return globalBandwidthMatrixCholeskyFactorization;
+}
+
+double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth, gsl_matrix * choleskyFactorGlobalBandwidthMatrix){
+    /* TODO Evaluate the kernel */
+    return 42.0;
+}
+
+
+/* Utilities */
+
 double dotProduct(double *a, double *b, int length) {
     double dotProduct = 0;
     for ( int i = 0; i < length; ++i ) {
