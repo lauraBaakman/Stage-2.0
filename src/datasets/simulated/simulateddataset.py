@@ -59,15 +59,7 @@ class SimulatedDataSet(DataSet):
         )
         outfile.write(
             '{component_lengths}\n'.format(
-                component_lengths=reduce(
-                    lambda x, y: '{} {}'.format(x, y),
-                    [
-                        component['num elements']
-                        for component
-                        in self._components.values()
-                    ]
-                )
-            )
+                component_lengths=reduce(lambda x, y: '{} {}'.format(x, y), self.components_lengths)
             ).encode('utf-8')
         )
 
