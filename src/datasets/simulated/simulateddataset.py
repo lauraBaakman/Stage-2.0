@@ -38,6 +38,27 @@ class SimulatedDataSet(DataSet):
         return np.mean(individual_densities, axis=0)
 
     def to_file(self, out_file):
+        self._header_to_file(out_file)
+
+    def _header_to_file(self, outfile):
+        outfile.write(
+            '{length} {dimension}\n'.format(
+                length=self.num_patterns,
+                dimension=self.dimension
+            )
+        )
+        outfile.write(
+            '{component_lengths}\n'.format(
+                component_lengths=reduce(
+                    lambda x, y: '{} {}'.format(x, y),
+                    [
+                        component['num elements']
+                        for component
+                        in self._components.values()
+                    ]
+                )
+            )
+        )
 
     def __repr__(self):
         return "%s(%r)" % (self.__class__, self.__dict__)
