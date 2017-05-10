@@ -175,8 +175,6 @@ double gaussianPDF(gsl_vector * pattern, gsl_vector * mean, gsl_matrix *cholesky
 gsl_matrix* shapeAdaptiveConstant(Array* covarianceMatrix){
     gsl_matrix* globalBandwidthMatrixCholeskyFactorization = arrayCopyToGSLMatrix(covarianceMatrix);
 
-    gsl_matrix_print(stdout, globalBandwidthMatrixCholeskyFactorization);
-
     gsl_linalg_cholesky_decomp1(globalBandwidthMatrixCholeskyFactorization);
 
     return globalBandwidthMatrixCholeskyFactorization;
