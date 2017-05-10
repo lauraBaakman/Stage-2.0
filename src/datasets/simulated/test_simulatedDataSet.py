@@ -10,12 +10,12 @@ import datasets.simulated.components as components
 
 component_a = {
     'component': components.UniformRandomNoise(
-        minimum_value=0,maximum_value=20),
+        minimum_value=0,maximum_value=20, dimension=3),
     'num elements': 3,
 }
 component_b = {
     'component': components.UniformRandomNoise(
-        minimum_value=10, maximum_value=50),
+        minimum_value=10, maximum_value=50, dimension=3),
     'num elements': 2,
 }
 
