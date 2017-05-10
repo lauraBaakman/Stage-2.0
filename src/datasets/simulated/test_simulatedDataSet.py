@@ -19,6 +19,16 @@ component_b = {
 }
 
 
+class SimulatedDataSetForTests(SimulatedDataSet):
+
+    def __init__(self):
+        super(SimulatedDataSetForTests, self).__init__()
+
+    def _init_components(self):
+        self._components['a'] = component_a
+        self._components['b'] = component_b
+
+
 class TestSimulatedDataSet(TestCase):
 
     def setUp(self):
@@ -50,6 +60,14 @@ class TestSimulatedDataSet(TestCase):
     def _in_range(self, values, min_value, max_value):
         self.assertTrue(np.all(values >= min_value))
         self.assertTrue(np.all(values <= max_value))
+
+    def test_fixed_seed(self):
+        set1 = SimulatedDataSetForTests()
+        set2 = SimulatedDataSetForTests()
+
+        self.assertEqual(set1, set2)
+        np.testing.assert_array_equal(set1.patterns, set2.patterns)
+        np.testing.assert_array_equal(set1.densities, set2.densities)
 
     def test__compute_densities_shape(self):
         SimulatedDataSet.__init__ = None
