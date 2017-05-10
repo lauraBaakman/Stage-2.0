@@ -18,6 +18,14 @@ class SimulatedDataSet(DataSet):
             densities=densities
         )
 
+    @property
+    def components_lengths(self):
+        return [
+            component['num elements']
+            for component
+            in self._components.values()
+        ]
+
     def _init_components(self):
         raise NotImplementedError()
 

@@ -38,6 +38,12 @@ class TestSimulatedDataSet(TestCase):
         self._components['a'] = component_a
         self._components['b'] = component_b
 
+    def test_components_lengths(self):
+        set = SimulatedDataSetForTests()
+        actual = set.components_lengths
+        expected = [3, 2]
+        self.assertEqual(actual, expected)
+
     def test__compute_patterns_shape(self):
         actual_patterns = SimulatedDataSet._compute_patterns(None, self._components)
         (actual_num_patterns, actual_dimension) = actual_patterns.shape
