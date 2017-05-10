@@ -5,7 +5,6 @@ import numpy as np
 from inputoutput.dataset import DataSet
 
 
-
 class SimulatedDataSet(DataSet):
 
     def __init__(self):
