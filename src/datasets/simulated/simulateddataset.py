@@ -37,5 +37,7 @@ class SimulatedDataSet(DataSet):
         ))
         return np.mean(individual_densities, axis=0)
 
+    def to_file(self, out_file):
+
     def __repr__(self):
         return "%s(%r)" % (self.__class__, self.__dict__)
