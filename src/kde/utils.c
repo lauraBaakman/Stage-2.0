@@ -158,6 +158,17 @@ int gsl_vector_print(FILE *f, const gsl_vector *vector) {
     return n;
 }
 
+int gsl_permutation_print(FILE *f, const gsl_permutation *permutation){
+    int status, n= 0;
+    for (size_t i = 0; i < permutation->size; i++) {
+        if ((status = fprintf(f, "%# .3g ", gsl_permutation_get(permutation, i))) < 0) return -1;
+        n += status;
+    }
+    if ((status = fprintf(f, "\n")) < 0)
+        return -1;
+    return n;
+}
+
 gsl_matrix* gsl_matrix_view_copy_to_gsl_matrix(gsl_matrix_view origin) {
     gsl_matrix *copy = gsl_matrix_alloc(origin.matrix.size1, origin.matrix.size2);
     gsl_matrix_memcpy(copy, &origin.matrix);

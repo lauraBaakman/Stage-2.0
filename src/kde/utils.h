@@ -5,6 +5,7 @@
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include <numpy/arrayobject.h>
 #include <gsl/gsl_matrix.h>
+#include <gsl/gsl_permutation.h>
 
 typedef struct Array{
     double* data;
@@ -43,6 +44,8 @@ gsl_matrix* gsl_matrix_view_copy_to_gsl_matrix(gsl_matrix_view origin);
 int gsl_matrix_print(FILE *f, const gsl_matrix *m);
 
 int gsl_vector_print(FILE *f, const gsl_vector *vector);
+
+int gsl_permutation_print(FILE *f, const gsl_permutation *permutation);
 
 double* scalePattern(double* pattern, double* dataPoint, double* scaledPattern, int dimensionality, double windowWidth);
 
