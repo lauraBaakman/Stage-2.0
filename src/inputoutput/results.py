@@ -1,4 +1,5 @@
 import numpy as np
+import warnings
 
 class Results:
     def __init__(self, results_array, data_set=None):
@@ -35,6 +36,7 @@ class _ResultsValidator(object):
     def validate(self):
         self._one_result_per_pattern()
         self._results_is_1D_array()
+        self._results_are_densities()
 
     def _one_result_per_pattern(self):
         num_patterns = self._data_set.num_patterns
@@ -52,6 +54,9 @@ class _ResultsValidator(object):
                 '''1D arrays are expected as results, the current results array has {} dimensions.'''
                     .format(self._results_array.ndim)
             )
+
+    def _results_are_densities(self):
+        pass
 
 
 class InvalidResultsException(Exception):
