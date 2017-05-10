@@ -17,21 +17,21 @@ class TestSimulatedDataSet(TestCase):
                     minimum_value=0,
                     maximum_value=20
                 ),
-                'num elements': 10,
+                'num elements': 3,
             }
         self._components['b'] = {
             'component': components.UniformRandomNoise(
                 minimum_value=10,
                 maximum_value=50
             ),
-            'num elements': 5,
+            'num elements': 2,
         }
 
     def test__compute_patterns_shape(self):
         actual_patterns = SimulatedDataSet._compute_patterns(None, self._components)
         (actual_num_patterns, actual_dimension) = actual_patterns.shape
 
-        expected_num_patterns = 15
+        expected_num_patterns = 5
         expected_dimension = 3
 
         self.assertEqual(actual_num_patterns, expected_num_patterns)
@@ -40,10 +40,10 @@ class TestSimulatedDataSet(TestCase):
     def test__compute_patterns_range(self):
         actual_patterns = SimulatedDataSet._compute_patterns(None, self._components)
 
-        first_component_patterns = actual_patterns[0:10]
+        first_component_patterns = actual_patterns[0:3]
         self._in_range(first_component_patterns, 0, 20)
 
-        second_component_patterns = actual_patterns[10:15]
+        second_component_patterns = actual_patterns[3:5]
         self._in_range(second_component_patterns, 10, 50)
 
     # noinspection PyTypeChecker
