@@ -177,3 +177,13 @@ class TestSimulatedDataSet(TestCase):
         actual_output = actual_file_buffer.read()
 
         self.assertEqual(actual_output, expected_output)
+
+    def test_reading_and_writing(self):
+        expected_data_set = SimulatedDataSetForTests()
+
+        file_buffer = io.BytesIO()
+        expected_data_set.to_file(file_buffer)
+        file_buffer.seek(0)
+
+        actual_data_set = SimulatedDataSetForTests.from_file(file_buffer)
+        self.assertEqual(expected_data_set, actual_data_set)
