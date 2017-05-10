@@ -2,6 +2,7 @@ import numpy.linalg as LA
 import scipy.stats as stats
 import numpy as np
 
+import kde.kernels._kernels as _kernels
 from kde.kernels.kernel import Kernel, KernelException
 
 _as_c_enum = 4
@@ -108,7 +109,9 @@ class _ShapeAdaptiveGaussian_C(_ShapeAdaptiveGaussian):
             raise TypeError("Expected a vector or a matrix, not a {}-dimensional array.".format(xs.ndim))
 
     def _handle_single_pattern(self, x):
-        pass
+        data = np.array([x])
+        density = _kernels.sa_gaussian_single_pattern(data)
+        return density
 
     def _handle_multiple_patterns(self, xs):
         pass
