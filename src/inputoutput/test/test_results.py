@@ -1,4 +1,5 @@
 from unittest import TestCase
+import warnings
 
 import numpy as np
 
@@ -129,3 +130,25 @@ class Test_ResultsValidator(TestCase):
             self.fail('Unexpected exception raised: {}'.format(e))
         else:
             self.fail('ExpectedException not raised')
+
+    def test__results_are_densities_0(self):
+        results_array = np.array([
+            0.0, 0.2, 0.33, 0.444, 0.55, 1.0
+        ])
+        validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
+        actual = validator._results_is_1D_array()
+        self.assertIsNone(actual)
+
+    def test__results_are_densities_1(self):
+        results_array = np.array([
+            0.0, 0.2, 33.0, 0.444, 0.55, 0.66
+        ])
+        validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
+        with warnings.catch_warnings(record=True) as warning:
+            warnings.simplefilter("always")
+
+            validator._results_are_densities()
+
+            self.assertEqual(len(warning), 1)
+            assert issubclass(warning[-1].category, UserWarning)
+            assert "densities" in str(warning[-1].message)
