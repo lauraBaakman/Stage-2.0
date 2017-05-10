@@ -130,13 +130,15 @@ static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
     PyObject* inPattern = NULL;
     PyObject* inGlobalBandwidthMatrix = NULL;
 
-    if (!PyArg_ParseTuple(args, "OO", &inPattern, &inGlobalBandwidthMatrix)) return NULL;
+    double localBandwidth;
+
+    if (!PyArg_ParseTuple(args, "OdO", &inPattern, &localBandwidth, &inGlobalBandwidthMatrix)) return NULL;
 
     Array pattern = pyObjectToArray(inPattern, NPY_ARRAY_IN_ARRAY);
     Array globalBandwidthMatrix = pyObjectToArray(inGlobalBandwidthMatrix, NPY_ARRAY_IN_ARRAY);
 
     /* Do computations */
-    double density = 42.0;
+    double density = localBandwidth;
 
     /* Free memory */
 
