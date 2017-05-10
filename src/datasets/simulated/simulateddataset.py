@@ -53,7 +53,7 @@ class SimulatedDataSet(DataSet):
             '{length} {dimension}\n'.format(
                 length=self.num_patterns,
                 dimension=self.dimension
-            )
+            ).encode('utf-8')
         )
         outfile.write(
             '{component_lengths}\n'.format(
@@ -66,6 +66,7 @@ class SimulatedDataSet(DataSet):
                     ]
                 )
             )
+            ).encode('utf-8')
         )
 
     def __repr__(self):
