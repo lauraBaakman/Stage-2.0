@@ -108,10 +108,10 @@ class _ShapeAdaptiveGaussian_C(_ShapeAdaptiveGaussian):
             raise TypeError("Expected a vector or a matrix, not a {}-dimensional array.".format(xs.ndim))
 
     def _handle_single_pattern(self, x):
-        raise NotImplementedError()
+        pass
 
     def _handle_multiple_patterns(self, xs):
-        raise NotImplementedError()
+        pass
 
 
 class _ShapeAdaptiveGaussian_Python(_ShapeAdaptiveGaussian):
