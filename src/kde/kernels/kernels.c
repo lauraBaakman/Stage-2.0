@@ -180,7 +180,7 @@ gsl_matrix* shapeAdaptiveConstant(Array* covarianceMatrix){
     return globalBandwidthMatrixCholeskyFactorization;
 }
 
-double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth, gsl_matrix * globalBandwidthMatrix, gsl_matrix * choleskyFactorGlobalBandwidthMatrix){
+double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth, gsl_matrix * globalBandwidthMatrix){
     /* TODO Evaluate the kernel */
     return 42.0;
 }

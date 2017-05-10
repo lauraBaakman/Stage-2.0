@@ -143,7 +143,7 @@ static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
     ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(SHAPE_ADAPTIVE_GAUSSIAN);
     gsl_vector_view pattern_view = arrayGetGSLVectorView(&pattern);
     gsl_matrix* kernelConstant = kernel.factorFunction(&globalBandwidthMatrix);
-    double density = kernel.densityFunction(&pattern_view.vector, localBandwidth, &globalBandwidthMatrixView.matrix, kernelConstant);
+    double density = kernel.densityFunction(&pattern_view.vector, localBandwidth, &globalBandwidthMatrixView.matrix);
 
     /* Free memory */
     gsl_matrix_free(kernelConstant);
