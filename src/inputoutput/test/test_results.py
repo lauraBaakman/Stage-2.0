@@ -150,5 +150,11 @@ class Test_ResultsValidator(TestCase):
             validator._results_are_densities()
 
             self.assertEqual(len(warning), 1)
+
+            expected_message = "Not all values in the results are in the range [0, 1]."
+            actual_message = str(warning[-1].message)
+            self.assertEqual(expected_message, actual_message)
+
+            assert issubclass(warning[-1].category, UserWarning)
             assert issubclass(warning[-1].category, UserWarning)
             assert "densities" in str(warning[-1].message)
