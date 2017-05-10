@@ -47,6 +47,8 @@ class SimulatedDataSet(DataSet):
 
     def to_file(self, out_file):
         self._header_to_file(out_file)
+        self._patterns_to_file(out_file)
+        self._densities_to_file(out_file)
 
     def _header_to_file(self, outfile):
         outfile.write(
