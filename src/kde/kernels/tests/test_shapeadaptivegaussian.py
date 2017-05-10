@@ -27,7 +27,6 @@ class TestShapeAdaptiveGaussian(TestCase):
         actual = ShapeAdaptiveGaussian(H).evaluate(x)
         self.assertAlmostEqual(actual, expected)
 
-    @skip("There is no C implementation of ShapeAdaptiveGaussian.")
     def test_alternative_implementation(self):
         H = np.array([
             [0.080225998475784, 0.000182273891304],
@@ -601,7 +600,6 @@ class ShapeAdaptiveGaussian_Python(ShapeAdaptiveGaussianImpAbstractTest, TestCas
         actual = _ShapeAdaptiveGaussian_Python(H)._compute_local_inverse(local_bandwidth)
         np.testing.assert_array_almost_equal(expected, actual)
 
-@skip("There is no C implementation of ShapeAdaptiveGaussian.")
 class ShapeAdaptiveGaussian_C(ShapeAdaptiveGaussianImpAbstractTest, TestCase):
 
     def setUp(self):
