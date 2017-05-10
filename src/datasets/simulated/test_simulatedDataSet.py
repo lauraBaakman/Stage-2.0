@@ -70,7 +70,6 @@ class TestSimulatedDataSet(TestCase):
         np.testing.assert_array_equal(set1.densities, set2.densities)
 
     def test__compute_densities_shape(self):
-        SimulatedDataSet.__init__ = None
         patterns = np.array([
             [-10, -10, -10],
             [5, 5, 5],
