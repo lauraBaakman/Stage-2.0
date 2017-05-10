@@ -128,10 +128,12 @@ static char kernels_sa_gaussian_docstring[] = "Evaluate the shape adaptive gauss
 static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
     /* Read input */
     PyObject* inPattern = NULL;
+    PyObject* inGlobalBandwidthMatrix = NULL;
 
-    if (!PyArg_ParseTuple(args, "O", &inPattern)) return NULL;
+    if (!PyArg_ParseTuple(args, "OO", &inPattern, &inGlobalBandwidthMatrix)) return NULL;
 
     Array pattern = pyObjectToArray(inPattern, NPY_ARRAY_IN_ARRAY);
+    Array globalBandwidthMatrix = pyObjectToArray(inGlobalBandwidthMatrix, NPY_ARRAY_IN_ARRAY);
 
     /* Do computations */
     double density = 42.0;
