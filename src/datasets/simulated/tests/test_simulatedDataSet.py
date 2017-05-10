@@ -123,3 +123,49 @@ class TestSimulatedDataSet(TestCase):
 
         self.assertEqual(actual_output, expected_output)
 
+    def test__header_to_file(self):
+        data_set = SimulatedDataSetForTests()
+
+        expected_output = ("5 3\n"
+                           "3 2\n")
+
+        actual_file_buffer = StringIO()
+        data_set._header_to_file(actual_file_buffer)
+        actual_file_buffer.seek(0)
+        actual_output = actual_file_buffer.read()
+
+        self.assertEqual(actual_output, expected_output)
+
+    def test_patterns_to_file(self):
+        data_set = SimulatedDataSetForTests()
+
+        expected_output = ("10.97627008,  14.30378733,  12.05526752\n"
+                           "10.89766366,   8.47309599,  12.91788226\n"
+                           "8.75174423,  17.83546002,  19.27325521\n"
+                           "25.33766075,  41.66900152,  31.15579679\n"
+                           "32.72178244,  47.02386553,  12.84144233\n")
+
+        # See: http://stackoverflow.com/a/3945057/1357229
+        actual_file_buffer = StringIO()
+        data_set._patterns_to_file(actual_file_buffer)
+        actual_file_buffer.seek(0)
+        actual_output = actual_file_buffer.read()
+
+        self.assertEqual(actual_output, expected_output)
+
+    def test_densities_to_file(self):
+        data_set = SimulatedDataSetForTests()
+
+        expected_output = ("7.03125000e-05\n"
+                           "6.25000000e-05\n"
+                           "6.25000000e-05\n"
+                           "7.81250000e-06\n"
+                           "7.81250000e-06\n")
+
+        # See: http://stackoverflow.com/a/3945057/1357229
+        actual_file_buffer = StringIO()
+        data_set._densities_to_file(actual_file_buffer)
+        actual_file_buffer.seek(0)
+        actual_output = actual_file_buffer.read()
+
+        self.assertEqual(actual_output, expected_output)
