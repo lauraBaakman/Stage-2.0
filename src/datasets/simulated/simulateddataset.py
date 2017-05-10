@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from functools import reduce
 
 import numpy as np
 
@@ -62,6 +63,12 @@ class SimulatedDataSet(DataSet):
                 component_lengths=reduce(lambda x, y: '{} {}'.format(x, y), self.components_lengths)
             ).encode('utf-8')
         )
+
+    def _patterns_to_file(self, outfile):
+        np.savetxt(outfile, self.patterns)
+
+    def _densities_to_file(self, outfile):
+        np.savetxt(outfile, self.densities)
 
     def __repr__(self):
         return "%s(%r)" % (self.__class__, self.__dict__)
