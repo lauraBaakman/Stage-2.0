@@ -54,7 +54,10 @@ class DataSet(object):
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return np.array_equiv(self.patterns, other.patterns)
+            return (
+                np.array_equiv(self.patterns, other.patterns) and
+                np.array_equiv(self.densities, other.densities)
+            )
         return NotImplemented
 
     def __ne__(self, other):

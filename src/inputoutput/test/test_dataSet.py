@@ -119,6 +119,74 @@ class TestDataSet(TestCase):
 
         self.assertEqual(actual, expected)
 
+    def test__eq_both_eqal(self):
+        one = DataSet(
+            patterns=np.array([
+                [52.0, 45.0, 56.0],
+                [60.0, 52.0, 41.0],
+            ]),
+            densities=np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+            ])
+        )
+        two = DataSet(
+            patterns=np.array([
+                [52.0, 45.0, 56.0],
+                [60.0, 52.0, 41.0],
+            ]),
+            densities=np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+            ])
+        )
+        self.assertTrue(one == two)
+
+    def test__eq_patterns_not_equal(self):
+        one = DataSet(
+            patterns=np.array([
+                [52.0, 45.0, 56.0],
+                [60.0, 52.0, 41.0],
+            ]),
+            densities=np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+            ])
+        )
+        two = DataSet(
+            patterns=np.array([
+                [52.0, 45.0, 56.0],
+                [60.0, 55.0, 41.0],
+            ]),
+            densities=np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+            ])
+        )
+        self.assertFalse(one == two)
+
+    def test__eq_densities_not_equal(self):
+        one = DataSet(
+            patterns=np.array([
+                [52.0, 45.0, 56.0],
+                [60.0, 52.0, 41.0],
+            ]),
+            densities=np.array([
+                7.539699219e-05,
+                1.250164051e-05,
+            ])
+        )
+        two = DataSet(
+            patterns=np.array([
+                [52.0, 45.0, 56.0],
+                [60.0, 52.0, 41.0],
+            ]),
+            densities=np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+            ])
+        )
+        self.assertFalse(one == two)
 
 class Test_DataSetReader(TestCase):
     def setUp(self):
