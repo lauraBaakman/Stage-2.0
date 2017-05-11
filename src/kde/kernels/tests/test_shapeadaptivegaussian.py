@@ -195,24 +195,28 @@ class Test_ShapeAdaptiveGaussian(TestCase):
     def test_define_and_validate_local_bandwidths_2(self):
         # Local bandwidth is a double, one pattern
         input_local_bandwidth = 0.5
-        patterns = np.random.rand(1, 3)
+        dimension = 3
+        patterns = np.random.rand(1, dimension)
+        bandwidth_matrix = np.random.rand(dimension, dimension)
 
-        expected_local_bandwidths = np.array([0.5])
+        expected = np.array([0.5])
 
-        actual_local_bandwidths = _ShapeAdaptiveGaussian._define_and_validate_local_bandwidths(
-            None, input_local_bandwidth, patterns
+        actual = ShapeAdaptiveGaussian(bandwidth_matrix)._define_and_validate_local_bandwidths(
+            input_local_bandwidth, patterns
         )
 
-        np.testing.assert_array_equal(actual_local_bandwidths, expected_local_bandwidths)
+        np.testing.assert_array_equal(actual, expected)
 
     def test_define_and_validate_local_bandwidths_3(self):
         # Local bandwidth is a double, multiple patterns
         input_local_bandwidth = 0.5
-        patterns = np.random.rand(5, 7)
+        dimension = 4
+        patterns = np.random.rand(5, dimension)
+        bandwidth_matrix = np.random.rand(dimension, dimension)
 
         try:
-            _ShapeAdaptiveGaussian._define_and_validate_local_bandwidths(
-                None, input_local_bandwidth, patterns
+            ShapeAdaptiveGaussian(bandwidth_matrix)._define_and_validate_local_bandwidths(
+                input_local_bandwidth, patterns
             )
         except KernelException:
             pass
@@ -224,12 +228,14 @@ class Test_ShapeAdaptiveGaussian(TestCase):
     def test_define_and_validate_local_bandwidths_4(self):
         # Local bandwidth is a 1x1 array, single pattern
         input_local_bandwidth = np.array([0.5])
-        patterns = np.random.rand(1, 3)
+        dimension = 2
+        patterns = np.random.rand(1, dimension)
+        bandwidth_matrix = np.random.rand(dimension, dimension)
 
         expected_local_bandwidths = np.array([0.5])
 
-        actual_local_bandwidths = _ShapeAdaptiveGaussian._define_and_validate_local_bandwidths(
-            None, input_local_bandwidth, patterns
+        actual_local_bandwidths = ShapeAdaptiveGaussian(bandwidth_matrix)._define_and_validate_local_bandwidths(
+            input_local_bandwidth, patterns
         )
 
         np.testing.assert_array_equal(actual_local_bandwidths, expected_local_bandwidths)
@@ -237,11 +243,13 @@ class Test_ShapeAdaptiveGaussian(TestCase):
     def test_define_and_validate_local_bandwidths_5(self):
         # Local bandwidth is a too small array
         input_local_bandwidth = np.random.rand(3)
-        patterns = np.random.rand(5, 7)
+        dimension = 5
+        patterns = np.random.rand(5, dimension)
+        bandwidth_matrix = np.random.rand(dimension, dimension)
 
         try:
-            _ShapeAdaptiveGaussian._define_and_validate_local_bandwidths(
-                None, input_local_bandwidth, patterns
+            ShapeAdaptiveGaussian(bandwidth_matrix)._define_and_validate_local_bandwidths(
+                input_local_bandwidth, patterns
             )
         except KernelException:
             pass
@@ -253,22 +261,26 @@ class Test_ShapeAdaptiveGaussian(TestCase):
     def test_define_and_validate_local_bandwidths_6(self):
         # Local bandwidth is an array of the correct size
         input_local_bandwidths = np.random.rand(5, 1)
-        patterns = np.random.rand(5, 7)
+        dimension = 6
+        patterns = np.random.rand(5, dimension)
+        bandwidth_matrix = np.random.rand(dimension, dimension)
 
-        actual_local_bandwidths = _ShapeAdaptiveGaussian._define_and_validate_local_bandwidths(
-                None, input_local_bandwidths, patterns
+        actual = ShapeAdaptiveGaussian(bandwidth_matrix)._define_and_validate_local_bandwidths(
+                input_local_bandwidths, patterns
             )
         expected_local_bandwidths = input_local_bandwidths
-        np.testing.assert_array_equal(actual_local_bandwidths, expected_local_bandwidths)
+        np.testing.assert_array_equal(actual, expected_local_bandwidths)
 
     def test_define_and_validate_local_bandwidths_7(self):
         # Local bandwidth is a too large array
         input_local_bandwidth = np.random.rand(10)
-        patterns = np.random.rand(5, 7)
+        dimension = 3
+        patterns = np.random.rand(5, dimension)
+        bandwidth_matrix = np.random.rand(dimension, dimension)
 
         try:
-            _ShapeAdaptiveGaussian._define_and_validate_local_bandwidths(
-                None, input_local_bandwidth, patterns
+            ShapeAdaptiveGaussian(bandwidth_matrix)._define_and_validate_local_bandwidths(
+                input_local_bandwidth, patterns
             )
         except KernelException:
             pass
@@ -280,11 +292,13 @@ class Test_ShapeAdaptiveGaussian(TestCase):
     def test_define_and_validate_local_bandwidths_8(self):
         #Local bandwidth has too many dimensions
         input_local_bandwidth = np.random.rand(5, 2)
-        patterns = np.random.rand(5, 7)
+        dimension = 3
+        patterns = np.random.rand(5, dimension)
+        bandwidth_matrix = np.random.rand(dimension, dimension)
 
         try:
-            _ShapeAdaptiveGaussian._define_and_validate_local_bandwidths(
-                None, input_local_bandwidth, patterns
+            ShapeAdaptiveGaussian(bandwidth_matrix)._define_and_validate_local_bandwidths(
+                input_local_bandwidth, patterns
             )
         except KernelException:
             pass
@@ -295,12 +309,14 @@ class Test_ShapeAdaptiveGaussian(TestCase):
 
     def test_define_and_validate_local_bandwidths_9(self):
         #Local bandwidth has too many dimensions
-        input_local_bandwidth = np.random.rand(5, 1)
-        patterns = np.random.rand(5, 7)
+        input_local_bandwidth = np.random.rand(5,1)
+        dimension = 3
+        patterns = np.random.rand(5, dimension)
+        bandwidth_matrix = np.random.rand(dimension, dimension)
 
         try:
-            _ShapeAdaptiveGaussian._define_and_validate_local_bandwidths(
-                None, input_local_bandwidth, patterns
+            ShapeAdaptiveGaussian(bandwidth_matrix)._define_and_validate_local_bandwidths(
+                input_local_bandwidth, patterns
             )
         except KernelException:
             pass
