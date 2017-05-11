@@ -27,32 +27,28 @@
 \newcommand{\varEigenValue}{\ensuremath{\lambda}\xspace}
 \newcommand{\varEpan}{\ensuremath{\mathcal{E}}}
 \newcommand{\varGaussian}{\ensuremath{\mathcal{G}}}
-%\newcommand{\varGeometricMeanFunction}[1]{\ensuremath{\text{GM}\left(#1\right)}\xspace}
 \newcommand{\varGeometricMeanFunction}[1]{%
 	\ifthenelse{\isempty{#1}}%
 	{\ensuremath{\text{GM}}\xspace}%
 	{\ensuremath{\text{GM}\left(#1\right)}\xspace}%
 }
 
-
 %Iterators
 \newcommand{\itDim}{\ensuremath{l}}
 \newcommand{\itXs}{\ensuremath{j}}
 \newcommand{\itXis}{\ensuremath{i}}
-
-
 
 \makeatletter
 \def\varKernel{\@ifnextchar[{\@with}{\@without}}
 \def\@with[#1]#2{
 	\ifthenelse{\isempty{#2}}% 
 	{\ensuremath{K_{#1}}\xspace}% #2 is empty
-	{\ensuremath{K_{#1}\left( #2 \right)}\xspace}% #2 is not empty
+	{\ensuremath{K_{#1}\!\left( #2 \right)}\xspace}% #2 is not empty
 }
 \def\@without#1{
 	\ifthenelse{\isempty{#1}}% 
 	{\ensuremath{K}\xspace}% #1 is empty
-	{\ensuremath{K\left( #1 \right)}\xspace}% #1 is not empty
+	{\ensuremath{K\!\left( #1 \right)}\xspace}% #1 is not empty
 }
 \makeatother
 
@@ -75,19 +71,19 @@
 \newcommand{\varDensityFunction}[1]{%
 	\ifthenelse{\isempty{#1}}%
 	{\ensuremath{f}\xspace}%
-	{\ensuremath{f\left( #1 \right)}\xspace}%
+	{\ensuremath{f\!\left( #1 \right)}\xspace}%
 }
 
 \newcommand{\varPilotDensityFunction}[1]{%
 	\ifthenelse{\isempty{#1}}%
 	{\ensuremath{\tilde{f}}\xspace}%
-	{\ensuremath{\tilde{f}\left( #1 \right)}\xspace}%
+	{\ensuremath{\tilde{f}\!\left( #1 \right)}\xspace}%
 }
 
 \newcommand{\varEstimatedDensityFunction}[1]{%
 	\ifthenelse{\isempty{#1}}%
 	{\ensuremath{\hat{f}}\xspace}%
-	{\ensuremath{\hat{f}\left( #1 \right)}\xspace}%
+	{\ensuremath{\hat{f}\!\left( #1 \right)}\xspace}%
 }
 \newcommand{\varScalingFactor}{\ensuremath{s}\xspace}
 \newcommand{\varMBESensitivityParam}{\ensuremath{\beta}\xspace}
