@@ -123,6 +123,9 @@ class _ShapeAdaptiveGaussian_Python(_ShapeAdaptiveGaussian):
         density = self._distribution.pdf(np.matmul(xs, local_inverse))
         return local_scaling_factor * density
 
+    def _evaluate_pattern(self, pattern, local_bandwidth):
+        pass
+
     def _compute_local_scaling_factor(self, local_bandwidth):
         return (1 / np.power(local_bandwidth, self.dimension)) * self._scaling_factor
 

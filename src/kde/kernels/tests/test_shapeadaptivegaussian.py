@@ -401,6 +401,24 @@ class Test_ShapeAdaptiveGaussian(TestCase):
         else:
             self.fail('ExpectedException not raised')
 
+    def test_evaluate_pattern_0(self):
+        H = np.array([[4, 2],
+                      [7, 6]])
+        x = np.array([0.05, 0.05])
+        local_bandwidth = 1.0
+        expected = 0.015914499621880
+        actual = ShapeAdaptiveGaussian(H)._evaluate_pattern(x, local_bandwidth)
+        self.assertAlmostEqual(actual, expected)
+
+    def test_evaluate_pattern_1(self):
+        H = np.array([[4, 2],
+                      [7, 6]])
+        local_bandwidth = 0.5
+        x = np.array([0.05, 0.05])
+        expected = 0.063646063731720
+        actual = ShapeAdaptiveGaussian(H)._evaluate_pattern(x, local_bandwidth)
+        self.assertAlmostEqual(actual, expected)
+
     def test_evaluate_0(self):
         # Single pattern, local bandwidth = 1
         H = np.array([[4, 2],
