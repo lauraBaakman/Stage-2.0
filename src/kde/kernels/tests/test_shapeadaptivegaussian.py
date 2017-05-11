@@ -190,7 +190,7 @@ class Test_ShapeAdaptiveGaussian(TestCase):
         bandwidth = 0.5
         x = np.array([0.05, 0.05])
         expected = 0.063646063731720
-        actual = ShapeAdaptiveGaussian(H).evaluate(x, local_bandwidth=bandwidth)
+        actual = ShapeAdaptiveGaussian(H).evaluate(x, local_bandwidths=bandwidth)
         self.assertAlmostEqual(actual, expected)
 
     def test_evaluate_3(self):
@@ -204,7 +204,7 @@ class Test_ShapeAdaptiveGaussian(TestCase):
             0.032475795183358,
             0.396571536389524
         ])
-        actual = ShapeAdaptiveGaussian(H).evaluate(x, local_bandwidth=local_bandwidths)
+        actual = ShapeAdaptiveGaussian(H).evaluate(x, local_bandwidths=local_bandwidths)
         np.testing.assert_array_almost_equal(actual, expected)
 
     def test_evaluate_4(self):
@@ -214,7 +214,7 @@ class Test_ShapeAdaptiveGaussian(TestCase):
         bandwidth = np.array([0.5])
         x = np.array([0.05, 0.05])
         expected = 0.063646063731720
-        actual = ShapeAdaptiveGaussian(H).evaluate(x, local_bandwidth=bandwidth)
+        actual = ShapeAdaptiveGaussian(H).evaluate(x, local_bandwidths=bandwidth)
         self.assertAlmostEqual(actual, expected)
 
 class ShapeAdaptiveGaussianImpAbstractTest(object):
@@ -248,7 +248,7 @@ class ShapeAdaptiveGaussianImpAbstractTest(object):
         bandwidth = 0.5
         x = np.array([0.05, 0.05])
         expected = 0.063646063731720
-        actual = self._kernel_class(H).evaluate(x, local_bandwidth=bandwidth)
+        actual = self._kernel_class(H).evaluate(x, local_bandwidths=bandwidth)
         self.assertAlmostEqual(expected, actual)
 
     def test_evaluate_3(self):
@@ -262,7 +262,7 @@ class ShapeAdaptiveGaussianImpAbstractTest(object):
             0.032475795183358,
             0.396571536389524
         ])
-        actual = self._kernel_class(H).evaluate(x, local_bandwidth=local_bandwidths)
+        actual = self._kernel_class(H).evaluate(x, local_bandwidths=local_bandwidths)
         np.testing.assert_array_almost_equal(actual, expected)
 
     def test_evaluate_4(self):
@@ -272,7 +272,7 @@ class ShapeAdaptiveGaussianImpAbstractTest(object):
         bandwidth = np.array([0.5])
         x = np.array([0.05, 0.05])
         expected = 0.063646063731720
-        actual = ShapeAdaptiveGaussian(H).evaluate(x, local_bandwidth=bandwidth)
+        actual = ShapeAdaptiveGaussian(H).evaluate(x, local_bandwidths=bandwidth)
         self.assertAlmostEqual(actual, expected)
 
 class ShapeAdaptiveGaussian_Python(ShapeAdaptiveGaussianImpAbstractTest, TestCase):

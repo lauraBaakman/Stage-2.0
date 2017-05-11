@@ -45,7 +45,7 @@ class _ShapeAdaptiveGaussian(Kernel):
         (dimension, _) = self._bandwidth_matrix_inverse.shape
         return dimension
 
-    def evaluate(self, xs, local_bandwidth=1):
+    def evaluate(self, xs, local_bandwidth=None):
         raise NotImplementedError("No functions should be called on objects of this type, it is an abstract class "
                                   "for the specific implementations.")
 
@@ -62,7 +62,7 @@ class _ShapeAdaptiveGaussian_C(_ShapeAdaptiveGaussian):
     def __init__(self, *args, **kwargs):
         super(_ShapeAdaptiveGaussian_C, self).__init__(*args, **kwargs)
 
-    def evaluate(self, xs, local_bandwidth=1):
+    def evaluate(self, xs, local_bandwidths=None):
         self._validate_patterns(xs)
         if xs.ndim == 1:
             return self._handle_single_pattern(xs)
@@ -84,11 +84,12 @@ class _ShapeAdaptiveGaussian_Python(_ShapeAdaptiveGaussian):
         super(_ShapeAdaptiveGaussian_Python, self).__init__(*args, **kwargs)
         self._distribution = stats.multivariate_normal(mean=np.zeros([self.dimension]))
 
-    def evaluate(self, xs, local_bandwidth=1):
+    def evaluate(self, xs, local_bandwidths=None):
         self._validate_patterns(xs)
+        local_bandwidths = self._define_and_validate_local_bandwidths(local_bandwidths, xs)
         
-        local_inverse = self._compute_local_inverse(local_bandwidth)
-        local_scaling_factor = self._compute_local_scaling_factor(local_bandwidth)
+        local_inverse = self._compute_local_inverse(local_bandwidths)
+        local_scaling_factor = self._compute_local_scaling_factor(local_bandwidths)
         
         density = self._distribution.pdf(np.matmul(xs, local_inverse))
         return local_scaling_factor * density
