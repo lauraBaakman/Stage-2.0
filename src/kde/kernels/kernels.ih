@@ -35,7 +35,8 @@ double computeLocalScalingFactor(double globalScalingFactor, double localBandwid
 gsl_matrix* computeLocalInverse(gsl_matrix* globalInverse, double localBandwidth);
 
 double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
-                                double globalScalingFactor, gsl_matrix * globalInverse);
+                                double globalScalingFactor, gsl_matrix * globalInverse,
+                                gsl_vector* mean, gsl_matrix* cholCovmat);
 
 /* Utilities */
 
