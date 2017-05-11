@@ -189,8 +189,7 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth, gsl_
     gsl_matrix_scale(localBandwidthMatrix, localBandwidth);
 
     //Compute the LU factorization of the local bandwidth matrix
-    gsl_matrix* luDecomposition = gsl_matrix_alloc(localBandwidthMatrix->size1, localBandwidthMatrix->size2);
-    gsl_matrix_memcpy(luDecomposition, localBandwidthMatrix);
+    gsl_matrix* luDecomposition = localBandwidthMatrix;
 
     gsl_permutation* permutation = gsl_permutation_calloc(luDecomposition->size2);
     int signum = 0;
@@ -198,7 +197,7 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth, gsl_
 
     // Compute inverse of local bandwidth matrix
     gsl_matrix* inverse = gsl_matrix_alloc(localBandwidthMatrix->size1, localBandwidthMatrix->size2);
-    gsl_linalg_LU_invert(luDecomposition,permutation, inverse);
+    gsl_linalg_LU_invert(luDecomposition, permutation, inverse);
 
     // Compute determinant of local bandwidth matrix
     double determinant = gsl_linalg_LU_det(luDecomposition, signum);
@@ -210,7 +209,7 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth, gsl_
 
     //Evaluate the pdf
     gsl_vector* mean = gsl_vector_calloc(localBandwidthMatrix->size1);
-    gsl_matrix* choleskyDecompositionCovarianceMatrix  = gsl_matrix_alloc(localBandwidthMatrix->size1, localBandwidthMatrix->size2);
+    gsl_matrix* choleskyDecompositionCovarianceMatrix  = localBandwidthMatrix;
     gsl_matrix_set_identity(choleskyDecompositionCovarianceMatrix);
 
     gsl_vector* work = gsl_vector_alloc(mean->size);
@@ -223,11 +222,9 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth, gsl_
     density *= scalingFactor;
 
     //Free memory
-    gsl_matrix_free(luDecomposition);
     gsl_matrix_free(inverse);
     gsl_vector_free(mean);
     gsl_vector_free(scaled_pattern);
-    gsl_matrix_free(choleskyDecompositionCovarianceMatrix);
     gsl_vector_free(work);
     gsl_permutation_free(permutation);
     gsl_matrix_free(localBandwidthMatrix);
