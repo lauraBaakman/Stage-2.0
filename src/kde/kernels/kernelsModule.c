@@ -1,4 +1,5 @@
 #include <gsl/gsl_matrix.h>
+#include <gsl/gsl_vector_double.h>
 #include "kernelsModule.h"
 
 PyObject *multi_pattern_symmetric(PyObject *args, KernelType kernelType) {
@@ -171,7 +172,21 @@ static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
     gsl_matrix_view globalBandwidthMatrixView = arrayGetGSLMatrixView(&globalBandwidthMatrix);
 
     /* Do computations */
-    densities.data[0] = 42.0;
+    ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(SHAPE_ADAPTIVE_GAUSSIAN);
+    double* pattern = patterns.data;
+    double localBandwidth;
+
+    gsl_vector_view pattern_view;
+
+    for( int j = 0; j < patterns.length; j++, pattern += patterns.rowStride) {
+        pattern_view = gsl_vector_view_array(pattern, (size_t) patterns.dimensionality);
+
+        localBandwidth = localBandwidths.data[j];
+
+        densities.data[j] = kernel.densityFunction(
+                &pattern_view.vector, localBandwidth, &globalBandwidthMatrixView.matrix
+        );
+    }
 
     /* Free memory */
 
