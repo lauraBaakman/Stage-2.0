@@ -7,7 +7,7 @@ import kde.kernels.shapeadaptivegaussian as sa_gaussian
 
 def test_1():
     dimension = 3
-    num_patterns = 500
+    num_patterns = 60000
     local_bandwidth = np.random.rand(num_patterns)
     patterns = np.random.rand(num_patterns, dimension)
 
@@ -31,7 +31,7 @@ if __name__ == '__main__':
     print(timeit.timeit(
         "test_1()",
         setup="from __main__ import test_1",
-        number=200)
+        number=10)
     )
     # print(timeit.timeit(
     #     "test_2()",
