@@ -171,8 +171,16 @@ static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
 
     gsl_matrix_view globalBandwidthMatrixView = arrayGetGSLMatrixView(&globalBandwidthMatrix);
 
-    /* Do computations */
+
     ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(SHAPE_ADAPTIVE_GAUSSIAN);
+
+    /* Compute constants */
+    gsl_matrix* globalInverse = gsl_matrix_alloc((size_t) patterns.dimensionality, (size_t) patterns.dimensionality);
+    double globalScalingFactor;
+
+    kernel.factorFunction(&globalBandwidthMatrix, globalInverse, &globalScalingFactor);
+
+    /* Do computations */
     double* pattern = patterns.data;
     double localBandwidth;
 

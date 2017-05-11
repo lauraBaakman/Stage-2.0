@@ -39,7 +39,7 @@ Kernel shapeAdaptiveGaussianKernel = {
         .isSymmetric = false,
         .isShapeAdaptive = true,
         .kernel.shapeAdaptiveKernel.densityFunction = shapeAdaptiveGaussianPDF,
-        .kernel.shapeAdaptiveKernel.factorFunction= shapeAdaptiveConstant,
+        .kernel.shapeAdaptiveKernel.factorFunction = computeGlobalConstants,
 };
 
 
@@ -171,15 +171,6 @@ double gaussianPDF(gsl_vector * pattern, gsl_vector * mean, gsl_matrix *cholesky
 }
 
 /* Shape Adaptive Kernels */
-
-gsl_matrix* shapeAdaptiveConstant(Array* covarianceMatrix){
-    gsl_matrix* globalBandwidthMatrixCholeskyFactorization = arrayCopyToGSLMatrix(covarianceMatrix);
-
-    gsl_linalg_cholesky_decomp1(globalBandwidthMatrixCholeskyFactorization);
-
-    return globalBandwidthMatrixCholeskyFactorization;
-}
-
 double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth, gsl_matrix * globalBandwidthMatrix){
 
     gsl_matrix* localBandwidthMatrix = gsl_matrix_alloc(globalBandwidthMatrix->size1, globalBandwidthMatrix->size2);
@@ -232,6 +223,28 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth, gsl_
     return density;
 }
 
+void computeGlobalConstants(Array* globalBandwidthMatrixArray, gsl_matrix *outGlobalInverse, double *outGlobalScalingFactor) {
+    gsl_matrix* LUDecompH = arrayCopyToGSLMatrix(globalBandwidthMatrixArray);
+
+    //Compute LU decompostion
+    gsl_permutation* permutation = gsl_permutation_calloc((size_t) globalBandwidthMatrixArray->dimensionality);
+    int signum = 0;
+    gsl_linalg_LU_decomp(LUDecompH, permutation, &signum);
+
+    //Compute global inverse
+    gsl_linalg_LU_invert(LUDecompH, permutation, outGlobalInverse);
+
+    //Compute global scaling factor
+    *outGlobalScalingFactor = 1.0 / gsl_linalg_LU_det(LUDecompH, signum);
+
+    //Free memory
+    gsl_permutation_free(permutation);
+}
+
+double computeLocalScalingFactor(double globalScalingFactor, double localBandwidth, int dimension) {
+    double localScalingFactor = pow(localBandwidth, dimension) * globalScalingFactor;
+    return localScalingFactor;
+}
 
 /* Utilities */
 
