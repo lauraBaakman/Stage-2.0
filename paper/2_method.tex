@@ -3,7 +3,7 @@
 %General Idea
 	We use shape adaptive kernels in combination with the Modified Breiman Estimator introduced by \textcite{wilkinson1995dataplot} 
 	%General bandwidth
-	with the general bandwidths computed according to the method introduced by \textcite{ferdosi2011comparison} for its lower complexity.
+	with the general bandwidths computed according to the method introduced by \textcite{ferdosi2011comparison} for its lower computational complexity.
 	%Pilot Densities
 	The pilot densities are computed on a $20 \times \cdots \times 20$ grid that covers all data points.
 	%Local bandwidths
@@ -13,16 +13,16 @@
 	\begin{equation}\label{eq:2:parzenWithBandWidthMatrix}
 		\varEstimatedDensityFunction{\varPattern} = \frac{1}{\varNumPatterns}\sum_{\itXis = 1}^{\varNumPatterns} \frac{1}{\det\left(\varBandwidthMatrix\right)}\varKernel{\varBandwidthMatrix^{-1}\left(\varPattern - \varPattern[\itXis]\right)}
 	\end{equation}
-	instead of \cref{eq:1:parzen} \cite{hardle2012nonparametric}. If $\varBandwidthMatrix = \varBandwidth \cdot \identityMatrix{\varDim}$ \cref{eq:2:parzenWithBandWidthMatrix} reduces to the fixed-width Parzen estimator defined in \cref{eq:1:parzen}. 
+	instead of \cref{eq:1:parzen} \cite{hardle2012nonparametric}. If an adaptive-width method is used the \varBandwidthMatrix is scaled with the local bandwidth. \Cref{eq:2:parzenWithBandWidthMatrix} reduces to the fixed-width Parzen estimator defined in \cref{eq:1:parzen}, if $\varBandwidthMatrix = \varBandwidth \cdot \identityMatrix{\varDim}$.
 	
 	For each data point \varPattern the bandwidth matrix is determined according to these steps:
 		\begin{enumerate}[labelindent=0ex]
 			\item \label{it:1:bandwidthmatrix:findNeighbours}
 				Find \varNeighborhood{\varPattern}, the \KNNK-nearest neighbors of \varPattern.
 			\item \label{it:1:bandwidthmatrix:initialBandwidthMatrix}
-				Compute \varCovarianceMatrix, the biased covariance matrix  of local neighborhood \varNeighborhood{\varPattern}.
+				Compute \varCovarianceMatrix, the biased covariance matrix of the local neighborhood \varNeighborhood{\varPattern}.
 			\item \label{it:1:bandwidthmatrix:scaleBandwidhtMatrix}
-				To determine \varBandwidthMatrix, scale \varCovarianceMatrix with
+				Determine \varBandwidthMatrix by scaling \varCovarianceMatrix with
 				\begin{equation}\label{eq:method:scalingFactor}
 					\varScalingFactor = \varBandwidth \left( \displaystyle\prod_{\itDim = 1}^{\varDim} \varEigenValue_\itDim \right)^{-\frac{1}{\varDim}}
 				\end{equation}
@@ -39,4 +39,4 @@
 			Step \ref{it:1:bandwidthmatrix:initialBandwidthMatrix} determines the basic shape of the bandwidth covariance matrix. 
 
 		% 	Discuss step 3
-			Step \ref{it:1:bandwidthmatrix:scaleBandwidhtMatrix} ensures that the kernels used in the density estimation of different patterns have the same domain, modulo the local bandwidths. \Cref{eq:method:scalingFactor} scales the bandwidth matrix in such a way that the volume of the eigenellipse of \varBandwidthMatrix is equal to that of the eigenellipse of the bandwidth matrix that is implicitly used in \cref{eq:1:parzen}. It should be noted that \varBandwidthMatrix is scaled with the local bandwidth if an adaptive-width method is used. 
+			Step \ref{it:1:bandwidthmatrix:scaleBandwidhtMatrix} ensures that the kernels used in the density estimation of different patterns have the same domain, modulo the local bandwidths. \Cref{eq:method:scalingFactor} scales the bandwidth matrix in such a way that the volume of the ellipsoid defined by the eigenvectors and values of \varBandwidthMatrix is equal to that of the eigenellipsoid of the bandwidth matrix that is implicitly used in \cref{eq:1:parzen}.
