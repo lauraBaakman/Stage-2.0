@@ -419,6 +419,21 @@ class Test_ShapeAdaptiveGaussian(TestCase):
         else:
             self.fail('ExpectedException not raised')
 
+    def test_define_and_validate_input(self):
+        dimension = 3
+        num_patterns = 10
+        patterns = np.random.rand(num_patterns, dimension)
+        local_bandwidths = np.random.rand(num_patterns)
+        bandwidth_matrix = np.random.rand(dimension, dimension)
+        (actual_patterns, actual_bandwidths) = _ShapeAdaptiveGaussian(bandwidth_matrix)._define_and_validate_input(
+            patterns, local_bandwidths
+        )
+        expected_patterns = patterns
+        expected_bandwidths = local_bandwidths
+
+        np.testing.assert_array_equal(actual_patterns, expected_patterns)
+        np.testing.assert_array_equal(actual_bandwidths, expected_bandwidths)
+
     def test_evaluate_pattern_0(self):
         H = np.array([[4, 2],
                       [7, 6]])
