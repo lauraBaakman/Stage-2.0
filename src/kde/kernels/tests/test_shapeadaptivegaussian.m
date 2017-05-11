@@ -8,11 +8,15 @@ x1 = [0.05; 0.05];
 x2 = [0.02; 0.03];
 x3 = [0.04; 0.05];
 
+lambda1 = 0.5;
+lambda2 = 0.7;
+lambda3 = 0.2;
+
 expectedResult(x1, H, 1); 
 expectedResult(x2, H, 1); 
 expectedResult(x3, H, 1);
 
 
-expectedResult(x1, H, 0.5) 
-expectedResult(x2, H, 0.5)
-expectedResult(x3, H, 0.5)
+expectedResult(x1, H, lambda1) 
+expectedResult(x2, H, lambda2)
+expectedResult(x3, H, lambda3)
