@@ -161,6 +161,34 @@ class Test_ShapeAdaptiveGaussian(TestCase):
         else:
             self.fail('ExpectedException not raised')
 
+    def test_define_and_validate_local_bandwidths_0(self):
+        #Input is None
+        self.fail("Not Implemented")
+
+    def test_define_and_validate_local_bandwidths_1(self):
+        #Local bandwidth is a double
+        self.fail("Not Implemented")
+
+    def test_define_and_validate_local_bandwidths_2(self):
+        #Local bandwidth is a 1x1 array
+        self.fail("Not Implemented")
+
+    def test_define_and_validate_local_bandwidths_3(self):
+        #Local bandwidth is a too small array
+        self.fail("Not Implemented")
+
+    def test_define_and_validate_local_bandwidths_4(self):
+        #Local bandwidth is an array of the correct size
+        self.fail("Not Implemented")
+
+    def test_define_and_validate_local_bandwidths_5(self):
+        #Local bandwidth is a too small array
+        self.fail("Not Implemented")
+
+    def test_define_and_validate_local_bandwidths_6(self):
+        #Local bandwidth has too many dimensions
+        self.fail("Not Implemented")
+
     def test_evaluate_0(self):
         # Single pattern, local bandwidth = 1
         H = np.array([[4, 2],

@@ -54,6 +54,16 @@ class _ShapeAdaptiveGaussian(Kernel):
         if xs_dimension is not self.dimension:
             raise KernelException("Patterns should have dimension {}, not {}.".format(self.dimension, xs_dimension))
 
+    def _define_and_validate_local_bandwidths(self, input_local_bandwidths, xs):
+        pass
+        # if input_local_bandwidths == None
+            # Create 1D array with ones, the size of xs
+            # return array
+        # if input_local_bandwidths == double
+            # Convert to 1D array
+        # Check if array is 1D and if its length is equal to that of xs
+        # return array
+
     def to_C_enum(self):
         return _as_c_enum
 
@@ -64,6 +74,7 @@ class _ShapeAdaptiveGaussian_C(_ShapeAdaptiveGaussian):
 
     def evaluate(self, xs, local_bandwidths=None):
         self._validate_patterns(xs)
+        local_bandwidths = self._define_and_validate_local_bandwidths(local_bandwidths, xs)
         if xs.ndim == 1:
             return self._handle_single_pattern(xs)
         elif xs.ndim == 2:
