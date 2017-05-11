@@ -121,14 +121,15 @@ class _ShapeAdaptiveGaussian_Python(_ShapeAdaptiveGaussian):
         self._distribution = stats.multivariate_normal(mean=np.zeros([self.dimension]))
 
     def evaluate(self, xs, local_bandwidths=None):
-        
-        local_inverse = self._compute_local_inverse(local_bandwidths)
-        local_scaling_factor = self._compute_local_scaling_factor(local_bandwidths)
-        
-        density = self._distribution.pdf(np.matmul(xs, local_inverse))
-        return local_scaling_factor * density
         (xs, local_bandwidths) = self._define_and_validate_input(xs, local_bandwidths)
 
+        (num_patterns, _) = xs.shape
+        densities = np.empty(num_patterns)
+
+        for idx, (pattern, local_bandwidth) in enumerate(zip(xs, local_bandwidths)):
+            densities[idx] = self._evaluate_pattern(pattern, local_bandwidth)
+
+        return self._handle_return(densities)
 
     def _handle_return(self, densities):
         try:
