@@ -129,6 +129,14 @@ class _ShapeAdaptiveGaussian_Python(_ShapeAdaptiveGaussian):
         return local_scaling_factor * density
         (xs, local_bandwidths) = self._define_and_validate_input(xs, local_bandwidths)
 
+
+    def _handle_return(self, densities):
+        try:
+            densities = np.asscalar(densities)
+        except ValueError:
+            pass #We are dealing with a vector, let's return that
+        return densities
+
     def _evaluate_pattern(self, pattern, local_bandwidth):
         local_inverse = self._compute_local_inverse(local_bandwidth)
         local_scaling_factor = self._compute_local_scaling_factor(local_bandwidth)
