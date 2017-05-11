@@ -59,6 +59,8 @@ class _ShapeAdaptiveGaussian(Kernel):
 
     def _define_and_validate_patterns(self, xs):
         xs = np.array(xs, ndmin=2)
+        if xs.ndim is not 2:
+            raise KernelException("Expected a vector or a matrix, not a {}-dimensional array.".format(xs.ndim))
         xs_dimension = self._get_data_dimension(xs)
         if xs_dimension is not self.dimension:
             raise KernelException("Patterns should have dimension {}, not {}.".format(self.dimension, xs_dimension))
@@ -106,10 +108,9 @@ class _ShapeAdaptiveGaussian_C(_ShapeAdaptiveGaussian):
 
         if num_patterns == 1:
             return self._handle_single_pattern(xs, local_bandwidths)
-        elif num_patterns == 2:
-            return self._handle_multiple_patterns(xs)
         else:
-            raise TypeError("Expected a vector or a matrix, not a {}-dimensional array.".format(xs.ndim))
+            return self._handle_multiple_patterns(xs)
+
 
     def _handle_single_pattern(self, x, local_bandwidth):
         data = np.array(x, ndmin=2)

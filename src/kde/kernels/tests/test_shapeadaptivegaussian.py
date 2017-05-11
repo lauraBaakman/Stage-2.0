@@ -179,6 +179,20 @@ class Test_ShapeAdaptiveGaussian(TestCase):
         expected = np.array([[1.0, 2.0, 3.0]])
         np.testing.assert_array_equal(expected, actual)
 
+    def test_define_and_validate_patterns_8(self):
+        dimension = 3
+        bandwidth_matrix = np.random.rand(dimension, dimension)
+        patterns = np.random.rand(10, dimension, 3)
+        try:
+            ShapeAdaptiveGaussian(bandwidth_matrix)._define_and_validate_patterns(patterns)
+        except KernelException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+
     def test_define_and_validate_local_bandwidths_0(self):
         # Local bandwidth is none, one pattern
         input_local_bandwidth = None
