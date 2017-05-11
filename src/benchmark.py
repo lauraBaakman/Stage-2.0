@@ -7,15 +7,16 @@ import kde.kernels.shapeadaptivegaussian as sa_gaussian
 
 def test_1():
     dimension = 3
-    local_bandwidth = np.random.rand()
-    pattern = np.random.rand(1, dimension)
+    num_patterns = 500
+    local_bandwidth = np.random.rand(num_patterns)
+    patterns = np.random.rand(num_patterns, dimension)
 
     H = np.array([[2, -1, 0],
                   [-1, 2, -1],
                   [0, -1, 2]])
 
     kernel = sa_gaussian.ShapeAdaptiveGaussian(H)
-    kernel.evaluate(pattern, local_bandwidth)
+    kernel.evaluate(patterns, local_bandwidth)
 
 
 # def test_2():
@@ -30,7 +31,7 @@ if __name__ == '__main__':
     print(timeit.timeit(
         "test_1()",
         setup="from __main__ import test_1",
-        number=50000)
+        number=200)
     )
     # print(timeit.timeit(
     #     "test_2()",
