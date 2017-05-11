@@ -6,6 +6,7 @@ from kde.kernels.kernel import Kernel, KernelException
 
 _as_c_enum = 4
 
+_default_local_bandwidth = 1.0
 
 class ShapeAdaptiveGaussian(object):
 
@@ -55,7 +56,10 @@ class _ShapeAdaptiveGaussian(Kernel):
             raise KernelException("Patterns should have dimension {}, not {}.".format(self.dimension, xs_dimension))
 
     def _define_and_validate_local_bandwidths(self, input_local_bandwidths, xs):
-        pass
+        (num_patterns, _) = xs.shape
+
+        if input_local_bandwidths is None:
+            return self._create_default_local_bandwidths_array(num_patterns)
         # if input_local_bandwidths == None
             # Create 1D array with ones, the size of xs
             # return array
@@ -63,6 +67,11 @@ class _ShapeAdaptiveGaussian(Kernel):
             # Convert to 1D array
         # Check if array is 1D and if its length is equal to that of xs
         # return array
+
+    def _create_default_local_bandwidths_array(self, num_patterns):
+        local_bandwidths = np.empty(num_patterns, dtype=np.float64)
+        local_bandwidths.fill(_default_local_bandwidth)
+        return local_bandwidths
 
     def to_C_enum(self):
         return _as_c_enum

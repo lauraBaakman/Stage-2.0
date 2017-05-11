@@ -165,25 +165,29 @@ class Test_ShapeAdaptiveGaussian(TestCase):
     def test_define_and_validate_local_bandwidths_0(self):
         # Local bandwidth is none, one pattern
         input_local_bandwidth = None
-        patterns = np.random.rand(1, 3)
+        dimension = 3
+        patterns = np.random.rand(1, dimension)
+        bandwidth_matrix = np.random.rand(dimension, dimension)
 
-        expected_local_bandwidths = np.array([1.0])
+        expected = np.array([1.0])
 
-        actual_local_bandwidths = _ShapeAdaptiveGaussian._define_and_validate_local_bandwidths(
-            None, input_local_bandwidth, patterns
+        actual = ShapeAdaptiveGaussian(bandwidth_matrix)._define_and_validate_local_bandwidths(
+            input_local_bandwidth, patterns
         )
 
-        np.testing.assert_array_equal(actual_local_bandwidths, expected_local_bandwidths)
+        np.testing.assert_array_equal(actual, expected)
 
     def test_define_and_validate_local_bandwidths_1(self):
         # Local bandwidth is none, multiple patterns
         input_local_bandwidth = None
-        patterns = np.random.rand(5, 7)
+        dimension = 7
+        patterns = np.random.rand(5, dimension)
+        bandwidth_matrix = np.random.rand(dimension, dimension)
 
         expected_local_bandwidths = np.array([1.0, 1.0, 1.0, 1.0, 1.0])
 
-        actual_local_bandwidths = _ShapeAdaptiveGaussian._define_and_validate_local_bandwidths(
-            None, input_local_bandwidth, patterns
+        actual_local_bandwidths = ShapeAdaptiveGaussian(bandwidth_matrix)._define_and_validate_local_bandwidths(
+            input_local_bandwidth, patterns
         )
 
         np.testing.assert_array_equal(actual_local_bandwidths, expected_local_bandwidths)
@@ -304,6 +308,22 @@ class Test_ShapeAdaptiveGaussian(TestCase):
             self.fail('Unexpected exception raised: {}'.format(e))
         else:
             self.fail('ExpectedException not raised')
+
+    def test_create_default_local_bandwidths_array_0(self):
+        num_patterns = 1
+        expected = np.array([1.0])
+
+        actual = _ShapeAdaptiveGaussian._create_default_local_bandwidths_array(None, num_patterns)
+
+        np.testing.assert_array_equal(actual, expected)
+
+    def test_create_default_local_bandwidths_array_1(self):
+        num_patterns = 5
+        expected = np.array([1.0, 1.0, 1.0, 1.0, 1.0])
+
+        actual = _ShapeAdaptiveGaussian._create_default_local_bandwidths_array(None, num_patterns)
+
+        np.testing.assert_array_equal(actual, expected)
 
     def test_evaluate_0(self):
         # Single pattern, local bandwidth = 1
