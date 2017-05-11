@@ -93,6 +93,7 @@ class _ShapeAdaptiveGaussian_C(_ShapeAdaptiveGaussian):
     def evaluate(self, xs, local_bandwidths=None):
         self._validate_patterns(xs)
         local_bandwidths = self._define_and_validate_local_bandwidths(local_bandwidths, xs)
+
         if xs.ndim == 1:
             return self._handle_single_pattern(xs)
         elif xs.ndim == 2:
@@ -124,7 +125,10 @@ class _ShapeAdaptiveGaussian_Python(_ShapeAdaptiveGaussian):
         return local_scaling_factor * density
 
     def _evaluate_pattern(self, pattern, local_bandwidth):
-        pass
+        local_inverse = self._compute_local_inverse(local_bandwidth)
+        local_scaling_factor = self._compute_local_scaling_factor(local_bandwidth)
+        density = self._distribution.pdf(np.matmul(pattern, local_inverse))
+        return local_scaling_factor * density
 
     def _compute_local_scaling_factor(self, local_bandwidth):
         return (1 / np.power(local_bandwidth, self.dimension)) * self._scaling_factor
