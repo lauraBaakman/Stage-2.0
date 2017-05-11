@@ -120,7 +120,7 @@ class _ShapeAdaptiveGaussian_C(_ShapeAdaptiveGaussian):
     def _handle_multiple_patterns(self, xs, local_bandwidths):
         (num_patterns, _) = xs.shape
         densities = np.empty(num_patterns, dtype=float)
-        _kernels.sa_gaussian_multi_pattern(xs, self._global_bandwidth_matrix, densities)
+        _kernels.sa_gaussian_multi_pattern(xs, local_bandwidths, self._global_bandwidth_matrix, densities)
         return densities
 
 

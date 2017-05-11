@@ -153,13 +153,19 @@ static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
 static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
     /* Read input */
     PyObject* inPatterns = NULL;
-    PyObject* outDensities = NULL;
+    PyObject* inLocalBandwidths = NULL;
     PyObject* inGlobalBandwidthMatrix = NULL;
+    PyObject* outDensities = NULL;
 
-    if (!PyArg_ParseTuple(args, "OOO", &inPatterns, &inGlobalBandwidthMatrix, &outDensities)) return NULL;
+    if (!PyArg_ParseTuple(args, "OOOO",
+                          &inPatterns,
+                          &inLocalBandwidths,
+                          &inGlobalBandwidthMatrix,
+                          &outDensities)) return NULL;
 
     Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
     Array globalBandwidthMatrix = pyObjectToArray(inGlobalBandwidthMatrix, NPY_ARRAY_IN_ARRAY);
+    Array localBandwidths = pyObjectToArray(inLocalBandwidths, NPY_ARRAY_IN_ARRAY);
     Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
 
     gsl_matrix_view globalBandwidthMatrixView = arrayGetGSLMatrixView(&globalBandwidthMatrix);
