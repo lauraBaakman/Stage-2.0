@@ -2,6 +2,7 @@ import numpy.linalg as LA
 import scipy.stats as stats
 import numpy as np
 
+import kde.kernels._kernels as _kernels
 from kde.kernels.kernel import Kernel, KernelException
 
 _as_c_enum = 4
@@ -38,12 +39,13 @@ class _ShapeAdaptiveGaussian(Kernel):
 
     def __init__(self, bandwidth_matrix, *args, **kwargs):
         super(_ShapeAdaptiveGaussian, self).__init__()
-        self._bandwidth_matrix_inverse = LA.inv(bandwidth_matrix)
+        self._global_bandwidth_matrix = bandwidth_matrix
+        self._global_bandwidth_matrix_inverse = LA.inv(bandwidth_matrix)
         self._scaling_factor = 1 / LA.det(bandwidth_matrix)
 
     @property
     def dimension(self):
-        (dimension, _) = self._bandwidth_matrix_inverse.shape
+        (dimension, _) = self._global_bandwidth_matrix_inverse.shape
         return dimension
 
     def evaluate(self, xs, local_bandwidth=None):
@@ -57,6 +59,8 @@ class _ShapeAdaptiveGaussian(Kernel):
 
     def _define_and_validate_patterns(self, xs):
         xs = np.array(xs, ndmin=2)
+        if xs.ndim is not 2:
+            raise KernelException("Expected a vector or a matrix, not a {}-dimensional array.".format(xs.ndim))
         xs_dimension = self._get_data_dimension(xs)
         if xs_dimension is not self.dimension:
             raise KernelException("Patterns should have dimension {}, not {}.".format(self.dimension, xs_dimension))
@@ -100,18 +104,24 @@ class _ShapeAdaptiveGaussian_C(_ShapeAdaptiveGaussian):
     def evaluate(self, xs, local_bandwidths=None):
         (xs, local_bandwidths) = self._define_and_validate_input(xs, local_bandwidths)
 
-        if xs.ndim == 1:
-            return self._handle_single_pattern(xs)
-        elif xs.ndim == 2:
-            return self._handle_multiple_patterns(xs)
+        (num_patterns, _) = xs.shape
+
+        if num_patterns == 1:
+            return self._handle_single_pattern(xs, local_bandwidths)
         else:
-            raise TypeError("Expected a vector or a matrix, not a {}-dimensional array.".format(xs.ndim))
+            return self._handle_multiple_patterns(xs, local_bandwidths)
 
-    def _handle_single_pattern(self, x):
-        raise NotImplementedError()
 
-    def _handle_multiple_patterns(self, xs):
-        raise NotImplementedError()
+    def _handle_single_pattern(self, x, local_bandwidth):
+        data = np.array(x, ndmin=2)
+        density = _kernels.sa_gaussian_single_pattern(data, local_bandwidth, self._global_bandwidth_matrix)
+        return density
+
+    def _handle_multiple_patterns(self, xs, local_bandwidths):
+        (num_patterns, _) = xs.shape
+        densities = np.empty(num_patterns, dtype=float)
+        _kernels.sa_gaussian_multi_pattern(xs, local_bandwidths, self._global_bandwidth_matrix, densities)
+        return densities
 
 
 class _ShapeAdaptiveGaussian_Python(_ShapeAdaptiveGaussian):
@@ -148,4 +158,4 @@ class _ShapeAdaptiveGaussian_Python(_ShapeAdaptiveGaussian):
         return (1 / np.power(local_bandwidth, self.dimension)) * self._scaling_factor
 
     def _compute_local_inverse(self, local_bandwidth):
-        return (1.0 / local_bandwidth) * self._bandwidth_matrix_inverse
+        return (1.0 / local_bandwidth) * self._global_bandwidth_matrix_inverse

@@ -1,9 +1,9 @@
 #include <gsl/gsl_matrix.h>
+#include <gsl/gsl_vector_double.h>
 #include "kernelsModule.h"
 
 PyObject *multi_pattern_symmetric(PyObject *args, KernelType kernelType) {
     /* Parse input data */
-
     PyObject* inPatterns = NULL;
     PyObject* outDensities = NULL;
 
@@ -124,6 +124,104 @@ static PyObject * gaussian_single_pattern(PyObject *self, PyObject *args){
     return returnObject;
 }
 
+static char kernels_sa_gaussian_docstring[] = "Evaluate the shape adaptive gaussian kernel for each row in the input matrix.";
+static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
+    /* Read input */
+    PyObject* inPattern = NULL;
+    PyObject* inGlobalBandwidthMatrix = NULL;
+
+    double localBandwidth;
+
+    if (!PyArg_ParseTuple(args, "OdO", &inPattern, &localBandwidth, &inGlobalBandwidthMatrix)) return NULL;
+
+    Array pattern = pyObjectToArray(inPattern, NPY_ARRAY_IN_ARRAY);
+    Array globalBandwidthMatrix = pyObjectToArray(inGlobalBandwidthMatrix, NPY_ARRAY_IN_ARRAY);
+
+    /* Compute constants */
+    size_t dimension = (size_t) pattern.dimensionality;
+    ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(SHAPE_ADAPTIVE_GAUSSIAN);
+    gsl_matrix* globalInverse = gsl_matrix_alloc(dimension, dimension);
+    double globalScalingFactor;
+
+    gsl_vector* mean = gsl_vector_calloc(dimension);
+    gsl_matrix* cholCovMat  = gsl_matrix_alloc(dimension, dimension);
+    gsl_matrix_set_identity(cholCovMat);
+
+    kernel.factorFunction(&globalBandwidthMatrix, globalInverse, &globalScalingFactor);
+
+    /* Do computations */
+    gsl_vector_view pattern_view = arrayGetGSLVectorView(&pattern);
+    double density = kernel.densityFunction(&pattern_view.vector, localBandwidth,
+                                            globalScalingFactor, globalInverse,
+                                            mean, cholCovMat);
+
+    /* Free memory */
+    gsl_matrix_free(globalInverse);
+    gsl_matrix_free(cholCovMat);
+    gsl_vector_free(mean);
+
+    /* Create return object */
+    PyObject *returnObject = Py_BuildValue("d", density);
+    return returnObject;
+}
+
+static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
+    /* Read input */
+    PyObject* inPatterns = NULL;
+    PyObject* inLocalBandwidths = NULL;
+    PyObject* inGlobalBandwidthMatrix = NULL;
+    PyObject* outDensities = NULL;
+
+    if (!PyArg_ParseTuple(args, "OOOO",
+                          &inPatterns,
+                          &inLocalBandwidths,
+                          &inGlobalBandwidthMatrix,
+                          &outDensities)) return NULL;
+
+    Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
+    Array globalBandwidthMatrix = pyObjectToArray(inGlobalBandwidthMatrix, NPY_ARRAY_IN_ARRAY);
+    Array localBandwidths = pyObjectToArray(inLocalBandwidths, NPY_ARRAY_IN_ARRAY);
+    Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
+
+    ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(SHAPE_ADAPTIVE_GAUSSIAN);
+
+    /* Compute constants */
+    size_t dimension = patterns.dimensionality;
+    gsl_matrix* globalInverse = gsl_matrix_alloc(dimension, dimension);
+    double globalScalingFactor;
+
+    gsl_vector* mean = gsl_vector_calloc(dimension);
+    gsl_matrix* cholCovMat  = gsl_matrix_alloc(dimension, dimension);
+    gsl_matrix_set_identity(cholCovMat);
+
+    kernel.factorFunction(&globalBandwidthMatrix, globalInverse, &globalScalingFactor);
+
+    /* Do computations */
+    double* pattern = patterns.data;
+    double localBandwidth;
+
+    gsl_vector_view pattern_view;
+
+    for( int j = 0; j < patterns.length; j++, pattern += patterns.rowStride) {
+        pattern_view = gsl_vector_view_array(pattern, (size_t) patterns.dimensionality);
+
+        localBandwidth = localBandwidths.data[j];
+    
+        densities.data[j] = kernel.densityFunction(
+                &pattern_view.vector, localBandwidth, globalScalingFactor, globalInverse,
+                mean, cholCovMat);
+    }
+
+    /* Free memory */
+    gsl_matrix_free(globalInverse);
+    gsl_matrix_free(cholCovMat);
+    gsl_vector_free(mean);
+
+    /* Create return object */
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 static char kernels_epanechnikov_docstring[] = "Evaluate the Epanechnikov kernel for each row in the input matrix.";
 static PyObject * epanechnikov_single_pattern(PyObject *self, PyObject *args){
     return single_pattern_symmetric(args, EPANECHNIKOV);
@@ -200,6 +298,9 @@ static PyMethodDef method_table[] = {
 
         {"test_kernel_single_pattern",          testKernel_single_pattern,          METH_VARARGS,   kernels_testKernel_docstring},
         {"test_kernel_multi_pattern",           testKernel_multi_pattern,  /**/     METH_VARARGS,   kernels_testKernel_docstring},
+
+        {"sa_gaussian_single_pattern",          sa_gaussian_single_pattern,         METH_VARARGS,   kernels_sa_gaussian_docstring},
+        {"sa_gaussian_multi_pattern",           sa_gaussian_multi_pattern,          METH_VARARGS,   kernels_sa_gaussian_docstring},
 
         {"scaling_factor",                      scaling_factor,                     METH_VARARGS,   kernels_scalingFactor_docstring},
         /* Sentinel */

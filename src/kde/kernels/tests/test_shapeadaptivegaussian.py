@@ -27,7 +27,6 @@ class TestShapeAdaptiveGaussian(TestCase):
         actual = ShapeAdaptiveGaussian(H).evaluate(x)
         self.assertAlmostEqual(actual, expected)
 
-    @skip("There is no C implementation of ShapeAdaptiveGaussian.")
     def test_alternative_implementation(self):
         H = np.array([
             [0.080225998475784, 0.000182273891304],
@@ -179,6 +178,20 @@ class Test_ShapeAdaptiveGaussian(TestCase):
         actual = ShapeAdaptiveGaussian(bandwidth_matrix)._define_and_validate_patterns(patterns)
         expected = np.array([[1.0, 2.0, 3.0]])
         np.testing.assert_array_equal(expected, actual)
+
+    def test_define_and_validate_patterns_8(self):
+        dimension = 3
+        bandwidth_matrix = np.random.rand(dimension, dimension)
+        patterns = np.random.rand(10, dimension, 3)
+        try:
+            ShapeAdaptiveGaussian(bandwidth_matrix)._define_and_validate_patterns(patterns)
+        except KernelException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
 
     def test_define_and_validate_local_bandwidths_0(self):
         # Local bandwidth is none, one pattern
@@ -454,46 +467,58 @@ class Test_ShapeAdaptiveGaussian(TestCase):
 
     def test_evaluate_0(self):
         # Single pattern, local bandwidth = 1
-        H = np.array([[4, 2],
-                      [7, 6]])
-        x = np.array([0.05, 0.05])
-        expected = 0.015914499621880
+        H = np.array([[2, -1, 0],
+                      [-1, 2, -1],
+                      [0, -1, 2]])
+        x = np.array([0.05, 0.05, 0.05])
+        expected = 0.015705646827791
         actual = ShapeAdaptiveGaussian(H).evaluate(x)
         self.assertAlmostEqual(actual, expected)
 
     def test_evaluate_1(self):
         # Multiple patterns, local bandwidth = 1
-        H = np.array([[4, 2],
-                      [7, 6]])
-        x = np.array([[0.05, 0.05], [0.02, 0.03], [0.04, 0.05]])
+        H = np.array([[2, -1, 0],
+                      [-1, 2, -1],
+                      [0, -1, 2]])
+        x = np.array([
+            [0.05, 0.05, 0.05],
+            [0.02, 0.03, 0.04],
+            [0.04, 0.05, 0.03]
+        ])
         expected = np.array([
-            0.015914499621880,
-            0.015914340477679,
-            0.015913385645896
+            0.015705646827791,
+            0.015812413849947,
+            0.015759235403527
         ])
         actual = ShapeAdaptiveGaussian(H).evaluate(x)
         np.testing.assert_array_almost_equal(actual, expected)
 
     def test_evaluate_2(self):
-        # Single pattern, local bandwidth \neq 1
-        H = np.array([[4, 2],
-                      [7, 6]])
+        # Single patterns, local bandwidth \neq 1
+        H = np.array([[2, -1, 0],
+                      [-1, 2, -1],
+                      [0, -1, 2]])
         bandwidth = 0.5
-        x = np.array([0.05, 0.05])
-        expected = 0.063646063731720
+        x = np.array([0.05, 0.05, 0.05])
+        expected = 0.121703390601269
         actual = ShapeAdaptiveGaussian(H).evaluate(x, local_bandwidths=bandwidth)
         self.assertAlmostEqual(actual, expected)
 
     def test_evaluate_3(self):
         # Multiple patterns, local bandwidth \neq 1
-        H = np.array([[4, 2],
-                      [7, 6]])
+        H = np.array([[2, -1, 0],
+                      [-1, 2, -1],
+                      [0, -1, 2]])
         local_bandwidths = np.array([0.5, 0.7, 0.2])
-        x = np.array([[0.05, 0.05], [0.02, 0.03], [0.04, 0.05]])
+        x = np.array([
+            [0.05, 0.05, 0.05],
+            [0.02, 0.03, 0.04],
+            [0.04, 0.05, 0.03]
+        ])
         expected = np.array([
-            0.063646063731720,
-            0.032475795183358,
-            0.396571536389524
+            0.121703390601269,
+            0.045915970935366,
+            1.656546521485471
         ])
         actual = ShapeAdaptiveGaussian(H).evaluate(x, local_bandwidths=local_bandwidths)
         np.testing.assert_array_almost_equal(actual, expected)
@@ -512,58 +537,104 @@ class ShapeAdaptiveGaussianImpAbstractTest(object):
 
     def test_evaluate_0(self):
         # Single pattern, local bandwidth = 1
-        H = np.array([[4, 2],
-                      [7, 6]])
-        x = np.array([0.05, 0.05])
-        expected = 0.015914499621880
+        H = np.array([[2, -1, 0],
+                      [-1, 2, -1],
+                      [0, -1, 2]])
+        x = np.array([0.05, 0.05, 0.05])
+        expected = 0.015705646827791
         actual = self._kernel_class(H).evaluate(x)
         self.assertAlmostEqual(expected, actual)
 
     def test_evaluate_1(self):
         # Multiple patterns, local bandwidth = 1
-        H = np.array([[4, 2],
-                      [7, 6]])
-        x = np.array([[0.05, 0.05], [0.02, 0.03], [0.04, 0.05]])
+        H = np.array([[2, -1, 0],
+                      [-1, 2, -1],
+                      [0, -1, 2]])
+        x = np.array([
+            [0.05, 0.05, 0.05],
+            [0.02, 0.03, 0.04],
+            [0.04, 0.05, 0.03]
+        ])
         expected = np.array([
-            0.015914499621880,
-            0.015914340477679,
-            0.015913385645896
+            0.015705646827791,
+            0.015812413849947,
+            0.015759235403527
         ])
         actual = self._kernel_class(H).evaluate(x)
         np.testing.assert_array_almost_equal(actual, expected)
 
     def test_evaluate_2(self):
         # Single pattern, local bandwidth \neq 1
-        H = np.array([[4, 2],
-                      [7, 6]])
+        H = np.array([[2, -1, 0],
+                      [-1, 2, -1],
+                      [0, -1, 2]])
         bandwidth = 0.5
-        x = np.array([0.05, 0.05])
-        expected = 0.063646063731720
+        x = np.array([0.05, 0.05, 0.05])
+        expected = 0.121703390601269
         actual = self._kernel_class(H).evaluate(x, local_bandwidths=bandwidth)
         self.assertAlmostEqual(expected, actual)
 
     def test_evaluate_3(self):
         # Multiple patterns, local bandwidth \neq 1
-        H = np.array([[4, 2],
-                      [7, 6]])
+        H = np.array([[2, -1, 0],
+                      [-1, 2, -1],
+                      [0, -1, 2]])
         local_bandwidths = np.array([0.5, 0.7, 0.2])
-        x = np.array([[0.05, 0.05], [0.02, 0.03], [0.04, 0.05]])
+        x = np.array([
+            [0.05, 0.05, 0.05],
+            [0.02, 0.03, 0.04],
+            [0.04, 0.05, 0.03]
+        ])
         expected = np.array([
-            0.063646063731720,
-            0.032475795183358,
-            0.396571536389524
+            0.121703390601269,
+            0.045915970935366,
+            1.656546521485471
         ])
         actual = self._kernel_class(H).evaluate(x, local_bandwidths=local_bandwidths)
         np.testing.assert_array_almost_equal(actual, expected)
 
     def test_evaluate_4(self):
         # Single pattern, local bandwidth \neq 1
-        H = np.array([[4, 2],
-                      [7, 6]])
+        H = np.array([[2, -1, 0],
+                      [-1, 2, -1],
+                      [0, -1, 2]])
         bandwidth = np.array([0.5])
-        x = np.array([0.05, 0.05])
-        expected = 0.063646063731720
-        actual = ShapeAdaptiveGaussian(H).evaluate(x, local_bandwidths=bandwidth)
+        x = np.array([0.05, 0.05, 0.05])
+        expected = 0.121703390601269
+        actual = self._kernel_class(H).evaluate(x, local_bandwidths=bandwidth)
+        self.assertAlmostEqual(actual, expected)
+
+    def test_evaluate_5(self):
+        # Single pattern, local bandwidth \neq 1
+        H = np.array([[2, -1, 0],
+                      [-1, 2, -1],
+                      [0, -1, 2]])
+        bandwidth = 0.5
+        x = np.array([0.02, 0.03, 0.04])
+        expected = 0.125046649030584
+        actual = self._kernel_class(H).evaluate(x, local_bandwidths=bandwidth)
+        self.assertAlmostEqual(actual, expected)
+
+    def test_evaluate_6(self):
+        # Single pattern, local bandwidth \neq 1
+        H = np.array([[2, -1, 0],
+                      [-1, 2, -1],
+                      [0, -1, 2]])
+        bandwidth = 0.7
+        x = np.array([0.02, 0.03, 0.04])
+        expected = 0.045915970935366
+        actual = self._kernel_class(H).evaluate(x, local_bandwidths=bandwidth)
+        self.assertAlmostEqual(actual, expected)
+
+    def test_evaluate_7(self):
+        # Single pattern, local bandwidth \neq 1
+        H = np.array([[2, -1, 0],
+                      [-1, 2, -1],
+                      [0, -1, 2]])
+        bandwidth = 0.2
+        x = np.array([0.04, 0.05, 0.03])
+        expected = 1.656546521485471
+        actual = self._kernel_class(H).evaluate(x, local_bandwidths=bandwidth)
         self.assertAlmostEqual(actual, expected)
 
 class ShapeAdaptiveGaussian_Python(ShapeAdaptiveGaussianImpAbstractTest, TestCase):
@@ -601,7 +672,6 @@ class ShapeAdaptiveGaussian_Python(ShapeAdaptiveGaussianImpAbstractTest, TestCas
         actual = _ShapeAdaptiveGaussian_Python(H)._compute_local_inverse(local_bandwidth)
         np.testing.assert_array_almost_equal(expected, actual)
 
-@skip("There is no C implementation of ShapeAdaptiveGaussian.")
 class ShapeAdaptiveGaussian_C(ShapeAdaptiveGaussianImpAbstractTest, TestCase):
 
     def setUp(self):

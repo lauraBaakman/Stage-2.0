@@ -7,6 +7,8 @@
 #include "../utils.h"
 #include "gsl/gsl_randist.h"
 
+/* Symmetric Kernels */
+
 double standardGaussianConstant(int patternDimensionality);
 double standardGaussianPDF(double *pattern, int patternDimensionality, double constant);
 
@@ -16,8 +18,27 @@ double epanechnikovPDF(double *data, int dimensionality, double constant);
 double testKernelConstant(int patternDimensionality);
 double testKernelPDF(double *data, int dimensionality, double constant);
 
+
+/* Asymmetric Kernels */
+
 gsl_matrix* gaussianConstant(Array* covarianceMatrix);
 double gaussianPDF(gsl_vector* pattern, gsl_vector * mean, gsl_matrix * choleskyFactorCovarianceMatrix);
+
+
+/* Shape Adaptive Kernels */
+
+void computeGlobalConstants(Array* globalBandwidthMatrixArray,
+                            gsl_matrix* outGlobalInverse, double* outGlobalScalingFactor);
+
+double computeLocalScalingFactor(double globalScalingFactor, double localBandwidth, size_t dimension);
+
+gsl_matrix* computeLocalInverse(gsl_matrix* globalInverse, double localBandwidth);
+
+double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
+                                double globalScalingFactor, gsl_matrix * globalInverse,
+                                gsl_vector* mean, gsl_matrix* cholCovmat);
+
+/* Utilities */
 
 double dotProduct(double *a, double *b, int length);
 

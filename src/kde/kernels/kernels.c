@@ -5,29 +5,41 @@
 #include "kernels.ih"
 #include "../utils/eigenvalues.h"
 #include "../../../../../../../usr/local/include/gsl/gsl_vector_double.h"
+#include "kernels.h"
 
 Kernel standardGaussianKernel = {
         .isSymmetric = true,
+        .isShapeAdaptive = false,
         .kernel.symmetricKernel.densityFunction = standardGaussianPDF,
         .kernel.symmetricKernel.factorFunction = standardGaussianConstant,
 };
 
 Kernel epanechnikovKernel = {
         .isSymmetric = true,
+        .isShapeAdaptive = false,
         .kernel.symmetricKernel.densityFunction = epanechnikovPDF,
         .kernel.symmetricKernel.factorFunction = epanechnikovConstant,
 };
 
 Kernel testKernel = {
         .isSymmetric = true,
+        .isShapeAdaptive = false,
         .kernel.symmetricKernel.densityFunction = testKernelPDF,
         .kernel.symmetricKernel.factorFunction = testKernelConstant,
 };
 
 Kernel gaussianKernel = {
         .isSymmetric = false,
+        .isShapeAdaptive = false,
         .kernel.aSymmetricKernel.densityFunction = gaussianPDF,
         .kernel.aSymmetricKernel.factorFunction= gaussianConstant,
+};
+
+Kernel shapeAdaptiveGaussianKernel = {
+        .isSymmetric = false,
+        .isShapeAdaptive = true,
+        .kernel.shapeAdaptiveKernel.densityFunction = shapeAdaptiveGaussianPDF,
+        .kernel.shapeAdaptiveKernel.factorFunction = computeGlobalConstants,
 };
 
 
@@ -41,6 +53,8 @@ Kernel selectKernel(KernelType type) {
             return testKernel;
         case GAUSSIAN:
             return gaussianKernel;
+        case SHAPE_ADAPTIVE_GAUSSIAN:
+            return shapeAdaptiveGaussianKernel;
         default:
             fprintf(stderr, "%d is an invalid kernel type.\n", type);
             exit(-1);
@@ -67,6 +81,16 @@ ASymmetricKernel selectASymmetricKernel(KernelType type) {
             return gaussianKernel.kernel.aSymmetricKernel;
         default:
             fprintf(stderr, "%d is an invalid asymmetric kernel type.\n", type);
+            exit(-1);
+    }
+}
+
+ShapeAdaptiveKernel selectShapeAdaptiveKernel(KernelType type){
+    switch(type) {
+        case SHAPE_ADAPTIVE_GAUSSIAN:
+            return shapeAdaptiveGaussianKernel.kernel.shapeAdaptiveKernel;
+        default:
+            fprintf(stderr, "%d is an invalid shape adaptive kernel type.\n", type);
             exit(-1);
     }
 }
@@ -145,6 +169,73 @@ double gaussianPDF(gsl_vector * pattern, gsl_vector * mean, gsl_matrix *cholesky
     gsl_vector_free(work);
     return density;
 }
+
+/* Shape Adaptive Kernels */
+double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
+                                double globalScalingFactor, gsl_matrix * globalInverse,
+                                gsl_vector* mean, gsl_matrix* cholCovmat){
+
+    size_t dimension = globalInverse->size1;
+
+    // Compute inverse of local bandwidth matrix
+    gsl_matrix* localInverse = computeLocalInverse(globalInverse, localBandwidth);
+
+    // Compute local scaling factor
+    double localScalingFactor = computeLocalScalingFactor(globalScalingFactor, localBandwidth, dimension);
+
+    // Multiply the transpose of the inverse with the pattern
+    // Since the bandwidth matrix is always symmetric we don't need to compute the transpose.
+    gsl_vector* scaled_pattern = gsl_vector_calloc(pattern->size);
+    gsl_blas_dsymv(CblasLower, 1.0, localInverse, pattern, 1.0, scaled_pattern);
+
+    //Evaluate the pdf
+    gsl_vector* work = gsl_vector_alloc(dimension);
+
+    double density = 1.0; //Skipping initialization of this value breaks the evaluation of the pdf
+    gsl_ran_multivariate_gaussian_pdf(scaled_pattern, mean, cholCovmat, &density, work);
+
+    //Determine the result of the kernel.
+    density *= localScalingFactor;
+
+    //Free memory
+    gsl_matrix_free(localInverse);
+    gsl_vector_free(scaled_pattern);
+    gsl_vector_free(work);
+
+    return density;
+}
+
+void computeGlobalConstants(Array* globalBandwidthMatrixArray, gsl_matrix *outGlobalInverse, double *outGlobalScalingFactor) {
+    gsl_matrix* LUDecompH = arrayCopyToGSLMatrix(globalBandwidthMatrixArray);
+
+    //Compute LU decompostion
+    gsl_permutation* permutation = gsl_permutation_calloc((size_t) globalBandwidthMatrixArray->dimensionality);
+    int signum = 0;
+    gsl_linalg_LU_decomp(LUDecompH, permutation, &signum);
+
+    //Compute global inverse
+    gsl_linalg_LU_invert(LUDecompH, permutation, outGlobalInverse);
+
+    //Compute global scaling factor
+    *outGlobalScalingFactor = 1.0 / gsl_linalg_LU_det(LUDecompH, signum);
+
+    //Free memory
+    gsl_permutation_free(permutation);
+}
+
+double computeLocalScalingFactor(double globalScalingFactor, double localBandwidth, size_t dimension) {
+    double localScalingFactor = (1.0 / pow(localBandwidth, dimension)) * globalScalingFactor;
+    return localScalingFactor;
+}
+
+gsl_matrix* computeLocalInverse(gsl_matrix* globalInverse, double localBandwidth){
+    gsl_matrix* localInverse = gsl_matrix_alloc(globalInverse->size1, globalInverse->size2);
+    gsl_matrix_memcpy(localInverse, globalInverse);
+    gsl_matrix_scale(localInverse, 1.0 / localBandwidth);
+    return localInverse;
+}
+
+/* Utilities */
 
 double dotProduct(double *a, double *b, int length) {
     double dotProduct = 0;

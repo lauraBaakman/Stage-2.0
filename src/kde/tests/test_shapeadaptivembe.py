@@ -3,15 +3,15 @@ from unittest import TestCase, skip
 import numpy as np
 
 import kde
-from kde.kernels.testKernel import TestKernel
 from kde.kernels.gaussian import Gaussian
 from kde.kernels.shapeadaptivegaussian import ShapeAdaptiveGaussian
+from kde.kernels.testKernel import TestKernel
 from kde.parzen import _ParzenEstimator_Python, _ParzenEstimator_C
 from kde.shapeadaptivembe import \
     ShapeAdaptiveMBE, \
-    _ShapeAdaptiveMBE, \
     _ShapeAdaptiveMBE_C, \
     _ShapeAdaptiveMBE_Python
+
 
 class TestShapeAdaptiveMBE(TestCase):
 
