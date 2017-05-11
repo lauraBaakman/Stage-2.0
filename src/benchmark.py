@@ -30,7 +30,7 @@ if __name__ == '__main__':
     print(timeit.timeit(
         "test_1()",
         setup="from __main__ import test_1",
-        number=10000)
+        number=50000)
     )
     # print(timeit.timeit(
     #     "test_2()",
