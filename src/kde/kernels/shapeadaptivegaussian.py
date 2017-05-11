@@ -50,10 +50,12 @@ class _ShapeAdaptiveGaussian(Kernel):
         raise NotImplementedError("No functions should be called on objects of this type, it is an abstract class "
                                   "for the specific implementations.")
 
-    def _validate_patterns(self, xs):
+    def _define_and_validate_patterns(self, xs):
+        xs = np.array(xs, ndmin=2)
         xs_dimension = self._get_data_dimension(xs)
         if xs_dimension is not self.dimension:
             raise KernelException("Patterns should have dimension {}, not {}.".format(self.dimension, xs_dimension))
+        return xs
 
     def _define_and_validate_local_bandwidths(self, input_local_bandwidths, xs):
         (num_patterns, _) = xs.shape
@@ -91,7 +93,7 @@ class _ShapeAdaptiveGaussian_C(_ShapeAdaptiveGaussian):
         super(_ShapeAdaptiveGaussian_C, self).__init__(*args, **kwargs)
 
     def evaluate(self, xs, local_bandwidths=None):
-        self._validate_patterns(xs)
+        self._define_and_validate_patterns(xs)
         local_bandwidths = self._define_and_validate_local_bandwidths(local_bandwidths, xs)
 
         if xs.ndim == 1:
@@ -115,7 +117,7 @@ class _ShapeAdaptiveGaussian_Python(_ShapeAdaptiveGaussian):
         self._distribution = stats.multivariate_normal(mean=np.zeros([self.dimension]))
 
     def evaluate(self, xs, local_bandwidths=None):
-        self._validate_patterns(xs)
+        xs = self._define_and_validate_patterns(xs)
         local_bandwidths = self._define_and_validate_local_bandwidths(local_bandwidths, xs)
         
         local_inverse = self._compute_local_inverse(local_bandwidths)
