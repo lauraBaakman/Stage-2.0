@@ -171,40 +171,28 @@ double gaussianPDF(gsl_vector * pattern, gsl_vector * mean, gsl_matrix *cholesky
 }
 
 /* Shape Adaptive Kernels */
-double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth, gsl_matrix * globalBandwidthMatrix,
+double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
                                 double globalScalingFactor, gsl_matrix * globalInverse){
 
-    gsl_matrix* localBandwidthMatrix = gsl_matrix_alloc(globalBandwidthMatrix->size1, globalBandwidthMatrix->size2);
-    gsl_matrix_memcpy(localBandwidthMatrix, globalBandwidthMatrix);
-
-    //Compute local bandwidth matrix
-    gsl_matrix_scale(localBandwidthMatrix, localBandwidth);
-
-    //Compute the LU factorization of the local bandwidth matrix
-    gsl_matrix* luDecomposition = localBandwidthMatrix;
-
-    gsl_permutation* permutation = gsl_permutation_calloc(luDecomposition->size2);
-    int signum = 0;
-    gsl_linalg_LU_decomp(luDecomposition, permutation, &signum);
+    size_t dimension = globalInverse->size1;
 
     // Compute inverse of local bandwidth matrix
-    gsl_matrix* inverse = gsl_matrix_alloc(localBandwidthMatrix->size1, localBandwidthMatrix->size2);
-    gsl_linalg_LU_invert(luDecomposition, permutation, inverse);
+    gsl_matrix* localInverse = computeLocalInverse(globalInverse, localBandwidth);
 
     // Compute local scaling factor
-    double localScalingFactor = computeLocalScalingFactor(globalScalingFactor, localBandwidth, localBandwidthMatrix->size1);
+    double localScalingFactor = computeLocalScalingFactor(globalScalingFactor, localBandwidth, dimension);
 
     // Multiply the transpose of the inverse with the pattern
     // Since the bandwidth matrix is always symmetric we don't need to compute the transpose.
     gsl_vector* scaled_pattern = gsl_vector_calloc(pattern->size);
-    gsl_blas_dsymv(CblasLower, 1.0, inverse, pattern, 1.0, scaled_pattern);
+    gsl_blas_dsymv(CblasLower, 1.0, localInverse, pattern, 1.0, scaled_pattern);
 
     //Evaluate the pdf
-    gsl_vector* mean = gsl_vector_calloc(localBandwidthMatrix->size1);
-    gsl_matrix* choleskyDecompositionCovarianceMatrix  = localBandwidthMatrix;
+    gsl_vector* mean = gsl_vector_calloc(dimension);
+    gsl_matrix* choleskyDecompositionCovarianceMatrix  = localInverse;
     gsl_matrix_set_identity(choleskyDecompositionCovarianceMatrix);
 
-    gsl_vector* work = gsl_vector_alloc(mean->size);
+    gsl_vector* work = gsl_vector_alloc(dimension);
 
     double density = 1.0; //Skipping initialization of this value breaks the evaluation of the pdf
     gsl_ran_multivariate_gaussian_pdf(scaled_pattern, mean, choleskyDecompositionCovarianceMatrix, &density, work);
@@ -213,12 +201,10 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth, gsl_
     density *= localScalingFactor;
 
     //Free memory
-    gsl_matrix_free(inverse);
+    gsl_matrix_free(localInverse);
     gsl_vector_free(mean);
     gsl_vector_free(scaled_pattern);
     gsl_vector_free(work);
-    gsl_permutation_free(permutation);
-    gsl_matrix_free(localBandwidthMatrix);
 
     return density;
 }
@@ -241,9 +227,16 @@ void computeGlobalConstants(Array* globalBandwidthMatrixArray, gsl_matrix *outGl
     gsl_permutation_free(permutation);
 }
 
-double computeLocalScalingFactor(double globalScalingFactor, double localBandwidth, int dimension) {
+double computeLocalScalingFactor(double globalScalingFactor, double localBandwidth, size_t dimension) {
     double localScalingFactor = (1.0 / pow(localBandwidth, dimension)) * globalScalingFactor;
     return localScalingFactor;
+}
+
+gsl_matrix* computeLocalInverse(gsl_matrix* globalInverse, double localBandwidth){
+    gsl_matrix* localInverse = gsl_matrix_alloc(globalInverse->size1, globalInverse->size2);
+    gsl_matrix_memcpy(localInverse, globalInverse);
+    gsl_matrix_scale(localInverse, 1.0 / localBandwidth);
+    return localInverse;
 }
 
 /* Utilities */
