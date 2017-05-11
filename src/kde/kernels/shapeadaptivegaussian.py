@@ -102,15 +102,17 @@ class _ShapeAdaptiveGaussian_C(_ShapeAdaptiveGaussian):
     def evaluate(self, xs, local_bandwidths=None):
         (xs, local_bandwidths) = self._define_and_validate_input(xs, local_bandwidths)
 
-        if xs.ndim == 1:
-            return self._handle_single_pattern(xs, local_bandwidth)
-        elif xs.ndim == 2:
+        (num_patterns, _) = xs.shape
+
+        if num_patterns == 1:
+            return self._handle_single_pattern(xs, local_bandwidths)
+        elif num_patterns == 2:
             return self._handle_multiple_patterns(xs)
         else:
             raise TypeError("Expected a vector or a matrix, not a {}-dimensional array.".format(xs.ndim))
 
     def _handle_single_pattern(self, x, local_bandwidth):
-        data = np.array([x])
+        data = np.array(x, ndmin=2)
         density = _kernels.sa_gaussian_single_pattern(data, local_bandwidth, self._global_bandwidth_matrix)
         return density
 
