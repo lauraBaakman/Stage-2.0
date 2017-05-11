@@ -60,13 +60,9 @@ class _ShapeAdaptiveGaussian(Kernel):
 
         if input_local_bandwidths is None:
             return self._create_default_local_bandwidths_array(num_patterns)
-        # if input_local_bandwidths == None
-            # Create 1D array with ones, the size of xs
-            # return array
-        # if input_local_bandwidths == double
-            # Convert to 1D array
-        # Check if array is 1D and if its length is equal to that of xs
-        # return array
+        local_bandwidths = np.array(input_local_bandwidths, ndmin=1)
+        self._validate_local_bandwidths(local_bandwidths, num_patterns)
+        return local_bandwidths
 
     def _create_default_local_bandwidths_array(self, num_patterns):
         local_bandwidths = np.empty(num_patterns, dtype=np.float64)
