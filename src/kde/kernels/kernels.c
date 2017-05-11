@@ -194,8 +194,8 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth, gsl_
     // Compute local scaling factor
     double localScalingFactor = computeLocalScalingFactor(globalScalingFactor, localBandwidth, localBandwidthMatrix->size1);
 
-    // Multiply the inverse with the pattern INPLACE!!
-    gsl_matrix_transpose(inverse);
+    // Multiply the transpose of the inverse with the pattern
+    // Since the bandwidth matrix is always symmetric we don't need to compute the transpose.
     gsl_vector* scaled_pattern = gsl_vector_calloc(pattern->size);
     gsl_blas_dsymv(CblasLower, 1.0, inverse, pattern, 1.0, scaled_pattern);
 
