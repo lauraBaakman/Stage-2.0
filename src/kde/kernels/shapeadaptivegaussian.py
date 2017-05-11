@@ -109,7 +109,7 @@ class _ShapeAdaptiveGaussian_C(_ShapeAdaptiveGaussian):
         if num_patterns == 1:
             return self._handle_single_pattern(xs, local_bandwidths)
         else:
-            return self._handle_multiple_patterns(xs)
+            return self._handle_multiple_patterns(xs, local_bandwidths)
 
 
     def _handle_single_pattern(self, x, local_bandwidth):
@@ -117,8 +117,11 @@ class _ShapeAdaptiveGaussian_C(_ShapeAdaptiveGaussian):
         density = _kernels.sa_gaussian_single_pattern(data, local_bandwidth, self._global_bandwidth_matrix)
         return density
 
-    def _handle_multiple_patterns(self, xs):
-        pass
+    def _handle_multiple_patterns(self, xs, local_bandwidths):
+        (num_patterns, _) = xs.shape
+        densities = np.empty(num_patterns, dtype=float)
+        _kernels.sa_gaussian_multi_pattern(xs, self._global_bandwidth_matrix, densities)
+        return densities
 
 
 class _ShapeAdaptiveGaussian_Python(_ShapeAdaptiveGaussian):

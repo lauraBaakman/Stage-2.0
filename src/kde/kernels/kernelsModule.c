@@ -3,7 +3,6 @@
 
 PyObject *multi_pattern_symmetric(PyObject *args, KernelType kernelType) {
     /* Parse input data */
-
     PyObject* inPatterns = NULL;
     PyObject* outDensities = NULL;
 
@@ -153,6 +152,30 @@ static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
     return returnObject;
 }
 
+static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
+    /* Read input */
+    PyObject* inPatterns = NULL;
+    PyObject* outDensities = NULL;
+    PyObject* inGlobalBandwidthMatrix = NULL;
+
+    if (!PyArg_ParseTuple(args, "OOO", &inPatterns, &inGlobalBandwidthMatrix, &outDensities)) return NULL;
+
+    Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
+    Array globalBandwidthMatrix = pyObjectToArray(inGlobalBandwidthMatrix, NPY_ARRAY_IN_ARRAY);
+    Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
+
+    gsl_matrix_view globalBandwidthMatrixView = arrayGetGSLMatrixView(&globalBandwidthMatrix);
+
+    /* Do computations */
+    densities.data[0] = 42.0;
+
+    /* Free memory */
+
+    /* Create return object */
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 static char kernels_epanechnikov_docstring[] = "Evaluate the Epanechnikov kernel for each row in the input matrix.";
 static PyObject * epanechnikov_single_pattern(PyObject *self, PyObject *args){
     return single_pattern_symmetric(args, EPANECHNIKOV);
@@ -231,7 +254,7 @@ static PyMethodDef method_table[] = {
         {"test_kernel_multi_pattern",           testKernel_multi_pattern,  /**/     METH_VARARGS,   kernels_testKernel_docstring},
 
         {"sa_gaussian_single_pattern",          sa_gaussian_single_pattern,         METH_VARARGS,   kernels_sa_gaussian_docstring},
-//        {"sa_gaussian_multi_pattern",           sa_gaussian_multi_pattern,          METH_VARARGS,   kernels_sa_gaussian_docstring},
+        {"sa_gaussian_multi_pattern",           sa_gaussian_multi_pattern,          METH_VARARGS,   kernels_sa_gaussian_docstring},
 
         {"scaling_factor",                      scaling_factor,                     METH_VARARGS,   kernels_scalingFactor_docstring},
         /* Sentinel */
