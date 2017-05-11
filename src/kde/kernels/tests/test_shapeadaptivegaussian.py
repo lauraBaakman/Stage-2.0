@@ -572,18 +572,34 @@ class ShapeAdaptiveGaussian_Python(ShapeAdaptiveGaussianImpAbstractTest, TestCas
         super().setUp()
         self._kernel_class = _ShapeAdaptiveGaussian_Python
 
-    def tests__handle_return_0(self):
+    def test__handle_return_0(self):
         densities = np.array([0.5])
         expected = 0.5
         actual = _ShapeAdaptiveGaussian_Python._handle_return(None, densities)
         self.assertEqual(actual, expected)
 
-    def tests__handle_return_1(self):
+    def test__handle_return_1(self):
         densities = np.array([0.5, 0.2])
         expected = np.array([0.5, 0.2])
         actual = _ShapeAdaptiveGaussian_Python._handle_return(None, densities)
         np.testing.assert_array_equal(actual, expected)
 
+    def test__compute_local_scaling_factor(self):
+        H = np.array([[4, 2],
+                      [7, 6]])
+        local_bandwidth = 0.5
+        expected = 1 / 2.5
+        actual = _ShapeAdaptiveGaussian_Python(H)._compute_local_scaling_factor(local_bandwidth)
+        self.assertAlmostEqual(actual, expected)
+
+    def test__compute_local_inverse(self):
+        H = np.array([[4, 2],
+                      [7, 6]])
+        local_bandwidth = 0.5
+        expected = np.array([[1.2, -0.4],
+                      [- 1.4, 0.8]])
+        actual = _ShapeAdaptiveGaussian_Python(H)._compute_local_inverse(local_bandwidth)
+        np.testing.assert_array_almost_equal(expected, actual)
 
 @skip("There is no C implementation of ShapeAdaptiveGaussian.")
 class ShapeAdaptiveGaussian_C(ShapeAdaptiveGaussianImpAbstractTest, TestCase):
