@@ -172,7 +172,7 @@ double gaussianPDF(gsl_vector * pattern, gsl_vector * mean, gsl_matrix *cholesky
 
 /* Shape Adaptive Kernels */
 double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth, gsl_matrix * globalBandwidthMatrix,
-                                double globalScalingFactor){
+                                double globalScalingFactor, gsl_matrix * globalInverse){
 
     gsl_matrix* localBandwidthMatrix = gsl_matrix_alloc(globalBandwidthMatrix->size1, globalBandwidthMatrix->size2);
     gsl_matrix_memcpy(localBandwidthMatrix, globalBandwidthMatrix);
