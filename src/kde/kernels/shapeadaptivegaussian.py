@@ -73,6 +73,9 @@ class _ShapeAdaptiveGaussian(Kernel):
         local_bandwidths.fill(_default_local_bandwidth)
         return local_bandwidths
 
+    def _validate_local_bandwidths(self, local_bandwidths, num_patterns):
+        pass
+
     def to_C_enum(self):
         return _as_c_enum
 

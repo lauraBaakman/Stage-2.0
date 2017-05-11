@@ -260,7 +260,7 @@ class Test_ShapeAdaptiveGaussian(TestCase):
 
     def test_define_and_validate_local_bandwidths_6(self):
         # Local bandwidth is an array of the correct size
-        input_local_bandwidths = np.random.rand(5, 1)
+        input_local_bandwidths = np.random.rand(5)
         dimension = 6
         patterns = np.random.rand(5, dimension)
         bandwidth_matrix = np.random.rand(dimension, dimension)
@@ -340,6 +340,66 @@ class Test_ShapeAdaptiveGaussian(TestCase):
         actual = _ShapeAdaptiveGaussian._create_default_local_bandwidths_array(None, num_patterns)
 
         np.testing.assert_array_equal(actual, expected)
+
+    def test_validate_local_bandwidths_0(self):
+        # Too short
+        local_bandwidths = np.random.rand(7)
+        num_patterns = 10
+        try:
+            _ShapeAdaptiveGaussian._validate_local_bandwidths(None, local_bandwidths, num_patterns)
+        except KernelException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test_validate_local_bandwidths_1(self):
+        # Too long
+        local_bandwidths = np.random.rand(15)
+        num_patterns = 10
+        try:
+            _ShapeAdaptiveGaussian._validate_local_bandwidths(None, local_bandwidths, num_patterns)
+        except KernelException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test_validate_local_bandwidths_3(self):
+        # Fine
+        num_patterns = 10
+        local_bandwidths = np.random.rand(num_patterns)
+        actual = _ShapeAdaptiveGaussian._validate_local_bandwidths(None, local_bandwidths, num_patterns)
+        self.assertIsNone(actual)
+
+
+    def test_validate_local_bandwidths_4(self):
+        # 1D but too many dimensions
+        num_patterns = 10
+        local_bandwidths = np.random.rand(num_patterns, 1)
+        try:
+            _ShapeAdaptiveGaussian._validate_local_bandwidths(None, local_bandwidths, num_patterns)
+        except KernelException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test_validate_local_bandwidths_5(self):
+        # Too many dimensions
+        num_patterns = 10
+        local_bandwidths = np.random.rand(num_patterns, 3)
+        try:
+            _ShapeAdaptiveGaussian._validate_local_bandwidths(None, local_bandwidths, num_patterns)
+        except KernelException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
 
     def test_evaluate_0(self):
         # Single pattern, local bandwidth = 1
