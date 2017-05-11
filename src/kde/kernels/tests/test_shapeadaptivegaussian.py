@@ -545,7 +545,6 @@ class ShapeAdaptiveGaussianImpAbstractTest(object):
         actual = self._kernel_class(H).evaluate(x)
         self.assertAlmostEqual(expected, actual)
 
-    @skip("Multiple patterns are not yet supported.")
     def test_evaluate_1(self):
         # Multiple patterns, local bandwidth = 1
         H = np.array([[2, -1, 0],
@@ -575,7 +574,6 @@ class ShapeAdaptiveGaussianImpAbstractTest(object):
         actual = self._kernel_class(H).evaluate(x, local_bandwidths=bandwidth)
         self.assertAlmostEqual(expected, actual)
 
-    @skip("Multiple patterns are not yet supported.")
     def test_evaluate_3(self):
         # Multiple patterns, local bandwidth \neq 1
         H = np.array([[2, -1, 0],
