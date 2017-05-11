@@ -74,7 +74,17 @@ class _ShapeAdaptiveGaussian(Kernel):
         return local_bandwidths
 
     def _validate_local_bandwidths(self, local_bandwidths, num_patterns):
-        pass
+        if not (local_bandwidths.ndim == 1):
+            raise KernelException(
+                "The array with local bandwidths should be 1D, not {}D.".format(local_bandwidths.ndim)
+            )
+        (num_local_bandwidths,) = local_bandwidths.shape
+        if not (num_local_bandwidths == num_patterns):
+            raise KernelException(
+                "The number of local bandwidths ({}) should be equal to the number of patterns ({}).".format(
+                    num_local_bandwidths, num_patterns
+                )
+            )
 
     def to_C_enum(self):
         return _as_c_enum
