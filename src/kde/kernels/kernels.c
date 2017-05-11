@@ -171,7 +171,8 @@ double gaussianPDF(gsl_vector * pattern, gsl_vector * mean, gsl_matrix *cholesky
 }
 
 /* Shape Adaptive Kernels */
-double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth, gsl_matrix * globalBandwidthMatrix){
+double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth, gsl_matrix * globalBandwidthMatrix,
+                                double globalScalingFactor){
 
     gsl_matrix* localBandwidthMatrix = gsl_matrix_alloc(globalBandwidthMatrix->size1, globalBandwidthMatrix->size2);
     gsl_matrix_memcpy(localBandwidthMatrix, globalBandwidthMatrix);
@@ -190,8 +191,8 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth, gsl_
     gsl_matrix* inverse = gsl_matrix_alloc(localBandwidthMatrix->size1, localBandwidthMatrix->size2);
     gsl_linalg_LU_invert(luDecomposition, permutation, inverse);
 
-    // Compute determinant of local bandwidth matrix
-    double determinant = gsl_linalg_LU_det(luDecomposition, signum);
+    // Compute local scaling factor
+    double localScalingFactor = computeLocalScalingFactor(globalScalingFactor, localBandwidth, localBandwidthMatrix->size1);
 
     // Multiply the inverse with the pattern INPLACE!!
     gsl_matrix_transpose(inverse);
@@ -209,8 +210,7 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth, gsl_
     gsl_ran_multivariate_gaussian_pdf(scaled_pattern, mean, choleskyDecompositionCovarianceMatrix, &density, work);
 
     //Determine the result of the kernel.
-    double scalingFactor = 1.0 / determinant;
-    density *= scalingFactor;
+    density *= localScalingFactor;
 
     //Free memory
     gsl_matrix_free(inverse);
@@ -242,7 +242,7 @@ void computeGlobalConstants(Array* globalBandwidthMatrixArray, gsl_matrix *outGl
 }
 
 double computeLocalScalingFactor(double globalScalingFactor, double localBandwidth, int dimension) {
-    double localScalingFactor = pow(localBandwidth, dimension) * globalScalingFactor;
+    double localScalingFactor = (1.0 / pow(localBandwidth, dimension)) * globalScalingFactor;
     return localScalingFactor;
 }
 
