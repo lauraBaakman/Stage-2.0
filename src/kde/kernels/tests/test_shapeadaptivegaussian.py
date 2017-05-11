@@ -5,6 +5,7 @@ import numpy as np
 from kde.kernels.kernel import KernelException
 from kde.kernels.shapeadaptivegaussian import \
     ShapeAdaptiveGaussian, \
+    _ShapeAdaptiveGaussian, \
     _ShapeAdaptiveGaussian_C, \
     _ShapeAdaptiveGaussian_Python
 
@@ -162,32 +163,147 @@ class Test_ShapeAdaptiveGaussian(TestCase):
             self.fail('ExpectedException not raised')
 
     def test_define_and_validate_local_bandwidths_0(self):
-        #Input is None
-        self.fail("Not Implemented")
+        # Local bandwidth is none, one pattern
+        input_local_bandwidth = None
+        patterns = np.random.rand(1, 3)
+
+        expected_local_bandwidths = np.array([1.0])
+
+        actual_local_bandwidths = _ShapeAdaptiveGaussian._define_and_validate_local_bandwidths(
+            None, input_local_bandwidth, patterns
+        )
+
+        np.testing.assert_array_equal(actual_local_bandwidths, expected_local_bandwidths)
 
     def test_define_and_validate_local_bandwidths_1(self):
-        #Local bandwidth is a double
-        self.fail("Not Implemented")
+        # Local bandwidth is none, multiple patterns
+        input_local_bandwidth = None
+        patterns = np.random.rand(5, 7)
+
+        expected_local_bandwidths = np.array([1.0, 1.0, 1.0, 1.0, 1.0])
+
+        actual_local_bandwidths = _ShapeAdaptiveGaussian._define_and_validate_local_bandwidths(
+            None, input_local_bandwidth, patterns
+        )
+
+        np.testing.assert_array_equal(actual_local_bandwidths, expected_local_bandwidths)
 
     def test_define_and_validate_local_bandwidths_2(self):
-        #Local bandwidth is a 1x1 array
-        self.fail("Not Implemented")
+        # Local bandwidth is a double, one pattern
+        input_local_bandwidth = 0.5
+        patterns = np.random.rand(1, 3)
+
+        expected_local_bandwidths = np.array([0.5])
+
+        actual_local_bandwidths = _ShapeAdaptiveGaussian._define_and_validate_local_bandwidths(
+            None, input_local_bandwidth, patterns
+        )
+
+        np.testing.assert_array_equal(actual_local_bandwidths, expected_local_bandwidths)
 
     def test_define_and_validate_local_bandwidths_3(self):
-        #Local bandwidth is a too small array
-        self.fail("Not Implemented")
+        # Local bandwidth is a double, multiple patterns
+        input_local_bandwidth = 0.5
+        patterns = np.random.rand(5, 7)
+
+        try:
+            _ShapeAdaptiveGaussian._define_and_validate_local_bandwidths(
+                None, input_local_bandwidth, patterns
+            )
+        except KernelException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
 
     def test_define_and_validate_local_bandwidths_4(self):
-        #Local bandwidth is an array of the correct size
-        self.fail("Not Implemented")
+        # Local bandwidth is a 1x1 array, single pattern
+        input_local_bandwidth = np.array([0.5])
+        patterns = np.random.rand(1, 3)
+
+        expected_local_bandwidths = np.array([0.5])
+
+        actual_local_bandwidths = _ShapeAdaptiveGaussian._define_and_validate_local_bandwidths(
+            None, input_local_bandwidth, patterns
+        )
+
+        np.testing.assert_array_equal(actual_local_bandwidths, expected_local_bandwidths)
 
     def test_define_and_validate_local_bandwidths_5(self):
-        #Local bandwidth is a too small array
-        self.fail("Not Implemented")
+        # Local bandwidth is a too small array
+        input_local_bandwidth = np.random.rand(3)
+        patterns = np.random.rand(5, 7)
+
+        try:
+            _ShapeAdaptiveGaussian._define_and_validate_local_bandwidths(
+                None, input_local_bandwidth, patterns
+            )
+        except KernelException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
 
     def test_define_and_validate_local_bandwidths_6(self):
+        # Local bandwidth is an array of the correct size
+        input_local_bandwidths = np.random.rand(5, 1)
+        patterns = np.random.rand(5, 7)
+
+        actual_local_bandwidths = _ShapeAdaptiveGaussian._define_and_validate_local_bandwidths(
+                None, input_local_bandwidths, patterns
+            )
+        expected_local_bandwidths = input_local_bandwidths
+        np.testing.assert_array_equal(actual_local_bandwidths, expected_local_bandwidths)
+
+    def test_define_and_validate_local_bandwidths_7(self):
+        # Local bandwidth is a too large array
+        input_local_bandwidth = np.random.rand(10)
+        patterns = np.random.rand(5, 7)
+
+        try:
+            _ShapeAdaptiveGaussian._define_and_validate_local_bandwidths(
+                None, input_local_bandwidth, patterns
+            )
+        except KernelException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test_define_and_validate_local_bandwidths_8(self):
         #Local bandwidth has too many dimensions
-        self.fail("Not Implemented")
+        input_local_bandwidth = np.random.rand(5, 2)
+        patterns = np.random.rand(5, 7)
+
+        try:
+            _ShapeAdaptiveGaussian._define_and_validate_local_bandwidths(
+                None, input_local_bandwidth, patterns
+            )
+        except KernelException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test_define_and_validate_local_bandwidths_9(self):
+        #Local bandwidth has too many dimensions
+        input_local_bandwidth = np.random.rand(5, 1)
+        patterns = np.random.rand(5, 7)
+
+        try:
+            _ShapeAdaptiveGaussian._define_and_validate_local_bandwidths(
+                None, input_local_bandwidth, patterns
+            )
+        except KernelException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
 
     def test_evaluate_0(self):
         # Single pattern, local bandwidth = 1
