@@ -206,13 +206,8 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth, gsl_
 
     //Evaluate the pdf
     gsl_vector* mean = gsl_vector_calloc(bandwidthMatrix->size1);
-    gsl_matrix* covarianceMatrix = gsl_matrix_alloc(bandwidthMatrix->size1, bandwidthMatrix->size2);
-    gsl_matrix_set_identity(covarianceMatrix);
-
-    gsl_matrix* choleskyDecompositionCovarianceMatrix = gsl_matrix_alloc(covarianceMatrix->size1, covarianceMatrix->size2);
-    gsl_matrix_memcpy(choleskyDecompositionCovarianceMatrix, covarianceMatrix);
-
-    gsl_linalg_cholesky_decomp1(choleskyDecompositionCovarianceMatrix);
+    gsl_matrix* choleskyDecompositionCovarianceMatrix  = gsl_matrix_alloc(bandwidthMatrix->size1, bandwidthMatrix->size2);
+    gsl_matrix_set_identity(choleskyDecompositionCovarianceMatrix);
 
     gsl_vector* work = gsl_vector_alloc(mean->size);
 
@@ -228,7 +223,6 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth, gsl_
     gsl_matrix_free(inverse);
     gsl_vector_free(mean);
     gsl_vector_free(scaled_pattern);
-    gsl_matrix_free(covarianceMatrix);
     gsl_matrix_free(choleskyDecompositionCovarianceMatrix);
     gsl_vector_free(work);
     gsl_permutation_free(permutation);
