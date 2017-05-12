@@ -1,6 +1,7 @@
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_vector_double.h>
 #include "kernelsModule.h"
+#include "kernels.h"
 
 PyObject *multi_pattern_symmetric(PyObject *args, KernelType kernelType) {
     /* Parse input data */
@@ -142,6 +143,7 @@ static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
     ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(SHAPE_ADAPTIVE_GAUSSIAN);
     gsl_matrix* globalInverse = gsl_matrix_alloc(dimension, dimension);
     double globalScalingFactor;
+    double gaussianConstant = standardGaussianKernel.kernel.symmetricKernel.factorFunction(dimension);
 
     kernel.factorFunction(&globalBandwidthMatrix, globalInverse, &globalScalingFactor);
 
@@ -155,13 +157,13 @@ static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
     gsl_matrix* localInverseMemory = gsl_matrix_alloc(dimension, dimension);
 
 
-
     /* Do computations */
     gsl_vector_view pattern_view = arrayGetGSLVectorView(&pattern);
     double density = kernel.densityFunction(&pattern_view.vector, localBandwidth,
                                             globalScalingFactor, globalInverse,
                                             mean, cholCovMat,
-                                            scaledPatternMemory, workMemory, localInverseMemory);
+                                            scaledPatternMemory, workMemory, localInverseMemory,
+                                            gaussianConstant);
 
     /* Free memory */
     gsl_matrix_free(globalInverse);
@@ -197,10 +199,11 @@ static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
     ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(SHAPE_ADAPTIVE_GAUSSIAN);
 
     /* Compute constants */
-    size_t dimension = patterns.dimensionality;
+    size_t dimension = (size_t) patterns.dimensionality;
     gsl_matrix* globalInverse = gsl_matrix_alloc(dimension, dimension);
     double globalScalingFactor;
     kernel.factorFunction(&globalBandwidthMatrix, globalInverse, &globalScalingFactor);
+    double gaussianConstant = standardGaussianKernel.kernel.symmetricKernel.factorFunction(dimension);
 
     /* Allocate memory for the kernel evaluatation */
 
@@ -227,7 +230,8 @@ static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
         densities.data[j] = kernel.densityFunction(
                 &pattern_view.vector, localBandwidth, globalScalingFactor, globalInverse,
                 mean, cholCovMat,
-                scaledPatternMemory, workMemory, localInverseMemory);
+                scaledPatternMemory, workMemory, localInverseMemory,
+                gaussianConstant);
     }
 
     /* Free memory */

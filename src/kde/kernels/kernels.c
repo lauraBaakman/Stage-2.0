@@ -174,7 +174,7 @@ double gaussianPDF(gsl_vector * pattern, gsl_vector * mean, gsl_matrix *cholesky
 double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
                                 double globalScalingFactor, gsl_matrix * globalInverse,
                                 gsl_vector* mean, gsl_matrix* cholCovmat,
-                                gsl_vector* scaledPattern, gsl_vector* work, gsl_matrix* localInverse){
+                                gsl_vector* scaledPattern, gsl_vector* work, gsl_matrix* localInverse, double gaussianConstant){
 
     size_t dimension = globalInverse->size1;
 
@@ -189,8 +189,7 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
     gsl_blas_dsymv(CblasLower, 1.0, localInverse, pattern, 1.0, scaledPattern);
 
     //Evaluate the pdf
-    double density = 1.0;
-    gsl_ran_multivariate_gaussian_pdf(scaledPattern, mean, cholCovmat, &density, work);
+    double density = standardGaussianPDF(scaledPattern->data, (int) dimension, gaussianConstant);
 
     //Determine the result of the kernel.
     density *= localScalingFactor;
