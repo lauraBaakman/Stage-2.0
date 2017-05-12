@@ -173,7 +173,8 @@ double gaussianPDF(gsl_vector * pattern, gsl_vector * mean, gsl_matrix *cholesky
 /* Shape Adaptive Kernels */
 double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
                                 double globalScalingFactor, gsl_matrix * globalInverse,
-                                gsl_vector* mean, gsl_matrix* cholCovmat){
+                                gsl_vector* mean, gsl_matrix* cholCovmat,
+                                gsl_vector* scaledPattern, gsl_vector* workVector, gsl_matrix* localInverseMatrix){
 
     size_t dimension = globalInverse->size1;
 
