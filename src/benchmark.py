@@ -28,10 +28,11 @@ def test_1():
 
 
 if __name__ == '__main__':
+    num_runs = 30
     print(timeit.timeit(
         "test_1()",
         setup="from __main__ import test_1",
-        number=10)
+        number=30)/num_runs
     )
     # print(timeit.timeit(
     #     "test_2()",

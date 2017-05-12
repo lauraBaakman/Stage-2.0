@@ -1,6 +1,7 @@
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_vector_double.h>
 #include "kernelsModule.h"
+#include "kernels.h"
 
 PyObject *multi_pattern_symmetric(PyObject *args, KernelType kernelType) {
     /* Parse input data */
@@ -141,24 +142,23 @@ static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
     size_t dimension = (size_t) pattern.dimensionality;
     ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(SHAPE_ADAPTIVE_GAUSSIAN);
     gsl_matrix* globalInverse = gsl_matrix_alloc(dimension, dimension);
-    double globalScalingFactor;
+    double globalScalingFactor, pdfConstant;
 
-    gsl_vector* mean = gsl_vector_calloc(dimension);
-    gsl_matrix* cholCovMat  = gsl_matrix_alloc(dimension, dimension);
-    gsl_matrix_set_identity(cholCovMat);
+    kernel.factorFunction(&globalBandwidthMatrix, globalInverse, &globalScalingFactor, &pdfConstant);
 
-    kernel.factorFunction(&globalBandwidthMatrix, globalInverse, &globalScalingFactor);
+
+    /* Allocate Memory for the kernel evaluation */
+    gsl_vector* scaledPatternMemory = gsl_vector_calloc(dimension);
 
     /* Do computations */
     gsl_vector_view pattern_view = arrayGetGSLVectorView(&pattern);
     double density = kernel.densityFunction(&pattern_view.vector, localBandwidth,
-                                            globalScalingFactor, globalInverse,
-                                            mean, cholCovMat);
+                                            globalScalingFactor, globalInverse, pdfConstant,
+                                            scaledPatternMemory);
 
     /* Free memory */
     gsl_matrix_free(globalInverse);
-    gsl_matrix_free(cholCovMat);
-    gsl_vector_free(mean);
+    gsl_vector_free(scaledPatternMemory);
 
     /* Create return object */
     PyObject *returnObject = Py_BuildValue("d", density);
@@ -186,15 +186,13 @@ static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
     ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(SHAPE_ADAPTIVE_GAUSSIAN);
 
     /* Compute constants */
-    size_t dimension = patterns.dimensionality;
+    size_t dimension = (size_t) patterns.dimensionality;
     gsl_matrix* globalInverse = gsl_matrix_alloc(dimension, dimension);
-    double globalScalingFactor;
+    double globalScalingFactor, pdfConstant;
+    kernel.factorFunction(&globalBandwidthMatrix, globalInverse, &globalScalingFactor, &pdfConstant);
 
-    gsl_vector* mean = gsl_vector_calloc(dimension);
-    gsl_matrix* cholCovMat  = gsl_matrix_alloc(dimension, dimension);
-    gsl_matrix_set_identity(cholCovMat);
-
-    kernel.factorFunction(&globalBandwidthMatrix, globalInverse, &globalScalingFactor);
+    /* Allocate memory for the kernel evaluatation */
+    gsl_vector* scaledPatternMemory = gsl_vector_alloc(dimension);
 
     /* Do computations */
     double* pattern = patterns.data;
@@ -205,17 +203,19 @@ static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
     for( int j = 0; j < patterns.length; j++, pattern += patterns.rowStride) {
         pattern_view = gsl_vector_view_array(pattern, (size_t) patterns.dimensionality);
 
+        gsl_vector_set_zero(scaledPatternMemory);
+
         localBandwidth = localBandwidths.data[j];
     
         densities.data[j] = kernel.densityFunction(
-                &pattern_view.vector, localBandwidth, globalScalingFactor, globalInverse,
-                mean, cholCovMat);
+                &pattern_view.vector, localBandwidth,
+                globalScalingFactor, globalInverse, pdfConstant,
+                scaledPatternMemory);
     }
 
     /* Free memory */
     gsl_matrix_free(globalInverse);
-    gsl_matrix_free(cholCovMat);
-    gsl_vector_free(mean);
+    gsl_vector_free(scaledPatternMemory);
 
     /* Create return object */
     Py_INCREF(Py_None);
