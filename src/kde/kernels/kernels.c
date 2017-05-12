@@ -174,12 +174,12 @@ double gaussianPDF(gsl_vector * pattern, gsl_vector * mean, gsl_matrix *cholesky
 double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
                                 double globalScalingFactor, gsl_matrix * globalInverse,
                                 gsl_vector* mean, gsl_matrix* cholCovmat,
-                                gsl_vector* scaledPattern, gsl_vector* workVector, gsl_matrix* localInverseMatrix){
+                                gsl_vector* scaledPattern, gsl_vector* work, gsl_matrix* localInverse){
 
     size_t dimension = globalInverse->size1;
 
     // Compute inverse of local bandwidth matrix
-    gsl_matrix* localInverse = computeLocalInverse(globalInverse, localBandwidth);
+    computeLocalInverse(globalInverse, localBandwidth, localInverse);
 
     // Compute local scaling factor
     double localScalingFactor = computeLocalScalingFactor(globalScalingFactor, localBandwidth, dimension);
@@ -189,18 +189,11 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
     gsl_blas_dsymv(CblasLower, 1.0, localInverse, pattern, 1.0, scaledPattern);
 
     //Evaluate the pdf
-    gsl_vector* work = gsl_vector_alloc(dimension);
-
     double density = 1.0;
     gsl_ran_multivariate_gaussian_pdf(scaledPattern, mean, cholCovmat, &density, work);
 
     //Determine the result of the kernel.
     density *= localScalingFactor;
-
-    //Free memory
-    gsl_matrix_free(localInverse);
-    gsl_vector_free(work);
-
     return density;
 }
 
@@ -227,11 +220,9 @@ double computeLocalScalingFactor(double globalScalingFactor, double localBandwid
     return localScalingFactor;
 }
 
-gsl_matrix* computeLocalInverse(gsl_matrix* globalInverse, double localBandwidth){
-    gsl_matrix* localInverse = gsl_matrix_alloc(globalInverse->size1, globalInverse->size2);
-    gsl_matrix_memcpy(localInverse, globalInverse);
-    gsl_matrix_scale(localInverse, 1.0 / localBandwidth);
-    return localInverse;
+void computeLocalInverse(gsl_matrix* globalInverse, double localBandwidth, gsl_matrix* outLocalInverse){
+    gsl_matrix_memcpy(outLocalInverse, globalInverse);
+    gsl_matrix_scale(outLocalInverse, 1.0 / localBandwidth);
 }
 
 /* Utilities */
