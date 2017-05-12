@@ -15,7 +15,7 @@ typedef double (*ShapeAdaptiveKernelDensityFunction)(gsl_vector* pattern, double
                                                      double globalScalingFactor, gsl_matrix * globalInverse, double gaussianConstant,
                                                      gsl_vector* scaledPattern);
 typedef gsl_matrix* (*ShapeAdaptiveKernelConstantFunction)(Array* globalBandwidthMatrix,
-                                                           gsl_matrix* outGlobalInverse, double* outGlobalScalingFactor);
+                                                           gsl_matrix* outGlobalInverse, double* outGlobalScalingFactor, double* outPDFConstant);
 
 typedef struct SymmetricKernel {
     SymmetricKernelConstantFunction factorFunction;

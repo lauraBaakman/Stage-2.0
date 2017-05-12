@@ -26,11 +26,10 @@ double gaussianPDF(gsl_vector* pattern, gsl_vector * mean, gsl_matrix * cholesky
 
 
 /* Shape Adaptive Kernels */
-
-void computeGlobalConstants(Array* globalBandwidthMatrixArray,
-                            gsl_matrix* outGlobalInverse, double* outGlobalScalingFactor);
-
 double computeLocalScalingFactor(double globalScalingFactor, double localBandwidth, size_t dimension);
+
+void shapeAdaptiveGaussianConstants(Array *globalBandwidthMatrixArray, gsl_matrix *outGlobalInverse,
+                                    double *outGlobalScalingFactor, double *outPDFConstant);
 
 double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
                                 double globalScalingFactor, gsl_matrix * globalInverse, double gaussianConstant,

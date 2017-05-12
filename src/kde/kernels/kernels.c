@@ -39,7 +39,7 @@ Kernel shapeAdaptiveGaussianKernel = {
         .isSymmetric = false,
         .isShapeAdaptive = true,
         .kernel.shapeAdaptiveKernel.densityFunction = shapeAdaptiveGaussianPDF,
-        .kernel.shapeAdaptiveKernel.factorFunction = computeGlobalConstants,
+        .kernel.shapeAdaptiveKernel.factorFunction = shapeAdaptiveGaussianConstants,
 };
 
 
@@ -193,7 +193,8 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
     return density;
 }
 
-void computeGlobalConstants(Array* globalBandwidthMatrixArray, gsl_matrix *outGlobalInverse, double *outGlobalScalingFactor) {
+void shapeAdaptiveGaussianConstants(Array *globalBandwidthMatrixArray, gsl_matrix *outGlobalInverse,
+                                    double *outGlobalScalingFactor, double *outPDFConstant) {
     gsl_matrix* LUDecompH = arrayCopyToGSLMatrix(globalBandwidthMatrixArray);
 
     //Compute LU decompostion
@@ -206,6 +207,9 @@ void computeGlobalConstants(Array* globalBandwidthMatrixArray, gsl_matrix *outGl
 
     //Compute global scaling factor
     *outGlobalScalingFactor = 1.0 / gsl_linalg_LU_det(LUDecompH, signum);
+
+    //Compute the pdfConstant
+    *outPDFConstant = standardGaussianKernel.kernel.symmetricKernel.factorFunction(globalBandwidthMatrixArray->dimensionality);
 
     //Free memory
     gsl_permutation_free(permutation);
