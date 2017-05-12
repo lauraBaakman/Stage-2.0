@@ -191,7 +191,7 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
     //Evaluate the pdf
     gsl_vector* work = gsl_vector_alloc(dimension);
 
-    double density = 1.0; //Skipping initialization of this value breaks the evaluation of the pdf
+    double density = 1.0;
     gsl_ran_multivariate_gaussian_pdf(scaled_pattern, mean, cholCovmat, &density, work);
 
     //Determine the result of the kernel.
