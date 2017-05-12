@@ -186,21 +186,19 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
 
     // Multiply the transpose of the inverse with the pattern
     // Since the bandwidth matrix is always symmetric we don't need to compute the transpose.
-    gsl_vector* scaled_pattern = gsl_vector_calloc(pattern->size);
-    gsl_blas_dsymv(CblasLower, 1.0, localInverse, pattern, 1.0, scaled_pattern);
+    gsl_blas_dsymv(CblasLower, 1.0, localInverse, pattern, 1.0, scaledPattern);
 
     //Evaluate the pdf
     gsl_vector* work = gsl_vector_alloc(dimension);
 
     double density = 1.0;
-    gsl_ran_multivariate_gaussian_pdf(scaled_pattern, mean, cholCovmat, &density, work);
+    gsl_ran_multivariate_gaussian_pdf(scaledPattern, mean, cholCovmat, &density, work);
 
     //Determine the result of the kernel.
     density *= localScalingFactor;
 
     //Free memory
     gsl_matrix_free(localInverse);
-    gsl_vector_free(scaled_pattern);
     gsl_vector_free(work);
 
     return density;
