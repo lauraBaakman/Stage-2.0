@@ -32,8 +32,6 @@ void computeGlobalConstants(Array* globalBandwidthMatrixArray,
 
 double computeLocalScalingFactor(double globalScalingFactor, double localBandwidth, size_t dimension);
 
-void computeLocalInverse(gsl_matrix* globalInverse, double localBandwidth, gsl_matrix* outLocalInverse);
-
 double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
                                 double globalScalingFactor, gsl_matrix * globalInverse,
                                 gsl_vector* mean, gsl_matrix* cholCovmat,

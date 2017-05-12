@@ -178,20 +178,19 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
 
     size_t dimension = globalInverse->size1;
 
-    // Compute inverse of local bandwidth matrix
-    computeLocalInverse(globalInverse, localBandwidth, localInverse);
-
-
-    // Multiply the transpose of the inverse with the pattern
+    // Multiply the transpose of the global inverse with the pattern
     // Since the bandwidth matrix is always symmetric we don't need to compute the transpose.
-    gsl_blas_dsymv(CblasLower, 1.0, localInverse, pattern, 1.0, scaledPattern);
+    gsl_blas_dsymv(CblasLower, 1.0, globalInverse, pattern, 1.0, scaledPattern);
+
+    //Apply the local inverse
+    gsl_vector_scale(scaledPattern, 1.0 / localBandwidth);
 
     // Compute local scaling factor
     double localScalingFactor = computeLocalScalingFactor(globalScalingFactor, localBandwidth, dimension);
 
     //Determine the result of the kernel
     double density = localScalingFactor * standardGaussianPDF(scaledPattern->data, (int) dimension, gaussianConstant);
-    
+
     return density;
 }
 
@@ -216,11 +215,6 @@ void computeGlobalConstants(Array* globalBandwidthMatrixArray, gsl_matrix *outGl
 double computeLocalScalingFactor(double globalScalingFactor, double localBandwidth, size_t dimension) {
     double localScalingFactor = (1.0 / pow(localBandwidth, dimension)) * globalScalingFactor;
     return localScalingFactor;
-}
-
-void computeLocalInverse(gsl_matrix* globalInverse, double localBandwidth, gsl_matrix* outLocalInverse){
-    gsl_matrix_memcpy(outLocalInverse, globalInverse);
-    gsl_matrix_scale(outLocalInverse, 1.0 / localBandwidth);
 }
 
 /* Utilities */
