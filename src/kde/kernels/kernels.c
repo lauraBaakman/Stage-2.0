@@ -193,13 +193,13 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
     return density;
 }
 
-void shapeAdaptiveGaussianConstants(gsl_matrix_view *globalBandwidthMatrix, gsl_matrix *outGlobalInverse,
+void shapeAdaptiveGaussianConstants(gsl_matrix *globalBandwidthMatrix, gsl_matrix *outGlobalInverse,
                                     double *outGlobalScalingFactor, double *outPDFConstant) {
 
-    size_t dimension = globalBandwidthMatrix->matrix.size1;
+    size_t dimension = globalBandwidthMatrix->size1;
 
     gsl_matrix* LUDecompH = gsl_matrix_alloc(dimension, dimension);
-    gsl_matrix_memcpy(LUDecompH, &globalBandwidthMatrix->matrix);
+    gsl_matrix_memcpy(LUDecompH, globalBandwidthMatrix);
 
     //Compute LU decompostion
     gsl_permutation* permutation = gsl_permutation_calloc(dimension);
