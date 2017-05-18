@@ -136,7 +136,8 @@ static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
     if (!PyArg_ParseTuple(args, "OdO", &inPattern, &localBandwidth, &inGlobalBandwidthMatrix)) return NULL;
 
     Array pattern = pyObjectToArray(inPattern, NPY_ARRAY_IN_ARRAY);
-    gsl_matrix_view globalBandwidthMatrix = pyObjectToGSLMatrixView(inGlobalBandwidthMatrix, NPY_ARRAY_IN_ARRAY);
+    gsl_matrix* globalBandwidthMatrix = pyObjectToGSLMatrix(inGlobalBandwidthMatrix, NPY_ARRAY_IN_ARRAY);
+
 
     /* Compute constants */
     size_t dimension = (size_t) pattern.dimensionality;
@@ -144,8 +145,7 @@ static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
     gsl_matrix* globalInverse = gsl_matrix_alloc(dimension, dimension);
     double globalScalingFactor, pdfConstant;
 
-    kernel.factorFunction(&globalBandwidthMatrix, globalInverse, &globalScalingFactor, &pdfConstant);
-
+    kernel.factorFunction(globalBandwidthMatrix, globalInverse, &globalScalingFactor, &pdfConstant);
 
     /* Allocate Memory for the kernel evaluation */
     gsl_vector* scaledPatternMemory = gsl_vector_calloc(dimension);
@@ -284,6 +284,11 @@ gsl_matrix_view pyObjectToGSLMatrixView(PyObject *pythonObject, int requirements
     size_t num_cols = PyArray_DIM(arrayObject, 1);
     Py_XDECREF(arrayObject);
     return gsl_matrix_view_array(data, num_rows, num_cols);
+}
+
+gsl_matrix *pyObjectToGSLMatrix(PyObject *pythonObject, int requirements) {
+    gsl_matrix_view view = pyObjectToGSLMatrixView(pythonObject, requirements);
+    return &view.matrix;
 }
 
 static PyMethodDef method_table[] = {
