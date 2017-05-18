@@ -58,6 +58,7 @@ class _ShapeAdaptiveMBE_C(_ShapeAdaptiveMBE):
 
 
 class _ShapeAdaptiveMBE_Python(_ShapeAdaptiveMBE):
+
     def estimate(self):
         densities = np.empty(self.num_x_s)
         for idx, x in enumerate(self._x_s):
