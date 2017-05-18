@@ -95,14 +95,14 @@ static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
     PyObject* inPatterns = NULL;
     PyObject* inLocalBandwidths = NULL;
     PyObject* outDensities = NULL;
-    KernelType inKernelType;
+    KernelType kernelType;
     int k;
     double globalBandwidth;
 
 
     if (!PyArg_ParseTuple(args, "OiidOO",
                           &inPatterns,
-                          &inKernelType,
+                          &kernelType,
                           &k,
                           &globalBandwidth,
                           &inLocalBandwidths,
@@ -114,12 +114,14 @@ static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
 
     double* current_pattern = patterns.data;
 
+    ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(kernelType);
+
     /* Do computations */
     for(int j = 0;
         j < patterns.length;
         j++, current_pattern += patterns.rowStride)
     {
-        densities.data[j] = sambeFinalDensity(current_pattern, &patterns, globalBandwidth);
+        densities.data[j] = sambeFinalDensity(current_pattern, &patterns, globalBandwidth, kernel);
     }
 
     /* Free memory */
