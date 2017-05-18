@@ -10,4 +10,9 @@
 
 #include "sambe.h"
 
+gsl_matrix* determineKernelShape(double *pattern);
+
+double finalDensityEstimatePattern(double *pattern);
+
+
 #endif //PARZEN_IH

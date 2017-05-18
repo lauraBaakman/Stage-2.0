@@ -13,6 +13,7 @@
 #include "parzen.h"
 #include "modifeidbreiman.h"
 #include "sambe.h"
+#include "sambe.ih" // Shouldn't be included anywhere, but the locals needed to be exposed somewhere for easy testing.
 #include "utils.h"
 #include "kernels/kernels.h"
 

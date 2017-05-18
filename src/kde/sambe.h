@@ -1,6 +1,8 @@
 #ifndef SAMBE_H
 #define SAMBE_H
 
+#include <gsl/gsl_matrix.h>
+
 #include "utils.h"
 #include "kernels/kernels.h"
 
