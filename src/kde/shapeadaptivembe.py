@@ -10,6 +10,7 @@ import kde.utils.covariance as covariance
 from kde.kernels.shapeadaptivegaussian import ShapeAdaptiveGaussian
 from kde.kernels.epanechnikov import Epanechnikov
 import kde.kernels.scaling
+import kde._kde as _kde
 
 
 class ShapeAdaptiveMBE(ModifiedBreimanEstimator):
@@ -53,8 +54,13 @@ class _ShapeAdaptiveMBE(EstimatorImplementation):
 class _ShapeAdaptiveMBE_C(_ShapeAdaptiveMBE):
 
     def estimate(self):
-        raise NotImplementedError("The C implementation of the Shape Adaptive Modified Breiman is estimator has not "
-                              "yet been written.")
+        densities = np.empty(self.num_x_s, dtype=float)
+        _kde.shape_adaptive_mbe(self._x_s,
+                                self._kernel_class.to_C_enum(),
+                                self._k, self._general_bandwidth,
+                                self._local_bandwidths,
+                                densities)
+        return densities
 
 
 class _ShapeAdaptiveMBE_Python(_ShapeAdaptiveMBE):

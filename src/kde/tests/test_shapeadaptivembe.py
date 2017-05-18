@@ -127,7 +127,6 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
         self.assertAlmostEqual(actual, expected)
 
 
-@skip("The C implementation of SAMBE has not yet been written.")
 class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
     def setUp(self):
         super().setUp()

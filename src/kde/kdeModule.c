@@ -88,6 +88,46 @@ static PyObject *kde_modified_breiman(PyObject *self, PyObject *args){
     return Py_None;
 }
 
+static char kde_sambe_docstring[] = "Perform the final estimation step of the Shape Adaptive Modified breiman estimator.";
+static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
+
+    /* Parse Arguments */
+    PyObject* inPatterns = NULL;
+    PyObject* inLocalBandwidths = NULL;
+    PyObject* outDensities = NULL;
+    KernelType inKernelType;
+    int k;
+    double globalBandwidth;
+
+
+    if (!PyArg_ParseTuple(args, "OiidOO",
+                          &inPatterns,
+                          &inKernelType,
+                          &k,
+                          &globalBandwidth,
+                          &inLocalBandwidths,
+                          &outDensities)) return NULL;
+
+    Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
+    Array localBandwidths = pyObjectToArray(inLocalBandwidths, NPY_ARRAY_IN_ARRAY);
+    Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
+
+    double* current_pattern = patterns.data;
+
+    /* Do computations */
+    for(int j = 0;
+        j < patterns.length;
+        j++, current_pattern += patterns.rowStride)
+    {
+        densities.data[j] = sambeFinalDensity(current_pattern, &patterns, globalBandwidth);
+    }
+
+    /* Free memory */
+
+    /* Create return object */
+    Py_INCREF(Py_None);
+    return Py_None;
+}
 
 
 Array pyObjectToArray(PyObject *pythonObject, int requirements){
@@ -103,8 +143,9 @@ Array pyObjectToArray(PyObject *pythonObject, int requirements){
 }
 
 static PyMethodDef method_table[] = {
-        {"parzen",                      kdeParzen,                  METH_VARARGS,   kde_parzen_docstring},
-        {"modified_breiman",                     kde_modified_breiman,     METH_VARARGS,     kde_breiman_docstring},
+        {"parzen",              kdeParzen,                          METH_VARARGS,   kde_parzen_docstring},
+        {"modified_breiman",    kde_modified_breiman,               METH_VARARGS,   kde_breiman_docstring},
+        {"shape_adaptive_mbe",  kde_shape_adaptive_mbe,             METH_VARARGS,   kde_sambe_docstring},
         /* Sentinel */
         {NULL,                              NULL,                                   0,              NULL}
 };

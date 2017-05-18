@@ -12,6 +12,7 @@
 
 #include "parzen.h"
 #include "modifeidbreiman.h"
+#include "sambe.h"
 #include "utils.h"
 #include "kernels/kernels.h"
 
