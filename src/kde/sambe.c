@@ -16,10 +16,20 @@ double sambeFinalDensity(double *pattern, Array *datapoints,
     gsl_matrix* globalInverse = gsl_matrix_alloc(dimension, dimension);
     kernel.factorFunction(globalKernelShape, globalInverse, &globalScalingFactor, &pdfConstant);
 
+    double density = 0;
+    for(int i = 0;
+        i < datapoints->length;
+        ++i, currentDataPoint+= datapoints->rowStride)
+    {
+        density += finalDensityEstimatePattern(currentDataPoint);
+    }
 
+    density /= datapoints->length;
 
     /* Free memory */
     gsl_matrix_free(globalInverse);
+
+    return density;
 }
 
 gsl_matrix *determineKernelShape(double *pattern) {
