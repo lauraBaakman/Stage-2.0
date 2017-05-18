@@ -126,7 +126,7 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
         expected = 0.143018801263046
         self.assertAlmostEqual(actual, expected)
 
-
+@skip
 class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
     def setUp(self):
         super().setUp()
