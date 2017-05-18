@@ -159,6 +159,7 @@ static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
     /* Free memory */
     gsl_matrix_free(globalInverse);
     gsl_vector_free(scaledPatternMemory);
+    gsl_matrix_free(globalBandwidthMatrix);
 
     /* Create return object */
     PyObject *returnObject = Py_BuildValue("d", density);
@@ -179,7 +180,7 @@ static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
                           &outDensities)) return NULL;
 
     Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
-    gsl_matrix_view globalBandwidthMatrix = pyObjectToGSLMatrixView(inGlobalBandwidthMatrix, NPY_ARRAY_IN_ARRAY);
+    gsl_matrix* globalBandwidthMatrix = pyObjectToGSLMatrix(inGlobalBandwidthMatrix, NPY_ARRAY_IN_ARRAY);
     Array localBandwidths = pyObjectToArray(inLocalBandwidths, NPY_ARRAY_IN_ARRAY);
     Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
 
@@ -189,7 +190,7 @@ static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
     size_t dimension = (size_t) patterns.dimensionality;
     gsl_matrix* globalInverse = gsl_matrix_alloc(dimension, dimension);
     double globalScalingFactor, pdfConstant;
-    kernel.factorFunction(&globalBandwidthMatrix, globalInverse, &globalScalingFactor, &pdfConstant);
+    kernel.factorFunction(globalBandwidthMatrix, globalInverse, &globalScalingFactor, &pdfConstant);
 
     /* Allocate memory for the kernel evaluatation */
     gsl_vector* scaledPatternMemory = gsl_vector_alloc(dimension);
@@ -206,7 +207,7 @@ static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
         gsl_vector_set_zero(scaledPatternMemory);
 
         localBandwidth = localBandwidths.data[j];
-    
+
         densities.data[j] = kernel.densityFunction(
                 &pattern_view.vector, localBandwidth,
                 globalScalingFactor, globalInverse, pdfConstant,
@@ -215,6 +216,7 @@ static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
 
     /* Free memory */
     gsl_matrix_free(globalInverse);
+    gsl_matrix_free(globalBandwidthMatrix);
     gsl_vector_free(scaledPatternMemory);
 
     /* Create return object */
@@ -282,13 +284,17 @@ gsl_matrix_view pyObjectToGSLMatrixView(PyObject *pythonObject, int requirements
     double* data = (double *)PyArray_DATA(arrayObject);
     size_t num_rows = PyArray_DIM(arrayObject, 0);
     size_t num_cols = PyArray_DIM(arrayObject, 1);
+
     Py_XDECREF(arrayObject);
     return gsl_matrix_view_array(data, num_rows, num_cols);
 }
 
 gsl_matrix *pyObjectToGSLMatrix(PyObject *pythonObject, int requirements) {
     gsl_matrix_view view = pyObjectToGSLMatrixView(pythonObject, requirements);
-    return &view.matrix;
+
+    gsl_matrix* matrix = gsl_matrix_alloc(view.matrix.size1, view.matrix.size2);
+    gsl_matrix_memcpy(matrix, &view.matrix);
+    return matrix;
 }
 
 static PyMethodDef method_table[] = {
