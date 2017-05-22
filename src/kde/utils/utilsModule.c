@@ -36,13 +36,14 @@ static PyObject * knn(PyObject *self, PyObject *args){
     if (!PyArg_ParseTuple(args, "iiOOO",
                           &k, &patternIdx, &inPatterns, &inDistanceMatrix, &outNearestNeighbours)) return NULL;
 
-    Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
-    Array distanceMatrix = pyObjectToArray(inDistanceMatrix, NPY_ARRAY_IN_ARRAY);
-    Array nearestNeighbours = pyObjectToArray(outNearestNeighbours, NPY_ARRAY_OUT_ARRAY);
-
+    gsl_matrix_view patterns = pyObjectToGSLMatrixView(inPatterns, NPY_ARRAY_IN_ARRAY);
+    gsl_matrix_view distanceMatrix = pyObjectToGSLMatrixView(inDistanceMatrix, NPY_ARRAY_IN_ARRAY);
+    gsl_matrix_view nearestNeighbours = pyObjectToGSLMatrixView(outNearestNeighbours, NPY_ARRAY_OUT_ARRAY);
 
     /* Do stuff */
-    compute_k_nearest_neighbours(k, patternIdx, &patterns, &distanceMatrix, &nearestNeighbours);
+    compute_k_nearest_neighbours(k, patternIdx,
+                                 &patterns.matrix, &distanceMatrix.matrix,
+                                 &nearestNeighbours.matrix);
 
     /* Create return object */
     Py_INCREF(Py_None);
