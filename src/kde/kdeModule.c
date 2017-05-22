@@ -94,7 +94,6 @@ static char kde_sambe_docstring[] = "Perform the final estimation step of the Sh
 static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
 
     /* Parse Arguments */
-    PyObject* inXis = NULL;
     PyObject* inXs = NULL;
     PyObject* inLocalBandwidths = NULL;
     PyObject* outDensities = NULL;
@@ -103,8 +102,7 @@ static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
     double globalBandwidth;
 
 
-    if (!PyArg_ParseTuple(args, "OOiidOO",
-                          &inXis,
+    if (!PyArg_ParseTuple(args, "OiidOO",
                           &inXs,
                           &kernelType,
                           &k,
@@ -112,7 +110,6 @@ static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
                           &inLocalBandwidths,
                           &outDensities)) return NULL;
 
-    gsl_matrix_view xis = pyObjectToGSLMatrixView(inXis, NPY_ARRAY_IN_ARRAY);
     gsl_matrix_view xs = pyObjectToGSLMatrixView(inXs, NPY_ARRAY_IN_ARRAY);
     gsl_vector_view localBandwidths = pyObjectToGSLVectorView(inLocalBandwidths, NPY_ARRAY_IN_ARRAY);
     gsl_vector_view densities = pyObjectToGSLVectorView(outDensities, NPY_ARRAY_OUT_ARRAY);
