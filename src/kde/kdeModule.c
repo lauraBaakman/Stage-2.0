@@ -127,7 +127,9 @@ static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
     for(size_t idx = 0; idx < xs.matrix.size1; idx++){
         currentPattern  = gsl_matrix_row(&xs.matrix, idx);
 
-        density = sambeFinalDensity(&currentPattern.vector, &xis.matrix, globalBandwidth, kernel);
+        density = sambeFinalDensity(
+                &currentPattern.vector, &xis.matrix, &localBandwidths.vector,
+                globalBandwidth, kernel);
 
         gsl_vector_set(&densities.vector, idx, density);
     }
