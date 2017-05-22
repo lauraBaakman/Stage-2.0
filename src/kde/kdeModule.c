@@ -117,7 +117,7 @@ static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
     gsl_vector_view localBandwidths = pyObjectToGSLVectorView(inLocalBandwidths, NPY_ARRAY_IN_ARRAY);
     gsl_vector_view densities = pyObjectToGSLVectorView(outDensities, NPY_ARRAY_OUT_ARRAY);
 
-    double density = 42.0;
+    double density;
 
     gsl_vector_view currentPattern;
 

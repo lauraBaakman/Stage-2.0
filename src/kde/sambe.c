@@ -1,3 +1,5 @@
+#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_vector_double.h>
 #include "sambe.ih"
 
 //double sambeFinalDensity(double *pattern, Array *datapoints,
@@ -16,7 +18,7 @@
 //    gsl_matrix* globalInverse = gsl_matrix_alloc(dimension, dimension);
 //    kernel.factorFunction(globalKernelShape, globalInverse, &globalScalingFactor, &pdfConstant);
 //
-//    /* Evalute
+//    /* Evaluate
 //    double density = 0;
 //    for(int i = 0;
 //        i < datapoints->length;
@@ -36,14 +38,41 @@
 double sambeFinalDensity(gsl_vector *pattern, gsl_matrix *datapoints, gsl_vector* localBandwidths,
                          double globalBandwidth,
                          ShapeAdaptiveKernel kernel) {
-    gsl_vector_print(stdout, pattern);
-    return 0;
+
+    size_t dimension = datapoints->size2;
+    size_t dataPointCount = datapoints->size1;
+
+    double localBandwidth, density = 0.0;
+
+    gsl_vector_view xi;
+    gsl_matrix* globalKernelShape = determineKernelShape(pattern);
+
+    /* Prepare the evaluation of the kernel */
+
+
+    /* Estimate Density */
+    for(size_t xiIDX = 0; xiIDX < dataPointCount; xiIDX++){
+        xi = gsl_matrix_row(datapoints, xiIDX);
+        localBandwidth = gsl_vector_get(localBandwidths, xiIDX);
+
+        density += finalDensityEstimatePattern(pattern, &xi.vector, localBandwidth);
+    }
+
+    density /= dataPointCount;
+
+    /* free memory */
+    gsl_matrix_free(globalKernelShape);
+
+    return density;
 }
 
 gsl_matrix *determineKernelShape(gsl_vector *pattern) {
-    return NULL;
+    size_t dimension = pattern->size;
+    gsl_matrix* shape = gsl_matrix_alloc(dimension, dimension);
+
+    return shape;
 }
 
-double finalDensityEstimatePattern(gsl_vector *pattern) {
+double finalDensityEstimatePattern(gsl_vector *pattern, gsl_vector* xi, double localBandwidth) {
     return 37;
 }
