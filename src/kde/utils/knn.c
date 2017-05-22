@@ -1,3 +1,4 @@
+#include <gsl/gsl_vector_double.h>
 #include "knn.ih"
 
 //Array* compute_k_nearest_neighbours(int k, int patternIdx, Array *patterns, Array *distanceMatrix,
@@ -17,14 +18,18 @@
 
 void compute_k_nearest_neighbours(int k, int patternIdx, gsl_matrix *patterns, gsl_matrix *distanceMatrix,
                                   gsl_matrix *outNearestNeighbours) {
-    printf("The C implementation");
+    gsl_vector_view distances = gsl_matrix_row(distanceMatrix, patternIdx);
+
+    ListElement* elements = toArrayOfListElements(&distances.vector);
+
+    free(elements);
 }
 
-ListElement* toArrayOfListElements(double *values, int numValues){
-    ListElement* elements = malloc(numValues * sizeof(ListElement));
-    for (int i = 0; i < numValues; ++i) {
+ListElement* toArrayOfListElements(gsl_vector *distances){
+    ListElement* elements = malloc(distances->size * sizeof(ListElement));
+    for (size_t i = 0; i < distances->size; ++i) {
         elements[i].index = i;
-        elements[i].value = &values[i];
+        elements[i].value = &(distances->data[i]);
     }
     return elements;
 }

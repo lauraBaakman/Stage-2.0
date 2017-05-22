@@ -11,7 +11,7 @@ typedef struct ListElement{
 
 void getKNearestElements(ListElement* sortedDistances, int k, Array* patterns, Array* neighbours);
 
-ListElement* toArrayOfListElements(double *values, int numValues);
+ListElement* toArrayOfListElements(gsl_vector *distances);
 
 int listElementCompare(const void *s1, const void *s2);
 void listElementArraySort(ListElement* elements, int numElements);
