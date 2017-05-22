@@ -3,6 +3,7 @@
 //
 
 #include <gsl/gsl_matrix.h>
+#include <gsl/gsl_vector_double.h>
 #include "kdeModule.h"
 
 static char kde_parzen_docstring[] = "Estimate densities with Parzen.";
@@ -93,7 +94,8 @@ static char kde_sambe_docstring[] = "Perform the final estimation step of the Sh
 static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
 
     /* Parse Arguments */
-    PyObject* inPatterns = NULL;
+    PyObject* inXis = NULL;
+    PyObject* inXs = NULL;
     PyObject* inLocalBandwidths = NULL;
     PyObject* outDensities = NULL;
     KernelType kernelType;
@@ -101,8 +103,9 @@ static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
     double globalBandwidth;
 
 
-    if (!PyArg_ParseTuple(args, "OiidOO",
-                          &inPatterns,
+    if (!PyArg_ParseTuple(args, "OOiidOO",
+                          &inXis,
+                          &inXs,
                           &kernelType,
                           &k,
                           &globalBandwidth,
@@ -110,6 +113,11 @@ static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
                           &outDensities)) return NULL;
 
     /* Do computations */
+    gsl_matrix_view xis = pyObjectToGSLMatrixView(inXis, NPY_ARRAY_IN_ARRAY);
+    gsl_matrix_view xs = pyObjectToGSLMatrixView(inXs, NPY_ARRAY_IN_ARRAY);
+    gsl_vector_view localBandwidths = pyObjectToGSLVectorView(inLocalBandwidths, NPY_ARRAY_IN_ARRAY);
+
+    gsl_vector_print(stdout, &localBandwidths.vector);
 
     /* Free memory */
 
@@ -131,6 +139,20 @@ Array pyObjectToArray(PyObject *pythonObject, int requirements){
     return array;
 }
 
+gsl_vector_view pyObjectToGSLVectorView(PyObject *pythonObject, int requirements) {
+    PyArrayObject* arrayObject = NULL;
+    arrayObject = (PyArrayObject *)PyArray_FROM_OTF(pythonObject, NPY_DOUBLE, requirements);
+    if (arrayObject == NULL){
+        fprintf(stderr, "Error converting PyObject to PyArrayObject\n");
+        exit(-1);
+    }
+    double* data = (double *)PyArray_DATA(arrayObject);
+    size_t length = (size_t) PyArray_DIM(arrayObject, 0);
+
+    Py_XDECREF(arrayObject);
+    return gsl_vector_view_array(data, length);
+}
+
 gsl_matrix_view pyObjectToGSLMatrixView(PyObject *pythonObject, int requirements) {
     PyArrayObject* arrayObject = NULL;
     arrayObject = (PyArrayObject *)PyArray_FROM_OTF(pythonObject, NPY_DOUBLE, requirements);
@@ -139,8 +161,8 @@ gsl_matrix_view pyObjectToGSLMatrixView(PyObject *pythonObject, int requirements
         exit(-1);
     }
     double* data = (double *)PyArray_DATA(arrayObject);
-    size_t num_rows = PyArray_DIM(arrayObject, 0);
-    size_t num_cols = PyArray_DIM(arrayObject, 1);
+    size_t num_rows = (size_t) PyArray_DIM(arrayObject, 0);
+    size_t num_cols = (size_t) PyArray_DIM(arrayObject, 1);
 
     Py_XDECREF(arrayObject);
     return gsl_matrix_view_array(data, num_rows, num_cols);
