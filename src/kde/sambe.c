@@ -56,8 +56,6 @@ void sambeFinalDensity(gsl_matrix* xs, gsl_matrix* xis,
     /* Take care of the globals */
     g_xs = xs;
 
-    gsl_matrix_print(stdout, xs);
-
     g_localBandwidths = localBandwidths;
     g_globalBandwidth = globalBandwidth;
     g_kernel = kernel;
@@ -65,10 +63,8 @@ void sambeFinalDensity(gsl_matrix* xs, gsl_matrix* xis,
 
     size_t dimension = g_xs->size2;
     size_t num_x_s = xs->size1;
-    size_t num_xi_s = xis->size1;
 
-
-    allocateGlobals(dimension, num_xi_s, g_k);
+    allocateGlobals(dimension, num_x_s, g_k);
 
     computeDistanceMatrix(g_xs, g_distanceMatrix);
 
