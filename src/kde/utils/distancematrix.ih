@@ -3,6 +3,6 @@
 
 #include "distancematrix.h"
 
-double squaredEuclidean(double* a, double* b, int length);
+double squaredEuclidean(gsl_vector* a, gsl_vector* b);
 
 #endif //KERNELS_DISTANCEMATRIX_IH
