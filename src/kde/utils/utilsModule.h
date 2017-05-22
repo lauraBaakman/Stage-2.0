@@ -17,5 +17,7 @@
 #include "geometricmean.h"
 
 Array pyObjectToArray(PyObject *pythonObject, int requirements);
+gsl_matrix_view pyObjectToGSLMatrixView(PyObject *pythonObject, int requirements);
+gsl_matrix* pyObjectToGSLMatrix(PyObject *pythonObject, int requirements);
 
 #endif //KERNELS_UTILSMODULE_H_H
