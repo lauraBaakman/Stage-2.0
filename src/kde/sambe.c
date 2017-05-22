@@ -52,12 +52,16 @@ void sambeFinalDensity(gsl_matrix* xs, gsl_matrix* xis,
                        gsl_vector* localBandwidths, double globalBandwidth,
                        ShapeAdaptiveKernel kernel,
                        gsl_vector* outDensities){
+
     /* Take care of the globals */
-    g_xs = xis;
+    g_xs = xs;
+
+    gsl_matrix_print(stdout, xs);
+
     g_localBandwidths = localBandwidths;
     g_globalBandwidth = globalBandwidth;
     g_kernel = kernel;
-    g_k = 3;
+    g_k = 1;
 
     size_t dimension = g_xs->size2;
     size_t num_x_s = xs->size1;
