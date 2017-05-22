@@ -119,10 +119,9 @@ static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
 
     /* Do computations */
     ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(kernelType);
-    sambeFinalDensity(&xs.matrix, &xis.matrix,
-                                   &localBandwidths.vector, globalBandwidth,
-                                   kernel,
-                                   &densities.vector);
+    sambeFinalDensity(&xs.matrix, &localBandwidths.vector, globalBandwidth,
+                      kernel,
+                      &densities.vector);
 
     /* Create return object */
     Py_INCREF(Py_None);

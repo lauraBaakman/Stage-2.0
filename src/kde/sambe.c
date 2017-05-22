@@ -48,7 +48,7 @@ int g_k;
 gsl_matrix* g_distanceMatrix;
 gsl_matrix* g_nearestNeighbours;
 
-void sambeFinalDensity(gsl_matrix* xs, gsl_matrix* xis,
+void sambeFinalDensity(gsl_matrix* xs,
                        gsl_vector* localBandwidths, double globalBandwidth,
                        ShapeAdaptiveKernel kernel,
                        gsl_vector* outDensities){
