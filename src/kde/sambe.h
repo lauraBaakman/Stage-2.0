@@ -6,8 +6,9 @@
 #include "utils.h"
 #include "kernels/kernels.h"
 
-double sambeFinalDensity(double *pattern, Array *datapoints,
-                         double globalBandwidth,
-                         ShapeAdaptiveKernel kernel);
+void sambeFinalDensity(gsl_matrix* xs, gsl_matrix* xis,
+                       gsl_vector* localBandwidths, double globalBandwidth,
+                       ShapeAdaptiveKernel kernel,
+                       gsl_vector* outDensities);
 
 #endif //SAMBE_H

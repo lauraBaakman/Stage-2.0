@@ -1,5 +1,5 @@
 #ifndef SAMBE_IH
-#define PARZEN_IH
+#define SAMBE_IH
 
 #include <printf.h>
 #include <math.h>
@@ -10,9 +10,15 @@
 
 #include "sambe.h"
 
-gsl_matrix* determineKernelShape(double *pattern);
+double sambeFinalDensitySinglePattern(gsl_vector *x, size_t xIdx);
 
-double finalDensityEstimatePattern(double *pattern);
+void determineGlobalKernelShape(size_t patternIdx);
+
+double evaluateKernel(gsl_vector* x, gsl_vector* xi, double localBandwidth);
+
+void allocateGlobals(size_t dataDimension, size_t num_xi_s, int k);
+
+void freeGlobals();
 
 
 #endif //PARZEN_IH
