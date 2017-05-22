@@ -3,7 +3,8 @@
 
 #include "../utils.h"
 
-Array* compute_k_nearest_neighbours(int k, int patternIdx, Array *patterns, Array *distanceMatrix,
-                                    Array *nearestNeighbours);
+void compute_k_nearest_neighbours(int k, int patternIdx,
+                                    gsl_matrix* patterns, gsl_matrix *distanceMatrix,
+                                    gsl_matrix *outNearestNeighbours);
 
 #endif //KERNELS_KNN_H

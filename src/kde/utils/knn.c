@@ -1,18 +1,23 @@
 #include "knn.ih"
 
-Array* compute_k_nearest_neighbours(int k, int patternIdx, Array *patterns, Array *distanceMatrix,
-                                    Array *nearestNeighbours){
-    double* distances = arrayGetRowView(distanceMatrix, patternIdx);
+//Array* compute_k_nearest_neighbours(int k, int patternIdx, Array *patterns, Array *distanceMatrix,
+//                                    Array *nearestNeighbours){
+//    double* distances = arrayGetRowView(distanceMatrix, patternIdx);
+//
+//    ListElement* elements = toArrayOfListElements(distances, distanceMatrix->dimensionality);
+//
+//    listElementArraySort(elements, distanceMatrix->dimensionality);
+//
+//    getKNearestElements(elements, k, patterns, nearestNeighbours);
+//
+//    free(elements);
+//
+//    return nearestNeighbours;
+//}
 
-    ListElement* elements = toArrayOfListElements(distances, distanceMatrix->dimensionality);
-
-    listElementArraySort(elements, distanceMatrix->dimensionality);
-
-    getKNearestElements(elements, k, patterns, nearestNeighbours);
-
-    free(elements);
-
-    return nearestNeighbours;
+void compute_k_nearest_neighbours(int k, int patternIdx, gsl_matrix *patterns, gsl_matrix *distanceMatrix,
+                                  gsl_matrix *outNearestNeighbours) {
+    printf("The C implementation");
 }
 
 ListElement* toArrayOfListElements(double *values, int numValues){
