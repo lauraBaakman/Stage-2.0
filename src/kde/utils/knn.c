@@ -26,6 +26,8 @@ void compute_k_nearest_neighbours(int k, int patternIdx, gsl_matrix *patterns, g
     ListElement* elements = toArrayOfListElements(&distances.vector);
     listElementArraySort(elements, distanceCount);
 
+    getKNearestElements(elements, k,
+                        patterns, outNearestNeighbours);
 
     free(elements);
 }
@@ -62,12 +64,23 @@ void listElementPrint(ListElement* element){
     printf("%f [%d] \n", *element->value, element->index);
 }
 
-void getKNearestElements(ListElement* sortedDistances, int k, Array* patterns, Array* neighbours){
-    int idx = 0;
-    double* pattern;
-    for (int i = 0; i < k; ++i) {
+void getKNearestElements(ListElement *sortedDistances, int k,
+                         gsl_matrix *patterns, gsl_matrix *outNeighbours) {
+    size_t idx = 0;
+    gsl_vector_view pattern;
+    for(size_t i = 0; i < k; i++){
         idx = sortedDistances[i].index;
-        pattern = arrayGetRowView(patterns, idx);
-        arraySetRow(neighbours, i, pattern);
+        pattern = gsl_matrix_row(patterns, idx);
+        gsl_matrix_set_row(outNeighbours, i, &pattern.vector);
     }
 }
+
+//void getKNearestElements(ListElement* sortedDistances, int k, Array* patterns, Array* neighbours){
+//    int idx = 0;
+//    double* pattern;
+//    for (int i = 0; i < k; ++i) {
+//        idx = sortedDistances[i].index;
+//        pattern = arrayGetRowView(patterns, idx);
+//        arraySetRow(neighbours, i, pattern);
+//    }
+//}

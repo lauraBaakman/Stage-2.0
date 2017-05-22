@@ -9,7 +9,7 @@ typedef struct ListElement{
     int index;
 } ListElement;
 
-void getKNearestElements(ListElement* sortedDistances, int k, Array* patterns, Array* neighbours);
+void getKNearestElements(ListElement* sortedDistances, int k, gsl_matrix* patterns, gsl_matrix* outNeighbours);
 
 ListElement* toArrayOfListElements(gsl_vector *distances);
 
