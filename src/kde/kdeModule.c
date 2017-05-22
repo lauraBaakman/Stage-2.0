@@ -112,12 +112,17 @@ static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
                           &inLocalBandwidths,
                           &outDensities)) return NULL;
 
-    /* Do computations */
     gsl_matrix_view xis = pyObjectToGSLMatrixView(inXis, NPY_ARRAY_IN_ARRAY);
     gsl_matrix_view xs = pyObjectToGSLMatrixView(inXs, NPY_ARRAY_IN_ARRAY);
     gsl_vector_view localBandwidths = pyObjectToGSLVectorView(inLocalBandwidths, NPY_ARRAY_IN_ARRAY);
+    gsl_vector_view densities = pyObjectToGSLVectorView(outDensities, NPY_ARRAY_OUT_ARRAY);
 
-    gsl_vector_print(stdout, &localBandwidths.vector);
+    double density = 42.0;
+
+    /* Do computations */
+    for(size_t patternIdx = 0; patternIdx < xs.matrix.size1; patternIdx++){
+        gsl_vector_set(&densities.vector, patternIdx, density);
+    }
 
     /* Free memory */
 
