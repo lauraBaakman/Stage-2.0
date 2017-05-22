@@ -1,3 +1,4 @@
+#include <gsl/gsl_matrix.h>
 #include "utilsModule.h"
 
 static char utils_distanceMatrix_docstring[] = "Compute the distance matrix for the input patterns with squared Euclidean distance as a metric.";
@@ -9,11 +10,12 @@ static PyObject * distance_matrix(PyObject *self, PyObject *args){
 
     if (!PyArg_ParseTuple(args, "OO", &inPatterns, &outDistanceMatrix)) return NULL;
 
-    Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
-    Array distanceMatrix = pyObjectToArray(outDistanceMatrix, NPY_ARRAY_OUT_ARRAY);
+
+    gsl_matrix_view patterns = pyObjectToGSLMatrixView(inPatterns, NPY_ARRAY_IN_ARRAY);
+    gsl_matrix_view distanceMatrix = pyObjectToGSLMatrixView(outDistanceMatrix, NPY_ARRAY_OUT_ARRAY);
 
     /* Do stuff */
-    computeDistanceMatrix(&patterns, &distanceMatrix);
+    computeDistanceMatrix(&patterns.matrix, &distanceMatrix.matrix);
 
     /* Create return object */
     Py_INCREF(Py_None);
@@ -117,6 +119,29 @@ Array pyObjectToArray(PyObject *pythonObject, int requirements){
     Array array = arrayBuildFromPyArray(arrayObject);
     Py_XDECREF(arrayObject);
     return array;
+}
+
+gsl_matrix_view pyObjectToGSLMatrixView(PyObject *pythonObject, int requirements) {
+    PyArrayObject* arrayObject = NULL;
+    arrayObject = (PyArrayObject *)PyArray_FROM_OTF(pythonObject, NPY_DOUBLE, requirements);
+    if (arrayObject == NULL){
+        fprintf(stderr, "Error converting PyObject to PyArrayObject\n");
+        exit(-1);
+    }
+    double* data = (double *)PyArray_DATA(arrayObject);
+    size_t num_rows = PyArray_DIM(arrayObject, 0);
+    size_t num_cols = PyArray_DIM(arrayObject, 1);
+
+    Py_XDECREF(arrayObject);
+    return gsl_matrix_view_array(data, num_rows, num_cols);
+}
+
+gsl_matrix *pyObjectToGSLMatrix(PyObject *pythonObject, int requirements) {
+    gsl_matrix_view view = pyObjectToGSLMatrixView(pythonObject, requirements);
+
+    gsl_matrix* matrix = gsl_matrix_alloc(view.matrix.size1, view.matrix.size2);
+    gsl_matrix_memcpy(matrix, &view.matrix);
+    return matrix;
 }
 
 static PyMethodDef method_table[] = {

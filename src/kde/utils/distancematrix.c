@@ -1,33 +1,33 @@
 #include "distancematrix.ih"
 
-void computeDistanceMatrix(Array *patterns, Array *distanceMatrix){
+void computeDistanceMatrix(gsl_matrix *patterns, gsl_matrix *distanceMatrix) {
+    gsl_matrix_set_zero(distanceMatrix);
 
-    double* a = patterns->data;
-    double* b;
+    gsl_vector_view a, b;
+
+    size_t patternCount = patterns->size1;
+
     double distance;
+    for(size_t i = 0; i < patternCount; i++){
+        a = gsl_matrix_row(patterns, i);
+        for(size_t j = i + 1; j < patternCount; j++){
+            b = gsl_matrix_row(patterns, j);
 
-    arraySetDiagonalToZero(distanceMatrix);
+            distance = squaredEuclidean(&a.vector, &b.vector);
 
-    for(int i = 0;
-            i < patterns->length;
-            i++, a+= patterns->rowStride)
-    {
-        b = a + patterns->rowStride;
-        for(int j = i + 1;
-                j < patterns->length;
-                j++, b+= patterns->rowStride){
-            distance = squaredEuclidean(a, b, patterns->dimensionality);
-            arraySetElement(distanceMatrix, i, j, distance);
-            arraySetElement(distanceMatrix, j, i, distance);
+            gsl_matrix_set(distanceMatrix, i, j, distance);
+            gsl_matrix_set(distanceMatrix, j, i, distance);
         }
     }
 }
 
-double squaredEuclidean(double* a, double* b, int length){
+double squaredEuclidean(gsl_vector* a, gsl_vector* b){
+    size_t vectorDimension = a->size;
     double distance = 0;
-    for(int i = 0; i < length; i++){
-        distance += (a[i] - b[i]) * (a[i] - b[i]);
+    double difference;
+    for(size_t i = 0; i < vectorDimension; i++){
+        difference = a->data[i] - b->data[i];
+        distance += difference * difference;
     }
     return distance;
 }
-
