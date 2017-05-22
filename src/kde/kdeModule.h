@@ -18,6 +18,7 @@
 #include "kernels/kernels.h"
 
 Array pyObjectToArray(PyObject *pythonObject, int requirements);
+gsl_matrix_view pyObjectToGSLMatrixView(PyObject *pythonObject, int requirements);
 
 Kernel selectKernel(KernelType type);
 
