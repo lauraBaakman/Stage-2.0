@@ -10,12 +10,15 @@
 
 #include "sambe.h"
 
-double sambeFinalDensitySinglePattern(gsl_vector *x, gsl_matrix *xis,
-                                      gsl_vector* localBandwidths, double globalBandwidth,
-                                      ShapeAdaptiveKernel kernel);
+double sambeFinalDensitySinglePattern(gsl_vector *x, size_t xIdx);
 
-gsl_matrix* determineKernelShape(gsl_vector *pattern);
+void determineGlobalKernelShape(size_t patternIdx);
 
 double evaluateKernel(gsl_vector* x, gsl_vector* xi, double localBandwidth);
+
+void allocateGlobals(size_t dataDimension, size_t num_xi_s, int k);
+
+void freeGlobals();
+
 
 #endif //PARZEN_IH
