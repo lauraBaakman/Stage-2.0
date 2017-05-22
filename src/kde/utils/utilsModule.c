@@ -11,14 +11,11 @@ static PyObject * distance_matrix(PyObject *self, PyObject *args){
     if (!PyArg_ParseTuple(args, "OO", &inPatterns, &outDistanceMatrix)) return NULL;
 
 
-    gsl_matrix_view patterns2 = pyObjectToGSLMatrixView(inPatterns, NPY_ARRAY_IN_ARRAY);
-    gsl_matrix_view distanceMatrix2 = pyObjectToGSLMatrixView(outDistanceMatrix, NPY_ARRAY_OUT_ARRAY);
-
-    Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
-    Array distanceMatrix = pyObjectToArray(outDistanceMatrix, NPY_ARRAY_OUT_ARRAY);
+    gsl_matrix_view patterns = pyObjectToGSLMatrixView(inPatterns, NPY_ARRAY_IN_ARRAY);
+    gsl_matrix_view distanceMatrix = pyObjectToGSLMatrixView(outDistanceMatrix, NPY_ARRAY_OUT_ARRAY);
 
     /* Do stuff */
-    computeDistanceMatrix(&patterns, &distanceMatrix);
+    computeDistanceMatrix(&patterns.matrix, &distanceMatrix.matrix);
 
     /* Create return object */
     Py_INCREF(Py_None);

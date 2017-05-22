@@ -15,6 +15,7 @@
 #include "covariancematrix.h"
 #include "eigenvalues.h"
 #include "geometricmean.h"
+#include <gsl/gsl_matrix.h>
 
 Array pyObjectToArray(PyObject *pythonObject, int requirements);
 gsl_matrix_view pyObjectToGSLMatrixView(PyObject *pythonObject, int requirements);
