@@ -1,3 +1,4 @@
+#include <gsl/gsl_matrix.h>
 #include "distancematrix.ih"
 
 //void computeDistanceMatrix(Array *patterns, Array *distanceMatrix){
@@ -33,4 +34,17 @@ double squaredEuclidean(double* a, double* b, int length){
 
 void computeDistanceMatrix(gsl_matrix *patterns, gsl_matrix *distanceMatrix) {
     gsl_matrix_set_identity(distanceMatrix);
+
+    size_t num_patterns = patterns->size1;
+    size_t dimension = patterns->size2;
+
+    double distance;
+    for(int i = 0; i < distanceMatrix->size1; i++){
+        for(int j = i + 1; j < distanceMatrix->size1; j++){
+//            distance = squaredEuclidean(a, b, dimension);
+            distance = 42.0;
+            gsl_matrix_set(distanceMatrix, i, j, distance);
+            gsl_matrix_set(distanceMatrix, j, i, distance);
+        }
+    }
 }
