@@ -117,24 +117,12 @@ static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
     gsl_vector_view localBandwidths = pyObjectToGSLVectorView(inLocalBandwidths, NPY_ARRAY_IN_ARRAY);
     gsl_vector_view densities = pyObjectToGSLVectorView(outDensities, NPY_ARRAY_OUT_ARRAY);
 
-    double density;
-
-    gsl_vector_view currentPattern;
-
-    ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(kernelType);
-
     /* Do computations */
-    for(size_t idx = 0; idx < xs.matrix.size1; idx++){
-        currentPattern  = gsl_matrix_row(&xs.matrix, idx);
-
-        density = sambeFinalDensity(
-                &currentPattern.vector, &xis.matrix, &localBandwidths.vector,
-                globalBandwidth, kernel);
-
-        gsl_vector_set(&densities.vector, idx, density);
-    }
-
-    /* Free memory */
+    ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(kernelType);
+    sambeFinalDensity(&xs.matrix, &xis.matrix,
+                                   &localBandwidths.vector, globalBandwidth,
+                                   kernel,
+                                   &densities.vector);
 
     /* Create return object */
     Py_INCREF(Py_None);

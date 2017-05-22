@@ -35,27 +35,46 @@
 //    return density;
 //}
 
-double sambeFinalDensity(gsl_vector *pattern, gsl_matrix *datapoints, gsl_vector* localBandwidths,
+void sambeFinalDensity(gsl_matrix* xs, gsl_matrix* xis,
+                       gsl_vector* localBandwidths, double globalBandwidth,
+                       ShapeAdaptiveKernel kernel,
+                       gsl_vector* outDensities){
+    double density;
+    gsl_vector_view x;
+
+    size_t num_xs = xs->size1;
+
+    for(size_t i = 0; i < num_xs; i++){
+        x = gsl_matrix_row(xs, i);
+
+        density = sambeFinalDensitySinglePattern(&x.vector, xis, localBandwidths, globalBandwidth, kernel);
+
+        gsl_vector_set(outDensities, i, density);
+    }
+
+}
+
+double sambeFinalDensitySinglePattern(gsl_vector *x, gsl_matrix *xis, gsl_vector* localBandwidths,
                          double globalBandwidth,
                          ShapeAdaptiveKernel kernel) {
 
-    size_t dimension = datapoints->size2;
-    size_t dataPointCount = datapoints->size1;
+    size_t dimension = xis->size2;
+    size_t dataPointCount = xis->size1;
 
     double localBandwidth, density = 0.0;
 
     gsl_vector_view xi;
-    gsl_matrix* globalKernelShape = determineKernelShape(pattern);
+    gsl_matrix* globalKernelShape = determineKernelShape(x);
 
     /* Prepare the evaluation of the kernel */
 
 
     /* Estimate Density */
     for(size_t xiIDX = 0; xiIDX < dataPointCount; xiIDX++){
-        xi = gsl_matrix_row(datapoints, xiIDX);
+        xi = gsl_matrix_row(xis, xiIDX);
         localBandwidth = gsl_vector_get(localBandwidths, xiIDX);
 
-        density += finalDensityEstimatePattern(pattern, &xi.vector, localBandwidth);
+        density += evaluateKernel(x, &xi.vector, localBandwidth);
     }
 
     density /= dataPointCount;
@@ -73,6 +92,6 @@ gsl_matrix *determineKernelShape(gsl_vector *pattern) {
     return shape;
 }
 
-double finalDensityEstimatePattern(gsl_vector *pattern, gsl_vector* xi, double localBandwidth) {
-    return 37;
+double evaluateKernel(gsl_vector *x, gsl_vector *xi, double localBandwidth) {
+    return 42.0;
 }
