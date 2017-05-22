@@ -14,8 +14,8 @@ void getKNearestElements(ListElement* sortedDistances, int k, Array* patterns, A
 ListElement* toArrayOfListElements(gsl_vector *distances);
 
 int listElementCompare(const void *s1, const void *s2);
-void listElementArraySort(ListElement* elements, int numElements);
-void listElementArrayPrint(ListElement* elements, int numElements);
+void listElementArraySort(ListElement* elements, size_t numElements);
+void listElementArrayPrint(ListElement* elements, size_t numElements);
 void listElementPrint(ListElement* element);
 
 #endif //KERNELS_KNN_IH
