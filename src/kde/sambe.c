@@ -36,7 +36,7 @@
 //    return density;
 //}
 
-gsl_matrix* g_xis;
+gsl_matrix* g_xs;
 gsl_vector* g_localBandwidths;
 double g_globalBandwidth;
 ShapeAdaptiveKernel g_kernel;
@@ -53,20 +53,20 @@ void sambeFinalDensity(gsl_matrix* xs, gsl_matrix* xis,
                        ShapeAdaptiveKernel kernel,
                        gsl_vector* outDensities){
     /* Take care of the globals */
-    g_xis = xis;
+    g_xs = xis;
     g_localBandwidths = localBandwidths;
     g_globalBandwidth = globalBandwidth;
     g_kernel = kernel;
     g_k = 3;
 
-    size_t dimension = g_xis->size2;
+    size_t dimension = g_xs->size2;
     size_t num_x_s = xs->size1;
     size_t num_xi_s = xis->size1;
 
 
     allocateGlobals(dimension, num_xi_s, g_k);
 
-    computeDistanceMatrix(g_xis, g_distanceMatrix);
+    computeDistanceMatrix(g_xs, g_distanceMatrix);
 
     /* Do the computations */
     double density;
@@ -89,8 +89,8 @@ void sambeFinalDensity(gsl_matrix* xs, gsl_matrix* xis,
 
 double sambeFinalDensitySinglePattern(gsl_vector *x, size_t xIdx) {
 
-    size_t dimension = g_xis->size2;
-    size_t dataPointCount = g_xis->size1;
+    size_t dimension = g_xs->size2;
+    size_t dataPointCount = g_xs->size1;
 
     double localBandwidth, density = 0.0;
 
@@ -102,7 +102,7 @@ double sambeFinalDensitySinglePattern(gsl_vector *x, size_t xIdx) {
 
     /* Estimate Density */
     for(size_t xiIDX = 0; xiIDX < dataPointCount; xiIDX++){
-        xi = gsl_matrix_row(g_xis, xiIDX);
+        xi = gsl_matrix_row(g_xs, xiIDX);
         localBandwidth = gsl_vector_get(g_localBandwidths, xiIDX);
 
         density += evaluateKernel(x, &xi.vector, localBandwidth);
@@ -118,7 +118,7 @@ double sambeFinalDensitySinglePattern(gsl_vector *x, size_t xIdx) {
 void determineGlobalKernelShape(size_t patternIdx) {
     /* Compute K nearest neighbours */
     compute_k_nearest_neighbours(g_k, (int)patternIdx,
-                                 g_xis, g_distanceMatrix,
+                                 g_xs, g_distanceMatrix,
                                  g_nearestNeighbours);
 
     /* Compute the covariance matrix of the neighbours */
