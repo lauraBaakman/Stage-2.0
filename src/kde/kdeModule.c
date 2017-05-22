@@ -108,21 +108,7 @@ static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
                           &inLocalBandwidths,
                           &outDensities)) return NULL;
 
-    Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
-    Array localBandwidths = pyObjectToArray(inLocalBandwidths, NPY_ARRAY_IN_ARRAY);
-    Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
-
-    double* current_pattern = patterns.data;
-
-    ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(kernelType);
-
     /* Do computations */
-    for(int j = 0;
-        j < patterns.length;
-        j++, current_pattern += patterns.rowStride)
-    {
-        densities.data[j] = sambeFinalDensity(current_pattern, &patterns, globalBandwidth, kernel);
-    }
 
     /* Free memory */
 
