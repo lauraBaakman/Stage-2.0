@@ -2,6 +2,7 @@
 #define KERNELS_KERNELS_H
 
 #include <gsl/gsl_matrix.h>
+#include "../utils/gsl_utils.h"
 #include <stdbool.h>
 
 typedef double (*SymmetricKernelDensityFunction)(double* data, int dimensionality, double factor);

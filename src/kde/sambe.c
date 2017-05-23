@@ -36,11 +36,15 @@
 gsl_matrix* g_xs;
 gsl_vector* g_localBandwidths;
 double g_globalBandwidth;
+
 ShapeAdaptiveKernel g_kernel;
+double g_kernelConstant;
 
 size_t g_numXs;
 
-gsl_matrix* g_globalKernelShape;
+gsl_matrix* g_globalBandwidthMatrix;
+gsl_matrix* g_globalBandwidthMatrixInverse;
+double g_globalBandwidthMatrixDeterminant;
 
 int g_k;
 gsl_matrix* g_distanceMatrix;
@@ -48,10 +52,10 @@ gsl_matrix* g_nearestNeighbours;
 
 void sambeFinalDensity(gsl_matrix* xs,
                        gsl_vector* localBandwidths, double globalBandwidth,
-                       ShapeAdaptiveKernel kernel,
+                       ShapeAdaptiveKernel kernel, int k,
                        gsl_vector* outDensities){
 
-    prepareGlobals(xs, localBandwidths, globalBandwidth, kernel);
+    prepareGlobals(xs, localBandwidths, globalBandwidth, kernel, k);
 
     /* Do the computations */
     double density;
@@ -72,10 +76,7 @@ double sambeFinalDensitySinglePattern(gsl_vector *x, size_t xIdx) {
     double localBandwidth, density = 0.0;
 
     gsl_vector_view xi;
-    determineGlobalKernelShape(xIdx);
-
-    /* Prepare the evaluation of the kernel */
-
+    prepareShapeAdaptiveKernel(xIdx);
 
     /* Estimate Density */
     for(size_t i = 0; i < g_numXs; i++){
@@ -97,13 +98,13 @@ void determineGlobalKernelShape(size_t patternIdx) {
                               g_nearestNeighbours);
 
     /* Compute the covariance matrix of the neighbours */
-    computeCovarianceMatrix(g_nearestNeighbours, g_globalKernelShape);
+    computeCovarianceMatrix(g_nearestNeighbours, g_globalBandwidthMatrix);
 
     /* Compute the scaling factor */
-    double scalingFactor = computeScalingFactor(g_globalBandwidth, g_globalKernelShape);
+    double scalingFactor = computeScalingFactor(g_globalBandwidth, g_globalBandwidthMatrix);
 
     /* Scale the shape matrix */
-    gsl_matrix_scale(g_globalKernelShape, scalingFactor);
+    gsl_matrix_scale(g_globalBandwidthMatrix, scalingFactor);
 }
 
 double evaluateKernel(gsl_vector *x, gsl_vector *xi, double localBandwidth) {
@@ -111,26 +112,28 @@ double evaluateKernel(gsl_vector *x, gsl_vector *xi, double localBandwidth) {
 }
 
 void allocateGlobals(size_t dataDimension, size_t num_xi_s, int k) {
-    g_globalKernelShape = gsl_matrix_alloc(dataDimension, dataDimension);
+    g_globalBandwidthMatrix = gsl_matrix_alloc(dataDimension, dataDimension);
+    g_globalBandwidthMatrixInverse = gsl_matrix_alloc(dataDimension, dataDimension);
     g_distanceMatrix = gsl_matrix_alloc(num_xi_s, num_xi_s);
     g_nearestNeighbours = gsl_matrix_alloc(k, dataDimension);
 }
 
 void freeGlobals() {
-    gsl_matrix_free(g_globalKernelShape);
+    gsl_matrix_free(g_globalBandwidthMatrix);
+    gsl_matrix_free(g_globalBandwidthMatrixInverse);
     gsl_matrix_free(g_distanceMatrix);
     gsl_matrix_free(g_nearestNeighbours);
 }
 
 void prepareGlobals(gsl_matrix *xs,
                     gsl_vector *localBandwidths, double globalBandwidth,
-                    ShapeAdaptiveKernel kernel) {
+                    ShapeAdaptiveKernel kernel, int k) {
     g_xs = xs;
 
     g_localBandwidths = localBandwidths;
     g_globalBandwidth = globalBandwidth;
     g_kernel = kernel;
-    g_k = 1;
+    g_k = k;
 
     g_numXs = xs->size1;
 
@@ -139,4 +142,11 @@ void prepareGlobals(gsl_matrix *xs,
     allocateGlobals(dimension, g_numXs, g_k);
 
     computeDistanceMatrix(g_xs, g_distanceMatrix);
+}
+
+void prepareShapeAdaptiveKernel(size_t patternIdx) {
+    determineGlobalKernelShape(patternIdx);
+    g_kernel.factorFunction(g_globalBandwidthMatrix,
+                            g_globalBandwidthMatrixInverse, &g_globalBandwidthMatrixDeterminant,
+                            &g_kernelConstant);
 }

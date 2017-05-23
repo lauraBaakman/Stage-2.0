@@ -8,6 +8,7 @@
 
 #include "kernels.h"
 #include "../utils.h"
+#include "../utils/gsl_utils.h"
 
 Array pyObjectToArray(PyObject *pythonObject, int requirements);
 gsl_matrix_view pyObjectToGSLMatrixView(PyObject *pythonObject, int requirements);

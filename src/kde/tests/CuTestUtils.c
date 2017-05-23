@@ -1,6 +1,5 @@
 #include "CuTestUtils.h"
 #include <math.h>
-#include <gsl/gsl_matrix.h>
 
 void CuAssertMatrixEquals_LineMsg(CuTest* tc,
                                   const char* file, int line, const char* message,
@@ -8,7 +7,7 @@ void CuAssertMatrixEquals_LineMsg(CuTest* tc,
     char buf[STRING_MAX];
 
     if ((expected->size1 != actual->size1) || (expected->size2 != actual->size2)){
-        sprintf(buf, "expected (%d, %d) has a different size than actual (%d, %d)",
+        sprintf(buf, "expected (%lu, %lu) has a different size than actual (%lu, %lu)",
                 expected->size1, expected->size2,
                 actual->size1, actual->size2);
         CuFail_Line(tc, file, line, message, buf);
@@ -22,8 +21,8 @@ void CuAssertMatrixEquals_LineMsg(CuTest* tc,
             expectedElement = gsl_matrix_get(expected, i, j);
             actualElement = gsl_matrix_get(actual, i, j);
 
-            if (fabs(expectedElement - actualElement) > delta){
-                sprintf(buf, "expected <%f> at (%d, %d) but was <%f>", expectedElement, i, j, actualElement);
+            if ((fabs(expectedElement - actualElement) > delta) || (isnan(actualElement))){
+                sprintf(buf, "expected <%f> at (%lu, %lu) but was <%f>", expectedElement, i, j, actualElement);
                 CuFail_Line(tc, file, line, message, buf);
             }
         }
