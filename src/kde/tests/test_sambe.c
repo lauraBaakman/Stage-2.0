@@ -3,9 +3,9 @@
 void testDetermineGlobalKernelShape(CuTest* tc){
     gsl_matrix* xs = gsl_matrix_alloc(4, 2);
     gsl_matrix_set(xs, 0, 0, 0); gsl_matrix_set(xs, 0, 1, 0);
-    gsl_matrix_set(xs, 0, 0, 0); gsl_matrix_set(xs, 0, 1, 1);
-    gsl_matrix_set(xs, 0, 0, 1); gsl_matrix_set(xs, 0, 1, 0);
-    gsl_matrix_set(xs, 0, 0, 1); gsl_matrix_set(xs, 0, 1, 1);
+    gsl_matrix_set(xs, 1, 0, 0); gsl_matrix_set(xs, 1, 1, 1);
+    gsl_matrix_set(xs, 2, 0, 1); gsl_matrix_set(xs, 2, 1, 0);
+    gsl_matrix_set(xs, 3, 0, 1); gsl_matrix_set(xs, 3, 1, 1);
 
     gsl_vector* localBandwidths = gsl_vector_alloc(4);
     gsl_vector_set(localBandwidths, 0, 0.840896194313949);
@@ -30,15 +30,17 @@ void testDetermineGlobalKernelShape(CuTest* tc){
 
     CuAssertMatrixEquals(tc, expected, actual, delta);
 
+    gsl_matrix_free(xs);
+    gsl_vector_free(localBandwidths);
     freeGlobals();
 }
 
 void testPrepareShapeAdaptiveKernelInverse(CuTest* tc){
     gsl_matrix* xs = gsl_matrix_alloc(4, 2);
     gsl_matrix_set(xs, 0, 0, 0); gsl_matrix_set(xs, 0, 1, 0);
-    gsl_matrix_set(xs, 0, 0, 0); gsl_matrix_set(xs, 0, 1, 1);
-    gsl_matrix_set(xs, 0, 0, 1); gsl_matrix_set(xs, 0, 1, 0);
-    gsl_matrix_set(xs, 0, 0, 1); gsl_matrix_set(xs, 0, 1, 1);
+    gsl_matrix_set(xs, 1, 0, 0); gsl_matrix_set(xs, 1, 1, 1);
+    gsl_matrix_set(xs, 2, 0, 1); gsl_matrix_set(xs, 2, 1, 0);
+    gsl_matrix_set(xs, 3, 0, 1); gsl_matrix_set(xs, 3, 1, 1);
 
     gsl_vector* localBandwidths = gsl_vector_alloc(4);
     gsl_vector_set(localBandwidths, 0, 0.840896194313949);
@@ -64,15 +66,17 @@ void testPrepareShapeAdaptiveKernelInverse(CuTest* tc){
 
     CuAssertMatrixEquals(tc, expected_inverse, actual_inverse, delta);
 
+    gsl_matrix_free(xs);
+    gsl_vector_free(localBandwidths);
     freeGlobals();
 }
 
 void testPrepareShapeAdaptiveKernelScalingFactor(CuTest* tc){
     gsl_matrix* xs = gsl_matrix_alloc(4, 2);
     gsl_matrix_set(xs, 0, 0, 0); gsl_matrix_set(xs, 0, 1, 0);
-    gsl_matrix_set(xs, 0, 0, 0); gsl_matrix_set(xs, 0, 1, 1);
-    gsl_matrix_set(xs, 0, 0, 1); gsl_matrix_set(xs, 0, 1, 0);
-    gsl_matrix_set(xs, 0, 0, 1); gsl_matrix_set(xs, 0, 1, 1);
+    gsl_matrix_set(xs, 1, 0, 0); gsl_matrix_set(xs, 1, 1, 1);
+    gsl_matrix_set(xs, 2, 0, 1); gsl_matrix_set(xs, 2, 1, 0);
+    gsl_matrix_set(xs, 3, 0, 1); gsl_matrix_set(xs, 3, 1, 1);
 
     gsl_vector* localBandwidths = gsl_vector_alloc(4);
     gsl_vector_set(localBandwidths, 0, 0.840896194313949);
@@ -95,15 +99,17 @@ void testPrepareShapeAdaptiveKernelScalingFactor(CuTest* tc){
 
     CuAssertDblEquals(tc, expected_scaling_factor, actual_scaling_factor, delta);
 
+    gsl_matrix_free(xs);
+    gsl_vector_free(localBandwidths);
     freeGlobals();
 }
 
 void testPrepareShapeAdaptiveKernelPDFConstant(CuTest* tc){
     gsl_matrix* xs = gsl_matrix_alloc(4, 2);
     gsl_matrix_set(xs, 0, 0, 0); gsl_matrix_set(xs, 0, 1, 0);
-    gsl_matrix_set(xs, 0, 0, 0); gsl_matrix_set(xs, 0, 1, 1);
-    gsl_matrix_set(xs, 0, 0, 1); gsl_matrix_set(xs, 0, 1, 0);
-    gsl_matrix_set(xs, 0, 0, 1); gsl_matrix_set(xs, 0, 1, 1);
+    gsl_matrix_set(xs, 1, 0, 0); gsl_matrix_set(xs, 1, 1, 1);
+    gsl_matrix_set(xs, 2, 0, 1); gsl_matrix_set(xs, 2, 1, 0);
+    gsl_matrix_set(xs, 3, 0, 1); gsl_matrix_set(xs, 3, 1, 1);
 
     gsl_vector* localBandwidths = gsl_vector_alloc(4);
     gsl_vector_set(localBandwidths, 0, 0.840896194313949);
@@ -126,6 +132,8 @@ void testPrepareShapeAdaptiveKernelPDFConstant(CuTest* tc){
 
     CuAssertDblEquals(tc, expected_pdf_constant, actual_pdf_constant, delta);
 
+    gsl_matrix_free(xs);
+    gsl_vector_free(localBandwidths);
     freeGlobals();
 }
 
