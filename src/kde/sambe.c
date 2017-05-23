@@ -78,9 +78,6 @@ double sambeFinalDensitySinglePattern(gsl_vector *x, size_t xIdx) {
     gsl_vector_view xi;
     prepareShapeAdaptiveKernel(xIdx);
 
-    /* Prepare the evaluation of the kernel */
-
-
     /* Estimate Density */
     for(size_t i = 0; i < g_numXs; i++){
         xi = gsl_matrix_row(g_xs, i);
