@@ -57,7 +57,7 @@ SymmetricKernel selectSymmetricKernel(KernelType type);
 ASymmetricKernel selectASymmetricKernel(KernelType type);
 ShapeAdaptiveKernel selectShapeAdaptiveKernel(KernelType type);
 
-double computeScalingFactor(double generalBandwidth, gsl_matrix_view covarianceMatrix);
+double computeScalingFactor(double generalBandwidth, gsl_matrix* covarianceMatrix);
 
 extern Kernel standardGaussianKernel;
 extern Kernel epanechnikovKernel;
