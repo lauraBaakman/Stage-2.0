@@ -7,7 +7,7 @@
 
 void sambeFinalDensity(gsl_matrix* xs,
                        gsl_vector* localBandwidths, double globalBandwidth,
-                       ShapeAdaptiveKernel kernel,
+                       ShapeAdaptiveKernel kernel, int k,
                        gsl_vector* outDensities);
 
 #endif //SAMBE_H

@@ -25,7 +25,7 @@ double evaluateKernel(gsl_vector* x, gsl_vector* xi, double localBandwidth);
 
 void prepareGlobals(gsl_matrix *xs,
                     gsl_vector *localBandwidths, double globalBandwidth,
-                    ShapeAdaptiveKernel kernel);
+                    ShapeAdaptiveKernel kernel, int k);
 
 void prepareShapeAdaptiveKernel(size_t patternIdx);
 

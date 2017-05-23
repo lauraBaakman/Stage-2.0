@@ -52,10 +52,10 @@ gsl_matrix* g_nearestNeighbours;
 
 void sambeFinalDensity(gsl_matrix* xs,
                        gsl_vector* localBandwidths, double globalBandwidth,
-                       ShapeAdaptiveKernel kernel,
+                       ShapeAdaptiveKernel kernel, int k,
                        gsl_vector* outDensities){
 
-    prepareGlobals(xs, localBandwidths, globalBandwidth, kernel);
+    prepareGlobals(xs, localBandwidths, globalBandwidth, kernel, k);
 
     /* Do the computations */
     double density;
@@ -130,13 +130,13 @@ void freeGlobals() {
 
 void prepareGlobals(gsl_matrix *xs,
                     gsl_vector *localBandwidths, double globalBandwidth,
-                    ShapeAdaptiveKernel kernel) {
+                    ShapeAdaptiveKernel kernel, int k) {
     g_xs = xs;
 
     g_localBandwidths = localBandwidths;
     g_globalBandwidth = globalBandwidth;
     g_kernel = kernel;
-    g_k = 1;
+    g_k = k;
 
     g_numXs = xs->size1;
 
