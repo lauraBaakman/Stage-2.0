@@ -6,7 +6,8 @@ sources = ['kernelsModule.c',
            'kernels.c',
            '../utils.c',
            '../utils/geometricmean.c',
-           '../utils/eigenvalues.c']
+           '../utils/eigenvalues.c',
+           '../utils/gsl_utils.c']
 
 if __name__ == "__main__":
     module = Extension('_kernels',

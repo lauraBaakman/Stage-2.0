@@ -19,7 +19,8 @@ set(SOURCE_FILES
         utils/knn.c utils/knn.h utils/knn.ih
         utils/covariancematrix.c utils/covariancematrix.h utils/covariancematrix.ih
         utils/eigenvalues.c utils/eigenvalues.h
-        utils/geometricmean.c utils/geometricmean.h)
+        utils/geometricmean.c utils/geometricmean.h
+        utils/gsl_utils.c utils/gsl_utils.h)
 add_executable(kde ${SOURCE_FILES})
 
 find_package(gsl COMPONENTS system filesystem REQUIRED)

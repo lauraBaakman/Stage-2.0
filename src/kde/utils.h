@@ -38,15 +38,6 @@ ArrayColumns getColumns(Array *array);
 void arrayColumnsFree(ArrayColumns *matrix);
 void arrayColumnsPrint(ArrayColumns *matrix);
 
-
-gsl_matrix* gsl_matrix_view_copy_to_gsl_matrix(gsl_matrix_view origin);
-
-int gsl_matrix_print(FILE *f, const gsl_matrix *m);
-
-int gsl_vector_print(FILE *f, const gsl_vector *vector);
-
-int gsl_permutation_print(FILE *f, const gsl_permutation *permutation);
-
 double* scalePattern(double* pattern, double* dataPoint, double* scaledPattern, int dimensionality, double windowWidth);
 
 #endif //UTILS_H
