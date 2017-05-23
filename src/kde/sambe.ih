@@ -11,7 +11,11 @@
 
 #include "sambe.h"
 
-extern gsl_matrix* g_globalKernelShape;
+extern gsl_matrix* g_globalBandwidthMatrix;
+extern gsl_matrix* g_globalBandwidthMatrixInverse;
+extern double g_globalBandwidthMatrixDeterminant;
+extern double g_kernelConstant;
+
 
 double sambeFinalDensitySinglePattern(gsl_vector *x, size_t xIdx);
 
@@ -22,6 +26,8 @@ double evaluateKernel(gsl_vector* x, gsl_vector* xi, double localBandwidth);
 void prepareGlobals(gsl_matrix *xs,
                     gsl_vector *localBandwidths, double globalBandwidth,
                     ShapeAdaptiveKernel kernel);
+
+void prepareShapeAdaptiveKernel(size_t patternIdx);
 
 void allocateGlobals(size_t dataDimension, size_t num_xi_s, int k);
 
