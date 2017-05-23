@@ -29,6 +29,8 @@ void testDetermineGlobalKernelShape(CuTest* tc){
     gsl_matrix* actual = g_globalBandwidthMatrix;
 
     CuAssertMatrixEquals(tc, expected, actual, delta);
+
+    freeGlobals();
 }
 
 void testPrepareShapeAdaptiveKernelInverse(CuTest* tc){
@@ -61,6 +63,8 @@ void testPrepareShapeAdaptiveKernelInverse(CuTest* tc){
     gsl_matrix* actual_inverse = g_globalBandwidthMatrixInverse;
 
     CuAssertMatrixEquals(tc, expected_inverse, actual_inverse, delta);
+
+    freeGlobals();
 }
 
 void testPrepareShapeAdaptiveKernelScalingFactor(CuTest* tc){
@@ -90,6 +94,8 @@ void testPrepareShapeAdaptiveKernelScalingFactor(CuTest* tc){
     double actual_scaling_factor = g_globalBandwidthMatrixDeterminant;
 
     CuAssertDblEquals(tc, expected_scaling_factor, actual_scaling_factor, delta);
+
+    freeGlobals();
 }
 
 void testPrepareShapeAdaptiveKernelPDFConstant(CuTest* tc){
@@ -119,6 +125,8 @@ void testPrepareShapeAdaptiveKernelPDFConstant(CuTest* tc){
     double actual_pdf_constant = g_kernelConstant;
 
     CuAssertDblEquals(tc, expected_pdf_constant, actual_pdf_constant, delta);
+
+    freeGlobals();
 }
 
 CuSuite *SAMBEGetSuite() {
