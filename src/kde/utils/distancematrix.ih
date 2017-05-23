@@ -2,7 +2,6 @@
 #define KERNELS_DISTANCEMATRIX_IH
 
 #include "distancematrix.h"
-#include <gsl/gsl_matrix.h>
 
 double squaredEuclidean(gsl_vector* a, gsl_vector* b);
 

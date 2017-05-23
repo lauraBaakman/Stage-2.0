@@ -1,7 +1,7 @@
 #include "knn.ih"
 
-void compute_k_nearest_neighbours(int k, int patternIdx, gsl_matrix *patterns, gsl_matrix *distanceMatrix,
-                                  gsl_matrix *outNearestNeighbours) {
+void computeKNearestNeighbours(int k, int patternIdx, gsl_matrix *patterns, gsl_matrix *distanceMatrix,
+                               gsl_matrix *outNearestNeighbours) {
     gsl_vector_view distances = gsl_matrix_row(distanceMatrix, patternIdx);
 
     size_t distanceCount = distanceMatrix->size1;
@@ -57,13 +57,3 @@ void getKNearestElements(ListElement *sortedDistances, int k,
         gsl_matrix_set_row(outNeighbours, i, &pattern.vector);
     }
 }
-
-//void getKNearestElements(ListElement* sortedDistances, int k, Array* patterns, Array* neighbours){
-//    int idx = 0;
-//    double* pattern;
-//    for (int i = 0; i < k; ++i) {
-//        idx = sortedDistances[i].index;
-//        pattern = arrayGetRowView(patterns, idx);
-//        arraySetRow(neighbours, i, pattern);
-//    }
-//}

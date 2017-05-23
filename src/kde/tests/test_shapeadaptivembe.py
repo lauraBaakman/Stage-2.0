@@ -6,7 +6,7 @@ import kde
 from kde.kernels.shapeadaptivegaussian import ShapeAdaptiveGaussian
 from kde.kernels.testKernel import TestKernel
 from kde.parzen import _ParzenEstimator_Python, _ParzenEstimator_C
-from kde.shapeadaptivembe import \
+from kde.sambe import \
     ShapeAdaptiveMBE, \
     _ShapeAdaptiveMBE_C, \
     _ShapeAdaptiveMBE_Python

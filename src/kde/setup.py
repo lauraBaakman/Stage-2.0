@@ -9,7 +9,8 @@ sources = ['utils.c',
            'kernels/kernels.c',
            'sambe.c',
            'utils/distancematrix.c',
-           'utils/knn.c']
+           'utils/knn.c',
+           'utils/covariancematrix.c']
 
 if __name__ == "__main__":
     module = Extension('_kde',

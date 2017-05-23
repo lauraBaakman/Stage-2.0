@@ -3,7 +3,6 @@
 
 #include <gsl/gsl_matrix.h>
 
-#include "utils.h"
 #include "kernels/kernels.h"
 
 void sambeFinalDensity(gsl_matrix* xs,

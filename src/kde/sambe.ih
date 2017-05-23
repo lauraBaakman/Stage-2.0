@@ -3,13 +3,25 @@
 
 #include <printf.h>
 
+#include <gsl/gsl_matrix.h>
+
+#include "utils/distancematrix.h"
+#include "utils/knn.h"
+#include "utils/covariancematrix.h"
+
 #include "sambe.h"
+
+extern gsl_matrix* g_globalKernelShape;
 
 double sambeFinalDensitySinglePattern(gsl_vector *x, size_t xIdx);
 
 void determineGlobalKernelShape(size_t patternIdx);
 
 double evaluateKernel(gsl_vector* x, gsl_vector* xi, double localBandwidth);
+
+void prepareGlobals(gsl_matrix *xs,
+                    gsl_vector *localBandwidths, double globalBandwidth,
+                    ShapeAdaptiveKernel kernel);
 
 void allocateGlobals(size_t dataDimension, size_t num_xi_s, int k);
 

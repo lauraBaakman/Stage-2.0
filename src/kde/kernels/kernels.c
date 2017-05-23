@@ -1,3 +1,4 @@
+#include <gsl/gsl_matrix.h>
 #include "kernels.ih"
 
 
@@ -67,7 +68,8 @@ ShapeAdaptiveKernel selectShapeAdaptiveKernel(KernelType type){
 }
 
 double computeScalingFactor(double generalBandwidth, gsl_matrix* covarianceMatrix) {
-    gsl_vector* eigenvalues = computeEigenValues2(covarianceMatrix);
+    gsl_vector* eigenvalues = gsl_vector_alloc(covarianceMatrix->size1);
+    computeEigenValues(covarianceMatrix, eigenvalues);
     size_t dimension = eigenvalues->size;
 
     double generalBandWidthTerm = log(generalBandwidth);

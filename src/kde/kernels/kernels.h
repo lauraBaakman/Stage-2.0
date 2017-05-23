@@ -3,7 +3,6 @@
 
 #include <gsl/gsl_matrix.h>
 #include <stdbool.h>
-#include "../utils.h"
 
 typedef double (*SymmetricKernelDensityFunction)(double* data, int dimensionality, double factor);
 typedef double (*SymmetricKernelConstantFunction)(int dimensionality);

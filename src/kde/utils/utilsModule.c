@@ -1,4 +1,5 @@
 #include <gsl/gsl_matrix.h>
+#include <gsl/gsl_vector_double.h>
 #include "utilsModule.h"
 
 static char utils_distanceMatrix_docstring[] = "Compute the distance matrix for the input patterns with squared Euclidean distance as a metric.";
@@ -41,9 +42,9 @@ static PyObject * knn(PyObject *self, PyObject *args){
     gsl_matrix_view nearestNeighbours = pyObjectToGSLMatrixView(outNearestNeighbours, NPY_ARRAY_OUT_ARRAY);
 
     /* Do stuff */
-    compute_k_nearest_neighbours(k, patternIdx,
-                                 &patterns.matrix, &distanceMatrix.matrix,
-                                 &nearestNeighbours.matrix);
+    computeKNearestNeighbours(k, patternIdx,
+                              &patterns.matrix, &distanceMatrix.matrix,
+                              &nearestNeighbours.matrix);
 
     /* Create return object */
     Py_INCREF(Py_None);
@@ -72,6 +73,9 @@ static PyObject * covariance_matrix(PyObject *self, PyObject *args){
 }
 
 static char utils_eigenValues_docstring[] = "Compute the eigen values of the input matrix.";
+
+static gsl_vector_view pyObjectToGSLVector(PyObject *pObject, int i);
+
 static PyObject * eigenValues(PyObject *self, PyObject *args){
 
     /* Handle input */
@@ -81,11 +85,11 @@ static PyObject * eigenValues(PyObject *self, PyObject *args){
     if (!PyArg_ParseTuple(args, "OO",
                           &inMatrix, &outEigenValues)) return NULL;
 
-    Array matrix = pyObjectToArray(inMatrix, NPY_ARRAY_IN_ARRAY);
-    Array eigenValues = pyObjectToArray(outEigenValues, NPY_ARRAY_OUT_ARRAY);
+    gsl_matrix_view matrix = pyObjectToGSLMatrixView(inMatrix, NPY_ARRAY_IN_ARRAY);
+    gsl_vector_view eigenvalues = pyObjectToGSLVector(outEigenValues, NPY_ARRAY_OUT_ARRAY);
 
     /* Do stuff */
-    computeEigenValues(&matrix, &eigenValues);
+    computeEigenValues(&matrix.matrix, &eigenvalues.vector);
 
     /* Create return object */
     Py_INCREF(Py_None);
@@ -120,6 +124,20 @@ Array pyObjectToArray(PyObject *pythonObject, int requirements){
     Array array = arrayBuildFromPyArray(arrayObject);
     Py_XDECREF(arrayObject);
     return array;
+}
+
+gsl_vector_view pyObjectToGSLVector(PyObject *pythonObject, int requirements) {
+    PyArrayObject* arrayObject = NULL;
+    arrayObject = (PyArrayObject *)PyArray_FROM_OTF(pythonObject, NPY_DOUBLE, requirements);
+    if (arrayObject == NULL){
+        fprintf(stderr, "Error converting PyObject to PyArrayObject\n");
+        exit(-1);
+    }
+    double* data = (double *)PyArray_DATA(arrayObject);
+    size_t size = PyArray_DIM(arrayObject, 0);
+
+    Py_XDECREF(arrayObject);
+    return gsl_vector_view_array(data, size);
 }
 
 gsl_matrix_view pyObjectToGSLMatrixView(PyObject *pythonObject, int requirements) {

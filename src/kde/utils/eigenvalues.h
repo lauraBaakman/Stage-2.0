@@ -1,14 +1,12 @@
-#include <gsl/gsl_vector.h>
-#include <gsl/gsl_matrix.h>
-#include "../utils.h"
-
 #ifndef KERNELS_EIGENVALUES_H
 #define KERNELS_EIGENVALUES_H
 
+#include <gsl/gsl_vector.h>
 #include <gsl/gsl_matrix.h>
+#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_eigen.h>
 
-void computeEigenValues(Array* data, Array* eigenValues);
-gsl_vector* computeEigenValues2(gsl_matrix* matrix);
+void computeEigenValues(gsl_matrix *matrix, gsl_vector *eigenValues);
 
 
 #endif //KERNELS_EIGENVALUES_H
