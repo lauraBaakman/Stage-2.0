@@ -34,7 +34,7 @@ int gsl_vector_print(FILE *f, const gsl_vector *vector) {
 int gsl_permutation_print(FILE *f, const gsl_permutation *permutation){
     int status, n= 0;
     for (size_t i = 0; i < permutation->size; i++) {
-        if ((status = fprintf(f, "%# .3g ", gsl_permutation_get(permutation, i))) < 0) return -1;
+        if ((status = fprintf(f, "%.3lu ", gsl_permutation_get(permutation, i))) < 0) return -1;
         n += status;
     }
     if ((status = fprintf(f, "\n")) < 0)
