@@ -10,7 +10,8 @@ SOURCES=test_main.c CuTest.c CuTestUtils.c\
     ../utils/distancematrix.c \
     ../utils/knn.c \
     ../utils/covariancematrix.c \
-    ../utils/eigenvalues.c
+    ../utils/eigenvalues.c \
+    ../utils/gsl_utils.c
 OBJECTS=$(SOURCES:.c=.o)
 DEPS=test_constants.h CuTest.h CuTestUtils.h\
     test_sambe.h ../sambe.h ../sambe.ih \
@@ -19,6 +20,7 @@ DEPS=test_constants.h CuTest.h CuTestUtils.h\
     ../utils/knn.h ../utils/knn.ih \
     ../utils/covariancematrix.h ../utils/covariancematrix.ih \
     ../utils/eigenvalues.h \
+    ../utils/gsl_utils.h
 
 # Working command
 # gcc test_main.c -I/usr/local/include/ -L/usr/local/lib/ -lgsl -lgslcblas
