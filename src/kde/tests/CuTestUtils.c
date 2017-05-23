@@ -1,6 +1,5 @@
 #include "CuTestUtils.h"
 #include <math.h>
-#include <gsl/gsl_matrix.h>
 
 void CuAssertMatrixEquals_LineMsg(CuTest* tc,
                                   const char* file, int line, const char* message,
