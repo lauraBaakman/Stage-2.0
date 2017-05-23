@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <gsl/gsl_matrix.h>
-#include <gsl/gsl_permutation.h>
 #include "gsl_utils.h"
 
 int gsl_matrix_print(FILE *f, const gsl_matrix *m) {
