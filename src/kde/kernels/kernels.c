@@ -164,7 +164,8 @@ void shapeAdaptiveGaussianConstants(gsl_matrix *globalBandwidthMatrix, gsl_matri
     gsl_linalg_LU_invert(LUDecompH, permutation, outGlobalInverse);
 
     //Compute global scaling factor
-    *outGlobalScalingFactor = 1.0 / gsl_linalg_LU_det(LUDecompH, signum);
+    double determinant = gsl_linalg_LU_det(LUDecompH, signum);
+    *outGlobalScalingFactor = 1.0 / determinant;
 
     //Compute the pdfConstant
     *outPDFConstant = standardGaussianKernel.kernel.symmetricKernel.factorFunction(dimension);
