@@ -8,7 +8,7 @@ void CuAssertMatrixEquals_LineMsg(CuTest* tc,
     char buf[STRING_MAX];
 
     if ((expected->size1 != actual->size1) || (expected->size2 != actual->size2)){
-        sprintf(buf, "expected (%d, %d) has a different size than actual (%d, %d)",
+        sprintf(buf, "expected (%lu, %lu) has a different size than actual (%lu, %lu)",
                 expected->size1, expected->size2,
                 actual->size1, actual->size2);
         CuFail_Line(tc, file, line, message, buf);
@@ -23,7 +23,7 @@ void CuAssertMatrixEquals_LineMsg(CuTest* tc,
             actualElement = gsl_matrix_get(actual, i, j);
 
             if (fabs(expectedElement - actualElement) > delta){
-                sprintf(buf, "expected <%f> at (%d, %d) but was <%f>", expectedElement, i, j, actualElement);
+                sprintf(buf, "expected <%f> at (%lu, %lu) but was <%f>", expectedElement, i, j, actualElement);
                 CuFail_Line(tc, file, line, message, buf);
             }
         }
