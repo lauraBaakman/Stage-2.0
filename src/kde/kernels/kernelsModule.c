@@ -253,7 +253,7 @@ static PyObject* scaling_factor(PyObject* self, PyObject *args){
     gsl_matrix_view covarianceMatrix = pyObjectToGSLMatrixView(inCovarianceMatrix, NPY_ARRAY_IN_ARRAY);
 
     /* Do computations */
-    double scalingFactor = computeScalingFactor(generalBandwidth, covarianceMatrix);
+    double scalingFactor = computeScalingFactor(generalBandwidth, &covarianceMatrix.matrix);
 
     /* Free memory */
 

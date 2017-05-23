@@ -95,8 +95,8 @@ ShapeAdaptiveKernel selectShapeAdaptiveKernel(KernelType type){
     }
 }
 
-double computeScalingFactor(double generalBandwidth, gsl_matrix_view covarianceMatrix) {
-    gsl_vector* eigenvalues = computeEigenValues2(&covarianceMatrix.matrix);
+double computeScalingFactor(double generalBandwidth, gsl_matrix* covarianceMatrix) {
+    gsl_vector* eigenvalues = computeEigenValues2(covarianceMatrix);
     size_t dimension = eigenvalues->size;
 
     double generalBandWidthTerm = log(generalBandwidth);
