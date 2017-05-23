@@ -26,7 +26,7 @@ void testDetermineGlobalKernelShape(CuTest* tc){
 
     gsl_matrix* expected = gsl_matrix_alloc(2, 2);
     gsl_matrix_set(expected, 0, 0, 0.832940370215782); gsl_matrix_set(expected, 0, 1, -0.416470185107891);
-    gsl_matrix_set(expected, 1, 1, - 0.416470185107891); gsl_matrix_set(expected, 1, 1, 0.832940370215782);
+    gsl_matrix_set(expected, 1, 0, - 0.416470185107891); gsl_matrix_set(expected, 1, 1, 0.832940370215782);
 
     gsl_matrix* actual = g_globalBandwidthMatrix;
 
@@ -64,7 +64,7 @@ void testPrepareShapeAdaptiveKernelInverse(CuTest* tc){
     /* Check the inverse */
     gsl_matrix* expected_inverse = gsl_matrix_alloc(2, 2);
     gsl_matrix_set(expected_inverse, 0, 0, 1.600754845137257); gsl_matrix_set(expected_inverse, 0, 1, 0.800377422568628);
-    gsl_matrix_set(expected_inverse, 1, 1, 0.800377422568628); gsl_matrix_set(expected_inverse, 1, 1, 1.600754845137257);
+    gsl_matrix_set(expected_inverse, 1, 0, 0.800377422568628); gsl_matrix_set(expected_inverse, 1, 1, 1.600754845137257);
 
     gsl_matrix* actual_inverse = g_globalBandwidthMatrixInverse;
 
