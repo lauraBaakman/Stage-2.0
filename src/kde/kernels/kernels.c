@@ -1,42 +1,25 @@
-#include <gsl/gsl_matrix.h>
-#include <gsl/gsl_linalg.h>
-#include <gsl/gsl_vector_double.h>
-#include <gsl/gsl_vector.h>
 #include "kernels.ih"
-#include "../utils/eigenvalues.h"
-#include "../../../../../../../usr/local/include/gsl/gsl_vector_double.h"
-#include "kernels.h"
+
 
 Kernel standardGaussianKernel = {
-        .isSymmetric = true,
         .isShapeAdaptive = false,
         .kernel.symmetricKernel.densityFunction = standardGaussianPDF,
         .kernel.symmetricKernel.factorFunction = standardGaussianConstant,
 };
 
 Kernel epanechnikovKernel = {
-        .isSymmetric = true,
         .isShapeAdaptive = false,
         .kernel.symmetricKernel.densityFunction = epanechnikovPDF,
         .kernel.symmetricKernel.factorFunction = epanechnikovConstant,
 };
 
 Kernel testKernel = {
-        .isSymmetric = true,
         .isShapeAdaptive = false,
         .kernel.symmetricKernel.densityFunction = testKernelPDF,
         .kernel.symmetricKernel.factorFunction = testKernelConstant,
 };
 
-Kernel gaussianKernel = {
-        .isSymmetric = false,
-        .isShapeAdaptive = false,
-        .kernel.aSymmetricKernel.densityFunction = gaussianPDF,
-        .kernel.aSymmetricKernel.factorFunction= gaussianConstant,
-};
-
 Kernel shapeAdaptiveGaussianKernel = {
-        .isSymmetric = false,
         .isShapeAdaptive = true,
         .kernel.shapeAdaptiveKernel.densityFunction = shapeAdaptiveGaussianPDF,
         .kernel.shapeAdaptiveKernel.factorFunction = shapeAdaptiveGaussianConstants,
@@ -51,8 +34,6 @@ Kernel selectKernel(KernelType type) {
             return standardGaussianKernel;
         case TEST:
             return testKernel;
-        case GAUSSIAN:
-            return gaussianKernel;
         case SHAPE_ADAPTIVE_GAUSSIAN:
             return shapeAdaptiveGaussianKernel;
         default:
@@ -71,16 +52,6 @@ SymmetricKernel selectSymmetricKernel(KernelType type) {
             return testKernel.kernel.symmetricKernel;
         default:
             fprintf(stderr, "%d is an invalid  symmetric kernel type.\n", type);
-            exit(-1);
-    }
-}
-
-ASymmetricKernel selectASymmetricKernel(KernelType type) {
-    switch (type) {
-        case GAUSSIAN:
-            return gaussianKernel.kernel.aSymmetricKernel;
-        default:
-            fprintf(stderr, "%d is an invalid asymmetric kernel type.\n", type);
             exit(-1);
     }
 }
@@ -149,25 +120,6 @@ double testKernelPDF(double *data, int dimensionality, double constant) {
     }
     double mean = density * constant;
     return fabs(mean);
-}
-
-
-/* Asymmetric Kernels */
-
-gsl_matrix * gaussianConstant(Array* covarianceMatrix) {
-    gsl_matrix* choleskyDecomposition = arrayCopyToGSLMatrix(covarianceMatrix);
-    gsl_linalg_cholesky_decomp1(choleskyDecomposition);
-    return choleskyDecomposition;
-}
-
-double gaussianPDF(gsl_vector * pattern, gsl_vector * mean, gsl_matrix *choleskyFactorCovarianceMatrix) {
-    double density;
-    gsl_vector* work = gsl_vector_alloc(mean->size);
-
-    gsl_ran_multivariate_gaussian_pdf(pattern, mean, choleskyFactorCovarianceMatrix, &density, work);
-
-    gsl_vector_free(work);
-    return density;
 }
 
 /* Shape Adaptive Kernels */

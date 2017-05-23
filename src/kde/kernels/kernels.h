@@ -8,9 +8,6 @@
 typedef double (*SymmetricKernelDensityFunction)(double* data, int dimensionality, double factor);
 typedef double (*SymmetricKernelConstantFunction)(int dimensionality);
 
-typedef double (*ASymmetricKernelDensityFunction)(gsl_vector* pattern, gsl_vector* mean, gsl_matrix* shapeMatrix);
-typedef gsl_matrix* (*ASymmetricKernelConstantFunction)(Array* covarianceMatrix);
-
 typedef double (*ShapeAdaptiveKernelDensityFunction)(gsl_vector* pattern, double localBandwidth,
                                                      double globalScalingFactor, gsl_matrix * globalInverse, double gaussianConstant,
                                                      gsl_vector* scaledPattern);
@@ -22,11 +19,6 @@ typedef struct SymmetricKernel {
     SymmetricKernelDensityFunction densityFunction;
 } SymmetricKernel;
 
-typedef struct ASymmetricKernel {
-    ASymmetricKernelConstantFunction factorFunction;
-    ASymmetricKernelDensityFunction densityFunction;
-} ASymmetricKernel;
-
 typedef struct ShapeAdaptiveKernel {
     ShapeAdaptiveKernelConstantFunction  factorFunction;
     ShapeAdaptiveKernelDensityFunction  densityFunction;
@@ -34,12 +26,10 @@ typedef struct ShapeAdaptiveKernel {
 
 typedef union {
     SymmetricKernel symmetricKernel;
-    ASymmetricKernel aSymmetricKernel;
     ShapeAdaptiveKernel shapeAdaptiveKernel;
 } kernelUnion;
 
 typedef struct Kernel {
-    bool isSymmetric;
     bool isShapeAdaptive;
     kernelUnion kernel;
 } Kernel;
@@ -48,13 +38,12 @@ typedef enum {
     TEST = 0,
     STANDARD_GAUSSIAN = 1,
     EPANECHNIKOV = 2,
-    GAUSSIAN = 3,
+    SHAPE_ADAPTIVE_EPANECHNIKOV = 3,
     SHAPE_ADAPTIVE_GAUSSIAN = 4,
 } KernelType;
 
 Kernel selectKernel(KernelType type);
 SymmetricKernel selectSymmetricKernel(KernelType type);
-ASymmetricKernel selectASymmetricKernel(KernelType type);
 ShapeAdaptiveKernel selectShapeAdaptiveKernel(KernelType type);
 
 double computeScalingFactor(double generalBandwidth, gsl_matrix* covarianceMatrix);
@@ -62,7 +51,6 @@ double computeScalingFactor(double generalBandwidth, gsl_matrix* covarianceMatri
 extern Kernel standardGaussianKernel;
 extern Kernel epanechnikovKernel;
 extern Kernel testKernel;
-extern Kernel gaussianKernel;
 extern Kernel shapeAdaptiveGaussianKernel;
 
 #endif //KERNELS_KERNELS_H

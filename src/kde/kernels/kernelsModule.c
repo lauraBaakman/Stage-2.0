@@ -59,72 +59,6 @@ static PyObject * standard_gaussian_single_pattern(PyObject *self, PyObject *arg
     return single_pattern_symmetric(args, STANDARD_GAUSSIAN);
 }
 
-static char kernels_gaussian_docstring[] = "Evaluate the Gaussian PDF for each row in the input matrix.";
-static PyObject * gaussian_multi_pattern(PyObject *self, PyObject *args){
-    /* Read input */
-    PyObject* inPattern = NULL;
-    PyObject* inMean = NULL;
-    PyObject* inCovarianceMatrix = NULL;
-    PyObject* outDensities = NULL;
-
-    if (!PyArg_ParseTuple(args, "OOOO", &inPattern, &inMean, &inCovarianceMatrix, &outDensities)) return NULL;
-
-    Array patterns = pyObjectToArray(inPattern, NPY_ARRAY_IN_ARRAY);
-    Array mean = pyObjectToArray(inMean, NPY_ARRAY_IN_ARRAY);
-    Array covarianceMatrix = pyObjectToArray(inCovarianceMatrix, NPY_ARRAY_IN_ARRAY);
-    Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
-
-    gsl_vector_view mean_view = arrayGetGSLVectorView(&mean);
-    gsl_matrix_view patterns_view = arrayGetGSLMatrixView(&patterns);
-
-    /* Do computations */
-    ASymmetricKernel kernel = selectASymmetricKernel(GAUSSIAN);
-    gsl_matrix* kernelConstant = kernel.factorFunction(&covarianceMatrix);
-
-    gsl_vector* current_pattern = gsl_vector_alloc((size_t) covarianceMatrix.dimensionality);
-
-    for(int i = 0; i < patterns.length; i++){
-        gsl_matrix_get_row(current_pattern, &patterns_view.matrix, i);
-        densities.data[i] = kernel.densityFunction(current_pattern, &mean_view.vector, kernelConstant);
-    }
-
-    /* Free memory */
-    gsl_vector_free(current_pattern);
-    gsl_matrix_free(kernelConstant);
-
-    /* Create return object */
-    Py_INCREF(Py_None);
-    return Py_None;
-}
-
-static PyObject * gaussian_single_pattern(PyObject *self, PyObject *args){
-    /* Read input */
-    PyObject* inPattern = NULL;
-    PyObject* inMean = NULL;
-    PyObject* inCovarianceMatrix = NULL;
-
-    if (!PyArg_ParseTuple(args, "OOO", &inPattern, &inMean, &inCovarianceMatrix)) return NULL;
-
-    Array pattern = pyObjectToArray(inPattern, NPY_ARRAY_IN_ARRAY);
-    Array mean = pyObjectToArray(inMean, NPY_ARRAY_IN_ARRAY);
-    Array covarianceMatrix = pyObjectToArray(inCovarianceMatrix, NPY_ARRAY_IN_ARRAY);
-
-    gsl_vector_view mean_view = arrayGetGSLVectorView(&mean);
-    gsl_vector_view pattern_view = arrayGetGSLVectorView(&pattern);
-
-    /* Do computations */
-    ASymmetricKernel kernel = selectASymmetricKernel(GAUSSIAN);
-    gsl_matrix* kernelConstant = kernel.factorFunction(&covarianceMatrix);
-    double density = kernel.densityFunction(&pattern_view.vector, &mean_view.vector, kernelConstant);
-
-    /* Free memory */
-    gsl_matrix_free(kernelConstant);
-
-    /* Create return object */
-    PyObject *returnObject = Py_BuildValue("d", density);
-    return returnObject;
-}
-
 static char kernels_sa_gaussian_docstring[] = "Evaluate the shape adaptive gaussian kernel for each row in the input matrix.";
 static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
     /* Read input */
@@ -300,9 +234,6 @@ gsl_matrix *pyObjectToGSLMatrix(PyObject *pythonObject, int requirements) {
 static PyMethodDef method_table[] = {
         {"standard_gaussian_multi_pattern",     standard_gaussian_multi_pattern,    METH_VARARGS,   kernels_standardGaussian_docstring},
         {"standard_gaussian_single_pattern",    standard_gaussian_single_pattern,   METH_VARARGS,   kernels_standardGaussian_docstring},
-
-        {"gaussian_multi_pattern",              gaussian_multi_pattern,             METH_VARARGS,   kernels_gaussian_docstring},
-        {"gaussian_single_pattern",             gaussian_single_pattern,            METH_VARARGS,   kernels_gaussian_docstring},
 
         {"epanechnikov_single_pattern",         epanechnikov_single_pattern,        METH_VARARGS,   kernels_epanechnikov_docstring},
         {"epanechnikov_multi_pattern",          epanechnikov_multi_pattern,         METH_VARARGS,   kernels_epanechnikov_docstring},

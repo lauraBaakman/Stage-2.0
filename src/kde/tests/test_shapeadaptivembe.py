@@ -3,7 +3,6 @@ from unittest import TestCase, skip
 import numpy as np
 
 import kde
-from kde.kernels.gaussian import Gaussian
 from kde.kernels.shapeadaptivegaussian import ShapeAdaptiveGaussian
 from kde.kernels.testKernel import TestKernel
 from kde.parzen import _ParzenEstimator_Python, _ParzenEstimator_C
@@ -92,7 +91,7 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
                                      1.189207427458816,
                                      0.840896194313949])
         h = 0.721347520444482
-        kernel = Gaussian
+        kernel = ShapeAdaptiveGaussian
 
         estimator = self._estimator_class(
             xi_s=xi_s, x_s=x_s, dimension=2,
@@ -125,6 +124,7 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
         actual = estimator._estimate_pattern(pattern=pattern)
         expected = 0.143018801263046
         self.assertAlmostEqual(actual, expected)
+
 
 class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
     def setUp(self):
