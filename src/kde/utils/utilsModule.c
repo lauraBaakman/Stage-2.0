@@ -60,11 +60,11 @@ static PyObject * covariance_matrix(PyObject *self, PyObject *args){
     if (!PyArg_ParseTuple(args, "OO",
                           &inPatterns, &outCovarianceMatrix)) return NULL;
 
-    Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
-    Array covarianceMatrix = pyObjectToArray(outCovarianceMatrix, NPY_ARRAY_OUT_ARRAY);
+    gsl_matrix_view patterns = pyObjectToGSLMatrixView(inPatterns, NPY_ARRAY_IN_ARRAY);
+    gsl_matrix_view covarianceMatrix = pyObjectToGSLMatrixView(outCovarianceMatrix, NPY_ARRAY_OUT_ARRAY);
 
     /* Do stuff */
-    computeCovarianceMatrix(&patterns, &covarianceMatrix);
+    computeCovarianceMatrix(&patterns.matrix, &covarianceMatrix.matrix);
 
     /* Create return object */
     Py_INCREF(Py_None);

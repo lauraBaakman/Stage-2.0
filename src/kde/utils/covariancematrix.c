@@ -1,70 +1,22 @@
+#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_statistics_double.h>
 #include "covariancematrix.ih"
 
+void computeCovarianceMatrix(gsl_matrix *patterns, gsl_matrix *covarianceMatrix) {
+    gsl_vector_view a, b;
+    double variance;
 
-void computeCovarianceMatrix(Array *patterns, Array *covarianceMatrix) {
-//http://stackoverflow.com/a/3307381/1357229
-    double covariance;
-    double* means;
+    for(size_t i = 0; i < covarianceMatrix->size1; i++){
+        for(size_t j = i; j < covarianceMatrix->size2; j++){
 
-    ArrayColumns columns = getColumns(patterns);
+            a = gsl_matrix_column(patterns, i);
+            b = gsl_matrix_column(patterns, j);
 
-    means = computeMeans(&columns);
-
-    for(int colA = 0; colA < columns.numberOfColumns; colA++){
-        arraySetElement(
-                covarianceMatrix, colA, colA,
-                computeVariance(columns.data[colA], means[colA], patterns->length)
-        );
-
-        for(int colB = colA  + 1; colB < columns.numberOfColumns; colB++){
-            covariance = computeCovariance(
-                    columns.data[colA], means[colA],
-                    columns.data[colB], means[colB],
-                    columns.columnLength);
-            arraySetElement(covarianceMatrix, colA, colB, covariance);
-            arraySetElement(covarianceMatrix, colB, colA, covariance);
+            variance = gsl_stats_covariance(a.vector.data, a.vector.stride,
+                                            b.vector.data, b.vector.stride,
+                                            b.vector.size);
+            gsl_matrix_set(covarianceMatrix, i, j, variance);
+            gsl_matrix_set(covarianceMatrix, j, i, variance);
         }
     }
-    arrayColumnsFree(&columns);
-    free(means);
-}
-
-double* computeMeans(ArrayColumns* matrix){
-    double* means = malloc(matrix->numberOfColumns * sizeof(double));
-    for (int i = 0; i < matrix->numberOfColumns; ++i) {
-        means[i] = computeMean(matrix->data[i], matrix->columnLength);
-    }
-    return means;
-}
-
-double computeCovariance(double *columnA, double meanA, double *columnB, double meanB, int length) {
-    double* someVector = elementWiseMultiplication(columnA, columnB, length);
-    double covariance = computeMean(someVector, length) - (meanA * meanB);
-    free(someVector);
-    return covariance;
-}
-
-double * elementWiseMultiplication(double *vectorA, double *vectorB, int length) {
-    double* product = malloc(length * sizeof(double));
-    for(int i = 0; i < length; i++){
-        product[i] = vectorA[i] * vectorB[i];
-    }
-    return product;
-}
-
-double computeVariance(double *data, double mean, int length) {
-    double variance = 0;
-    for(int i = 0; i<length; i++){
-        variance += ((data[i]) - mean) * ((data[i]) - mean);
-    }
-    variance = variance / length;
-    return variance;
-}
-
-double computeMean(double *data, int length) {
-    double mean = 0;
-    for(int i = 0; i < length; i++){
-        mean += data[i];
-    }
-    return mean / length;
 }
