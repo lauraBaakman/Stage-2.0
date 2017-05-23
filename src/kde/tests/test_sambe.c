@@ -35,6 +35,8 @@ void testDetermineGlobalKernelShape(CuTest* tc){
     gsl_matrix_free(xs);
     gsl_vector_free(localBandwidths);
     freeGlobals();
+
+
 }
 
 void testPrepareShapeAdaptiveKernelInverse(CuTest* tc){
@@ -148,8 +150,8 @@ void testPrepareShapeAdaptiveKernelPDFConstant(CuTest* tc){
 CuSuite *SAMBEGetSuite() {
 	CuSuite *suite = CuSuiteNew();
 	SUITE_ADD_TEST(suite, testDetermineGlobalKernelShape);
-//    SUITE_ADD_TEST(suite, testPrepareShapeAdaptiveKernelInverse);
-//    SUITE_ADD_TEST(suite, testPrepareShapeAdaptiveKernelScalingFactor);
-//    SUITE_ADD_TEST(suite, testPrepareShapeAdaptiveKernelPDFConstant);
+    SUITE_ADD_TEST(suite, testPrepareShapeAdaptiveKernelInverse);
+    SUITE_ADD_TEST(suite, testPrepareShapeAdaptiveKernelScalingFactor);
+    SUITE_ADD_TEST(suite, testPrepareShapeAdaptiveKernelPDFConstant);
 	return suite;
 }
