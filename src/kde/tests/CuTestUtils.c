@@ -22,7 +22,7 @@ void CuAssertMatrixEquals_LineMsg(CuTest* tc,
             expectedElement = gsl_matrix_get(expected, i, j);
             actualElement = gsl_matrix_get(actual, i, j);
 
-            if (fabs(expectedElement - actualElement) > delta){
+            if ((fabs(expectedElement - actualElement) > delta) || (isnan(actualElement))){
                 sprintf(buf, "expected <%f> at (%lu, %lu) but was <%f>", expectedElement, i, j, actualElement);
                 CuFail_Line(tc, file, line, message, buf);
             }
