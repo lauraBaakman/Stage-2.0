@@ -2,12 +2,19 @@
 #define KERNELS_GAUSSIAN_IH_H
 
 #include "gaussian.h"
+#include <gsl/gsl_matrix.h>
 
 /* Symmetric */
 double standardGaussianConstant(int patternDimensionality);
 double standardGaussianPDF(double *pattern, int patternDimensionality, double constant);
 
 /* Shape Adaptive */
+void shapeAdaptiveGaussianConstants(gsl_matrix* globalBandwidthMatrix, gsl_matrix *outGlobalInverse,
+                                    double *outGlobalScalingFactor, double *outPDFConstant);
+
+double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
+                                double globalScalingFactor, gsl_matrix * globalInverse, double gaussianConstant,
+                                gsl_vector* scaledPattern);
 
 
 #endif //KERNELS_GAUSSIAN_IH_H

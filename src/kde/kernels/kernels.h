@@ -1,7 +1,6 @@
 #ifndef KERNELS_KERNELS_H
 #define KERNELS_KERNELS_H
 
-#include <gsl/gsl_matrix.h>
 #include "../utils/gsl_utils.h"
 #include <stdbool.h>
 
@@ -48,8 +47,9 @@ ShapeAdaptiveKernel selectShapeAdaptiveKernel(KernelType type);
 
 double computeScalingFactor(double generalBandwidth, gsl_matrix* covarianceMatrix);
 
+double computeLocalScalingFactor(double globalScalingFactor, double localBandwidth, size_t dimension);
+
 extern Kernel epanechnikovKernel;
 extern Kernel testKernel;
-extern Kernel shapeAdaptiveGaussianKernel;
 
 #endif //KERNELS_KERNELS_H

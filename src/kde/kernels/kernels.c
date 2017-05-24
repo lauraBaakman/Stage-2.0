@@ -12,12 +12,6 @@ Kernel testKernel = {
         .kernel.symmetricKernel.factorFunction = testKernelConstant,
 };
 
-Kernel shapeAdaptiveGaussianKernel = {
-        .isShapeAdaptive = true,
-        .kernel.shapeAdaptiveKernel.densityFunction = shapeAdaptiveGaussianPDF,
-        .kernel.shapeAdaptiveKernel.factorFunction = shapeAdaptiveGaussianConstants,
-};
-
 
 Kernel selectKernel(KernelType type) {
     switch (type) {
@@ -73,7 +67,6 @@ double computeScalingFactor(double generalBandwidth, gsl_matrix* covarianceMatri
     return exp(generalBandWidthTerm - (1.0 / dimension) * eigenValuesTerm);
 }
 
-
 /* Symmetric Kernels */
 
 double epanechnikovConstant(int dimensionality) {
@@ -104,56 +97,6 @@ double testKernelPDF(double *data, int dimensionality, double constant) {
     return fabs(mean);
 }
 
-/* Shape Adaptive Kernels */
-double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
-                                double globalScalingFactor, gsl_matrix * globalInverse, double gaussianConstant,
-                                gsl_vector* scaledPattern){
-
-    size_t dimension = globalInverse->size1;
-
-    // Multiply the transpose of the global inverse with the pattern
-    // Since the bandwidth matrix is always symmetric we don't need to compute the transpose.
-    gsl_blas_dsymv(CblasLower, 1.0, globalInverse, pattern, 1.0, scaledPattern);
-
-    //Apply the local inverse
-    gsl_vector_scale(scaledPattern, 1.0 / localBandwidth);
-
-    // Compute local scaling factor
-    double localScalingFactor = computeLocalScalingFactor(globalScalingFactor, localBandwidth, dimension);
-
-    //Determine the result of the kernel
-    double density = localScalingFactor * standardGaussianPDF(scaledPattern->data, (int) dimension, gaussianConstant);
-
-    return density;
-}
-
-void shapeAdaptiveGaussianConstants(gsl_matrix *globalBandwidthMatrix, gsl_matrix *outGlobalInverse,
-                                    double *outGlobalScalingFactor, double *outPDFConstant) {
-
-    size_t dimension = globalBandwidthMatrix->size1;
-
-    gsl_matrix* LUDecompH = gsl_matrix_alloc(dimension, dimension);
-    gsl_matrix_memcpy(LUDecompH, globalBandwidthMatrix);
-
-    //Compute LU decompostion
-    gsl_permutation* permutation = gsl_permutation_calloc(dimension);
-    int signum = 0;
-    gsl_linalg_LU_decomp(LUDecompH, permutation, &signum);
-
-    //Compute global inverse
-    gsl_linalg_LU_invert(LUDecompH, permutation, outGlobalInverse);
-
-    //Compute global scaling factor
-    double determinant = gsl_linalg_LU_det(LUDecompH, signum);
-    *outGlobalScalingFactor = 1.0 / determinant;
-
-    //Compute the pdfConstant
-    *outPDFConstant = standardGaussianKernel.kernel.symmetricKernel.factorFunction(dimension);
-
-    //Free memory
-    gsl_permutation_free(permutation);
-    gsl_matrix_free(LUDecompH);
-}
 
 double computeLocalScalingFactor(double globalScalingFactor, double localBandwidth, size_t dimension) {
     double localScalingFactor = (1.0 / pow(localBandwidth, dimension)) * globalScalingFactor;

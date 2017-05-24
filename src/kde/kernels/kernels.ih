@@ -21,16 +21,6 @@ double epanechnikovPDF(double *data, int dimensionality, double constant);
 double testKernelConstant(int patternDimensionality);
 double testKernelPDF(double *data, int dimensionality, double constant);
 
-/* Shape Adaptive Kernels */
-double computeLocalScalingFactor(double globalScalingFactor, double localBandwidth, size_t dimension);
-
-void shapeAdaptiveGaussianConstants(gsl_matrix* globalBandwidthMatrix, gsl_matrix *outGlobalInverse,
-                                    double *outGlobalScalingFactor, double *outPDFConstant);
-
-double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
-                                double globalScalingFactor, gsl_matrix * globalInverse, double gaussianConstant,
-                                gsl_vector* scaledPattern);
-
 /* Utilities */
 
 double dotProduct(double *a, double *b, int length);
