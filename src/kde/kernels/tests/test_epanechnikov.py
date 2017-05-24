@@ -98,6 +98,7 @@ class EpanechnikovImpAbstractTest(object):
         expected = np.array([0.726488328774824])
         np.testing.assert_array_almost_equal(actual, expected)
 
+
 class TestEpanechnikov_Python(EpanechnikovImpAbstractTest, TestCase):
     def setUp(self):
         super().setUp()
@@ -134,7 +135,6 @@ class TestEpanechnikov_Python(EpanechnikovImpAbstractTest, TestCase):
         self.assertAlmostEqual(actual, expected)
 
 
-@skip("Not yet implemented")
 class TestEpanechnikov_C(EpanechnikovImpAbstractTest, TestCase):
     def setUp(self):
         super().setUp()
