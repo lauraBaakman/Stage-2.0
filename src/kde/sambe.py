@@ -1,5 +1,5 @@
 import numpy as np
-from numpy.ma.extras import cov
+import warnings
 
 from kde.modifeidbreiman import ModifiedBreimanEstimator
 import kde.utils.automaticWindowWidthMethods as automaticWindowWidthMethods
@@ -54,6 +54,8 @@ class _ShapeAdaptiveMBE(EstimatorImplementation):
 class _ShapeAdaptiveMBE_C(_ShapeAdaptiveMBE):
 
     def estimate(self):
+        if not np.all(self._x_s == self._xi_s):
+            raise ValueError("This estimator only accepts x_s == xi_s.")
         densities = np.empty(self.num_x_s, dtype=float)
         _kde.shape_adaptive_mbe(self._x_s,
                                 self._kernel_class.to_C_enum(),

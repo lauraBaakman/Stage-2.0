@@ -1,4 +1,5 @@
 from unittest import TestCase, skip
+import warnings
 
 import numpy as np
 
@@ -152,3 +153,27 @@ class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
     def setUp(self):
         super().setUp()
         self._estimator_class = _ShapeAdaptiveMBE_C
+
+    def test_warning(self):
+        try:
+            xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+            x_s = np.array([[0, 0], [1, 1]])
+            local_bandwidths = np.array([0.84089642,
+                                         1.18920712,
+                                         1.18920712,
+                                         0.84089642])
+            general_bandwidth = 0.721347520444482
+            kernel = ShapeAdaptiveGaussian
+            estimator = self._estimator_class(
+                xi_s=xi_s, x_s=x_s, dimension=2,
+                kernel=kernel,
+                local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
+            )
+            estimator.estimate()
+        except ValueError:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
