@@ -17,7 +17,7 @@ extern double g_globalScalingFactor;
 extern double g_kernelConstant;
 
 
-double sambeFinalDensitySinglePattern(gsl_vector *x, size_t xIdx);
+double finalDensitySinglePattern(gsl_vector *x, size_t xIdx);
 
 void determineGlobalKernelShape(size_t patternIdx);
 

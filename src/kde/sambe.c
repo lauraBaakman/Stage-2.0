@@ -67,7 +67,7 @@ void sambeFinalDensity(gsl_matrix* xs,
     for(size_t i = 0; i < g_numXs; i++){
         x = gsl_matrix_row(xs, i);
 
-        density = sambeFinalDensitySinglePattern(&x.vector, i);
+        density = finalDensitySinglePattern(&x.vector, i);
 
         gsl_vector_set(outDensities, i, density);
     }
@@ -75,7 +75,7 @@ void sambeFinalDensity(gsl_matrix* xs,
     freeGlobals();
 }
 
-double sambeFinalDensitySinglePattern(gsl_vector *x, size_t xIdx) {
+double finalDensitySinglePattern(gsl_vector *x, size_t xIdx) {
     double localBandwidth, density = 0.0;
 
     gsl_vector_view xi;
