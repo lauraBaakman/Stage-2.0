@@ -60,7 +60,6 @@ void sambeFinalDensity(gsl_matrix* xs,
 
     prepareGlobals(xs, localBandwidths, globalBandwidth, kernel, k);
 
-    /* Do the computations */
     double density;
     gsl_vector_view x;
 
@@ -81,7 +80,6 @@ double finalDensitySinglePattern(gsl_vector *x, size_t xIdx) {
     gsl_vector_view xi;
     prepareShapeAdaptiveKernel(xIdx);
 
-    /* Estimate Density */
     for(size_t i = 0; i < g_numXs; i++){
         xi = gsl_matrix_row(g_xs, i);
         localBandwidth = gsl_vector_get(g_localBandwidths, i);
