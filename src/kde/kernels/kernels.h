@@ -49,7 +49,7 @@ double computeScalingFactor(double generalBandwidth, gsl_matrix* covarianceMatri
 
 double computeLocalScalingFactor(double globalScalingFactor, double localBandwidth, size_t dimension);
 
-extern Kernel epanechnikovKernel;
+
 extern Kernel testKernel;
 
 #endif //KERNELS_KERNELS_H

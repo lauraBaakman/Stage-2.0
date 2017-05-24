@@ -4,6 +4,7 @@
 #include "kernels.h"
 
 #include "gaussian.h"
+#include "epanechnikov.h"
 
 #include <printf.h>
 #include <math.h>
@@ -15,8 +16,7 @@
 
 /* Symmetric Kernels */
 
-double epanechnikovConstant(int dimensionality);
-double epanechnikovPDF(double *data, int dimensionality, double constant);
+
 
 double testKernelConstant(int patternDimensionality);
 double testKernelPDF(double *data, int dimensionality, double constant);

@@ -8,6 +8,7 @@ set(SOURCE_FILES
         kernels/kernels.c kernels/kernels.h
         kernels/kernelsModule.c kernels/kernelsModule.h
         kernels/gaussian.c kernels/gaussian.h kernels/gaussian.ih
+        kernels/epanechnikov.c kernels/epanechnikov.h kernels/epanechnikov.ih
         parzen.c parzen.h parzen.ih
         sambe.c sambe.h sambe.ih
         utils.c utils.h utils.ih

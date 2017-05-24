@@ -1,0 +1,17 @@
+#ifndef KERNELS_EPANECHNIKOV_IH_H
+#define KERNELS_EPANECHNIKOV_IH_H
+
+#include <math.h>
+
+#include "epanechnikov.h"
+
+/* Symmetric */
+double epanechnikovConstant(int dimensionality);
+double epanechnikovPDF(double *data, int dimensionality, double constant);
+
+/* Shape Adaptive */
+
+/* Utilities */
+double dotProduct(double *a, double *b, int length);
+
+#endif //KERNELS_EPANECHNIKOV_IH_H
