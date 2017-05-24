@@ -12,10 +12,14 @@
 
 #include "parzen.h"
 #include "modifeidbreiman.h"
+#include "sambe.h"
+#include "sambe.ih" // Shouldn't be included anywhere, but the locals needed to be exposed somewhere for easy testing.
 #include "utils.h"
 #include "kernels/kernels.h"
 
 Array pyObjectToArray(PyObject *pythonObject, int requirements);
+gsl_matrix_view pyObjectToGSLMatrixView(PyObject *pythonObject, int requirements);
+gsl_vector_view pyObjectToGSLVectorView(PyObject *pythonObject, int requirements);
 
 Kernel selectKernel(KernelType type);
 

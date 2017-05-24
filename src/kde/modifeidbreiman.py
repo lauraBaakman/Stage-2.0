@@ -137,7 +137,7 @@ class _MBEEstimator_C(_MBEEstimator):
     def estimate(self):
         densities = np.empty(self.num_x_s, dtype=float)
         _kde.modified_breiman(self._x_s, self._xi_s,
-                                  self._general_bandwidth, self._local_bandwidths,
-                                  self._kernel.to_C_enum(),
-                                  densities)
+                              self._general_bandwidth, self._local_bandwidths,
+                              self._kernel.to_C_enum(),
+                              densities)
         return densities

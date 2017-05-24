@@ -59,72 +59,6 @@ static PyObject * standard_gaussian_single_pattern(PyObject *self, PyObject *arg
     return single_pattern_symmetric(args, STANDARD_GAUSSIAN);
 }
 
-static char kernels_gaussian_docstring[] = "Evaluate the Gaussian PDF for each row in the input matrix.";
-static PyObject * gaussian_multi_pattern(PyObject *self, PyObject *args){
-    /* Read input */
-    PyObject* inPattern = NULL;
-    PyObject* inMean = NULL;
-    PyObject* inCovarianceMatrix = NULL;
-    PyObject* outDensities = NULL;
-
-    if (!PyArg_ParseTuple(args, "OOOO", &inPattern, &inMean, &inCovarianceMatrix, &outDensities)) return NULL;
-
-    Array patterns = pyObjectToArray(inPattern, NPY_ARRAY_IN_ARRAY);
-    Array mean = pyObjectToArray(inMean, NPY_ARRAY_IN_ARRAY);
-    Array covarianceMatrix = pyObjectToArray(inCovarianceMatrix, NPY_ARRAY_IN_ARRAY);
-    Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
-
-    gsl_vector_view mean_view = arrayGetGSLVectorView(&mean);
-    gsl_matrix_view patterns_view = arrayGetGSLMatrixView(&patterns);
-
-    /* Do computations */
-    ASymmetricKernel kernel = selectASymmetricKernel(GAUSSIAN);
-    gsl_matrix* kernelConstant = kernel.factorFunction(&covarianceMatrix);
-
-    gsl_vector* current_pattern = gsl_vector_alloc((size_t) covarianceMatrix.dimensionality);
-
-    for(int i = 0; i < patterns.length; i++){
-        gsl_matrix_get_row(current_pattern, &patterns_view.matrix, i);
-        densities.data[i] = kernel.densityFunction(current_pattern, &mean_view.vector, kernelConstant);
-    }
-
-    /* Free memory */
-    gsl_vector_free(current_pattern);
-    gsl_matrix_free(kernelConstant);
-
-    /* Create return object */
-    Py_INCREF(Py_None);
-    return Py_None;
-}
-
-static PyObject * gaussian_single_pattern(PyObject *self, PyObject *args){
-    /* Read input */
-    PyObject* inPattern = NULL;
-    PyObject* inMean = NULL;
-    PyObject* inCovarianceMatrix = NULL;
-
-    if (!PyArg_ParseTuple(args, "OOO", &inPattern, &inMean, &inCovarianceMatrix)) return NULL;
-
-    Array pattern = pyObjectToArray(inPattern, NPY_ARRAY_IN_ARRAY);
-    Array mean = pyObjectToArray(inMean, NPY_ARRAY_IN_ARRAY);
-    Array covarianceMatrix = pyObjectToArray(inCovarianceMatrix, NPY_ARRAY_IN_ARRAY);
-
-    gsl_vector_view mean_view = arrayGetGSLVectorView(&mean);
-    gsl_vector_view pattern_view = arrayGetGSLVectorView(&pattern);
-
-    /* Do computations */
-    ASymmetricKernel kernel = selectASymmetricKernel(GAUSSIAN);
-    gsl_matrix* kernelConstant = kernel.factorFunction(&covarianceMatrix);
-    double density = kernel.densityFunction(&pattern_view.vector, &mean_view.vector, kernelConstant);
-
-    /* Free memory */
-    gsl_matrix_free(kernelConstant);
-
-    /* Create return object */
-    PyObject *returnObject = Py_BuildValue("d", density);
-    return returnObject;
-}
-
 static char kernels_sa_gaussian_docstring[] = "Evaluate the shape adaptive gaussian kernel for each row in the input matrix.";
 static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
     /* Read input */
@@ -136,7 +70,8 @@ static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
     if (!PyArg_ParseTuple(args, "OdO", &inPattern, &localBandwidth, &inGlobalBandwidthMatrix)) return NULL;
 
     Array pattern = pyObjectToArray(inPattern, NPY_ARRAY_IN_ARRAY);
-    Array globalBandwidthMatrix = pyObjectToArray(inGlobalBandwidthMatrix, NPY_ARRAY_IN_ARRAY);
+    gsl_matrix* globalBandwidthMatrix = pyObjectToGSLMatrix(inGlobalBandwidthMatrix, NPY_ARRAY_IN_ARRAY);
+
 
     /* Compute constants */
     size_t dimension = (size_t) pattern.dimensionality;
@@ -144,8 +79,7 @@ static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
     gsl_matrix* globalInverse = gsl_matrix_alloc(dimension, dimension);
     double globalScalingFactor, pdfConstant;
 
-    kernel.factorFunction(&globalBandwidthMatrix, globalInverse, &globalScalingFactor, &pdfConstant);
-
+    kernel.factorFunction(globalBandwidthMatrix, globalInverse, &globalScalingFactor, &pdfConstant);
 
     /* Allocate Memory for the kernel evaluation */
     gsl_vector* scaledPatternMemory = gsl_vector_calloc(dimension);
@@ -159,6 +93,7 @@ static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
     /* Free memory */
     gsl_matrix_free(globalInverse);
     gsl_vector_free(scaledPatternMemory);
+    gsl_matrix_free(globalBandwidthMatrix);
 
     /* Create return object */
     PyObject *returnObject = Py_BuildValue("d", density);
@@ -179,7 +114,7 @@ static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
                           &outDensities)) return NULL;
 
     Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
-    Array globalBandwidthMatrix = pyObjectToArray(inGlobalBandwidthMatrix, NPY_ARRAY_IN_ARRAY);
+    gsl_matrix* globalBandwidthMatrix = pyObjectToGSLMatrix(inGlobalBandwidthMatrix, NPY_ARRAY_IN_ARRAY);
     Array localBandwidths = pyObjectToArray(inLocalBandwidths, NPY_ARRAY_IN_ARRAY);
     Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
 
@@ -189,7 +124,7 @@ static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
     size_t dimension = (size_t) patterns.dimensionality;
     gsl_matrix* globalInverse = gsl_matrix_alloc(dimension, dimension);
     double globalScalingFactor, pdfConstant;
-    kernel.factorFunction(&globalBandwidthMatrix, globalInverse, &globalScalingFactor, &pdfConstant);
+    kernel.factorFunction(globalBandwidthMatrix, globalInverse, &globalScalingFactor, &pdfConstant);
 
     /* Allocate memory for the kernel evaluatation */
     gsl_vector* scaledPatternMemory = gsl_vector_alloc(dimension);
@@ -206,7 +141,7 @@ static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
         gsl_vector_set_zero(scaledPatternMemory);
 
         localBandwidth = localBandwidths.data[j];
-    
+
         densities.data[j] = kernel.densityFunction(
                 &pattern_view.vector, localBandwidth,
                 globalScalingFactor, globalInverse, pdfConstant,
@@ -215,6 +150,7 @@ static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
 
     /* Free memory */
     gsl_matrix_free(globalInverse);
+    gsl_matrix_free(globalBandwidthMatrix);
     gsl_vector_free(scaledPatternMemory);
 
     /* Create return object */
@@ -251,7 +187,7 @@ static PyObject* scaling_factor(PyObject* self, PyObject *args){
     gsl_matrix_view covarianceMatrix = pyObjectToGSLMatrixView(inCovarianceMatrix, NPY_ARRAY_IN_ARRAY);
 
     /* Do computations */
-    double scalingFactor = computeScalingFactor(generalBandwidth, covarianceMatrix);
+    double scalingFactor = computeScalingFactor(generalBandwidth, &covarianceMatrix.matrix);
 
     /* Free memory */
 
@@ -282,16 +218,22 @@ gsl_matrix_view pyObjectToGSLMatrixView(PyObject *pythonObject, int requirements
     double* data = (double *)PyArray_DATA(arrayObject);
     size_t num_rows = PyArray_DIM(arrayObject, 0);
     size_t num_cols = PyArray_DIM(arrayObject, 1);
+
     Py_XDECREF(arrayObject);
     return gsl_matrix_view_array(data, num_rows, num_cols);
+}
+
+gsl_matrix *pyObjectToGSLMatrix(PyObject *pythonObject, int requirements) {
+    gsl_matrix_view view = pyObjectToGSLMatrixView(pythonObject, requirements);
+
+    gsl_matrix* matrix = gsl_matrix_alloc(view.matrix.size1, view.matrix.size2);
+    gsl_matrix_memcpy(matrix, &view.matrix);
+    return matrix;
 }
 
 static PyMethodDef method_table[] = {
         {"standard_gaussian_multi_pattern",     standard_gaussian_multi_pattern,    METH_VARARGS,   kernels_standardGaussian_docstring},
         {"standard_gaussian_single_pattern",    standard_gaussian_single_pattern,   METH_VARARGS,   kernels_standardGaussian_docstring},
-
-        {"gaussian_multi_pattern",              gaussian_multi_pattern,             METH_VARARGS,   kernels_gaussian_docstring},
-        {"gaussian_single_pattern",             gaussian_single_pattern,            METH_VARARGS,   kernels_gaussian_docstring},
 
         {"epanechnikov_single_pattern",         epanechnikov_single_pattern,        METH_VARARGS,   kernels_epanechnikov_docstring},
         {"epanechnikov_multi_pattern",          epanechnikov_multi_pattern,         METH_VARARGS,   kernels_epanechnikov_docstring},

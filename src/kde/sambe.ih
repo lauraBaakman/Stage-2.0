@@ -1,0 +1,37 @@
+#ifndef SAMBE_IH
+#define SAMBE_IH
+
+#include <printf.h>
+
+#include <gsl/gsl_matrix.h>
+
+#include "utils/distancematrix.h"
+#include "utils/knn.h"
+#include "utils/covariancematrix.h"
+
+#include "sambe.h"
+
+extern gsl_matrix* g_globalBandwidthMatrix;
+extern gsl_matrix* g_globalInverse;
+extern double g_globalScalingFactor;
+extern double g_kernelConstant;
+
+
+double finalDensitySinglePattern(gsl_vector *x, size_t xIdx);
+
+void determineGlobalKernelShape(size_t patternIdx);
+
+double evaluateKernel(gsl_vector* x, gsl_vector* xi, double localBandwidth);
+
+void prepareGlobals(gsl_matrix *xs,
+                    gsl_vector *localBandwidths, double globalBandwidth,
+                    ShapeAdaptiveKernel kernel, int k);
+
+void prepareShapeAdaptiveKernel(size_t patternIdx);
+
+void allocateGlobals(size_t dataDimension, size_t num_xi_s, int k);
+
+void freeGlobals();
+
+
+#endif //PARZEN_IH

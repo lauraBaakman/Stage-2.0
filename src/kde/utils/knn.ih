@@ -2,6 +2,7 @@
 #define KERNELS_KNN_IH
 
 #include "knn.h"
+#include <gsl/gsl_vector_double.h>
 
 
 typedef struct ListElement{
@@ -9,13 +10,13 @@ typedef struct ListElement{
     int index;
 } ListElement;
 
-void getKNearestElements(ListElement* sortedDistances, int k, Array* patterns, Array* neighbours);
+void getKNearestElements(ListElement* sortedDistances, int k, gsl_matrix* patterns, gsl_matrix* outNeighbours);
 
-ListElement* toArrayOfListElements(double *values, int numValues);
+ListElement* toArrayOfListElements(gsl_vector *distances);
 
 int listElementCompare(const void *s1, const void *s2);
-void listElementArraySort(ListElement* elements, int numElements);
-void listElementArrayPrint(ListElement* elements, int numElements);
+void listElementArraySort(ListElement* elements, size_t numElements);
+void listElementArrayPrint(ListElement* elements, size_t numElements);
 void listElementPrint(ListElement* element);
 
 #endif //KERNELS_KNN_IH

@@ -11,7 +11,7 @@ def _covariance_C(data):
 
 
 def _covariance_Python(data):
-    return np.cov(data.transpose(), bias=True)
+    return np.cov(data.transpose())
 
 
 def covariance(data, implementation=_covariance_C):

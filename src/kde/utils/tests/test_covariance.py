@@ -13,8 +13,8 @@ class TestCovariance(TestCase):
             [3, 4]
         ])
         expected = np.array([
-            [1.687500000000000, 1.375000000000000],
-            [1.375000000000000, 1.250000000000000]
+            [2.250000000000000, 1.833333333333333],
+            [1.833333333333333, 1.666666666666667]
         ])
         actual = covariance(data)
         np.testing.assert_array_almost_equal(actual, expected)
@@ -27,8 +27,8 @@ class TestCovariance(TestCase):
             [3, 4]
         ])
         expected = np.array([
-            [1.687500000000000, 1.375000000000000],
-            [1.375000000000000, 1.250000000000000]
+            [2.250000000000000, 1.833333333333333],
+            [1.833333333333333, 1.666666666666667]
         ])
         actual = covariance(data, implementation=_covariance_Python)
         np.testing.assert_array_almost_equal(actual, expected)
@@ -41,8 +41,8 @@ class TestCovariance(TestCase):
             [3, 4]
         ])
         expected = np.array([
-            [1.687500000000000, 1.375000000000000],
-            [1.375000000000000, 1.250000000000000]
+            [2.250000000000000, 1.833333333333333],
+            [1.833333333333333, 1.666666666666667]
         ])
         actual = covariance(data, implementation=_covariance_C)
         np.testing.assert_array_almost_equal(actual, expected)
@@ -62,8 +62,8 @@ class CovarianceImpAbstractTest(object):
             [3, 4]
         ])
         expected = np.array([
-            [1.687500000000000, 1.375000000000000],
-            [1.375000000000000, 1.250000000000000]
+            [2.250000000000000, 1.833333333333333],
+            [1.833333333333333, 1.666666666666667]
         ])
         actual = self._implementation(data)
         np.testing.assert_array_almost_equal(actual, expected)
@@ -75,7 +75,7 @@ class CovarianceImpAbstractTest(object):
         ])
         expected = np.array([
             [0.0, 0.0],
-            [0.0, 0.250000000000000]
+            [0.0, 0.500000000000000]
         ])
         actual = self._implementation(data)
         np.testing.assert_array_almost_equal(actual, expected)

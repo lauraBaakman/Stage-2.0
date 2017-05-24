@@ -2,7 +2,15 @@ from distutils.core import setup, Extension
 
 import globalConfigParameters
 
-sources = ['utils.c', 'kdeModule.c', 'parzen.c', 'modifeidbreiman.c', 'kernels/kernels.c']
+sources = ['utils.c',
+           'kdeModule.c',
+           'parzen.c',
+           'modifeidbreiman.c',
+           'kernels/kernels.c',
+           'sambe.c',
+           'utils/distancematrix.c',
+           'utils/knn.c',
+           'utils/covariancematrix.c']
 
 if __name__ == "__main__":
     module = Extension('_kde',

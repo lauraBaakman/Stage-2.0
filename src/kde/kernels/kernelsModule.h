@@ -8,9 +8,11 @@
 
 #include "kernels.h"
 #include "../utils.h"
+#include "../utils/gsl_utils.h"
 
 Array pyObjectToArray(PyObject *pythonObject, int requirements);
 gsl_matrix_view pyObjectToGSLMatrixView(PyObject *pythonObject, int requirements);
+gsl_matrix* pyObjectToGSLMatrix(PyObject *pythonObject, int requirements);
 
 static PyObject * multi_pattern_symmetric(PyObject *args, KernelType kernelType);
 static PyObject* single_pattern_symmetric(PyObject *args, KernelType kernelType);
