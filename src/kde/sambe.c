@@ -1,38 +1,5 @@
 #include "sambe.ih"
 
-//double sambeFinalDensity(double *pattern, Array *datapoints,
-//                         double globalBandwidth,
-//                         ShapeAdaptiveKernel kernel) {
-//
-//    size_t dimension = (size_t) datapoints->dimensionality;
-//
-//    double* currentDataPoint = datapoints->data;
-//
-//    gsl_matrix* globalKernelShape = determineKernelShape(pattern);
-//
-//    /* Prepare the evaluation of the kernel */
-//    double pdfConstant;
-//    double globalScalingFactor;
-//    gsl_matrix* globalInverse = gsl_matrix_alloc(dimension, dimension);
-//    kernel.factorFunction(globalKernelShape, globalInverse, &globalScalingFactor, &pdfConstant);
-//
-//    /* Evaluate
-//    double density = 0;
-//    for(int i = 0;
-//        i < datapoints->length;
-//        ++i, currentDataPoint+= datapoints->rowStride)
-//    {
-//        density += finalDensityEstimatePattern(currentDataPoint);
-//    }
-//
-//    density /= datapoints->length;
-//
-//    /* Free memory */
-//    gsl_matrix_free(globalInverse);
-//
-//    return density;
-//}
-
 gsl_matrix* g_xs;
 gsl_vector* g_localBandwidths;
 double g_globalBandwidth;
@@ -83,7 +50,6 @@ double finalDensitySinglePattern(gsl_vector *x, size_t xIdx) {
     for(size_t i = 0; i < g_numXs; i++){
         xi = gsl_matrix_row(g_xs, i);
         localBandwidth = gsl_vector_get(g_localBandwidths, i);
-
         density += evaluateKernel(x, &xi.vector, localBandwidth);
     }
 

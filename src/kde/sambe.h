@@ -2,6 +2,7 @@
 #define SAMBE_H
 
 #include <gsl/gsl_matrix.h>
+#include <gsl/gsl_vector_double.h>
 
 #include "kernels/kernels.h"
 
