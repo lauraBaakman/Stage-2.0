@@ -112,10 +112,11 @@ double evaluateKernel(gsl_vector *x, gsl_vector *xi, double localBandwidth) {
     gsl_vector_memcpy(g_movedPattern, x);
     gsl_vector_sub(g_movedPattern, xi);
 
-    double density = g_kernel.densityFunction(g_movedPattern,
-                             localBandwidth,
-                             g_globalScalingFactor, g_globalInverse, g_kernelConstant,
-                             g_scaledPattern);
+    gsl_vector_set_zero(g_scaledPattern);
+
+    double density = g_kernel.densityFunction(g_movedPattern, localBandwidth,
+                                              g_globalScalingFactor, g_globalInverse, g_kernelConstant,
+                                              g_scaledPattern);
     return density;
 }
 
