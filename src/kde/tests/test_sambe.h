@@ -6,6 +6,9 @@
 #include "CuTest.h"
 #include "CuTestUtils.h"
 
+#include <gsl/gsl_vector_double.h>
+
+
 #include "test_constants.h"
 #include "../sambe.ih"
 
