@@ -1,0 +1,21 @@
+{
+	"folders":
+	[
+		{
+			"path": ".",
+			"folder_exclude_patterns": [
+				".idea",
+				"__pycache__",
+				"*build",
+				"*cmake-build-debug"
+			],
+			"file_exclude_patterns": [
+				"*.m",
+				"*.out",
+				"*.py",
+				"requirements.txt",
+				"*CMakeLists.txt"
+			]
+		}
+	]
+}

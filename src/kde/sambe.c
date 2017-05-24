@@ -42,9 +42,12 @@ double g_kernelConstant;
 
 size_t g_numXs;
 
+gsl_vector* g_movedPattern;
+gsl_vector* g_scaledPattern;
+
 gsl_matrix* g_globalBandwidthMatrix;
-gsl_matrix* g_globalBandwidthMatrixInverse;
-double g_globalBandwidthMatrixDeterminant;
+gsl_matrix* g_globalInverse;
+double g_globalScalingFactor;
 
 int g_k;
 gsl_matrix* g_distanceMatrix;
@@ -108,21 +111,32 @@ void determineGlobalKernelShape(size_t patternIdx) {
 }
 
 double evaluateKernel(gsl_vector *x, gsl_vector *xi, double localBandwidth) {
-    return 42.0;
+    gsl_vector_memcpy(g_movedPattern, x);
+    gsl_vector_sub(g_movedPattern, xi);
+
+    double density = g_kernel.densityFunction(g_movedPattern,
+                             localBandwidth,
+                             g_globalScalingFactor, g_globalInverse, g_kernelConstant,
+                             g_scaledPattern);
+    return density;
 }
 
 void allocateGlobals(size_t dataDimension, size_t num_xi_s, int k) {
     g_globalBandwidthMatrix = gsl_matrix_alloc(dataDimension, dataDimension);
-    g_globalBandwidthMatrixInverse = gsl_matrix_alloc(dataDimension, dataDimension);
+    g_globalInverse = gsl_matrix_alloc(dataDimension, dataDimension);
     g_distanceMatrix = gsl_matrix_alloc(num_xi_s, num_xi_s);
     g_nearestNeighbours = gsl_matrix_alloc(k, dataDimension);
+    g_movedPattern = gsl_vector_alloc(dataDimension);
+    g_scaledPattern = gsl_vector_alloc(dataDimension);
 }
 
 void freeGlobals() {
     gsl_matrix_free(g_globalBandwidthMatrix);
-    gsl_matrix_free(g_globalBandwidthMatrixInverse);
+    gsl_matrix_free(g_globalInverse);
     gsl_matrix_free(g_distanceMatrix);
     gsl_matrix_free(g_nearestNeighbours);
+    gsl_vector_free(g_movedPattern);
+    gsl_vector_free(g_scaledPattern);
 }
 
 void prepareGlobals(gsl_matrix *xs,
@@ -147,6 +161,6 @@ void prepareGlobals(gsl_matrix *xs,
 void prepareShapeAdaptiveKernel(size_t patternIdx) {
     determineGlobalKernelShape(patternIdx);
     g_kernel.factorFunction(g_globalBandwidthMatrix,
-                            g_globalBandwidthMatrixInverse, &g_globalBandwidthMatrixDeterminant,
+                            g_globalInverse, &g_globalScalingFactor,
                             &g_kernelConstant);
 }

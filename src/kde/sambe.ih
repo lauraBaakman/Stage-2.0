@@ -12,8 +12,8 @@
 #include "sambe.h"
 
 extern gsl_matrix* g_globalBandwidthMatrix;
-extern gsl_matrix* g_globalBandwidthMatrixInverse;
-extern double g_globalBandwidthMatrixDeterminant;
+extern gsl_matrix* g_globalInverse;
+extern double g_globalScalingFactor;
 extern double g_kernelConstant;
 
 

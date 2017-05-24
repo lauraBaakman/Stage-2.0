@@ -30,3 +30,26 @@ void CuAssertMatrixEquals_LineMsg(CuTest* tc,
 
 
 }
+
+void CuAssertVectorEquals_LineMsg(CuTest *tc, const char *file, int line, const char *message, gsl_vector *expected,
+                                  gsl_vector *actual, double delta) {
+    char buf[STRING_MAX];
+    if (expected->size != actual->size){
+        sprintf(buf, "expected (%lu) has a different size than actual (%lu)",
+                expected->size, actual->size);
+        CuFail_Line(tc, file, line, message, buf);
+        return;
+    }
+
+    double expectedElement, actualElement;
+
+    for(size_t i = 0; i < actual->size; i++){
+        expectedElement = gsl_vector_get(expected, i);
+        actualElement = gsl_vector_get(actual, i);
+
+        if ((fabs(expectedElement - actualElement) > delta) || (isnan(actualElement))){
+            sprintf(buf, "expected <%f> at (%lu) but was <%f>", expectedElement, i, actualElement);
+            CuFail_Line(tc, file, line, message, buf);
+        }
+    }
+}
