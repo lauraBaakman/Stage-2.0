@@ -48,7 +48,6 @@ ShapeAdaptiveKernel selectShapeAdaptiveKernel(KernelType type);
 
 double computeScalingFactor(double generalBandwidth, gsl_matrix* covarianceMatrix);
 
-extern Kernel standardGaussianKernel;
 extern Kernel epanechnikovKernel;
 extern Kernel testKernel;
 extern Kernel shapeAdaptiveGaussianKernel;

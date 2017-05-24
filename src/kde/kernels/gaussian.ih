@@ -1,0 +1,13 @@
+#ifndef KERNELS_GAUSSIAN_IH_H
+#define KERNELS_GAUSSIAN_IH_H
+
+#include "gaussian.h"
+
+/* Symmetric */
+double standardGaussianConstant(int patternDimensionality);
+double standardGaussianPDF(double *pattern, int patternDimensionality, double constant);
+
+/* Shape Adaptive */
+
+
+#endif //KERNELS_GAUSSIAN_IH_H

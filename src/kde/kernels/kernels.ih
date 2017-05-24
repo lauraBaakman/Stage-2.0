@@ -3,6 +3,8 @@
 
 #include "kernels.h"
 
+#include "gaussian.h"
+
 #include <printf.h>
 #include <math.h>
 
@@ -12,9 +14,6 @@
 #include <gsl/gsl_linalg.h>
 
 /* Symmetric Kernels */
-
-double standardGaussianConstant(int patternDimensionality);
-double standardGaussianPDF(double *pattern, int patternDimensionality, double constant);
 
 double epanechnikovConstant(int dimensionality);
 double epanechnikovPDF(double *data, int dimensionality, double constant);

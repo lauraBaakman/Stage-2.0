@@ -7,6 +7,7 @@ set(SOURCE_FILES
         kdeModule.c kdeModule.h
         kernels/kernels.c kernels/kernels.h
         kernels/kernelsModule.c kernels/kernelsModule.h
+        kernels/gaussian.c kernels/gaussian.h kernels/gaussian.ih
         parzen.c parzen.h parzen.ih
         sambe.c sambe.h sambe.ih
         utils.c utils.h utils.ih
