@@ -134,6 +134,7 @@ class TestEpanechnikov_Python(EpanechnikovImpAbstractTest, TestCase):
         self.assertAlmostEqual(actual, expected)
 
 
+@skip("Not yet implemented")
 class TestEpanechnikov_C(EpanechnikovImpAbstractTest, TestCase):
     def setUp(self):
         super().setUp()
