@@ -230,15 +230,23 @@ class ShapeAdaptiveGaussianImpAbstractTest(object):
         self.assertAlmostEqual(actual, expected)
 
     def test_evaluate_8(self):
-        # Single pattern, local bandwidth \neq 1
-        H = np.array([[2, -1, 0],
-                      [-1, 2, -1],
-                      [0, -1, 2]])
-        bandwidth = 0.5
-        x = np.array([0.03, 0.02, 0.01])
-        expected = 0.126114075683830
+        # Multiple patterns, local bandwidth \neq 1
+        H = np.array([[+0.832940370216, -0.416470185108],
+                      [-0.416470185108, +0.832940370216]])
+        bandwidth = np.array([0.840896194314, 1.18920742746, 1.18920742746, 0.840896194314])
+        x = np.array([[0.0, 0.0],
+                      [0.0, 1.0],
+                      [1.0, 0.0],
+                      [1.0, 1.0]])
+        expected = np.array([
+            0.4325599148816852,
+            0.06969541947584654,
+            0.06969541947584654,
+            0.00012445121880528157
+        ])
         actual = self._kernel_class(H).evaluate(x, local_bandwidths=bandwidth)
-        self.assertAlmostEqual(actual, expected)
+        np.testing.assert_array_almost_equal(actual, expected)
+
 
 class ShapeAdaptiveGaussian_Python(ShapeAdaptiveGaussianImpAbstractTest, TestCase):
 
