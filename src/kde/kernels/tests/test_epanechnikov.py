@@ -27,7 +27,7 @@ class TestEpanechnikov(TestCase):
 class EpanechnikovImpAbstractTest(object):
 
     def test_evaluate_1D_1(self):
-        x = np.array([5])
+        x = np.array([5.0])
         actual = self._kernel_class().evaluate(x)
         expected = np.array([0])
         np.testing.assert_array_almost_equal(actual, expected)
