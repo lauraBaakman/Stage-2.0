@@ -25,7 +25,7 @@ typedef struct SymmetricKernel {
 
 typedef struct ShapeAdaptiveKernel {
     ShapeAdaptiveKernelConstantFunction  factorFunction;
-    ShapeAdaptiveKernelDensityFunction  densityFunction;
+    ShapeAdaptiveKernelDensityFunction  density;
     ShapeAdaptiveKernelAllocFunction allocate;
     ShapeAdaptiveKernelConstantsFunction computeConstants;
     KernelFreeFunction free;

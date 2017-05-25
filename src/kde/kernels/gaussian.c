@@ -11,7 +11,7 @@ Kernel standardGaussianKernel = {
 
 Kernel shapeAdaptiveGaussianKernel = {
         .isShapeAdaptive = true,
-        .kernel.shapeAdaptiveKernel.densityFunction = shapeAdaptiveGaussianPDF,
+        .kernel.shapeAdaptiveKernel.density = shapeAdaptiveGaussianPDF,
         .kernel.shapeAdaptiveKernel.factorFunction = shapeAdaptiveGaussianConstants,
         .kernel.shapeAdaptiveKernel.allocate = sa_allocate,
         .kernel.shapeAdaptiveKernel.free = sa_free,
