@@ -49,7 +49,7 @@ void normal_free() {
 
 double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
                                 double globalScalingFactor, gsl_matrix * globalInverse, double gaussianConstant,
-                                gsl_vector* scaledPattern){
+                                gsl_vector* scaledPattern, gsl_matrix* globalBandwidthMatrix){
 
     size_t dimension = globalInverse->size1;
 

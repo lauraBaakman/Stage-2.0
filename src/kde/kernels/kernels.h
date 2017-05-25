@@ -11,7 +11,7 @@ typedef double (*SymmetricKernelDensityFunction)(gsl_vector* pattern);
 
 typedef double (*ShapeAdaptiveKernelDensityFunction)(gsl_vector* pattern, double localBandwidth,
                                                      double globalScalingFactor, gsl_matrix * globalInverse, double gaussianConstant,
-                                                     gsl_vector* scaledPattern);
+                                                     gsl_vector* scaledPattern, gsl_matrix* globalBandwidthMatrix);
 typedef void (*ShapeAdaptiveKernelConstantFunction)(gsl_matrix* globalBandwidthMatrix,
                                                            gsl_matrix* outGlobalInverse, double* outGlobalScalingFactor, double* outPDFConstant);
 
