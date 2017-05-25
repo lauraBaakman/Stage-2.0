@@ -80,11 +80,6 @@ static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
     /* Compute constants */
     size_t dimension = (size_t) pattern.dimensionality;
     ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(SHAPE_ADAPTIVE_GAUSSIAN);
-    gsl_matrix* globalInverse = gsl_matrix_alloc(dimension, dimension);
-    double globalScalingFactor, pdfConstant;
-
-    /* Allocate Memory for the kernel evaluation */
-    gsl_vector* scaledPatternMemory = gsl_vector_calloc(dimension);
 
     kernel.allocate(dimension);
     kernel.computeConstants(globalBandwidthMatrix);
@@ -95,8 +90,6 @@ static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
 
     /* Free memory */
     kernel.free();
-    gsl_matrix_free(globalInverse);
-    gsl_vector_free(scaledPatternMemory);
     gsl_matrix_free(globalBandwidthMatrix);
 
     /* Create return object */
