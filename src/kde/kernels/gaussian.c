@@ -16,7 +16,9 @@ Kernel shapeAdaptiveGaussianKernel = {
 };
 
 static double g_standardGaussianConstant;
+
 static gsl_matrix* g_sa_globalInverse;
+static double g_sa_globalScalingFactor;
 
 /* Normal Kernel */
 
@@ -60,7 +62,7 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
     gsl_vector_scale(scaledPattern, 1.0 / localBandwidth);
 
     // Compute local scaling factor
-    double localScalingFactor = computeLocalScalingFactor(globalScalingFactor, localBandwidth, dimension);
+    double localScalingFactor = computeLocalScalingFactor(g_sa_globalScalingFactor, localBandwidth, dimension);
 
     //Determine the result of the kernel
     double density = localScalingFactor * normal_pdf(scaledPattern);
@@ -120,11 +122,16 @@ void sa_compute_constants(gsl_matrix *globalBandwidthMatrix) {
     //Compute global inverse
     gsl_linalg_LU_invert(LUDecompH, permutation, g_sa_globalInverse);
 
+    //Compute global scaling factor
+    double determinant = gsl_linalg_LU_det(LUDecompH, signum);
+    g_sa_globalScalingFactor = 1.0 / determinant;
+
     //Free Memory
     gsl_matrix_free(LUDecompH);
 }
 
 void sa_free() {
     g_standardGaussianConstant = 0.0;
+    g_sa_globalScalingFactor = 0.0;
     gsl_matrix_free(g_sa_globalInverse);
 }
