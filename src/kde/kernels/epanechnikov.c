@@ -5,6 +5,7 @@ Kernel epanechnikovKernel = {
         .isShapeAdaptive = false,
         .kernel.symmetricKernel.densityFunction = normal_pdf,
         .kernel.symmetricKernel.factorFunction = epanechnikovConstant,
+        .kernel.symmetricKernel.free = normal_free,
 };
 
 static double g_normal_constant;

@@ -5,6 +5,7 @@ Kernel standardGaussianKernel = {
         .isShapeAdaptive = false,
         .kernel.symmetricKernel.densityFunction = normal_pdf,
         .kernel.symmetricKernel.factorFunction = normal_constant_compute,
+        .kernel.symmetricKernel.free = normal_free,
 };
 
 Kernel shapeAdaptiveGaussianKernel = {
