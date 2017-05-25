@@ -1,22 +1,24 @@
 #ifndef KERNELS_KERNELS_H
 #define KERNELS_KERNELS_H
 
-#include <gsl/gsl_matrix.h>
 #include "../utils/gsl_utils.h"
 #include <stdbool.h>
 
-typedef double (*SymmetricKernelDensityFunction)(double* data, int dimensionality, double factor);
-typedef double (*SymmetricKernelConstantFunction)(int dimensionality);
+typedef void (*KernelFreeFunction)(void);
+
+typedef void (*SymmetricKernelPrepareFunction)(size_t dimensionality);
+typedef double (*SymmetricKernelDensityFunction)(gsl_vector* pattern);
 
 typedef double (*ShapeAdaptiveKernelDensityFunction)(gsl_vector* pattern, double localBandwidth,
                                                      double globalScalingFactor, gsl_matrix * globalInverse, double gaussianConstant,
                                                      gsl_vector* scaledPattern);
-typedef gsl_matrix* (*ShapeAdaptiveKernelConstantFunction)(gsl_matrix* globalBandwidthMatrix,
+typedef void (*ShapeAdaptiveKernelConstantFunction)(gsl_matrix* globalBandwidthMatrix,
                                                            gsl_matrix* outGlobalInverse, double* outGlobalScalingFactor, double* outPDFConstant);
 
 typedef struct SymmetricKernel {
-    SymmetricKernelConstantFunction factorFunction;
-    SymmetricKernelDensityFunction densityFunction;
+    SymmetricKernelDensityFunction density;
+    SymmetricKernelPrepareFunction prepare;
+    KernelFreeFunction free;
 } SymmetricKernel;
 
 typedef struct ShapeAdaptiveKernel {
@@ -48,9 +50,6 @@ ShapeAdaptiveKernel selectShapeAdaptiveKernel(KernelType type);
 
 double computeScalingFactor(double generalBandwidth, gsl_matrix* covarianceMatrix);
 
-extern Kernel standardGaussianKernel;
-extern Kernel epanechnikovKernel;
-extern Kernel testKernel;
-extern Kernel shapeAdaptiveGaussianKernel;
+double computeLocalScalingFactor(double globalScalingFactor, double localBandwidth, size_t dimension);
 
 #endif //KERNELS_KERNELS_H

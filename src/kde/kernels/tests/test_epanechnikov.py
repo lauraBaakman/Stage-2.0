@@ -13,7 +13,7 @@ class TestEpanechnikov(TestCase):
         np.testing.assert_array_almost_equal(actual, expected)
 
     def test_evaluate_alternative_implementation(self):
-        x = np.array([5])
+        x = np.array([5.0])
         actual = Epanechnikov(implementation=_Epanechnikov_Python).evaluate(x)
         expected = np.array([0])
         np.testing.assert_array_almost_equal(actual, expected)
@@ -97,6 +97,7 @@ class EpanechnikovImpAbstractTest(object):
         actual = self._kernel_class().evaluate(x)
         expected = np.array([0.726488328774824])
         np.testing.assert_array_almost_equal(actual, expected)
+
 
 class TestEpanechnikov_Python(EpanechnikovImpAbstractTest, TestCase):
     def setUp(self):

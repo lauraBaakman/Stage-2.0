@@ -9,6 +9,6 @@
 #include "kernels/kernels.h"
 
 double parzen(double *pattern, Array *dataPoints, double windowWidth, double parzenFactor,
-              SymmetricKernelDensityFunction kernel, double kernelConstant);
+              SymmetricKernelDensityFunction kernel);
 
 #endif //PARZEN_H
