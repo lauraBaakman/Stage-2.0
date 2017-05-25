@@ -8,7 +8,7 @@
 #include "epanechnikov.h"
 
 /* Symmetric */
-double epanechnikovConstant(int dimensionality);
+double unitSphereVolume(size_t dimensionality);
 
 static double normal_pdf(gsl_vector* pattern);
 static void normal_prepare(size_t dimension);

@@ -11,7 +11,7 @@ Kernel epanechnikovKernel = {
 static double g_normal_constant;
 
 void normal_prepare(size_t dimension) {
-    g_normal_constant = epanechnikovConstant(dimension);
+    g_normal_constant = unitSphereVolume(dimension);
 }
 
 double normal_pdf(gsl_vector *pattern) {
@@ -27,7 +27,7 @@ void normal_free() {
     g_normal_constant = 0.0;
 }
 
-double epanechnikovConstant(int dimensionality) {
+double unitSphereVolume(size_t dimensionality) {
     double numerator = pow(M_PI, dimensionality / 2.0);
     double denominator = gamma(dimensionality / 2.0 + 1);
     return 2 * (numerator / denominator);
