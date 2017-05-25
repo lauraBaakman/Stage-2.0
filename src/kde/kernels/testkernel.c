@@ -6,16 +6,23 @@ Kernel testKernel = {
         .kernel.symmetricKernel.factorFunction = testKernelConstant,
 };
 
-static double normal_pdf(gsl_vector* pattern){
+static double g_normal_constant;
 
+static double normal_pdf(gsl_vector* pattern){
+    double density = 0;
+    for ( size_t i = 0; i < pattern->size; i++ ) {
+        density += pattern->data[i];
+    }
+    double mean = density * g_normal_constant;
+    return fabs(mean);
 }
 
 static void normal_prepare(size_t dimension){
-
+    g_normal_constant = testKernelConstant(dimension);
 }
 
 static void normal_free(){
-
+    g_normal_constant = 0.0;
 }
 
 double testKernelConstant(int patternDimensionality) {
