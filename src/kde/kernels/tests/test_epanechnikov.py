@@ -135,7 +135,6 @@ class TestEpanechnikov_Python(EpanechnikovImpAbstractTest, TestCase):
         self.assertAlmostEqual(actual, expected)
 
 
-@skip('C implementation does not have unit variance')
 class TestEpanechnikov_C(EpanechnikovImpAbstractTest, TestCase):
     def setUp(self):
         super().setUp()

@@ -4,11 +4,14 @@
 #include <math.h>
 
 #include <gsl/gsl_blas.h>
+#include <gsl/gsl_vector_double.h>
 
 #include "epanechnikov.h"
 
 /* Symmetric */
-double unitSphereVolume(size_t dimensionality);
+double unitSphereVolume(size_t dimension);
+double normal_constant(size_t dimension);
+double normal_unit_variance_constant(size_t dimension);
 
 static double normal_pdf(gsl_vector* pattern);
 static void normal_prepare(size_t dimension);
