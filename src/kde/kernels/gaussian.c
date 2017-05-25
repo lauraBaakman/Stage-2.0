@@ -1,4 +1,5 @@
 #include <gsl/gsl_vector_double.h>
+#include <gsl/gsl_matrix.h>
 #include "gaussian.ih"
 
 Kernel standardGaussianKernel = {
@@ -14,9 +15,9 @@ Kernel shapeAdaptiveGaussianKernel = {
         .kernel.shapeAdaptiveKernel.factorFunction = shapeAdaptiveGaussianConstants,
 };
 
-/* Normal Kernel */
-
 static double g_standardGaussianConstant;
+
+/* Normal Kernel */
 
 double computeStandardGaussianConstant(int patternDimensionality){
     return pow(2 * M_PI, -1 * patternDimensionality * 0.5);
@@ -67,7 +68,7 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
     double localScalingFactor = computeLocalScalingFactor(globalScalingFactor, localBandwidth, dimension);
 
     //Determine the result of the kernel
-    double density = localScalingFactor * standardGaussianPDF(scaledPattern, gaussianConstant);
+    double density = localScalingFactor * standardGaussianPDF(scaledPattern, g_standardGaussianConstant);
 
     sa_free();
 
@@ -107,9 +108,10 @@ void sa_allocate(size_t dimension) {
 }
 
 void sa_compute_constants(gsl_matrix *globalBandwidthMatrix) {
-
+    size_t dimension = globalBandwidthMatrix->size1;
+    g_standardGaussianConstant = computeStandardGaussianConstant(dimension);
 }
 
 void sa_free() {
-
+    g_standardGaussianConstant = 0.0;
 }
