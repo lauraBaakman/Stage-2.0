@@ -88,6 +88,8 @@ static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
     /* Allocate Memory for the kernel evaluation */
     gsl_vector* scaledPatternMemory = gsl_vector_calloc(dimension);
 
+    kernel.allocate(dimension);
+
     /* Do computations */
     gsl_vector_view pattern_view = arrayGetGSLVectorView(&pattern);
     double density = kernel.densityFunction(&pattern_view.vector, localBandwidth,
@@ -95,6 +97,7 @@ static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
                                             scaledPatternMemory, globalBandwidthMatrix);
 
     /* Free memory */
+    kernel.free();
     gsl_matrix_free(globalInverse);
     gsl_vector_free(scaledPatternMemory);
     gsl_matrix_free(globalBandwidthMatrix);
@@ -139,6 +142,8 @@ static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
 
     gsl_vector_view pattern_view;
 
+    kernel.allocate(dimension);
+
     for( int j = 0; j < patterns.length; j++, pattern += patterns.rowStride) {
         pattern_view = gsl_vector_view_array(pattern, (size_t) patterns.dimensionality);
 
@@ -153,6 +158,7 @@ static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
     }
 
     /* Free memory */
+    kernel.free();
     gsl_matrix_free(globalInverse);
     gsl_matrix_free(globalBandwidthMatrix);
     gsl_vector_free(scaledPatternMemory);
