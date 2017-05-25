@@ -6,8 +6,10 @@
 
 typedef void (*KernelFreeFunction)(void);
 
+typedef void (*SymmetricKernelPrepareFunction)(size_t dimensionality);
 typedef double (*SymmetricKernelDensityFunction)(gsl_vector* pattern);
 typedef double (*SymmetricKernelConstantFunction)(int dimensionality);
+
 
 typedef double (*ShapeAdaptiveKernelDensityFunction)(gsl_vector* pattern, double localBandwidth,
                                                      double globalScalingFactor, gsl_matrix * globalInverse, double gaussianConstant,
@@ -18,6 +20,7 @@ typedef void (*ShapeAdaptiveKernelConstantFunction)(gsl_matrix* globalBandwidthM
 typedef struct SymmetricKernel {
     SymmetricKernelConstantFunction factorFunction;
     SymmetricKernelDensityFunction densityFunction;
+    SymmetricKernelPrepareFunction prepare;
     KernelFreeFunction free;
 } SymmetricKernel;
 

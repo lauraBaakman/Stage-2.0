@@ -6,6 +6,7 @@ Kernel testKernel = {
         .kernel.symmetricKernel.densityFunction = normal_pdf,
         .kernel.symmetricKernel.factorFunction = testKernelConstant,
         .kernel.symmetricKernel.free = normal_free,
+        .kernel.symmetricKernel.prepare = normal_prepare,
 };
 
 static double g_normal_constant;
