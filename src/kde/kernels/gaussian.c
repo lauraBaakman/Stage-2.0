@@ -20,6 +20,7 @@ static double g_standardGaussianConstant;
 static gsl_matrix* g_sa_globalInverse;
 static double g_sa_globalScalingFactor;
 static gsl_matrix* g_sa_LUDecompositionH;
+static gsl_vector* g_sa_scaledPattern;
 
 /* Normal Kernel */
 
@@ -55,18 +56,20 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
     sa_allocate(dimension);
     sa_compute_constants(globalBandwidthMatrix);
 
+    gsl_vector_set_zero(g_sa_scaledPattern);
+
     // Multiply the transpose of the global inverse with the pattern
     // Since the bandwidth matrix is always symmetric we don't need to compute the transpose.
-    gsl_blas_dsymv(CblasLower, 1.0, g_sa_globalInverse, pattern, 1.0, scaledPattern);
+    gsl_blas_dsymv(CblasLower, 1.0, g_sa_globalInverse, pattern, 1.0, g_sa_scaledPattern);
 
     //Apply the local inverse
-    gsl_vector_scale(scaledPattern, 1.0 / localBandwidth);
+    gsl_vector_scale(g_sa_scaledPattern, 1.0 / localBandwidth);
 
     // Compute local scaling factor
     double localScalingFactor = computeLocalScalingFactor(g_sa_globalScalingFactor, localBandwidth, dimension);
 
     //Determine the result of the kernel
-    double density = localScalingFactor * normal_pdf(scaledPattern);
+    double density = localScalingFactor * normal_pdf(g_sa_scaledPattern);
 
     sa_free();
 
@@ -104,6 +107,7 @@ void shapeAdaptiveGaussianConstants(gsl_matrix *globalBandwidthMatrix, gsl_matri
 void sa_allocate(size_t dimension) {
     g_sa_globalInverse = gsl_matrix_alloc(dimension, dimension);
     g_sa_LUDecompositionH = gsl_matrix_alloc(dimension, dimension);
+    g_sa_scaledPattern = gsl_vector_alloc(dimension);
 }
 
 void sa_compute_constants(gsl_matrix *globalBandwidthMatrix) {
@@ -134,4 +138,5 @@ void sa_free() {
     g_sa_globalScalingFactor = 0.0;
     gsl_matrix_free(g_sa_globalInverse);
     gsl_matrix_free(g_sa_LUDecompositionH);
+    gsl_vector_free(g_sa_scaledPattern);
 }
