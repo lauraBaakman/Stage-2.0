@@ -16,6 +16,7 @@ Kernel shapeAdaptiveGaussianKernel = {
 };
 
 static double g_standardGaussianConstant;
+static gsl_matrix* g_sa_globalInverse;
 
 /* Normal Kernel */
 
@@ -52,14 +53,14 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
                                 double globalScalingFactor, gsl_matrix * globalInverse, double gaussianConstant,
                                 gsl_vector* scaledPattern, gsl_matrix* globalBandwidthMatrix){
 
-    size_t dimension = globalInverse->size1;
+    size_t dimension = pattern->size;
 
     sa_allocate(dimension);
     sa_compute_constants(globalBandwidthMatrix);
 
     // Multiply the transpose of the global inverse with the pattern
     // Since the bandwidth matrix is always symmetric we don't need to compute the transpose.
-    gsl_blas_dsymv(CblasLower, 1.0, globalInverse, pattern, 1.0, scaledPattern);
+    gsl_blas_dsymv(CblasLower, 1.0, g_sa_globalInverse, pattern, 1.0, scaledPattern);
 
     //Apply the local inverse
     gsl_vector_scale(scaledPattern, 1.0 / localBandwidth);
@@ -104,14 +105,32 @@ void shapeAdaptiveGaussianConstants(gsl_matrix *globalBandwidthMatrix, gsl_matri
 }
 
 void sa_allocate(size_t dimension) {
-
+    g_sa_globalInverse = gsl_matrix_alloc(dimension, dimension);
 }
 
 void sa_compute_constants(gsl_matrix *globalBandwidthMatrix) {
     size_t dimension = globalBandwidthMatrix->size1;
+
+    //Compute the Standard Gaussian Constant
     g_standardGaussianConstant = computeStandardGaussianConstant(dimension);
+
+    //Allocate memory for the LU decomposition
+    gsl_matrix* LUDecompH = gsl_matrix_alloc(dimension, dimension);
+    gsl_matrix_memcpy(LUDecompH, globalBandwidthMatrix);
+
+    //Compute LU decompostion
+    gsl_permutation* permutation = gsl_permutation_calloc(dimension);
+    int signum = 0;
+    gsl_linalg_LU_decomp(LUDecompH, permutation, &signum);
+
+    //Compute global inverse
+    gsl_linalg_LU_invert(LUDecompH, permutation, g_sa_globalInverse);
+
+    //Free Memory
+    gsl_matrix_free(LUDecompH);
 }
 
 void sa_free() {
     g_standardGaussianConstant = 0.0;
+    gsl_matrix_free(g_sa_globalInverse);
 }
