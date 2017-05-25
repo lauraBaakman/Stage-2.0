@@ -53,6 +53,9 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
 
     size_t dimension = globalInverse->size1;
 
+    sa_allocate(dimension);
+    sa_compute_constants(globalBandwidthMatrix);
+
     // Multiply the transpose of the global inverse with the pattern
     // Since the bandwidth matrix is always symmetric we don't need to compute the transpose.
     gsl_blas_dsymv(CblasLower, 1.0, globalInverse, pattern, 1.0, scaledPattern);
@@ -65,6 +68,8 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
 
     //Determine the result of the kernel
     double density = localScalingFactor * standardGaussianPDF(scaledPattern, gaussianConstant);
+
+    sa_free();
 
     return density;
 }
