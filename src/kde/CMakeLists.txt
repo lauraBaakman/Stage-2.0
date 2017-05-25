@@ -5,7 +5,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(SOURCE_FILES
         kdeModule.c kdeModule.h
-        kernels/kernels.c kernels/kernels.h
+        kernels/kernels.c kernels/kernels.h kernels/kernels.ih
         kernels/kernelsModule.c kernels/kernelsModule.h
         kernels/gaussian.c kernels/gaussian.h kernels/gaussian.ih
         kernels/epanechnikov.c kernels/epanechnikov.h kernels/epanechnikov.ih
