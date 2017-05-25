@@ -89,6 +89,7 @@ static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
     gsl_vector* scaledPatternMemory = gsl_vector_calloc(dimension);
 
     kernel.allocate(dimension);
+    kernel.computeConstants(globalBandwidthMatrix);
 
     /* Do computations */
     gsl_vector_view pattern_view = arrayGetGSLVectorView(&pattern);
@@ -143,6 +144,7 @@ static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
     gsl_vector_view pattern_view;
 
     kernel.allocate(dimension);
+    kernel.computeConstants(globalBandwidthMatrix);
 
     for( int j = 0; j < patterns.length; j++, pattern += patterns.rowStride) {
         pattern_view = gsl_vector_view_array(pattern, (size_t) patterns.dimensionality);

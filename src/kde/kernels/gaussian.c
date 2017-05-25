@@ -15,6 +15,7 @@ Kernel shapeAdaptiveGaussianKernel = {
         .kernel.shapeAdaptiveKernel.factorFunction = shapeAdaptiveGaussianConstants,
         .kernel.shapeAdaptiveKernel.allocate = sa_allocate,
         .kernel.shapeAdaptiveKernel.free = sa_free,
+        .kernel.shapeAdaptiveKernel.computeConstants = sa_compute_constants,
 };
 
 static double g_standardGaussianConstant;
@@ -54,8 +55,6 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
                                 gsl_vector* scaledPattern, gsl_matrix* globalBandwidthMatrix){
 
     size_t dimension = pattern->size;
-
-    sa_compute_constants(globalBandwidthMatrix);
 
     gsl_vector_set_zero(g_sa_scaledPattern);
 
