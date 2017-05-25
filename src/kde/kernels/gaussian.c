@@ -11,7 +11,7 @@ Kernel standardGaussianKernel = {
 
 Kernel shapeAdaptiveGaussianKernel = {
         .isShapeAdaptive = true,
-        .kernel.shapeAdaptiveKernel.density = shapeAdaptiveGaussianPDF,
+        .kernel.shapeAdaptiveKernel.density = sa_pdf,
         .kernel.shapeAdaptiveKernel.allocate = sa_allocate,
         .kernel.shapeAdaptiveKernel.free = sa_free,
         .kernel.shapeAdaptiveKernel.computeConstants = sa_compute_constants,
@@ -49,7 +49,7 @@ void normal_free() {
 
 /* Shape Adaptive Kernel */
 
-double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth){
+double sa_pdf(gsl_vector *pattern, double localBandwidth){
 
     size_t dimension = pattern->size;
 
