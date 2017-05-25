@@ -13,6 +13,10 @@
 double standardGaussianConstant(int patternDimensionality);
 double standardGaussianPDF(gsl_vector* pattern, double constant);
 
+static double normal_pdf(gsl_vector* pattern);
+static void normal_prepare(size_t dimension);
+static void normal_free();
+
 /* Shape Adaptive */
 void shapeAdaptiveGaussianConstants(gsl_matrix* globalBandwidthMatrix, gsl_matrix *outGlobalInverse,
                                     double *outGlobalScalingFactor, double *outPDFConstant);

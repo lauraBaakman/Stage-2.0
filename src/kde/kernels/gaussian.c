@@ -14,6 +14,8 @@ Kernel shapeAdaptiveGaussianKernel = {
 
 /* Normal Kernel */
 
+static double g_normal_constant;
+
 double standardGaussianConstant(int patternDimensionality){
     return pow(2 * M_PI, -1 * patternDimensionality * 0.5);
 }
@@ -22,6 +24,20 @@ double standardGaussianPDF(gsl_vector* pattern, double constant){
     double dotProduct = 0.0;
     gsl_blas_ddot(pattern,  pattern, &dotProduct);
     return constant * exp(-0.5 * dotProduct);
+}
+
+void normal_prepare(size_t dimension) {
+    g_normal_constant = standardGaussianConstant(dimension);
+}
+
+double normal_pdf(gsl_vector *pattern) {
+    double dotProduct = 0.0;
+    gsl_blas_ddot(pattern,  pattern, &dotProduct);
+    return g_normal_constant * exp(-0.5 * dotProduct);
+}
+
+void normal_free() {
+    g_normal_constant = 0.0;
 }
 
 /* Shape Adaptive Kernel */
