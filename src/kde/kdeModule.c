@@ -39,7 +39,7 @@ static PyObject * kdeParzen(PyObject *self, PyObject *args){
     {
         densities.data[j] = parzen(current_pattern, &dataPoints,
                                    inWindowWidth, parzenFactor,
-                                   kernel.densityFunction, 0.0);
+                                   kernel.densityFunction);
     }
     kernel.free();
 
