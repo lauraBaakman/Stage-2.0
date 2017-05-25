@@ -107,11 +107,11 @@ static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
     gsl_matrix_view patterns = pyObjectToGSLMatrixView(inPatterns, NPY_ARRAY_IN_ARRAY);
     gsl_matrix* globalBandwidthMatrix = pyObjectToGSLMatrix(inGlobalBandwidthMatrix, NPY_ARRAY_IN_ARRAY);
     gsl_vector_view localBandwidths = pyObjectToGSLVectorView(inLocalBandwidths, NPY_ARRAY_IN_ARRAY);
-    Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
+    gsl_vector_view densities = pyObjectToGSLVectorView(outDensities, NPY_ARRAY_OUT_ARRAY);
 
     ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(SHAPE_ADAPTIVE_GAUSSIAN);
 
-    double localBandwidth;
+    double localBandwidth, density;
 
     gsl_vector_view pattern;
 
@@ -121,8 +121,8 @@ static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
     for(size_t j = 0; j < patterns.matrix.size1; j++) {
         pattern = gsl_matrix_row(&patterns.matrix, j);
         localBandwidth = gsl_vector_get(&localBandwidths.vector, j);
-
-        densities.data[j] = kernel.density(&pattern.vector, localBandwidth);
+        density = kernel.density(&pattern.vector, localBandwidth);
+        gsl_vector_set(&densities.vector, j, density);
     }
 
     kernel.free();
