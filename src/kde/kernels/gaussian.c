@@ -24,12 +24,6 @@ double computeStandardGaussianConstant(size_t dimension){
     return pow(2 * M_PI, -1 * (double) dimension * 0.5);
 }
 
-double standardGaussianPDF(gsl_vector* pattern, double constant){
-    double dotProduct = 0.0;
-    gsl_blas_ddot(pattern,  pattern, &dotProduct);
-    return constant * exp(-0.5 * dotProduct);
-}
-
 void normal_prepare(size_t dimension) {
     g_standardGaussianConstant = computeStandardGaussianConstant(dimension);
 }
@@ -69,7 +63,7 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
     double localScalingFactor = computeLocalScalingFactor(globalScalingFactor, localBandwidth, dimension);
 
     //Determine the result of the kernel
-    double density = localScalingFactor * standardGaussianPDF(scaledPattern, g_standardGaussianConstant);
+    double density = localScalingFactor * normal_pdf(scaledPattern);
 
     sa_free();
 
