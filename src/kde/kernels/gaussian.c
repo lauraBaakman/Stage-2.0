@@ -20,8 +20,8 @@ static gsl_matrix* g_sa_globalInverse;
 
 /* Normal Kernel */
 
-double computeStandardGaussianConstant(int patternDimensionality){
-    return pow(2 * M_PI, -1 * patternDimensionality * 0.5);
+double computeStandardGaussianConstant(size_t dimension){
+    return pow(2 * M_PI, -1 * (double) dimension * 0.5);
 }
 
 double standardGaussianPDF(gsl_vector* pattern, double constant){

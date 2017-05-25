@@ -10,7 +10,7 @@
 #include "gaussian.h"
 
 /* Symmetric */
-double computeStandardGaussianConstant(int patternDimensionality);
+double computeStandardGaussianConstant(size_t dimension);
 double standardGaussianPDF(gsl_vector* pattern, double constant);
 
 static double normal_pdf(gsl_vector* pattern);
