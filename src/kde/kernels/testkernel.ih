@@ -1,4 +1,15 @@
 #ifndef KERNELS_TESTKERNEL_IH_H
 #define KERNELS_TESTKERNEL_IH_H
 
+#include "testkernel.h"
+#include <gsl/gsl_vector.h>
+#include <math.h>
+
+static double normal_pdf(gsl_vector* pattern);
+static void normal_prepare(size_t dimension);
+static void normal_free();
+
+double testKernelConstant(int patternDimensionality);
+double testKernelPDF(gsl_vector* pattern, double constant);
+
 #endif //KERNELS_TESTKERNEL_IH_H
