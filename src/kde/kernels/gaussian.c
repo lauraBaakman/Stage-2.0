@@ -40,8 +40,6 @@ double normal_pdf(gsl_vector *pattern) {
 
     double density = g_normal_constant * exp(-0.5 * dotProduct);
 
-    normal_free();
-
     return  density;
 }
 

@@ -19,8 +19,6 @@ static double normal_pdf(gsl_vector* pattern){
     }
     density = fabs(density * g_normal_constant);
 
-    normal_free();
-
     return density;
 }
 

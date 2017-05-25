@@ -22,9 +22,6 @@ double normal_pdf(gsl_vector *pattern) {
     if (dotProduct >= 1) return 0;
     double numerator = (double) pattern->size + 2;
     double density = (numerator / g_normal_constant) * (1 - pattern->size);
-
-    normal_free();
-
     return density;
 }
 

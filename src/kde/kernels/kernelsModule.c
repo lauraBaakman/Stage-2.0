@@ -25,6 +25,7 @@ PyObject *multi_pattern_symmetric(PyObject *args, KernelType kernelType) {
         density = kernel.densityFunction(&current_pattern.vector);
         gsl_vector_set(&densities.vector, j, density);
     }
+    kernel.free();
 
     /* Create return object */
     Py_INCREF(Py_None);
@@ -46,6 +47,7 @@ PyObject *single_pattern_symmetric(PyObject *args, KernelType kernelType) {
 
     double kernelConstant = kernel.factorFunction((int) pattern.vector.size);
     density = kernel.densityFunction(&pattern.vector);
+    kernel.free();
 
     /* Create return object */
     PyObject *returnObject = Py_BuildValue("d", density);

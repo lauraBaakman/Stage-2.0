@@ -41,6 +41,7 @@ static PyObject * kdeParzen(PyObject *self, PyObject *args){
                                    inWindowWidth, parzenFactor,
                                    kernel.densityFunction, kernelConstant);
     }
+    kernel.free();
 
     /* Create return object */
     Py_INCREF(Py_None);
@@ -84,6 +85,7 @@ static PyObject *kde_modified_breiman(PyObject *self, PyObject *args){
                                                         globalBandwidth, &localBandwidths,
                                                         kernelConstant, kernel.densityFunction);
     }
+    kernel.free();
 
     /* Create return object */
     Py_INCREF(Py_None);
