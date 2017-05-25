@@ -9,7 +9,6 @@
 
 /* Symmetric */
 double epanechnikovConstant(int dimensionality);
-double epanechnikovPDF(gsl_vector* pattern, double constant);
 
 static double normal_pdf(gsl_vector* pattern);
 static void normal_prepare(size_t dimension);
