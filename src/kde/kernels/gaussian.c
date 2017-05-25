@@ -3,7 +3,7 @@
 Kernel standardGaussianKernel = {
         .isShapeAdaptive = false,
         .kernel.symmetricKernel.densityFunction = standardGaussianPDF,
-        .kernel.symmetricKernel.factorFunction = standardGaussianConstant,
+        .kernel.symmetricKernel.factorFunction = normal_constant_compute,
 };
 
 Kernel shapeAdaptiveGaussianKernel = {
@@ -16,7 +16,7 @@ Kernel shapeAdaptiveGaussianKernel = {
 
 static double g_normal_constant;
 
-double standardGaussianConstant(int patternDimensionality){
+double normal_constant_compute(int patternDimensionality){
     return pow(2 * M_PI, -1 * patternDimensionality * 0.5);
 }
 
@@ -27,7 +27,7 @@ double standardGaussianPDF(gsl_vector* pattern, double constant){
 }
 
 void normal_prepare(size_t dimension) {
-    g_normal_constant = standardGaussianConstant(dimension);
+    g_normal_constant = normal_constant_compute(dimension);
 }
 
 double normal_pdf(gsl_vector *pattern) {
