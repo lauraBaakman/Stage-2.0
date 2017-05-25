@@ -4,7 +4,6 @@
 Kernel testKernel = {
         .isShapeAdaptive = false,
         .kernel.symmetricKernel.densityFunction = normal_pdf,
-        .kernel.symmetricKernel.factorFunction = testKernelConstant,
         .kernel.symmetricKernel.free = normal_free,
         .kernel.symmetricKernel.prepare = normal_prepare,
 };
@@ -12,8 +11,6 @@ Kernel testKernel = {
 static double g_normal_constant;
 
 static double normal_pdf(gsl_vector* pattern){
-    normal_prepare(pattern->size);
-
     double density = 0;
     for ( size_t i = 0; i < pattern->size; i++ ) {
         density += pattern->data[i];

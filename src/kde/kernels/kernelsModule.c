@@ -18,7 +18,7 @@ PyObject *multi_pattern_symmetric(PyObject *args, KernelType kernelType) {
 
     gsl_vector_view current_pattern;
     double density;
-    double kernelConstant = kernel.factorFunction((int) patterns.matrix.size2);
+    kernel.prepare(patterns.matrix.size2);
 
     for( size_t j = 0; j < patterns.matrix.size1; j++) {
         current_pattern = gsl_matrix_row(&patterns.matrix, j);
@@ -45,7 +45,7 @@ PyObject *single_pattern_symmetric(PyObject *args, KernelType kernelType) {
 
     SymmetricKernel kernel = selectSymmetricKernel(kernelType);
 
-    double kernelConstant = kernel.factorFunction((int) pattern.vector.size);
+    kernel.prepare(pattern.vector.size);
     density = kernel.densityFunction(&pattern.vector);
     kernel.free();
 

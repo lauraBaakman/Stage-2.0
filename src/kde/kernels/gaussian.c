@@ -4,7 +4,6 @@
 Kernel standardGaussianKernel = {
         .isShapeAdaptive = false,
         .kernel.symmetricKernel.densityFunction = normal_pdf,
-        .kernel.symmetricKernel.factorFunction = normal_constant_compute,
         .kernel.symmetricKernel.free = normal_free,
         .kernel.symmetricKernel.prepare = normal_prepare,
 };
@@ -34,8 +33,6 @@ void normal_prepare(size_t dimension) {
 }
 
 double normal_pdf(gsl_vector *pattern) {
-    normal_prepare(pattern->size);
-
     double dotProduct = 0.0;
     gsl_blas_ddot(pattern,  pattern, &dotProduct);
 

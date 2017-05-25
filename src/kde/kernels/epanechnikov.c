@@ -4,7 +4,6 @@
 Kernel epanechnikovKernel = {
         .isShapeAdaptive = false,
         .kernel.symmetricKernel.densityFunction = normal_pdf,
-        .kernel.symmetricKernel.factorFunction = epanechnikovConstant,
         .kernel.symmetricKernel.prepare = normal_prepare,
         .kernel.symmetricKernel.free = normal_free,
 };
@@ -16,8 +15,6 @@ void normal_prepare(size_t dimension) {
 }
 
 double normal_pdf(gsl_vector *pattern) {
-    normal_prepare(pattern->size);
-
     double dotProduct = 0.0;
     gsl_blas_ddot(pattern,  pattern, &dotProduct);
     if (dotProduct >= 1) return 0;
