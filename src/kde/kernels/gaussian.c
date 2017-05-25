@@ -85,7 +85,7 @@ void shapeAdaptiveGaussianConstants(gsl_matrix *globalBandwidthMatrix, gsl_matri
     *outGlobalScalingFactor = 1.0 / determinant;
 
     //Compute the pdfConstant
-    *outPDFConstant = standardGaussianKernel.kernel.symmetricKernel.factorFunction(dimension);
+    *outPDFConstant = normal_constant_compute(dimension);
 
     //Free memory
     gsl_permutation_free(permutation);
