@@ -3,6 +3,10 @@
 
 #include "kernels.h"
 
+#include "gaussian.h"
+#include "epanechnikov.h"
+#include "testkernel.h"
+
 #include <printf.h>
 #include <math.h>
 
@@ -10,30 +14,5 @@
 #include "gsl/gsl_randist.h"
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_linalg.h>
-
-/* Symmetric Kernels */
-
-double standardGaussianConstant(int patternDimensionality);
-double standardGaussianPDF(double *pattern, int patternDimensionality, double constant);
-
-double epanechnikovConstant(int dimensionality);
-double epanechnikovPDF(double *data, int dimensionality, double constant);
-
-double testKernelConstant(int patternDimensionality);
-double testKernelPDF(double *data, int dimensionality, double constant);
-
-/* Shape Adaptive Kernels */
-double computeLocalScalingFactor(double globalScalingFactor, double localBandwidth, size_t dimension);
-
-void shapeAdaptiveGaussianConstants(gsl_matrix* globalBandwidthMatrix, gsl_matrix *outGlobalInverse,
-                                    double *outGlobalScalingFactor, double *outPDFConstant);
-
-double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
-                                double globalScalingFactor, gsl_matrix * globalInverse, double gaussianConstant,
-                                gsl_vector* scaledPattern);
-
-/* Utilities */
-
-double dotProduct(double *a, double *b, int length);
 
 #endif //KERNELS_KERNELS_IH

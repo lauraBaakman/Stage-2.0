@@ -10,19 +10,22 @@ PyObject *multi_pattern_symmetric(PyObject *args, KernelType kernelType) {
 
     if (!PyArg_ParseTuple(args, "OO", &inPatterns, &outDensities)) return NULL;
 
-    Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
-    Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
+    gsl_matrix_view patterns = pyObjectToGSLMatrixView(inPatterns, NPY_ARRAY_IN_ARRAY);
+    gsl_vector_view densities = pyObjectToGSLVectorView(outDensities, NPY_ARRAY_OUT_ARRAY);
 
     /* Do computations */
     SymmetricKernel kernel = selectSymmetricKernel(kernelType);
 
-    double* current_pattern = patterns.data;
-    double kernelConstant = kernel.factorFunction(patterns.dimensionality);
+    gsl_vector_view current_pattern;
+    double density;
+    kernel.prepare(patterns.matrix.size2);
 
-    for( int j = 0; j < patterns.length; j++, current_pattern += patterns.rowStride) {
-        densities.data[j] = kernel.densityFunction(
-                current_pattern, patterns.dimensionality, kernelConstant);
+    for( size_t j = 0; j < patterns.matrix.size1; j++) {
+        current_pattern = gsl_matrix_row(&patterns.matrix, j);
+        density = kernel.density(&current_pattern.vector);
+        gsl_vector_set(&densities.vector, j, density);
     }
+    kernel.free();
 
     /* Create return object */
     Py_INCREF(Py_None);
@@ -31,19 +34,20 @@ PyObject *multi_pattern_symmetric(PyObject *args, KernelType kernelType) {
 
 PyObject *single_pattern_symmetric(PyObject *args, KernelType kernelType) {
     /* Parse input data */
-    PyObject* inPatterns = NULL;
+    PyObject* inPattern = NULL;
 
-    if (!PyArg_ParseTuple(args, "O", &inPatterns)) return NULL;
+    if (!PyArg_ParseTuple(args, "O", &inPattern)) return NULL;
 
-    Array pattern = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
+    gsl_vector_view pattern = pyObjectToGSLVectorView(inPattern, NPY_ARRAY_IN_ARRAY);
 
     /* Do computations */
     double density;
 
     SymmetricKernel kernel = selectSymmetricKernel(kernelType);
 
-    double kernelConstant = kernel.factorFunction(pattern.dimensionality);
-    density = kernel.densityFunction(pattern.data, pattern.dimensionality, kernelConstant);
+    kernel.prepare(pattern.vector.size);
+    density = kernel.density(&pattern.vector);
+    kernel.free();
 
     /* Create return object */
     PyObject *returnObject = Py_BuildValue("d", density);
@@ -229,6 +233,21 @@ gsl_matrix *pyObjectToGSLMatrix(PyObject *pythonObject, int requirements) {
     gsl_matrix* matrix = gsl_matrix_alloc(view.matrix.size1, view.matrix.size2);
     gsl_matrix_memcpy(matrix, &view.matrix);
     return matrix;
+}
+
+gsl_vector_view pyObjectToGSLVectorView(PyObject *pythonObject, int requirements) {
+    PyArrayObject* arrayObject = NULL;
+    arrayObject = (PyArrayObject *)PyArray_FROM_OTF(pythonObject, NPY_DOUBLE, requirements);
+    if (arrayObject == NULL){
+        fprintf(stderr, "Error converting PyObject to PyArrayObject\n");
+        exit(-1);
+    }
+    double* data = (double *)PyArray_DATA(arrayObject);
+
+    size_t length = (size_t) PyArray_DIM(arrayObject, 1);
+
+    Py_XDECREF(arrayObject);
+    return gsl_vector_view_array(data, length);
 }
 
 static PyMethodDef method_table[] = {

@@ -4,6 +4,9 @@ import globalConfigParameters
 
 sources = ['kernelsModule.c',
            'kernels.c',
+           'gaussian.c',
+           'epanechnikov.c',
+           'testkernel.c',
            '../utils.c',
            '../utils/geometricmean.c',
            '../utils/eigenvalues.c',

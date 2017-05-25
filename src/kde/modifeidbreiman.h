@@ -10,6 +10,6 @@
 
 double modifiedBreimanFinalDensity(double *pattern, Array *dataPoints,
                                    double globalBandwidth, Array *localBandwidths,
-                                   double kernelConstant, SymmetricKernelDensityFunction kernel);
+                                   SymmetricKernelDensityFunction kernel);
 
 #endif //KERNELS_MODIFEID_BREIMAN_H
