@@ -17,9 +17,6 @@ static void normal_prepare(size_t dimension);
 static void normal_free();
 
 /* Shape Adaptive */
-void shapeAdaptiveGaussianConstants(gsl_matrix* globalBandwidthMatrix, gsl_matrix *outGlobalInverse,
-                                    double *outGlobalScalingFactor, double *outPDFConstant);
-
 double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth);
 
 void sa_allocate(size_t dimension);

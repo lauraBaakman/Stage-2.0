@@ -12,7 +12,6 @@ Kernel standardGaussianKernel = {
 Kernel shapeAdaptiveGaussianKernel = {
         .isShapeAdaptive = true,
         .kernel.shapeAdaptiveKernel.density = shapeAdaptiveGaussianPDF,
-        .kernel.shapeAdaptiveKernel.factorFunction = shapeAdaptiveGaussianConstants,
         .kernel.shapeAdaptiveKernel.allocate = sa_allocate,
         .kernel.shapeAdaptiveKernel.free = sa_free,
         .kernel.shapeAdaptiveKernel.computeConstants = sa_compute_constants,
@@ -70,34 +69,6 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth){
     double density = localScalingFactor * normal_pdf(g_sa_scaledPattern);
 
     return density;
-}
-
-void shapeAdaptiveGaussianConstants(gsl_matrix *globalBandwidthMatrix, gsl_matrix *outGlobalInverse,
-                                    double *outGlobalScalingFactor, double *outPDFConstant) {
-
-    size_t dimension = globalBandwidthMatrix->size1;
-
-    gsl_matrix* LUDecompH = gsl_matrix_alloc(dimension, dimension);
-    gsl_matrix_memcpy(LUDecompH, globalBandwidthMatrix);
-
-    //Compute LU decompostion
-    gsl_permutation* permutation = gsl_permutation_calloc(dimension);
-    int signum = 0;
-    gsl_linalg_LU_decomp(LUDecompH, permutation, &signum);
-
-    //Compute global inverse
-    gsl_linalg_LU_invert(LUDecompH, permutation, outGlobalInverse);
-
-    //Compute global scaling factor
-    double determinant = gsl_linalg_LU_det(LUDecompH, signum);
-    *outGlobalScalingFactor = 1.0 / determinant;
-
-    //Compute the pdfConstant
-    *outPDFConstant = computeStandardGaussianConstant(dimension);
-
-    //Free memory
-    gsl_permutation_free(permutation);
-    gsl_matrix_free(LUDecompH);
 }
 
 void sa_allocate(size_t dimension) {

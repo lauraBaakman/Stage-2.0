@@ -83,8 +83,6 @@ static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
     gsl_matrix* globalInverse = gsl_matrix_alloc(dimension, dimension);
     double globalScalingFactor, pdfConstant;
 
-    kernel.factorFunction(globalBandwidthMatrix, globalInverse, &globalScalingFactor, &pdfConstant);
-
     /* Allocate Memory for the kernel evaluation */
     gsl_vector* scaledPatternMemory = gsl_vector_calloc(dimension);
 
@@ -130,7 +128,6 @@ static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
     size_t dimension = (size_t) patterns.dimensionality;
     gsl_matrix* globalInverse = gsl_matrix_alloc(dimension, dimension);
     double globalScalingFactor, pdfConstant;
-    kernel.factorFunction(globalBandwidthMatrix, globalInverse, &globalScalingFactor, &pdfConstant);
 
     /* Allocate memory for the kernel evaluatation */
     gsl_vector* scaledPatternMemory = gsl_vector_alloc(dimension);
