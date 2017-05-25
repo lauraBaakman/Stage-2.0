@@ -74,7 +74,7 @@ static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
     if (!PyArg_ParseTuple(args, "OdO", &inPattern, &localBandwidth, &inGlobalBandwidthMatrix)) return NULL;
 
     Array pattern = pyObjectToArray(inPattern, NPY_ARRAY_IN_ARRAY);
-    gsl_matrix* globalBandwidthMatrix = pyObjectToGSLMatrix(inGlobalBandwidthMatrix, NPY_ARRAY_IN_ARRAY);
+    gsl_matrix_view globalBandwidthMatrix = pyObjectToGSLMatrixView(inGlobalBandwidthMatrix, NPY_ARRAY_IN_ARRAY);
 
 
     /* Compute constants */
@@ -82,7 +82,7 @@ static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
     ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(SHAPE_ADAPTIVE_GAUSSIAN);
 
     kernel.allocate(dimension);
-    kernel.computeConstants(globalBandwidthMatrix);
+    kernel.computeConstants(&globalBandwidthMatrix.matrix);
 
     /* Do computations */
     gsl_vector_view pattern_view = arrayGetGSLVectorView(&pattern);
@@ -90,7 +90,6 @@ static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
 
     /* Free memory */
     kernel.free();
-    gsl_matrix_free(globalBandwidthMatrix);
 
     /* Create return object */
     PyObject *returnObject = Py_BuildValue("d", density);
