@@ -56,12 +56,6 @@ class _Epanechnikov_Python(_Epanechnikov):
                                                             volume=volume, unit_constant=unit_constant)
 
     def _evaluate_multiple_patterns(self, patterns):
-        def evaluate(pattern, dimension, volume):
-            dot_product = np.dot(pattern, pattern)
-            if dot_product >= 1:
-                return 0
-            return (dimension + 2) / (2 * volume) * (1 - dot_product)
-
         (num_patterns, dimension) = patterns.shape
         volume = self._unit_sphere_volume(dimension)
         densities = np.empty(num_patterns)
