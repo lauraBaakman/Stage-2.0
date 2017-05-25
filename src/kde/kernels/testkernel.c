@@ -1,3 +1,4 @@
+#include <gsl/gsl_vector_double.h>
 #include "testkernel.ih"
 
 Kernel testKernel = {
@@ -9,12 +10,17 @@ Kernel testKernel = {
 static double g_normal_constant;
 
 static double normal_pdf(gsl_vector* pattern){
+    normal_prepare(pattern->size);
+
     double density = 0;
     for ( size_t i = 0; i < pattern->size; i++ ) {
         density += pattern->data[i];
     }
-    double mean = density * g_normal_constant;
-    return fabs(mean);
+    density = fabs(density * g_normal_constant);
+
+    normal_free();
+
+    return density;
 }
 
 static void normal_prepare(size_t dimension){

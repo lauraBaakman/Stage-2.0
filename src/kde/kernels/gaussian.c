@@ -1,3 +1,4 @@
+#include <gsl/gsl_vector_double.h>
 #include "gaussian.ih"
 
 Kernel standardGaussianKernel = {
@@ -31,9 +32,16 @@ void normal_prepare(size_t dimension) {
 }
 
 double normal_pdf(gsl_vector *pattern) {
+    normal_prepare(pattern->size);
+
     double dotProduct = 0.0;
     gsl_blas_ddot(pattern,  pattern, &dotProduct);
-    return g_normal_constant * exp(-0.5 * dotProduct);
+
+    double density = g_normal_constant * exp(-0.5 * dotProduct);
+
+    normal_free();
+
+    return  density;
 }
 
 void normal_free() {

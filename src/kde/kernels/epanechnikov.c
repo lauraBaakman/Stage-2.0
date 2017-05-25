@@ -14,11 +14,17 @@ void normal_prepare(size_t dimension) {
 }
 
 double normal_pdf(gsl_vector *pattern) {
+    normal_prepare(pattern->size);
+
     double dotProduct = 0.0;
     gsl_blas_ddot(pattern,  pattern, &dotProduct);
     if (dotProduct >= 1) return 0;
     double numerator = (double) pattern->size + 2;
-    return (numerator / g_normal_constant) * (1 - pattern->size);
+    double density = (numerator / g_normal_constant) * (1 - pattern->size);
+
+    normal_free();
+
+    return density;
 }
 
 void normal_free() {
