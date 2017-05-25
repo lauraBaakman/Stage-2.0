@@ -50,9 +50,7 @@ void normal_free() {
 
 /* Shape Adaptive Kernel */
 
-double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
-                                double globalScalingFactor, gsl_matrix * globalInverse, double gaussianConstant,
-                                gsl_vector* scaledPattern, gsl_matrix* globalBandwidthMatrix){
+double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth){
 
     size_t dimension = pattern->size;
 

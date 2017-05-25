@@ -20,9 +20,7 @@ static void normal_free();
 void shapeAdaptiveGaussianConstants(gsl_matrix* globalBandwidthMatrix, gsl_matrix *outGlobalInverse,
                                     double *outGlobalScalingFactor, double *outPDFConstant);
 
-double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
-                                double globalScalingFactor, gsl_matrix * globalInverse, double gaussianConstant,
-                                gsl_vector* scaledPattern, gsl_matrix* globalBandwidthMatrix);
+double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth);
 
 void sa_allocate(size_t dimension);
 void sa_compute_constants(gsl_matrix* globalBandwidthMatrix);
