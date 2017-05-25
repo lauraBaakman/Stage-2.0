@@ -4,7 +4,7 @@
 #include "../utils/gsl_utils.h"
 #include <stdbool.h>
 
-typedef double (*KernelFreeFunction)(void);
+typedef void (*KernelFreeFunction)(void);
 
 typedef double (*SymmetricKernelDensityFunction)(gsl_vector* pattern);
 typedef double (*SymmetricKernelConstantFunction)(int dimensionality);
