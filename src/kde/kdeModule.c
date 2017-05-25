@@ -83,7 +83,7 @@ static PyObject *kde_modified_breiman(PyObject *self, PyObject *args){
     {
         densities.data[j] = modifiedBreimanFinalDensity(current_pattern, &dataPoints,
                                                         globalBandwidth, &localBandwidths,
-                                                        0.0, kernel.densityFunction);
+                                                        kernel.densityFunction);
     }
     kernel.free();
 
