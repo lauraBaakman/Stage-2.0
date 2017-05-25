@@ -4,13 +4,13 @@
 #include "../utils/gsl_utils.h"
 #include <stdbool.h>
 
-typedef double (*SymmetricKernelDensityFunction)(double* data, int dimensionality, double factor);
+typedef double (*SymmetricKernelDensityFunction)(gsl_vector* pattern, double factor);
 typedef double (*SymmetricKernelConstantFunction)(int dimensionality);
 
 typedef double (*ShapeAdaptiveKernelDensityFunction)(gsl_vector* pattern, double localBandwidth,
                                                      double globalScalingFactor, gsl_matrix * globalInverse, double gaussianConstant,
                                                      gsl_vector* scaledPattern);
-typedef gsl_matrix* (*ShapeAdaptiveKernelConstantFunction)(gsl_matrix* globalBandwidthMatrix,
+typedef void (*ShapeAdaptiveKernelConstantFunction)(gsl_matrix* globalBandwidthMatrix,
                                                            gsl_matrix* outGlobalInverse, double* outGlobalScalingFactor, double* outPDFConstant);
 
 typedef struct SymmetricKernel {

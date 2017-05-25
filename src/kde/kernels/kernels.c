@@ -1,3 +1,4 @@
+#include <gsl/gsl_vector_double.h>
 #include "kernels.ih"
 
 Kernel testKernel = {
@@ -66,15 +67,14 @@ double testKernelConstant(int patternDimensionality) {
     return 1.0 / patternDimensionality;
 }
 
-double testKernelPDF(double *data, int dimensionality, double constant) {
+double testKernelPDF(gsl_vector* pattern, double constant) {
     double density = 0;
-    for ( int i = 0; i < dimensionality; i++ ) {
-        density += data[i];
+    for ( size_t i = 0; i < pattern->size; i++ ) {
+        density += pattern->data[i];
     }
     double mean = density * constant;
     return fabs(mean);
 }
-
 
 double computeLocalScalingFactor(double globalScalingFactor, double localBandwidth, size_t dimension) {
     double localScalingFactor = (1.0 / pow(localBandwidth, dimension)) * globalScalingFactor;

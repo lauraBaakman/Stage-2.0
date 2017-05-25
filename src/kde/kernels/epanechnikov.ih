@@ -3,15 +3,15 @@
 
 #include <math.h>
 
+#include <gsl/gsl_blas.h>
+
 #include "epanechnikov.h"
 
 /* Symmetric */
 double epanechnikovConstant(int dimensionality);
-double epanechnikovPDF(double *data, int dimensionality, double constant);
+double epanechnikovPDF(gsl_vector* pattern, double constant);
 
 /* Shape Adaptive */
 
-/* Utilities */
-double dotProduct(double *a, double *b, int length);
 
 #endif //KERNELS_EPANECHNIKOV_IH_H

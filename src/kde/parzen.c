@@ -1,7 +1,4 @@
-//
-// Created by Laura Baakman on 09/01/2017.
-//
-
+#include <gsl/gsl_vector_double.h>
 #include "parzen.ih"
 
 double parzen(double *pattern, Array *dataPoints, double windowWidth, double parzenFactor,
@@ -10,13 +7,15 @@ double parzen(double *pattern, Array *dataPoints, double windowWidth, double par
     double density = 0;
 
     double* scaledPattern = (double *)malloc(sizeof(double) * dataPoints->dimensionality);
+    gsl_vector_view currentPattern;
 
     for (int i = 0;
          i < dataPoints->length;
          ++i, currentDataPoint += dataPoints->rowStride)
     {
         scaledPattern = scalePattern(pattern, currentDataPoint, scaledPattern, dataPoints->dimensionality, windowWidth);
-        density += kernel(scaledPattern, dataPoints->dimensionality, kernelConstant);
+        currentPattern = gsl_vector_view_array(scaledPattern, (size_t) dataPoints->dimensionality);
+        density += kernel(&currentPattern.vector, kernelConstant);
     }
     density *= parzenFactor;
 

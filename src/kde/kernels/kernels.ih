@@ -14,15 +14,7 @@
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_linalg.h>
 
-/* Symmetric Kernels */
-
-
-
 double testKernelConstant(int patternDimensionality);
-double testKernelPDF(double *data, int dimensionality, double constant);
-
-/* Utilities */
-
-double dotProduct(double *a, double *b, int length);
+double testKernelPDF(gsl_vector* pattern, double constant);
 
 #endif //KERNELS_KERNELS_IH

@@ -11,7 +11,7 @@
 
 /* Symmetric */
 double standardGaussianConstant(int patternDimensionality);
-double standardGaussianPDF(double *pattern, int patternDimensionality, double constant);
+double standardGaussianPDF(gsl_vector* pattern, double constant);
 
 /* Shape Adaptive */
 void shapeAdaptiveGaussianConstants(gsl_matrix* globalBandwidthMatrix, gsl_matrix *outGlobalInverse,
