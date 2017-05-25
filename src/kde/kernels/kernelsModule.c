@@ -104,37 +104,29 @@ static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
                           &inGlobalBandwidthMatrix,
                           &outDensities)) return NULL;
 
-    Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
+    gsl_matrix_view patterns = pyObjectToGSLMatrixView(inPatterns, NPY_ARRAY_IN_ARRAY);
     gsl_matrix* globalBandwidthMatrix = pyObjectToGSLMatrix(inGlobalBandwidthMatrix, NPY_ARRAY_IN_ARRAY);
     Array localBandwidths = pyObjectToArray(inLocalBandwidths, NPY_ARRAY_IN_ARRAY);
     Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
 
     ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(SHAPE_ADAPTIVE_GAUSSIAN);
 
-    /* Compute constants */
-    size_t dimension = (size_t) patterns.dimensionality;
-
-
-    /* Do computations */
-    double* pattern = patterns.data;
     double localBandwidth;
 
-    gsl_vector_view pattern_view;
+    gsl_vector_view pattern;
 
-    kernel.allocate(dimension);
+    kernel.allocate(patterns.matrix.size2);
     kernel.computeConstants(globalBandwidthMatrix);
 
-    for( int j = 0; j < patterns.length; j++, pattern += patterns.rowStride) {
-        pattern_view = gsl_vector_view_array(pattern, (size_t) patterns.dimensionality);
+    for(size_t j = 0; j < patterns.matrix.size1; j++) {
+        pattern = gsl_matrix_row(&patterns.matrix, j);
 
         localBandwidth = localBandwidths.data[j];
 
-        densities.data[j] = kernel.density(&pattern_view.vector, localBandwidth);
+        densities.data[j] = kernel.density(&pattern.vector, localBandwidth);
     }
 
-    /* Free memory */
     kernel.free();
-    gsl_matrix_free(globalBandwidthMatrix);
 
     /* Create return object */
     Py_INCREF(Py_None);
