@@ -15,7 +15,7 @@ double parzen(double *pattern, Array *dataPoints, double windowWidth, double par
     {
         scaledPattern = scalePattern(pattern, currentDataPoint, scaledPattern, dataPoints->dimensionality, windowWidth);
         currentPattern = gsl_vector_view_array(scaledPattern, (size_t) dataPoints->dimensionality);
-        density += kernel(&currentPattern.vector, kernelConstant);
+        density += kernel(&currentPattern.vector);
     }
     density *= parzenFactor;
 

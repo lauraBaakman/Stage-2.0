@@ -3,7 +3,7 @@
 
 Kernel epanechnikovKernel = {
         .isShapeAdaptive = false,
-        .kernel.symmetricKernel.densityFunction = epanechnikovPDF,
+        .kernel.symmetricKernel.densityFunction = normal_pdf,
         .kernel.symmetricKernel.factorFunction = epanechnikovConstant,
 };
 

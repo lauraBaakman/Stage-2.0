@@ -4,7 +4,7 @@
 #include "../utils/gsl_utils.h"
 #include <stdbool.h>
 
-typedef double (*SymmetricKernelDensityFunction)(gsl_vector* pattern, double factor);
+typedef double (*SymmetricKernelDensityFunction)(gsl_vector* pattern);
 typedef double (*SymmetricKernelConstantFunction)(int dimensionality);
 
 typedef double (*ShapeAdaptiveKernelDensityFunction)(gsl_vector* pattern, double localBandwidth,

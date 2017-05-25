@@ -21,7 +21,7 @@ double modifiedBreimanFinalDensity(double *pattern, Array *dataPoints,
         factor = pow(bandwidth, -1 * dataPoints->dimensionality);
         scaledPattern = scalePattern(pattern, currentDataPoint, scaledPattern, dataPoints->dimensionality, bandwidth);
         currentPattern = gsl_vector_view_array(scaledPattern, (size_t)dataPoints->dimensionality);
-        density += (factor * kernel(&currentPattern.vector, kernelConstant));
+        density += (factor * kernel(&currentPattern.vector));
     }
     density /= dataPoints->length;
 
