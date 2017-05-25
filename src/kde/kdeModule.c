@@ -39,7 +39,7 @@ static PyObject * kdeParzen(PyObject *self, PyObject *args){
     {
         densities.data[j] = parzen(current_pattern, &dataPoints,
                                    inWindowWidth, parzenFactor,
-                                   kernel.densityFunction);
+                                   kernel.density);
     }
     kernel.free();
 
@@ -83,7 +83,7 @@ static PyObject *kde_modified_breiman(PyObject *self, PyObject *args){
     {
         densities.data[j] = modifiedBreimanFinalDensity(current_pattern, &dataPoints,
                                                         globalBandwidth, &localBandwidths,
-                                                        kernel.densityFunction);
+                                                        kernel.density);
     }
     kernel.free();
 

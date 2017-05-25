@@ -22,7 +22,7 @@ PyObject *multi_pattern_symmetric(PyObject *args, KernelType kernelType) {
 
     for( size_t j = 0; j < patterns.matrix.size1; j++) {
         current_pattern = gsl_matrix_row(&patterns.matrix, j);
-        density = kernel.densityFunction(&current_pattern.vector);
+        density = kernel.density(&current_pattern.vector);
         gsl_vector_set(&densities.vector, j, density);
     }
     kernel.free();
@@ -46,7 +46,7 @@ PyObject *single_pattern_symmetric(PyObject *args, KernelType kernelType) {
     SymmetricKernel kernel = selectSymmetricKernel(kernelType);
 
     kernel.prepare(pattern.vector.size);
-    density = kernel.densityFunction(&pattern.vector);
+    density = kernel.density(&pattern.vector);
     kernel.free();
 
     /* Create return object */

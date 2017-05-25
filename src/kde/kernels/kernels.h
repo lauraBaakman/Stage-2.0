@@ -16,7 +16,7 @@ typedef void (*ShapeAdaptiveKernelConstantFunction)(gsl_matrix* globalBandwidthM
                                                            gsl_matrix* outGlobalInverse, double* outGlobalScalingFactor, double* outPDFConstant);
 
 typedef struct SymmetricKernel {
-    SymmetricKernelDensityFunction densityFunction;
+    SymmetricKernelDensityFunction density;
     SymmetricKernelPrepareFunction prepare;
     KernelFreeFunction free;
 } SymmetricKernel;

@@ -3,7 +3,7 @@
 
 Kernel testKernel = {
         .isShapeAdaptive = false,
-        .kernel.symmetricKernel.densityFunction = normal_pdf,
+        .kernel.symmetricKernel.density = normal_pdf,
         .kernel.symmetricKernel.free = normal_free,
         .kernel.symmetricKernel.prepare = normal_prepare,
 };
