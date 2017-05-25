@@ -25,5 +25,8 @@ double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
                                 double globalScalingFactor, gsl_matrix * globalInverse, double gaussianConstant,
                                 gsl_vector* scaledPattern);
 
+void sa_allocate(size_t dimension);
+void sa_compute_constants(gsl_matrix* globalBandwidthMatrix);
+void sa_free();
 
 #endif //KERNELS_GAUSSIAN_IH_H

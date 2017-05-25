@@ -96,3 +96,15 @@ void shapeAdaptiveGaussianConstants(gsl_matrix *globalBandwidthMatrix, gsl_matri
     gsl_permutation_free(permutation);
     gsl_matrix_free(LUDecompH);
 }
+
+void sa_allocate(size_t dimension) {
+
+}
+
+void sa_compute_constants(gsl_matrix *globalBandwidthMatrix) {
+
+}
+
+void sa_free() {
+
+}
