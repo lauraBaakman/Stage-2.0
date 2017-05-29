@@ -9,7 +9,7 @@ from kde.kernels.kernel import Kernel
 _as_C_enum = 2
 
 
-class Epanechnikov(object):
+class Epanechnikov(Kernel):
     def __new__(cls, implementation=None):
         implementation_class = implementation or _Epanechnikov_C
         return implementation_class()
