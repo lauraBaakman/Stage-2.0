@@ -1,4 +1,5 @@
 #include <gsl/gsl_vector_double.h>
+#include <gsl/gsl_matrix.h>
 #include "gaussian.ih"
 
 Kernel standardGaussianKernel = {
@@ -10,89 +11,106 @@ Kernel standardGaussianKernel = {
 
 Kernel shapeAdaptiveGaussianKernel = {
         .isShapeAdaptive = true,
-        .kernel.shapeAdaptiveKernel.densityFunction = shapeAdaptiveGaussianPDF,
-        .kernel.shapeAdaptiveKernel.factorFunction = shapeAdaptiveGaussianConstants,
+        .kernel.shapeAdaptiveKernel.density = sa_pdf,
+        .kernel.shapeAdaptiveKernel.allocate = sa_allocate,
+        .kernel.shapeAdaptiveKernel.free = sa_free,
+        .kernel.shapeAdaptiveKernel.computeConstants = sa_compute_constants,
 };
+
+static double g_standardGaussianConstant;
+
+static gsl_matrix* g_sa_globalInverse;
+static double g_sa_globalScalingFactor;
+static gsl_matrix* g_sa_LUDecompositionH;
+static gsl_vector* g_sa_scaledPattern;
+static gsl_permutation* g_sa_permutation;
 
 /* Normal Kernel */
 
-static double g_normal_constant;
-
-double normal_constant_compute(int patternDimensionality){
-    return pow(2 * M_PI, -1 * patternDimensionality * 0.5);
-}
-
-double standardGaussianPDF(gsl_vector* pattern, double constant){
-    double dotProduct = 0.0;
-    gsl_blas_ddot(pattern,  pattern, &dotProduct);
-    return constant * exp(-0.5 * dotProduct);
+double computeStandardGaussianConstant(size_t dimension){
+    return pow(2 * M_PI, -1 * (double) dimension * 0.5);
 }
 
 void normal_prepare(size_t dimension) {
-    g_normal_constant = normal_constant_compute(dimension);
+    g_standardGaussianConstant = computeStandardGaussianConstant(dimension);
 }
 
 double normal_pdf(gsl_vector *pattern) {
     double dotProduct = 0.0;
     gsl_blas_ddot(pattern,  pattern, &dotProduct);
 
-    double density = g_normal_constant * exp(-0.5 * dotProduct);
+    double density = g_standardGaussianConstant * exp(-0.5 * dotProduct);
 
     return  density;
 }
 
 void normal_free() {
-    g_normal_constant = 0.0;
+    g_standardGaussianConstant = 0.0;
 }
 
 /* Shape Adaptive Kernel */
 
-double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
-                                double globalScalingFactor, gsl_matrix * globalInverse, double gaussianConstant,
-                                gsl_vector* scaledPattern){
+double sa_pdf(gsl_vector *pattern, double localBandwidth){
 
-    size_t dimension = globalInverse->size1;
+    size_t dimension = pattern->size;
+
+    gsl_vector_set_zero(g_sa_scaledPattern);
 
     // Multiply the transpose of the global inverse with the pattern
     // Since the bandwidth matrix is always symmetric we don't need to compute the transpose.
-    gsl_blas_dsymv(CblasLower, 1.0, globalInverse, pattern, 1.0, scaledPattern);
+    gsl_blas_dsymv(CblasLower, 1.0, g_sa_globalInverse, pattern, 1.0, g_sa_scaledPattern);
 
     //Apply the local inverse
-    gsl_vector_scale(scaledPattern, 1.0 / localBandwidth);
+    gsl_vector_scale(g_sa_scaledPattern, 1.0 / localBandwidth);
 
     // Compute local scaling factor
-    double localScalingFactor = computeLocalScalingFactor(globalScalingFactor, localBandwidth, dimension);
+    double localScalingFactor = computeLocalScalingFactor(g_sa_globalScalingFactor, localBandwidth, dimension);
 
     //Determine the result of the kernel
-    double density = localScalingFactor * standardGaussianPDF(scaledPattern, gaussianConstant);
+    double density = localScalingFactor * normal_pdf(g_sa_scaledPattern);
 
     return density;
 }
 
-void shapeAdaptiveGaussianConstants(gsl_matrix *globalBandwidthMatrix, gsl_matrix *outGlobalInverse,
-                                    double *outGlobalScalingFactor, double *outPDFConstant) {
+void sa_allocate(size_t dimension) {
+    g_sa_globalInverse = gsl_matrix_alloc(dimension, dimension);
+    g_sa_LUDecompositionH = gsl_matrix_alloc(dimension, dimension);
+    g_sa_scaledPattern = gsl_vector_alloc(dimension);
+    g_sa_permutation = gsl_permutation_alloc(dimension);
 
+    //Compute the Standard Gaussian Constant
+    sa_compute_dimension_dependent_constants(dimension);
+}
+
+void sa_compute_dimension_dependent_constants(size_t dimension) {
+
+    g_standardGaussianConstant = computeStandardGaussianConstant(dimension);
+}
+
+void sa_compute_constants(gsl_matrix *globalBandwidthMatrix) {
     size_t dimension = globalBandwidthMatrix->size1;
 
-    gsl_matrix* LUDecompH = gsl_matrix_alloc(dimension, dimension);
-    gsl_matrix_memcpy(LUDecompH, globalBandwidthMatrix);
+    //Copy the global bandwidth matrix so that we can change it
+    gsl_matrix_memcpy(g_sa_LUDecompositionH, globalBandwidthMatrix);
 
     //Compute LU decompostion
-    gsl_permutation* permutation = gsl_permutation_calloc(dimension);
     int signum = 0;
-    gsl_linalg_LU_decomp(LUDecompH, permutation, &signum);
+    gsl_linalg_LU_decomp(g_sa_LUDecompositionH, g_sa_permutation, &signum);
 
     //Compute global inverse
-    gsl_linalg_LU_invert(LUDecompH, permutation, outGlobalInverse);
+    gsl_linalg_LU_invert(g_sa_LUDecompositionH, g_sa_permutation, g_sa_globalInverse);
 
     //Compute global scaling factor
-    double determinant = gsl_linalg_LU_det(LUDecompH, signum);
-    *outGlobalScalingFactor = 1.0 / determinant;
+    double determinant = gsl_linalg_LU_det(g_sa_LUDecompositionH, signum);
+    g_sa_globalScalingFactor = 1.0 / determinant;
 
-    //Compute the pdfConstant
-    *outPDFConstant = normal_constant_compute(dimension);
+}
 
-    //Free memory
-    gsl_permutation_free(permutation);
-    gsl_matrix_free(LUDecompH);
+void sa_free() {
+    g_standardGaussianConstant = 0.0;
+    g_sa_globalScalingFactor = 0.0;
+    gsl_matrix_free(g_sa_globalInverse);
+    gsl_matrix_free(g_sa_LUDecompositionH);
+    gsl_vector_free(g_sa_scaledPattern);
+    gsl_permutation_free(g_sa_permutation);
 }

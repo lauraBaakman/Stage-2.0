@@ -10,20 +10,18 @@
 #include "gaussian.h"
 
 /* Symmetric */
-double normal_constant_compute(int patternDimensionality);
-double standardGaussianPDF(gsl_vector* pattern, double constant);
+double computeStandardGaussianConstant(size_t dimension);
 
 static double normal_pdf(gsl_vector* pattern);
 static void normal_prepare(size_t dimension);
 static void normal_free();
 
 /* Shape Adaptive */
-void shapeAdaptiveGaussianConstants(gsl_matrix* globalBandwidthMatrix, gsl_matrix *outGlobalInverse,
-                                    double *outGlobalScalingFactor, double *outPDFConstant);
+double sa_pdf(gsl_vector *pattern, double localBandwidth);
 
-double shapeAdaptiveGaussianPDF(gsl_vector* pattern, double localBandwidth,
-                                double globalScalingFactor, gsl_matrix * globalInverse, double gaussianConstant,
-                                gsl_vector* scaledPattern);
-
+void sa_allocate(size_t dimension);
+void sa_compute_constants(gsl_matrix* globalBandwidthMatrix);
+void sa_compute_dimension_dependent_constants(size_t dimension);
+void sa_free();
 
 #endif //KERNELS_GAUSSIAN_IH_H

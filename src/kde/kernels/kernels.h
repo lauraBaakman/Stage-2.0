@@ -9,11 +9,9 @@ typedef void (*KernelFreeFunction)(void);
 typedef void (*SymmetricKernelPrepareFunction)(size_t dimensionality);
 typedef double (*SymmetricKernelDensityFunction)(gsl_vector* pattern);
 
-typedef double (*ShapeAdaptiveKernelDensityFunction)(gsl_vector* pattern, double localBandwidth,
-                                                     double globalScalingFactor, gsl_matrix * globalInverse, double gaussianConstant,
-                                                     gsl_vector* scaledPattern);
-typedef void (*ShapeAdaptiveKernelConstantFunction)(gsl_matrix* globalBandwidthMatrix,
-                                                           gsl_matrix* outGlobalInverse, double* outGlobalScalingFactor, double* outPDFConstant);
+typedef void (*ShapeAdaptiveKernelAllocFunction)(size_t dimensionality);
+typedef void (*ShapeAdaptiveKernelConstantsFunction)(gsl_matrix* globalBandwidthMatrix);
+typedef double (*ShapeAdaptiveKernelDensityFunction)(gsl_vector* pattern, double localBandwidth);
 
 typedef struct SymmetricKernel {
     SymmetricKernelDensityFunction density;
@@ -22,8 +20,10 @@ typedef struct SymmetricKernel {
 } SymmetricKernel;
 
 typedef struct ShapeAdaptiveKernel {
-    ShapeAdaptiveKernelConstantFunction  factorFunction;
-    ShapeAdaptiveKernelDensityFunction  densityFunction;
+    ShapeAdaptiveKernelDensityFunction  density;
+    ShapeAdaptiveKernelAllocFunction allocate;
+    ShapeAdaptiveKernelConstantsFunction computeConstants;
+    KernelFreeFunction free;
 } ShapeAdaptiveKernel;
 
 typedef union {

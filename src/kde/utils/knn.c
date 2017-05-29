@@ -51,7 +51,7 @@ void getKNearestElements(ListElement *sortedDistances, int k,
                          gsl_matrix *patterns, gsl_matrix *outNeighbours) {
     size_t idx = 0;
     gsl_vector_view pattern;
-    for(size_t i = 0; i < k; i++){
+    for(size_t i = 0; i < (size_t) k; i++){
         idx = sortedDistances[i].index;
         pattern = gsl_matrix_row(patterns, idx);
         gsl_matrix_set_row(outNeighbours, i, &pattern.vector);
