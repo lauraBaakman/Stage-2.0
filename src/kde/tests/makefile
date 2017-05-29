@@ -7,6 +7,7 @@ IDIRS=-I/usr/local/include/
 SOURCES=test_main.c CuTest.c CuTestUtils.c\
     test_sambe.c ../sambe.c \
     ../kernels/kernels.c \
+    ../kernels/gaussian.c ../kernels/epanechnikov.c ../kernels/testkernel.c \
     ../utils/distancematrix.c \
     ../utils/knn.c \
     ../utils/covariancematrix.c \
@@ -16,6 +17,9 @@ OBJECTS=$(SOURCES:.c=.o)
 DEPS=test_constants.h CuTest.h CuTestUtils.h\
     test_sambe.h ../sambe.h ../sambe.ih \
     ../kernels/kernels.h ../kernels/kernels.ih \
+    ../kernels/gaussian.h ../kernels/gaussian.ih \
+    ../kernels/epanechnikov.h ../kernels/epanechnikov.ih \
+    ../kernels/testkernel.h ../kernels/testkernel.ih \
     ../utils/distancematrix.ih ../utils/distancematrix.h \
     ../utils/knn.h ../utils/knn.ih \
     ../utils/covariancematrix.h ../utils/covariancematrix.ih \
