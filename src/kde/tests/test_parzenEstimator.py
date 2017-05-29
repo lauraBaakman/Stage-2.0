@@ -54,7 +54,6 @@ class ParzenEstimatorImpAbstractTest(object):
         expected = np.array([3 / 384.0, 15 / 1536.0])
         np.testing.assert_array_almost_equal(actual, expected)
 
-    @skip('The test has to be updated to reflect the fact that we are now using the unit variance Epanechnikov kernel.')
     def test_estimate_epanechnikov(self):
         xi_s = np.array([[-1, -1], [0, 0], [1 / 2.0, 1 / 2.0]])
         x_s = np.array([[0, 0], [1 / 4.0, 1 / 2.0]])
@@ -62,7 +61,7 @@ class ParzenEstimatorImpAbstractTest(object):
             xi_s=xi_s, x_s=x_s, dimension=2,
             kernel=Epanechnikov(), general_bandwidth=4)
         actual = estimator.estimate()
-        expected = np.array([0.03771640578479811, 0.036317583042779503])
+        expected = np.array([0.048652803495835, 0.046243112756654])
         np.testing.assert_array_almost_equal(actual, expected)
 
 
