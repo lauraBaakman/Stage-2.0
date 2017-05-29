@@ -15,7 +15,7 @@ size_t g_numXs;
 
 gsl_vector* g_movedPattern;
 
-int g_k;
+size_t g_k;
 gsl_matrix* g_distanceMatrix;
 gsl_matrix* g_nearestNeighbours;
 
@@ -55,7 +55,7 @@ double finalDensitySinglePattern(gsl_vector *x, size_t xIdx) {
         xi = gsl_matrix_row(g_xs, i);
 
         //x - xi
-        movedPattern = substract(x, &xi.vector, g_movedPattern);
+        movedPattern = subtract(x, &xi.vector, g_movedPattern);
         localBandwidth = gsl_vector_get(g_localBandwidths, i);
 
         density += g_kernel.density(movedPattern, localBandwidth);
@@ -68,7 +68,7 @@ double finalDensitySinglePattern(gsl_vector *x, size_t xIdx) {
 
 void determineGlobalKernelShape(size_t patternIdx) {
     /* Compute K nearest neighbours */
-    computeKNearestNeighbours(g_k, (int) patternIdx,
+    computeKNearestNeighbours(g_k, patternIdx,
                               g_xs, g_distanceMatrix,
                               g_nearestNeighbours);
 
@@ -82,14 +82,14 @@ void determineGlobalKernelShape(size_t patternIdx) {
     gsl_matrix_scale(g_globalBandwidthMatrix, scalingFactor);
 }
 
-gsl_vector *substract(gsl_vector *termA, gsl_vector *termB, gsl_vector *result) {
+gsl_vector *subtract(gsl_vector *termA, gsl_vector *termB, gsl_vector *result) {
     gsl_vector_memcpy(result, termA);
     gsl_vector_sub(result, termB);
 
     return result;
 }
 
-void allocateGlobals(size_t dataDimension, size_t num_xi_s, int k) {
+void allocateGlobals(size_t dataDimension, size_t num_xi_s, size_t k) {
     g_globalBandwidthMatrix = gsl_matrix_alloc(dataDimension, dataDimension);
     g_distanceMatrix = gsl_matrix_alloc(num_xi_s, num_xi_s);
     g_nearestNeighbours = gsl_matrix_alloc(k, dataDimension);
@@ -111,7 +111,7 @@ void prepareGlobals(gsl_matrix *xs,
     g_localBandwidths = localBandwidths;
     g_globalBandwidth = globalBandwidth;
     g_kernel = kernel;
-    g_k = k;
+    g_k = (size_t) k;
 
     g_numXs = xs->size1;
 

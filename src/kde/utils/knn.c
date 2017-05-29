@@ -1,6 +1,6 @@
 #include "knn.ih"
 
-void computeKNearestNeighbours(int k, int patternIdx, gsl_matrix *patterns, gsl_matrix *distanceMatrix,
+void computeKNearestNeighbours(size_t k, size_t patternIdx, gsl_matrix *patterns, gsl_matrix *distanceMatrix,
                                gsl_matrix *outNearestNeighbours) {
     gsl_vector_view distances = gsl_matrix_row(distanceMatrix, patternIdx);
 
@@ -35,6 +35,7 @@ int listElementCompare(const void *s1, const void *s2){
     if (*(e1->value) < *(e2->value)) return -1;
     if (*(e1->value) == *(e2->value)) return 0;
     if (*(e1->value) > *(e2->value)) return +1;
+    return 0; //avoid compile warnings
 }
 
 void listElementArrayPrint(ListElement* elements, size_t numElements){
@@ -44,10 +45,10 @@ void listElementArrayPrint(ListElement* elements, size_t numElements){
 }
 
 void listElementPrint(ListElement* element){
-    printf("%f [%d] \n", *element->value, element->index);
+    printf("%f [%lu] \n", *element->value, element->index);
 }
 
-void getKNearestElements(ListElement *sortedDistances, int k,
+void getKNearestElements(ListElement *sortedDistances, size_t k,
                          gsl_matrix *patterns, gsl_matrix *outNeighbours) {
     size_t idx = 0;
     gsl_vector_view pattern;

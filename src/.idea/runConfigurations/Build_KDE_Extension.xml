@@ -16,6 +16,8 @@
     <option name="PARAMETERS" value="build_ext --inplace" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <option name="EMULATE_TERMINAL" value="false" />
-    <method />
+    <method>
+      <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_Run kde.sh" />
+    </method>
   </configuration>
 </component>

@@ -88,8 +88,6 @@ void sa_compute_dimension_dependent_constants(size_t dimension) {
 }
 
 void sa_compute_constants(gsl_matrix *globalBandwidthMatrix) {
-    size_t dimension = globalBandwidthMatrix->size1;
-
     //Copy the global bandwidth matrix so that we can change it
     gsl_matrix_memcpy(g_sa_LUDecompositionH, globalBandwidthMatrix);
 

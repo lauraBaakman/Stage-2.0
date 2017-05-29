@@ -43,7 +43,7 @@ double normal_constant(size_t dimension){
 
 double unitSphereVolume(size_t dimension) {
     double numerator = pow(M_PI, dimension / 2.0);
-    double denominator = gamma(dimension / 2.0 + 1);
+    double denominator = tgamma(dimension / 2.0 + 1);
     return numerator / denominator;
 }
 
