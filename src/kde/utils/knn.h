@@ -3,7 +3,7 @@
 
 #include <gsl/gsl_matrix.h>
 
-void computeKNearestNeighbours(int k, int patternIdx,
+void computeKNearestNeighbours(size_t k, size_t patternIdx,
                                gsl_matrix *patterns, gsl_matrix *distanceMatrix,
                                gsl_matrix *outNearestNeighbours);
 
