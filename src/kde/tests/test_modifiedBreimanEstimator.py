@@ -74,7 +74,6 @@ class ModifiedBreimanEstimatorImpAbstractTest(object):
         super().setUp()
         self._estimator_class = None
 
-    @skip('The test has to be updated to reflect the fact that we are now using the unit variance Epanechnikov kernel.')
     def test_estimate_epanechnikov(self):
         xi_s = np.array([[-1, -1], [1, 1], [0, 0]])
         x_s = np.array([[0, 0], [1, 1], [0, 1]])
@@ -87,7 +86,7 @@ class ModifiedBreimanEstimatorImpAbstractTest(object):
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
         actual = estimator.estimate()
-        expected = np.array([0.01022836, 0.00823253, 0.00923044])
+        expected = np.array([0.013128790727490, 0.009690664372166, 0.011409727549828])
         np.testing.assert_array_almost_equal(actual, expected)
 
     def test_estimate_gaussian(self):
@@ -127,7 +126,6 @@ class Test_MBEEstimator_Python(ModifiedBreimanEstimatorImpAbstractTest, TestCase
         expected = 0.00264898 * 3
         self.assertAlmostEqual(actual, expected)
 
-    @skip('The test has to be updated to reflect the fact that we are now using the unit variance Epanechnikov kernel.')
     def test_estimate_pattern_epanechnikov(self):
         xi_s = np.array([[-1, -1], [1, 1], [0, 0]])
         x_s = np.array([[0, 0], [1, 1]])
@@ -141,7 +139,7 @@ class Test_MBEEstimator_Python(ModifiedBreimanEstimatorImpAbstractTest, TestCase
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
         actual = estimator._estimate_pattern(pattern)
-        expected = 0.01022836 * 3
+        expected = 0.013128790727490 * 3
         self.assertAlmostEqual(actual, expected)
 
 

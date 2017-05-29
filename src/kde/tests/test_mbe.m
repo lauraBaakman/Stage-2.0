@@ -19,4 +19,7 @@ x_s = [0, 0; 1, 1; 0, 1];
 local_bandwidths = [10, 20, 50];
 general_bandwidth = 0.5;
 
+%% Epanechnikov
 result_epanechnikov_1 = mbe(x_s(1, :), xi_s, general_bandwidth, local_bandwidths, epanechnikovKernel)
+result_epanechnikov_2 = mbe(x_s(2, :), xi_s, general_bandwidth, local_bandwidths, epanechnikovKernel)
+result_epanechnikov_3 = mbe(x_s(3, :), xi_s, general_bandwidth, local_bandwidths, epanechnikovKernel)
