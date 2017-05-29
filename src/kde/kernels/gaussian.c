@@ -75,13 +75,18 @@ void sa_allocate(size_t dimension) {
     g_sa_globalInverse = gsl_matrix_alloc(dimension, dimension);
     g_sa_LUDecompositionH = gsl_matrix_alloc(dimension, dimension);
     g_sa_scaledPattern = gsl_vector_alloc(dimension);
+
+    //Compute the Standard Gaussian Constant
+    sa_compute_dimension_dependent_constants(dimension);
+}
+
+void sa_compute_dimension_dependent_constants(size_t dimension) {
+
+    g_standardGaussianConstant = computeStandardGaussianConstant(dimension);
 }
 
 void sa_compute_constants(gsl_matrix *globalBandwidthMatrix) {
     size_t dimension = globalBandwidthMatrix->size1;
-
-    //Compute the Standard Gaussian Constant
-    g_standardGaussianConstant = computeStandardGaussianConstant(dimension);
 
     //Copy the global bandwidth matrix so that we can change it
     gsl_matrix_memcpy(g_sa_LUDecompositionH, globalBandwidthMatrix);
