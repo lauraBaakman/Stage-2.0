@@ -55,7 +55,7 @@ double finalDensitySinglePattern(gsl_vector *x, size_t xIdx) {
         xi = gsl_matrix_row(g_xs, i);
 
         //x - xi
-        movedPattern = substract(x, &xi.vector, g_movedPattern);
+        movedPattern = subtract(x, &xi.vector, g_movedPattern);
         localBandwidth = gsl_vector_get(g_localBandwidths, i);
 
         density += g_kernel.density(movedPattern, localBandwidth);
@@ -82,7 +82,7 @@ void determineGlobalKernelShape(size_t patternIdx) {
     gsl_matrix_scale(g_globalBandwidthMatrix, scalingFactor);
 }
 
-gsl_vector *substract(gsl_vector *termA, gsl_vector *termB, gsl_vector *result) {
+gsl_vector *subtract(gsl_vector *termA, gsl_vector *termB, gsl_vector *result) {
     gsl_vector_memcpy(result, termA);
     gsl_vector_sub(result, termB);
 
