@@ -1,20 +1,19 @@
+#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_vector_double.h>
 #include "sambe.ih"
 
 gsl_matrix* g_xs;
+
 gsl_vector* g_localBandwidths;
+
 double g_globalBandwidth;
+gsl_matrix* g_globalBandwidthMatrix;
 
 ShapeAdaptiveKernel g_kernel;
-double g_kernelConstant;
 
 size_t g_numXs;
 
 gsl_vector* g_movedPattern;
-gsl_vector* g_scaledPattern;
-
-gsl_matrix* g_globalBandwidthMatrix;
-gsl_matrix* g_globalInverse;
-double g_globalScalingFactor;
 
 int g_k;
 gsl_matrix* g_distanceMatrix;
@@ -27,6 +26,8 @@ void sambeFinalDensity(gsl_matrix* xs,
 
     prepareGlobals(xs, localBandwidths, globalBandwidth, kernel, k);
 
+    kernel.allocate(xs->size2);
+
     double density;
     gsl_vector_view x;
 
@@ -38,6 +39,7 @@ void sambeFinalDensity(gsl_matrix* xs,
         gsl_vector_set(outDensities, i, density);
     }
 
+    kernel.free();
     freeGlobals();
 }
 
@@ -45,12 +47,18 @@ double finalDensitySinglePattern(gsl_vector *x, size_t xIdx) {
     double localBandwidth, density = 0.0;
 
     gsl_vector_view xi;
-    prepareShapeAdaptiveKernel(xIdx);
+    gsl_vector* movedPattern;
+    determineGlobalKernelShape(xIdx);
+    g_kernel.computeConstants(g_globalBandwidthMatrix);
 
     for(size_t i = 0; i < g_numXs; i++){
         xi = gsl_matrix_row(g_xs, i);
+
+        //x - xi
+        movedPattern = substract(x, &xi.vector, g_movedPattern);
         localBandwidth = gsl_vector_get(g_localBandwidths, i);
-        density += evaluateKernel(x, &xi.vector, localBandwidth);
+
+        density += g_kernel.density(movedPattern, localBandwidth);
     }
 
     density /= g_numXs;
@@ -74,34 +82,25 @@ void determineGlobalKernelShape(size_t patternIdx) {
     gsl_matrix_scale(g_globalBandwidthMatrix, scalingFactor);
 }
 
-double evaluateKernel(gsl_vector *x, gsl_vector *xi, double localBandwidth) {
-    gsl_vector_memcpy(g_movedPattern, x);
-    gsl_vector_sub(g_movedPattern, xi);
+gsl_vector *substract(gsl_vector *termA, gsl_vector *termB, gsl_vector *result) {
+    gsl_vector_memcpy(result, termA);
+    gsl_vector_sub(result, termB);
 
-    gsl_vector_set_zero(g_scaledPattern);
-
-    double density = g_kernel.density(g_movedPattern, localBandwidth,
-                                              g_globalScalingFactor, g_globalInverse, g_kernelConstant,
-                                              g_scaledPattern);
-    return density;
+    return result;
 }
 
 void allocateGlobals(size_t dataDimension, size_t num_xi_s, int k) {
     g_globalBandwidthMatrix = gsl_matrix_alloc(dataDimension, dataDimension);
-    g_globalInverse = gsl_matrix_alloc(dataDimension, dataDimension);
     g_distanceMatrix = gsl_matrix_alloc(num_xi_s, num_xi_s);
     g_nearestNeighbours = gsl_matrix_alloc(k, dataDimension);
     g_movedPattern = gsl_vector_alloc(dataDimension);
-    g_scaledPattern = gsl_vector_alloc(dataDimension);
 }
 
 void freeGlobals() {
     gsl_matrix_free(g_globalBandwidthMatrix);
-    gsl_matrix_free(g_globalInverse);
     gsl_matrix_free(g_distanceMatrix);
     gsl_matrix_free(g_nearestNeighbours);
     gsl_vector_free(g_movedPattern);
-    gsl_vector_free(g_scaledPattern);
 }
 
 void prepareGlobals(gsl_matrix *xs,
@@ -121,11 +120,4 @@ void prepareGlobals(gsl_matrix *xs,
     allocateGlobals(dimension, g_numXs, g_k);
 
     computeDistanceMatrix(g_xs, g_distanceMatrix);
-}
-
-void prepareShapeAdaptiveKernel(size_t patternIdx) {
-    determineGlobalKernelShape(patternIdx);
-    g_kernel.factorFunction(g_globalBandwidthMatrix,
-                            g_globalInverse, &g_globalScalingFactor,
-                            &g_kernelConstant);
 }
