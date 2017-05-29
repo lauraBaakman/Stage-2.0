@@ -23,6 +23,7 @@ static gsl_matrix* g_sa_globalInverse;
 static double g_sa_globalScalingFactor;
 static gsl_matrix* g_sa_LUDecompositionH;
 static gsl_vector* g_sa_scaledPattern;
+static gsl_permutation* g_sa_permutation;
 
 /* Normal Kernel */
 
@@ -75,6 +76,7 @@ void sa_allocate(size_t dimension) {
     g_sa_globalInverse = gsl_matrix_alloc(dimension, dimension);
     g_sa_LUDecompositionH = gsl_matrix_alloc(dimension, dimension);
     g_sa_scaledPattern = gsl_vector_alloc(dimension);
+    g_sa_permutation = gsl_permutation_alloc(dimension);
 
     //Compute the Standard Gaussian Constant
     sa_compute_dimension_dependent_constants(dimension);
@@ -92,12 +94,11 @@ void sa_compute_constants(gsl_matrix *globalBandwidthMatrix) {
     gsl_matrix_memcpy(g_sa_LUDecompositionH, globalBandwidthMatrix);
 
     //Compute LU decompostion
-    gsl_permutation* permutation = gsl_permutation_calloc(dimension);
     int signum = 0;
-    gsl_linalg_LU_decomp(g_sa_LUDecompositionH, permutation, &signum);
+    gsl_linalg_LU_decomp(g_sa_LUDecompositionH, g_sa_permutation, &signum);
 
     //Compute global inverse
-    gsl_linalg_LU_invert(g_sa_LUDecompositionH, permutation, g_sa_globalInverse);
+    gsl_linalg_LU_invert(g_sa_LUDecompositionH, g_sa_permutation, g_sa_globalInverse);
 
     //Compute global scaling factor
     double determinant = gsl_linalg_LU_det(g_sa_LUDecompositionH, signum);
@@ -111,4 +112,5 @@ void sa_free() {
     gsl_matrix_free(g_sa_globalInverse);
     gsl_matrix_free(g_sa_LUDecompositionH);
     gsl_vector_free(g_sa_scaledPattern);
+    gsl_permutation_free(g_sa_permutation);
 }
