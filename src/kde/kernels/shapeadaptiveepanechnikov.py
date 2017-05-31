@@ -50,6 +50,7 @@ class _ShapeAdaptiveEpanechnikov_Python(ShapeAdaptiveKernel_Python):
 
     def __init__(self, bandwidth_matrix, *args, **kwargs):
         self._global_bandwidth_matrix = self._square_root_of_the_variance * bandwidth_matrix
+        self._unit_sphere_volume = self._compute_unit_sphere_volume(self.dimension)
 
     @property
     def dimension(self):
@@ -68,10 +69,10 @@ class _ShapeAdaptiveEpanechnikov_Python(ShapeAdaptiveKernel_Python):
     def _epanechnikov(self, pattern):
         dot_product = np.dot(pattern, pattern)
         if dot_product < 1.0:
-            return (2 + self.dimension) / (2 * self._unit_sphere_volume(self.dimension)) * (1 - dot_product)
+            return (2 + self.dimension) / (2 * self._unit_sphere_volume) * (1 - dot_product)
         return 0
 
-    def _unit_sphere_volume(self, dimension):
+    def _compute_unit_sphere_volume(self, dimension):
         numerator = math.pow(math.pi, dimension / 2.0)
         denominator = scipy.special.gamma(dimension / 2.0 + 1)
         return numerator / denominator
