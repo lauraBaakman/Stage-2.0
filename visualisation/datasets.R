@@ -6,8 +6,7 @@ source("./header.R");
 source("./io.R");
 
 # Load libraries
-library.path <- cat(.libPaths())
-library(scatterplot3d, lib.loc = library.path)
+library(scatterplot3d)
 
 plotDataSet <- function(data, outputFile, numberOfPatternsPerSubSet){
   if(length(colours) < length(numberOfPatternsPerSubSet)){
