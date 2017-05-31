@@ -18,7 +18,7 @@ class Gaussian(Kernel):
         return _as_C_enum
 
 
-class _StandardGaussian(Kernel):
+class _Gaussian(Kernel):
 
     def __init__(self):
         pass
@@ -28,7 +28,7 @@ class _StandardGaussian(Kernel):
         return _as_C_enum
 
 
-class _StandardGaussian_C(_StandardGaussian):
+class _StandardGaussian_C(_Gaussian):
     def __init__(self):
         super(_StandardGaussian_C, self).__init__()
 
@@ -52,7 +52,7 @@ class _StandardGaussian_C(_StandardGaussian):
         return densities
 
 
-class _StandardGaussian_Python(_StandardGaussian):
+class _StandardGaussian_Python(_Gaussian):
     def __init__(self):
         super(_StandardGaussian_Python, self).__init__()
 
