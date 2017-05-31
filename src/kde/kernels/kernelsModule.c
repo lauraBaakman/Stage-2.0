@@ -132,6 +132,75 @@ static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
     return Py_None;
 }
 
+static char kernels_sa_epanechnikov_docstring[] = "Evaluate the shape adaptive Epanechnikov kernel for each row in the input matrix.";
+static PyObject * sa_epanechnikov_single_pattern(PyObject *self, PyObject *args){
+    /* Read input */
+    PyObject* inPattern = NULL;
+    PyObject* inGlobalBandwidthMatrix = NULL;
+
+    double localBandwidth;
+
+    if (!PyArg_ParseTuple(args, "OdO", &inPattern, &localBandwidth, &inGlobalBandwidthMatrix)) return NULL;
+
+    gsl_vector_view pattern = pyObjectToGSLVectorView(inPattern, NPY_ARRAY_IN_ARRAY);
+    gsl_matrix_view globalBandwidthMatrix = pyObjectToGSLMatrixView(inGlobalBandwidthMatrix, NPY_ARRAY_IN_ARRAY);
+
+    ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(SHAPE_ADAPTIVE_EPANECHNIKOV);
+
+    kernel.allocate(pattern.vector.size);
+    kernel.computeConstants(&globalBandwidthMatrix.matrix);
+
+    double density = kernel.density(&pattern.vector, localBandwidth);
+
+    /* Free memory */
+    kernel.free();
+
+    /* Create return object */
+    PyObject *returnObject = Py_BuildValue("d", density);
+    return returnObject;
+}
+
+static PyObject * sa_epanechnikov_multi_pattern(PyObject *self, PyObject *args){
+    /* Read input */
+    PyObject* inPatterns = NULL;
+    PyObject* inLocalBandwidths = NULL;
+    PyObject* inGlobalBandwidthMatrix = NULL;
+    PyObject* outDensities = NULL;
+
+    if (!PyArg_ParseTuple(args, "OOOO",
+                          &inPatterns,
+                          &inLocalBandwidths,
+                          &inGlobalBandwidthMatrix,
+                          &outDensities)) return NULL;
+
+    gsl_matrix_view patterns = pyObjectToGSLMatrixView(inPatterns, NPY_ARRAY_IN_ARRAY);
+    gsl_matrix* globalBandwidthMatrix = pyObjectToGSLMatrix(inGlobalBandwidthMatrix, NPY_ARRAY_IN_ARRAY);
+    gsl_vector_view localBandwidths = pyObjectToGSLVectorView(inLocalBandwidths, NPY_ARRAY_IN_ARRAY);
+    gsl_vector_view densities = pyObjectToGSLVectorView(outDensities, NPY_ARRAY_OUT_ARRAY);
+
+    ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(SHAPE_ADAPTIVE_EPANECHNIKOV);
+
+    double localBandwidth, density;
+
+    gsl_vector_view pattern;
+
+    kernel.allocate(patterns.matrix.size2);
+    kernel.computeConstants(globalBandwidthMatrix);
+
+    for(size_t j = 0; j < patterns.matrix.size1; j++) {
+        pattern = gsl_matrix_row(&patterns.matrix, j);
+        localBandwidth = gsl_vector_get(&localBandwidths.vector, j);
+        density = kernel.density(&pattern.vector, localBandwidth);
+        gsl_vector_set(&densities.vector, j, density);
+    }
+
+    kernel.free();
+
+    /* Create return object */
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 static char kernels_epanechnikov_docstring[] = "Evaluate the Epanechnikov kernel for each row in the input matrix.";
 static PyObject * epanechnikov_single_pattern(PyObject *self, PyObject *args){
     return single_pattern_symmetric(args, EPANECHNIKOV);
@@ -228,10 +297,13 @@ static PyMethodDef method_table[] = {
         {"epanechnikov_multi_pattern",          epanechnikov_multi_pattern,         METH_VARARGS,   kernels_epanechnikov_docstring},
 
         {"test_kernel_single_pattern",          testKernel_single_pattern,          METH_VARARGS,   kernels_testKernel_docstring},
-        {"test_kernel_multi_pattern",           testKernel_multi_pattern,  /**/     METH_VARARGS,   kernels_testKernel_docstring},
+        {"test_kernel_multi_pattern",           testKernel_multi_pattern,           METH_VARARGS,   kernels_testKernel_docstring},
 
         {"sa_gaussian_single_pattern",          sa_gaussian_single_pattern,         METH_VARARGS,   kernels_sa_gaussian_docstring},
         {"sa_gaussian_multi_pattern",           sa_gaussian_multi_pattern,          METH_VARARGS,   kernels_sa_gaussian_docstring},
+
+        {"sa_epanechnikov_single_pattern",      sa_epanechnikov_single_pattern,     METH_VARARGS,   kernels_sa_epanechnikov_docstring},
+        {"sa_epanechnikov_multi_pattern",       sa_epanechnikov_multi_pattern,      METH_VARARGS,   kernels_sa_epanechnikov_docstring},
 
         {"scaling_factor",                      scaling_factor,                     METH_VARARGS,   kernels_scalingFactor_docstring},
         /* Sentinel */
