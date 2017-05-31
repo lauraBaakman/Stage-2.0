@@ -4,7 +4,7 @@ import numpy as np
 
 import kde
 from kde.kernels.epanechnikov import Epanechnikov
-from kde.kernels.standardGaussian import StandardGaussian
+from kde.kernels.gaussian import Gaussian
 from kde.kernels.testKernel import TestKernel
 from kde.modifeidbreiman import _MBEEstimator_Python, _MBEEstimator_C, ModifiedBreimanEstimator
 from kde.parzen import _ParzenEstimator_Python, _ParzenEstimator_C
@@ -47,7 +47,7 @@ class TestModifiedBreimanEstimator(TestCase):
             [1, 1]
         ])
         estimator = ModifiedBreimanEstimator(
-            pilot_kernel_class=StandardGaussian, pilot_estimator_implementation=_parzen_implementation,
+            pilot_kernel_class=Gaussian, pilot_estimator_implementation=_parzen_implementation,
             dimension=2, sensitivity=0.5
         )
         actual = estimator._estimate_pilot_densities(0.5, xi_s)
@@ -94,7 +94,7 @@ class ModifiedBreimanEstimatorImpAbstractTest(object):
         x_s = np.array([[0, 0], [1, 1], [0, 1]])
         local_bandwidths = np.array([10, 20, 50])
         general_bandwidth = 0.5
-        kernel = StandardGaussian()
+        kernel = Gaussian()
         estimator = self._estimator_class(
             xi_s=xi_s, x_s=x_s, dimension=2,
             kernel=kernel,
@@ -115,7 +115,7 @@ class Test_MBEEstimator_Python(ModifiedBreimanEstimatorImpAbstractTest, TestCase
         x_s = np.array([[0, 0], [1, 1]])
         local_bandwidths = np.array([10, 20, 50])
         general_bandwidth = 0.5
-        kernel = StandardGaussian()
+        kernel = Gaussian()
         pattern = x_s[0]
         estimator = self._estimator_class(
             xi_s=xi_s, x_s=x_s, dimension=2,

@@ -7,10 +7,10 @@ from kde.kernels.kernel import Kernel, KernelException
 _as_C_enum = 1
 
 
-class StandardGaussian(Kernel):
+class Gaussian(Kernel):
 
     def __new__(cls, implementation=None):
-        implementation_class = implementation or _StandardGaussian_C
+        implementation_class = implementation or _Gaussian_C
         return implementation_class()
 
     @staticmethod
@@ -18,7 +18,7 @@ class StandardGaussian(Kernel):
         return _as_C_enum
 
 
-class _StandardGaussian(Kernel):
+class _Gaussian(Kernel):
 
     def __init__(self):
         pass
@@ -28,9 +28,9 @@ class _StandardGaussian(Kernel):
         return _as_C_enum
 
 
-class _StandardGaussian_C(_StandardGaussian):
+class _Gaussian_C(_Gaussian):
     def __init__(self):
-        super(_StandardGaussian_C, self).__init__()
+        super(_Gaussian_C, self).__init__()
 
     def evaluate(self, xs):
         if xs.ndim == 1:
@@ -52,9 +52,9 @@ class _StandardGaussian_C(_StandardGaussian):
         return densities
 
 
-class _StandardGaussian_Python(_StandardGaussian):
+class _Gaussian_Python(_Gaussian):
     def __init__(self):
-        super(_StandardGaussian_Python, self).__init__()
+        super(_Gaussian_Python, self).__init__()
 
     def evaluate(self, xs):
         dimension = self._get_data_dimension(xs)

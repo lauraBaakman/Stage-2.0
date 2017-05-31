@@ -10,7 +10,7 @@ _as_c_enum = 4
 class ShapeAdaptiveGaussian(ShapeAdaptive):
 
     def __new__(cls, bandwidth_matrix, implementation=None):
-        implementation_class = implementation or _ShapeAdaptiveGaussian_Python
+        implementation_class = implementation or _ShapeAdaptiveGaussian_C
         cls._validate_bandwidth_matrix(bandwidth_matrix)
         return implementation_class(bandwidth_matrix=bandwidth_matrix)
 

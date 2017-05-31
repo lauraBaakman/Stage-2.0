@@ -7,7 +7,7 @@ import kde.utils as utils
 import kde.utils.automaticWindowWidthMethods as automaticWindowWidthMethods
 from kde.estimatorimplementation import EstimatorImplementation
 from kde.kernels.epanechnikov import Epanechnikov
-from kde.kernels.standardGaussian import StandardGaussian
+from kde.kernels.gaussian import Gaussian
 from kde.parzen import ParzenEstimator
 
 
@@ -38,7 +38,7 @@ class ModifiedBreimanEstimator(object):
         self._general_window_width_method = pilot_window_width_method
         self._sensitivity = sensitivity
         self._pilot_kernel_class = pilot_kernel_class or Epanechnikov
-        self._kernel = kernel_class() if kernel_class else StandardGaussian()
+        self._kernel = kernel_class() if kernel_class else Gaussian()
         self._number_of_grid_points = number_of_grid_points
 
         self._pilot_estimator_implementation = pilot_estimator_implementation or ParzenEstimator
