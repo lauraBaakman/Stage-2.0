@@ -49,17 +49,27 @@ class _ShapeAdaptiveEpanechnikov_Python(ShapeAdaptiveKernel_Python):
     _square_root_of_the_variance = np.sqrt(_kernel_variance)
 
     def __init__(self, bandwidth_matrix, *args, **kwargs):
-        raise NotImplementedError()
+        self._global_bandwidth_matrix = self._square_root_of_the_variance * bandwidth_matrix
 
     @property
     def dimension(self):
-        raise NotImplementedError()
+        (d, _) = self._global_bandwidth_matrix.shape
+        return d
 
     def to_C_enum(self):
         return _as_c_enum
 
     def _evaluate_pattern(self, pattern, local_bandwidth):
-        raise NotImplementedError() 
+        local_bandwidth_matrix = local_bandwidth * self._global_bandwidth_matrix
+        local_inverse = LA.inv(local_bandwidth_matrix)
+        local_scaling_factor = 1 / LA.det(local_bandwidth_matrix)
+        return local_scaling_factor * self._epanechnikov(np.matmul(pattern, local_inverse))
+
+    def _epanechnikov(self, pattern):
+        dot_product = np.dot(pattern, pattern)
+        if dot_product < 1.0:
+            return (2 + self.dimension) / (2 * self._unit_sphere_volume(self.dimension)) * (1 - dot_product)
+        return 0
 
     def _unit_sphere_volume(self, dimension):
         numerator = math.pow(math.pi, dimension / 2.0)
