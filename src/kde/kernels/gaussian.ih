@@ -9,19 +9,18 @@
 
 #include "gaussian.h"
 
-/* Symmetric */
 double computeStandardGaussianConstant(size_t dimension);
 
+/* Symmetric */
 static double normal_pdf(gsl_vector* pattern);
 static void normal_prepare(size_t dimension);
 static void normal_free();
 
 /* Shape Adaptive */
-double sa_pdf(gsl_vector *pattern, double localBandwidth);
+static void sa_allocate(size_t dimension);
+static void sa_computeConstants(gsl_matrix *globalBandwidthMatrix);
+static double sa_pdf(gsl_vector *pattern, double localBandwidth);
+static void sa_free();
 
-void sa_allocate(size_t dimension);
-void sa_compute_constants(gsl_matrix* globalBandwidthMatrix);
-void sa_compute_dimension_dependent_constants(size_t dimension);
-void sa_free();
-
+static void sa_computeDimensionDependentConstants(size_t dimension);
 #endif //KERNELS_GAUSSIAN_IH_H
