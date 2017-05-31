@@ -10,7 +10,7 @@ _as_C_enum = 1
 class Gaussian(Kernel):
 
     def __new__(cls, implementation=None):
-        implementation_class = implementation or _StandardGaussian_C
+        implementation_class = implementation or _Gaussian_C
         return implementation_class()
 
     @staticmethod
@@ -28,9 +28,9 @@ class _Gaussian(Kernel):
         return _as_C_enum
 
 
-class _StandardGaussian_C(_Gaussian):
+class _Gaussian_C(_Gaussian):
     def __init__(self):
-        super(_StandardGaussian_C, self).__init__()
+        super(_Gaussian_C, self).__init__()
 
     def evaluate(self, xs):
         if xs.ndim == 1:
