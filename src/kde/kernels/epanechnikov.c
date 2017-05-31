@@ -40,6 +40,15 @@ double unitSphereVolume(size_t dimension) {
     return numerator / denominator;
 }
 
+double epanechnikov_kernel(gsl_vector *pattern, double constant) {
+    double dotProduct = 0.0;
+    gsl_blas_ddot(pattern,  pattern, &dotProduct);
+
+    if (dotProduct >= 1) return 0;
+
+    return constant * (1 - dotProduct);
+}
+
 /* Normal Kernel */
 
 void normal_prepare(size_t dimension) {
@@ -57,13 +66,7 @@ void normal_free() {
 double normal_pdf(gsl_vector *pattern) {
     gsl_vector_memcpy(g_scaledPattern, pattern);
     gsl_vector_scale(g_scaledPattern, g_normal_one_over_unit_variance_constant);
-
-    double dotProduct = 0.0;
-    gsl_blas_ddot(g_scaledPattern,  g_scaledPattern, &dotProduct);
-
-    if (dotProduct >= 1) return 0;
-
-    return g_normal_constant * (1 - dotProduct);
+    return epanechnikov_kernel(g_scaledPattern, g_normal_constant);
 }
 
 double normal_unitVarianceConstant(size_t dimension) {
