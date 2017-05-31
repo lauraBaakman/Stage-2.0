@@ -1,7 +1,7 @@
 import numpy as np
 import warnings
 
-from kde.modifeidbreiman import ModifiedBreimanEstimator
+from kde.modifeidbreiman import MBEstimator
 import kde.utils.automaticWindowWidthMethods as automaticWindowWidthMethods
 from kde.estimatorimplementation import EstimatorImplementation
 from kde.parzen import ParzenEstimator
@@ -13,14 +13,14 @@ import kde.kernels.scaling
 import kde._kde as _kde
 
 
-class ShapeAdaptiveMBE(ModifiedBreimanEstimator):
+class SAMBEstimator(MBEstimator):
     """
     Implementation of the shape adaptive modified Breiman Estimator.
     """
 
     def __init__(self, dimension, sensitivity=1 / 2,
                  pilot_window_width_method=automaticWindowWidthMethods.ferdosi,
-                 number_of_grid_points=ModifiedBreimanEstimator.default_number_of_grid_points,
+                 number_of_grid_points=MBEstimator.default_number_of_grid_points,
                  pilot_kernel_class=None, pilot_estimator_implementation=None,
                  kernel_class=None, final_estimator_implementation=None):
         self._dimension = dimension
@@ -28,7 +28,7 @@ class ShapeAdaptiveMBE(ModifiedBreimanEstimator):
         self._sensitivity = sensitivity
         self._pilot_kernel_class = pilot_kernel_class or Epanechnikov
         self._kernel = kernel_class or ShapeAdaptiveGaussian
-        self._number_of_grid_points = number_of_grid_points or ModifiedBreimanEstimator.default_number_of_grid_points
+        self._number_of_grid_points = number_of_grid_points or MBEstimator.default_number_of_grid_points
 
         self._pilot_estimator_implementation = pilot_estimator_implementation or ParzenEstimator
         self._final_estimator_implementation = final_estimator_implementation or _ShapeAdaptiveMBE_C

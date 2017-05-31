@@ -9,7 +9,7 @@ from kde.kernels.shapeadaptiveepanechnikov import ShapeAdaptiveEpanechnikov
 from kde.kernels.testKernel import TestKernel
 from kde.parzen import _ParzenEstimator_Python, _ParzenEstimator_C
 from kde.sambe import \
-    ShapeAdaptiveMBE, \
+    SAMBEstimator, \
     _ShapeAdaptiveMBE_C, \
     _ShapeAdaptiveMBE_Python
 
@@ -23,7 +23,7 @@ class TestShapeAdaptiveMBE(TestCase):
         final_kernel = ShapeAdaptiveGaussian
         number_of_grid_points = 2
         sensitivity = 0.5
-        estimator = ShapeAdaptiveMBE(
+        estimator = SAMBEstimator(
             pilot_kernel_class=pilot_kernel, pilot_estimator_implementation=pilot_implementation,
             kernel_class=final_kernel, final_estimator_implementation=final_implementation,
             dimension=2, number_of_grid_points=number_of_grid_points,

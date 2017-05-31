@@ -11,7 +11,7 @@ from kde.kernels.gaussian import Gaussian
 from kde.parzen import ParzenEstimator
 
 
-class ModifiedBreimanEstimator(object):
+class MBEstimator(object):
     """Implementation of the Modifeid Breiman EstimatorImplementation, as proposed by Wilkinson and Meijer.
     """
 
@@ -31,7 +31,7 @@ class ModifiedBreimanEstimator(object):
             window width. Defaults to ferdosi.
         :param number_of_grid_points: (int or list, optional) The number of grid points per dimension. If an int is
         passed the same number of grid points is used for each dimension.
-        Defaults to *ModifiedBreimanEstimator.default_number_of_grid_points*
+        Defaults to *MBEstimator.default_number_of_grid_points*
         :param final_estimator_implementation: Class that inherits from EstimatorImplementation.
         """
         self._dimension = dimension

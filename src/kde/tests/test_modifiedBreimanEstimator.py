@@ -6,7 +6,7 @@ import kde
 from kde.kernels.epanechnikov import Epanechnikov
 from kde.kernels.gaussian import Gaussian
 from kde.kernels.testKernel import TestKernel
-from kde.modifeidbreiman import _MBEEstimator_Python, _MBEEstimator_C, ModifiedBreimanEstimator
+from kde.modifeidbreiman import _MBEEstimator_Python, _MBEEstimator_C, MBEstimator
 from kde.parzen import _ParzenEstimator_Python, _ParzenEstimator_C
 
 
@@ -18,7 +18,7 @@ class TestModifiedBreimanEstimator(TestCase):
         final_kerel = TestKernel
         number_of_grid_points = 2
         sensitivity = 0.5
-        estimator = ModifiedBreimanEstimator(
+        estimator = MBEstimator(
             pilot_kernel_class=pilot_kernel, pilot_estimator_implementation=pilot_implementation,
             kernel_class=final_kerel, final_estimator_implementation=final_implementation,
             dimension=2, number_of_grid_points=number_of_grid_points,
@@ -46,7 +46,7 @@ class TestModifiedBreimanEstimator(TestCase):
             [0, 0],
             [1, 1]
         ])
-        estimator = ModifiedBreimanEstimator(
+        estimator = MBEstimator(
             pilot_kernel_class=Gaussian, pilot_estimator_implementation=_parzen_implementation,
             dimension=2, sensitivity=0.5
         )
@@ -61,7 +61,7 @@ class TestModifiedBreimanEstimator(TestCase):
         self.estimate_pilot_densities_test_helper(_ParzenEstimator_C)
 
     def test__compute_local_bandwidths(self):
-        estimator = ModifiedBreimanEstimator(dimension=2, sensitivity=0.5)
+        estimator = MBEstimator(dimension=2, sensitivity=0.5)
         densities = np.array([1, 2, 3, 4, 5, 6])
         expected = np.array([1.730258699016973, 1.223477659281915, 0.998965325645141,
                              0.865129349508487, 0.773795213932460, 0.706375155933907])
