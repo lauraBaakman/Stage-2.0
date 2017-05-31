@@ -54,7 +54,7 @@ PyObject *single_pattern_symmetric(PyObject *args, KernelType kernelType) {
     return returnObject;
 }
 
-PyObject *single_pattern_shapeadaptive(PyObject *args, KernelType kernelType){
+PyObject *single_pattern_shape_adaptive(PyObject *args, KernelType kernelType){
     /* Read input */
     PyObject* inPattern = NULL;
     PyObject* inGlobalBandwidthMatrix = NULL;
@@ -81,6 +81,47 @@ PyObject *single_pattern_shapeadaptive(PyObject *args, KernelType kernelType){
     return returnObject;
 }
 
+PyObject *multiple_patterns_shape_adaptive(PyObject *args, KernelType kernelType) {
+    /* Read input */
+    PyObject* inPatterns = NULL;
+    PyObject* inLocalBandwidths = NULL;
+    PyObject* inGlobalBandwidthMatrix = NULL;
+    PyObject* outDensities = NULL;
+
+    if (!PyArg_ParseTuple(args, "OOOO",
+                          &inPatterns,
+                          &inLocalBandwidths,
+                          &inGlobalBandwidthMatrix,
+                          &outDensities)) return NULL;
+
+    gsl_matrix_view patterns = pyObjectToGSLMatrixView(inPatterns, NPY_ARRAY_IN_ARRAY);
+    gsl_matrix* globalBandwidthMatrix = pyObjectToGSLMatrix(inGlobalBandwidthMatrix, NPY_ARRAY_IN_ARRAY);
+    gsl_vector_view localBandwidths = pyObjectToGSLVectorView(inLocalBandwidths, NPY_ARRAY_IN_ARRAY);
+    gsl_vector_view densities = pyObjectToGSLVectorView(outDensities, NPY_ARRAY_OUT_ARRAY);
+
+    ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(kernelType);
+
+    double localBandwidth, density;
+
+    gsl_vector_view pattern;
+
+    kernel.allocate(patterns.matrix.size2);
+    kernel.computeConstants(globalBandwidthMatrix);
+
+    for(size_t j = 0; j < patterns.matrix.size1; j++) {
+        pattern = gsl_matrix_row(&patterns.matrix, j);
+        localBandwidth = gsl_vector_get(&localBandwidths.vector, j);
+        density = kernel.density(&pattern.vector, localBandwidth);
+        gsl_vector_set(&densities.vector, j, density);
+    }
+
+    kernel.free();
+
+    /* Create return object */
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 static char kernels_standardGaussian_docstring[] = "Evaluate the Standard Gaussian (zero vector mean and identity covariance matrix) for each row in the input matrix.";
 static PyObject * standard_gaussian_multi_pattern(PyObject *self, PyObject *args){
     return multi_pattern_symmetric(args, STANDARD_GAUSSIAN);
@@ -92,94 +133,20 @@ static PyObject * standard_gaussian_single_pattern(PyObject *self, PyObject *arg
 
 static char kernels_sa_gaussian_docstring[] = "Evaluate the shape adaptive gaussian kernel for each row in the input matrix.";
 static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
-    return single_pattern_shapeadaptive(args, SHAPE_ADAPTIVE_GAUSSIAN);
+    return single_pattern_shape_adaptive(args, SHAPE_ADAPTIVE_GAUSSIAN);
 }
 
 static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
-    /* Read input */
-    PyObject* inPatterns = NULL;
-    PyObject* inLocalBandwidths = NULL;
-    PyObject* inGlobalBandwidthMatrix = NULL;
-    PyObject* outDensities = NULL;
-
-    if (!PyArg_ParseTuple(args, "OOOO",
-                          &inPatterns,
-                          &inLocalBandwidths,
-                          &inGlobalBandwidthMatrix,
-                          &outDensities)) return NULL;
-
-    gsl_matrix_view patterns = pyObjectToGSLMatrixView(inPatterns, NPY_ARRAY_IN_ARRAY);
-    gsl_matrix* globalBandwidthMatrix = pyObjectToGSLMatrix(inGlobalBandwidthMatrix, NPY_ARRAY_IN_ARRAY);
-    gsl_vector_view localBandwidths = pyObjectToGSLVectorView(inLocalBandwidths, NPY_ARRAY_IN_ARRAY);
-    gsl_vector_view densities = pyObjectToGSLVectorView(outDensities, NPY_ARRAY_OUT_ARRAY);
-
-    ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(SHAPE_ADAPTIVE_GAUSSIAN);
-
-    double localBandwidth, density;
-
-    gsl_vector_view pattern;
-
-    kernel.allocate(patterns.matrix.size2);
-    kernel.computeConstants(globalBandwidthMatrix);
-
-    for(size_t j = 0; j < patterns.matrix.size1; j++) {
-        pattern = gsl_matrix_row(&patterns.matrix, j);
-        localBandwidth = gsl_vector_get(&localBandwidths.vector, j);
-        density = kernel.density(&pattern.vector, localBandwidth);
-        gsl_vector_set(&densities.vector, j, density);
-    }
-
-    kernel.free();
-
-    /* Create return object */
-    Py_INCREF(Py_None);
-    return Py_None;
+    return multiple_patterns_shape_adaptive(args, SHAPE_ADAPTIVE_GAUSSIAN);
 }
 
 static char kernels_sa_epanechnikov_docstring[] = "Evaluate the shape adaptive Epanechnikov kernel for each row in the input matrix.";
 static PyObject * sa_epanechnikov_single_pattern(PyObject *self, PyObject *args){
-    return single_pattern_shapeadaptive(args, SHAPE_ADAPTIVE_EPANECHNIKOV);
+    return single_pattern_shape_adaptive(args, SHAPE_ADAPTIVE_EPANECHNIKOV);
 }
 
 static PyObject * sa_epanechnikov_multi_pattern(PyObject *self, PyObject *args){
-    /* Read input */
-    PyObject* inPatterns = NULL;
-    PyObject* inLocalBandwidths = NULL;
-    PyObject* inGlobalBandwidthMatrix = NULL;
-    PyObject* outDensities = NULL;
-
-    if (!PyArg_ParseTuple(args, "OOOO",
-                          &inPatterns,
-                          &inLocalBandwidths,
-                          &inGlobalBandwidthMatrix,
-                          &outDensities)) return NULL;
-
-    gsl_matrix_view patterns = pyObjectToGSLMatrixView(inPatterns, NPY_ARRAY_IN_ARRAY);
-    gsl_matrix* globalBandwidthMatrix = pyObjectToGSLMatrix(inGlobalBandwidthMatrix, NPY_ARRAY_IN_ARRAY);
-    gsl_vector_view localBandwidths = pyObjectToGSLVectorView(inLocalBandwidths, NPY_ARRAY_IN_ARRAY);
-    gsl_vector_view densities = pyObjectToGSLVectorView(outDensities, NPY_ARRAY_OUT_ARRAY);
-
-    ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(SHAPE_ADAPTIVE_EPANECHNIKOV);
-
-    double localBandwidth, density;
-
-    gsl_vector_view pattern;
-
-    kernel.allocate(patterns.matrix.size2);
-    kernel.computeConstants(globalBandwidthMatrix);
-
-    for(size_t j = 0; j < patterns.matrix.size1; j++) {
-        pattern = gsl_matrix_row(&patterns.matrix, j);
-        localBandwidth = gsl_vector_get(&localBandwidths.vector, j);
-        density = kernel.density(&pattern.vector, localBandwidth);
-        gsl_vector_set(&densities.vector, j, density);
-    }
-
-    kernel.free();
-
-    /* Create return object */
-    Py_INCREF(Py_None);
-    return Py_None;
+    return multiple_patterns_shape_adaptive(args, SHAPE_ADAPTIVE_EPANECHNIKOV);
 }
 
 static char kernels_epanechnikov_docstring[] = "Evaluate the Epanechnikov kernel for each row in the input matrix.";
