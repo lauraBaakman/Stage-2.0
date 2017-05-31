@@ -76,14 +76,30 @@ double normal_unitVarianceConstant(size_t dimension) {
 /* Shape Adaptive Kernel */
 
 double sa_pdf(gsl_vector* pattern, double localBandwidth){
-    printf("sa_pdf\n");
-    return 42.0;
+    size_t dimension = pattern->size;
+
+    gsl_vector_set_zero(g_scaledPattern);
+
+    // Multiply the transpose of the global inverse with the pattern
+    // Since the bandwidth matrix is always symmetric we don't need to compute the transpose.
+    gsl_blas_dsymv(CblasLower, 1.0, g_sa_globalInverse, pattern, 1.0, g_scaledPattern);
+
+    //Apply the local inverse
+    gsl_vector_scale(g_scaledPattern, 1.0 / localBandwidth);
+
+    // Compute local scaling factor
+    double localScalingFactor = computeLocalScalingFactor(g_sa_globalScalingFactor, localBandwidth, dimension);
+
+    //Determine the result of the kernel
+    return localScalingFactor * epanechnikov_kernel(g_scaledPattern, g_sa_epanechnikovConstant);
 }
 
 void sa_allocate(size_t dimension){
     g_sa_globalInverse = gsl_matrix_alloc(dimension, dimension);
     g_sa_LUDecompositionH = gsl_matrix_alloc(dimension, dimension);
     g_sa_permutation = gsl_permutation_alloc(dimension);
+
+    g_scaledPattern = gsl_vector_alloc(dimension);
 
     sa_computeDimensionDependentConstants(dimension);
 }
@@ -115,6 +131,8 @@ void sa_free(){
     gsl_matrix_free(g_sa_globalInverse);
     gsl_matrix_free(g_sa_LUDecompositionH);
     gsl_permutation_free(g_sa_permutation);
+
+    gsl_vector_free(g_scaledPattern);
 
     g_sa_globalScalingFactor = 0.0;
     g_sa_epanechnikovConstant = 0.0;

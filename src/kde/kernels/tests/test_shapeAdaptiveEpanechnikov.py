@@ -12,7 +12,6 @@ class TestShapeAdaptiveEpanechnikov(TestCase):
         expected = 3
         self.assertEqual(actual, expected)
 
-    @skip("No C Implementation, yet.")
     def test_default_implementation_single_pattern_l_eq_1(self):
         H = np.array([[2, -1, 0],
                       [-1, 2, -1],
@@ -32,7 +31,6 @@ class TestShapeAdaptiveEpanechnikov(TestCase):
         actual = ShapeAdaptiveEpanechnikov(H, implementation=_ShapeAdaptiveEpanechnikov_Python).evaluate(x, local_bandwidth)
         self.assertAlmostEqual(actual, expected)
 
-    @skip("No C Implementation, yet.")
     def test_default_implementation_single_pattern_l_neq_1(self):
         H = np.array([[2, -1, 0],
                       [-1, 2, -1],
@@ -53,7 +51,6 @@ class TestShapeAdaptiveEpanechnikov(TestCase):
         actual = ShapeAdaptiveEpanechnikov(H, implementation=_ShapeAdaptiveEpanechnikov_Python).evaluate(x, local_bandwidth)
         self.assertAlmostEqual(actual, expected)
 
-    @skip("No C Implementation, yet.")
     def test_default_implementation_multiple_patterns_l_neq_1(self):
         H = np.array([[2, -1, 0],
                       [-1, 2, -1],
