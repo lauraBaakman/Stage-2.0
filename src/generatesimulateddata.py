@@ -4,9 +4,10 @@ import datasets.simulated.allsets
 
 if __name__ == '__main__':
     extension = '.txt'
-    path = '../data/simulated'
+    path = '/Users/laura/Repositories/stage-2.0/data/simulated'
 
-    for name, generator in datasets.simulated.allsets.sets:
+    for name, generator in datasets.simulated.allsets.sets.items():
         data_set = generator()
-        path = os.path.join(path, name + extension)
-        data_set.to_file(path)
+        out_path = os.path.join(path, name.replace(" ", "_") + "_" + str(data_set.num_patterns) + extension)
+        with open(out_path, 'wb') as out_file:
+            data_set.to_file(out_file)
