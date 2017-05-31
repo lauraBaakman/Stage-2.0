@@ -3,7 +3,7 @@ from unittest import TestCase, skip, skipIf
 import numpy as np
 
 from kde.kernels.kernel import KernelException
-from kde.kernels.gaussian import Gaussian, _Gaussian_C, _StandardGaussian_Python
+from kde.kernels.gaussian import Gaussian, _Gaussian_C, _Gaussian_Python
 
 
 class TestStandardGaussian(TestCase):
@@ -15,7 +15,7 @@ class TestStandardGaussian(TestCase):
 
     def test_evaluate_alternative_implementation(self):
         x = np.array([0.5, 0.5])
-        actual = Gaussian(implementation=_StandardGaussian_Python).evaluate(x)
+        actual = Gaussian(implementation=_Gaussian_Python).evaluate(x)
         expected = np.array([0.123949994309653])
         np.testing.assert_array_almost_equal(actual, expected)
 
@@ -79,7 +79,7 @@ class Test_StandardGaussian_Python(StandardGaussianImpAbstractTest, TestCase):
 
     def setUp(self):
         super().setUp()
-        self._kernel_class = _StandardGaussian_Python
+        self._kernel_class = _Gaussian_Python
 
 
 class Test_StandardGaussian_C(StandardGaussianImpAbstractTest, TestCase):

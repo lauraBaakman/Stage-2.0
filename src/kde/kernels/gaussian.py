@@ -52,9 +52,9 @@ class _Gaussian_C(_Gaussian):
         return densities
 
 
-class _StandardGaussian_Python(_Gaussian):
+class _Gaussian_Python(_Gaussian):
     def __init__(self):
-        super(_StandardGaussian_Python, self).__init__()
+        super(_Gaussian_Python, self).__init__()
 
     def evaluate(self, xs):
         dimension = self._get_data_dimension(xs)
