@@ -254,6 +254,7 @@ class ShapeAdaptiveGaussian_Python(ShapeAdaptiveGaussianImpAbstractTest, TestCas
         super().setUp()
         self._kernel_class = _ShapeAdaptiveGaussian_Python
 
+
 class ShapeAdaptiveGaussian_C(ShapeAdaptiveGaussianImpAbstractTest, TestCase):
 
     def setUp(self):
