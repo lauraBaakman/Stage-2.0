@@ -49,7 +49,7 @@ class _ShapeAdaptiveEpanechnikov_Python(ShapeAdaptiveKernel_Python):
     _square_root_of_the_variance = np.sqrt(_kernel_variance)
 
     def __init__(self, bandwidth_matrix, *args, **kwargs):
-        self._global_bandwidth_matrix = self._square_root_of_the_variance * bandwidth_matrix
+        super(_ShapeAdaptiveEpanechnikov_Python, self).__init__(self._square_root_of_the_variance * bandwidth_matrix, *args, **kwargs)
         self._unit_sphere_volume = self._compute_unit_sphere_volume(self.dimension)
 
     @property
