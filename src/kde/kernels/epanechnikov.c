@@ -89,6 +89,9 @@ void sa_computeConstants(gsl_matrix *globalBandwidthMatrix){
     //Copy the global bandwidth matrix so that we can change it
     gsl_matrix_memcpy(g_sa_LUDecompositionH, globalBandwidthMatrix);
 
+    //Scale the copy with sqrt(var(epanechnikov kernel)) to ensure unitvariance
+    gsl_matrix_scale(g_sa_LUDecompositionH, squareRootOfTheVariance);
+
     //Compute LU decompostion
     int signum = 0;
     gsl_linalg_LU_decomp(g_sa_LUDecompositionH, g_sa_permutation, &signum);
