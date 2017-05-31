@@ -27,6 +27,10 @@ static gsl_matrix* g_sa_LUDecompositionH;
 static gsl_permutation* g_sa_permutation;
 static double g_sa_globalScalingFactor;
 
+double epanechnikov_constant(size_t dimension){
+    return ((double) (dimension + 2)) / (2 * unitSphereVolume(dimension));
+}
+
 double unitSphereVolume(size_t dimension) {
     double numerator = pow(M_PI, dimension / 2.0);
     double denominator = tgamma(dimension / 2.0 + 1);
@@ -36,7 +40,7 @@ double unitSphereVolume(size_t dimension) {
 /* Normal Kernel */
 
 void normal_prepare(size_t dimension) {
-    g_normal_constant = normal_constant(dimension) * normal_unitVarianceConstant(dimension);
+    g_normal_constant = epanechnikov_constant(dimension) * normal_unitVarianceConstant(dimension);
     g_normal_one_over_unit_variance_constant = 1.0 / squareRootOfTheVariance;
     g_scaledPattern = gsl_vector_alloc(dimension);
 }
@@ -57,10 +61,6 @@ double normal_pdf(gsl_vector *pattern) {
     if (dotProduct >= 1) return 0;
 
     return g_normal_constant * (1 - dotProduct);
-}
-
-double normal_constant(size_t dimension){
-    return ((double) (dimension + 2)) / (2 * unitSphereVolume(dimension));
 }
 
 double normal_unitVarianceConstant(size_t dimension) {

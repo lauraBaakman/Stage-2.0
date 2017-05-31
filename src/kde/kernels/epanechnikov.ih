@@ -10,7 +10,7 @@
 
 /* Symmetric */
 double unitSphereVolume(size_t dimension);
-double normal_constant(size_t dimension);
+double epanechnikov_constant(size_t dimension);
 double normal_unitVarianceConstant(size_t dimension);
 
 static double normal_pdf(gsl_vector* pattern);
