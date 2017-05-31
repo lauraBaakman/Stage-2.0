@@ -160,7 +160,6 @@ class Test_ShapeAdaptiveEpanechnikov_Python(ShapeAdaptiveGaussianImpAbstractTest
         self._kernel_class = _ShapeAdaptiveEpanechnikov_Python
 
 
-@skip("No C Implementation, yet.")
 class Test_ShapeAdaptiveEpanechnikov_C(ShapeAdaptiveGaussianImpAbstractTest, TestCase):
 
     def setUp(self):
