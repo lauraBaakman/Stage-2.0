@@ -25,6 +25,7 @@ static gsl_vector* g_scaledPattern;
 static gsl_matrix* g_sa_globalInverse;
 static gsl_matrix* g_sa_LUDecompositionH;
 static gsl_permutation* g_sa_permutation;
+static double g_sa_globalScalingFactor;
 
 double unitSphereVolume(size_t dimension) {
     double numerator = pow(M_PI, dimension / 2.0);
@@ -91,6 +92,10 @@ void sa_computeConstants(gsl_matrix *globalBandwidthMatrix){
 
     //Compute global inverse
     gsl_linalg_LU_invert(g_sa_LUDecompositionH, g_sa_permutation, g_sa_globalInverse);
+
+    //Compute global scaling factor
+    double determinant = gsl_linalg_LU_det(g_sa_LUDecompositionH, signum);
+    g_sa_globalScalingFactor = 1.0 / determinant;
 }
 
 void sa_computeDimensionDependentConstants(size_t dimension){
@@ -101,4 +106,6 @@ void sa_free(){
     gsl_matrix_free(g_sa_globalInverse);
     gsl_matrix_free(g_sa_LUDecompositionH);
     gsl_permutation_free(g_sa_permutation);
+
+    g_sa_globalScalingFactor = 0.0;
 }
