@@ -14,7 +14,7 @@ Kernel shapeAdaptiveGaussianKernel = {
         .kernel.shapeAdaptiveKernel.density = sa_pdf,
         .kernel.shapeAdaptiveKernel.allocate = sa_allocate,
         .kernel.shapeAdaptiveKernel.free = sa_free,
-        .kernel.shapeAdaptiveKernel.computeConstants = sa_compute_constants,
+        .kernel.shapeAdaptiveKernel.computeConstants = sa_computeConstants,
 };
 
 static double g_standardGaussianConstant;
@@ -79,15 +79,15 @@ void sa_allocate(size_t dimension) {
     g_sa_permutation = gsl_permutation_alloc(dimension);
 
     //Compute the Standard Gaussian Constant
-    sa_compute_dimension_dependent_constants(dimension);
+    sa_computeDimensionDependentConstants(dimension);
 }
 
-void sa_compute_dimension_dependent_constants(size_t dimension) {
+void sa_computeDimensionDependentConstants(size_t dimension) {
 
     g_standardGaussianConstant = computeStandardGaussianConstant(dimension);
 }
 
-void sa_compute_constants(gsl_matrix *globalBandwidthMatrix) {
+void sa_computeConstants(gsl_matrix *globalBandwidthMatrix) {
     //Copy the global bandwidth matrix so that we can change it
     gsl_matrix_memcpy(g_sa_LUDecompositionH, globalBandwidthMatrix);
 

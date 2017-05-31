@@ -54,17 +54,7 @@ PyObject *single_pattern_symmetric(PyObject *args, KernelType kernelType) {
     return returnObject;
 }
 
-static char kernels_standardGaussian_docstring[] = "Evaluate the Standard Gaussian (zero vector mean and identity covariance matrix) for each row in the input matrix.";
-static PyObject * standard_gaussian_multi_pattern(PyObject *self, PyObject *args){
-    return multi_pattern_symmetric(args, STANDARD_GAUSSIAN);
-}
-
-static PyObject * standard_gaussian_single_pattern(PyObject *self, PyObject *args){
-    return single_pattern_symmetric(args, STANDARD_GAUSSIAN);
-}
-
-static char kernels_sa_gaussian_docstring[] = "Evaluate the shape adaptive gaussian kernel for each row in the input matrix.";
-static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
+PyObject *single_pattern_shape_adaptive(PyObject *args, KernelType kernelType){
     /* Read input */
     PyObject* inPattern = NULL;
     PyObject* inGlobalBandwidthMatrix = NULL;
@@ -76,7 +66,7 @@ static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
     gsl_vector_view pattern = pyObjectToGSLVectorView(inPattern, NPY_ARRAY_IN_ARRAY);
     gsl_matrix_view globalBandwidthMatrix = pyObjectToGSLMatrixView(inGlobalBandwidthMatrix, NPY_ARRAY_IN_ARRAY);
 
-    ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(SHAPE_ADAPTIVE_GAUSSIAN);
+    ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(kernelType);
 
     kernel.allocate(pattern.vector.size);
     kernel.computeConstants(&globalBandwidthMatrix.matrix);
@@ -91,7 +81,7 @@ static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
     return returnObject;
 }
 
-static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
+PyObject *multiple_patterns_shape_adaptive(PyObject *args, KernelType kernelType) {
     /* Read input */
     PyObject* inPatterns = NULL;
     PyObject* inLocalBandwidths = NULL;
@@ -109,7 +99,7 @@ static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
     gsl_vector_view localBandwidths = pyObjectToGSLVectorView(inLocalBandwidths, NPY_ARRAY_IN_ARRAY);
     gsl_vector_view densities = pyObjectToGSLVectorView(outDensities, NPY_ARRAY_OUT_ARRAY);
 
-    ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(SHAPE_ADAPTIVE_GAUSSIAN);
+    ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(kernelType);
 
     double localBandwidth, density;
 
@@ -130,6 +120,33 @@ static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
     /* Create return object */
     Py_INCREF(Py_None);
     return Py_None;
+}
+
+static char kernels_standardGaussian_docstring[] = "Evaluate the Standard Gaussian (zero vector mean and identity covariance matrix) for each row in the input matrix.";
+static PyObject * standard_gaussian_multi_pattern(PyObject *self, PyObject *args){
+    return multi_pattern_symmetric(args, STANDARD_GAUSSIAN);
+}
+
+static PyObject * standard_gaussian_single_pattern(PyObject *self, PyObject *args){
+    return single_pattern_symmetric(args, STANDARD_GAUSSIAN);
+}
+
+static char kernels_sa_gaussian_docstring[] = "Evaluate the shape adaptive gaussian kernel for each row in the input matrix.";
+static PyObject * sa_gaussian_single_pattern(PyObject *self, PyObject *args){
+    return single_pattern_shape_adaptive(args, SHAPE_ADAPTIVE_GAUSSIAN);
+}
+
+static PyObject * sa_gaussian_multi_pattern(PyObject *self, PyObject *args){
+    return multiple_patterns_shape_adaptive(args, SHAPE_ADAPTIVE_GAUSSIAN);
+}
+
+static char kernels_sa_epanechnikov_docstring[] = "Evaluate the shape adaptive Epanechnikov kernel for each row in the input matrix.";
+static PyObject * sa_epanechnikov_single_pattern(PyObject *self, PyObject *args){
+    return single_pattern_shape_adaptive(args, SHAPE_ADAPTIVE_EPANECHNIKOV);
+}
+
+static PyObject * sa_epanechnikov_multi_pattern(PyObject *self, PyObject *args){
+    return multiple_patterns_shape_adaptive(args, SHAPE_ADAPTIVE_EPANECHNIKOV);
 }
 
 static char kernels_epanechnikov_docstring[] = "Evaluate the Epanechnikov kernel for each row in the input matrix.";
@@ -228,10 +245,13 @@ static PyMethodDef method_table[] = {
         {"epanechnikov_multi_pattern",          epanechnikov_multi_pattern,         METH_VARARGS,   kernels_epanechnikov_docstring},
 
         {"test_kernel_single_pattern",          testKernel_single_pattern,          METH_VARARGS,   kernels_testKernel_docstring},
-        {"test_kernel_multi_pattern",           testKernel_multi_pattern,  /**/     METH_VARARGS,   kernels_testKernel_docstring},
+        {"test_kernel_multi_pattern",           testKernel_multi_pattern,           METH_VARARGS,   kernels_testKernel_docstring},
 
         {"sa_gaussian_single_pattern",          sa_gaussian_single_pattern,         METH_VARARGS,   kernels_sa_gaussian_docstring},
         {"sa_gaussian_multi_pattern",           sa_gaussian_multi_pattern,          METH_VARARGS,   kernels_sa_gaussian_docstring},
+
+        {"sa_epanechnikov_single_pattern",      sa_epanechnikov_single_pattern,     METH_VARARGS,   kernels_sa_epanechnikov_docstring},
+        {"sa_epanechnikov_multi_pattern",       sa_epanechnikov_multi_pattern,      METH_VARARGS,   kernels_sa_epanechnikov_docstring},
 
         {"scaling_factor",                      scaling_factor,                     METH_VARARGS,   kernels_scalingFactor_docstring},
         /* Sentinel */

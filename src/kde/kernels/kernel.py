@@ -50,8 +50,6 @@ class ShapeAdaptiveKernel(Kernel):
     def __init__(self, bandwidth_matrix, *args, **kwargs):
         super(ShapeAdaptiveKernel, self).__init__()
         self._global_bandwidth_matrix = bandwidth_matrix
-        self._global_bandwidth_matrix_inverse = LA.inv(bandwidth_matrix)
-        self._scaling_factor = 1 / LA.det(bandwidth_matrix)
 
     def evaluate(self, xs):
         raise NotImplementedError()
@@ -102,7 +100,7 @@ class ShapeAdaptiveKernel(Kernel):
 
     @property
     def dimension(self):
-        (dimension, _) = self._global_bandwidth_matrix_inverse.shape
+        (dimension, _) = self._global_bandwidth_matrix.shape
         return dimension
 
 
@@ -129,6 +127,11 @@ class ShapeAdaptiveKernel_C(ShapeAdaptiveKernel):
 
 
 class ShapeAdaptiveKernel_Python(ShapeAdaptiveKernel):
+
+    def __init__(self, bandwidth_matrix, *args, **kwargs):
+        super(ShapeAdaptiveKernel_Python, self).__init__(bandwidth_matrix, *args, **kwargs)
+        self._global_bandwidth_matrix_inverse = LA.inv(bandwidth_matrix)
+        self._scaling_factor = 1 / LA.det(bandwidth_matrix)
 
     def to_C_enum(self):
         pass

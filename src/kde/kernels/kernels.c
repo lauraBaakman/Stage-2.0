@@ -1,5 +1,6 @@
 #include <gsl/gsl_vector_double.h>
 #include "kernels.ih"
+#include "kernels.h"
 
 Kernel selectKernel(KernelType type) {
     switch (type) {
@@ -11,6 +12,8 @@ Kernel selectKernel(KernelType type) {
             return testKernel;
         case SHAPE_ADAPTIVE_GAUSSIAN:
             return shapeAdaptiveGaussianKernel;
+        case SHAPE_ADAPTIVE_EPANECHNIKOV:
+            return shapeAdaptiveEpanechnikovKernel;
         default:
             fprintf(stderr, "%d is an invalid kernel type.\n", type);
             exit(-1);
@@ -35,6 +38,8 @@ ShapeAdaptiveKernel selectShapeAdaptiveKernel(KernelType type){
     switch(type) {
         case SHAPE_ADAPTIVE_GAUSSIAN:
             return shapeAdaptiveGaussianKernel.kernel.shapeAdaptiveKernel;
+        case SHAPE_ADAPTIVE_EPANECHNIKOV:
+            return shapeAdaptiveEpanechnikovKernel.kernel.shapeAdaptiveKernel;
         default:
             fprintf(stderr, "%d is an invalid shape adaptive kernel type.\n", type);
             exit(-1);

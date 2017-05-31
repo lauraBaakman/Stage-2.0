@@ -7,5 +7,6 @@
 extern Kernel epanechnikovKernel;
 
 /* Shape Adaptive */
+extern Kernel shapeAdaptiveEpanechnikovKernel;
 
 #endif //KERNELS_EPANECHNIKOV_H
