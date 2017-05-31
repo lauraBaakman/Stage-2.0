@@ -18,9 +18,10 @@ Kernel shapeAdaptiveEpanechnikovKernel = {
 
 static double squareRootOfTheVariance = 0.8728715609439694;
 
+static gsl_vector* g_scaledPattern;
+
 static double g_normal_constant;
 static double g_normal_one_over_unit_variance_constant;
-static gsl_vector* g_scaledPattern;
 
 static gsl_matrix* g_sa_globalInverse;
 static gsl_matrix* g_sa_LUDecompositionH;
