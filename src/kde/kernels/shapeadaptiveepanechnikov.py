@@ -31,17 +31,15 @@ class _ShapeAdaptiveEpanechnikov_C(ShapeAdaptiveKernel_C):
         return _as_c_enum
 
     def _handle_single_pattern(self, x, local_bandwidth):
-        # data = np.array(x, ndmin=2)
-        # density = _kernels.sa_gaussian_single_pattern(data, local_bandwidth, self._global_bandwidth_matrix)
-        # return density
-        raise NotImplementedError()
+        data = np.array(x, ndmin=2)
+        density = _kernels.sa_epanechnikov_single_pattern(data, local_bandwidth, self._global_bandwidth_matrix)
+        return density
 
     def _handle_multiple_patterns(self, xs, local_bandwidths):
-        # (num_patterns, _) = xs.shape
-        # densities = np.empty(num_patterns, dtype=float)
-        # _kernels.sa_gaussian_multi_pattern(xs, local_bandwidths, self._global_bandwidth_matrix, densities)
-        # return densities
-        raise NotImplementedError()
+        (num_patterns, _) = xs.shape
+        densities = np.empty(num_patterns, dtype=float)
+        _kernels.sa_epanechnikov_multi_pattern(xs, local_bandwidths, self._global_bandwidth_matrix, densities)
+        return densities
 
 
 class _ShapeAdaptiveEpanechnikov_Python(ShapeAdaptiveKernel_Python):

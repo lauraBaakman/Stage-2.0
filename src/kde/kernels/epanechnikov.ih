@@ -11,13 +11,18 @@
 /* Symmetric */
 double unitSphereVolume(size_t dimension);
 double normal_constant(size_t dimension);
-double normal_unit_variance_constant(size_t dimension);
+double normal_unitVarianceConstant(size_t dimension);
 
 static double normal_pdf(gsl_vector* pattern);
 static void normal_prepare(size_t dimension);
 static void normal_free();
 
 /* Shape Adaptive */
+static void sa_allocate(size_t dimension);
+static void sa_computeConstants(gsl_matrix *globalBandwidthMatrix);
+double sa_pdf(gsl_vector* pattern, double localBandwidth);
+static void sa_free();
 
+static void sa_computeDimensionDependentConstants(size_t dimension);
 
 #endif //KERNELS_EPANECHNIKOV_IH_H
