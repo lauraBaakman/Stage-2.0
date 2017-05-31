@@ -1,3 +1,4 @@
+#include <gsl/gsl_linalg.h>
 #include "epanechnikov.ih"
 
 Kernel epanechnikovKernel = {
@@ -20,6 +21,10 @@ static double squareRootOfTheVariance = 0.8728715609439694;
 static double g_normal_constant;
 static double g_normal_one_over_unit_variance_constant;
 static gsl_vector* g_scaledPattern;
+
+static gsl_matrix* g_sa_globalInverse;
+static gsl_matrix* g_sa_LUDecompositionH;
+static gsl_permutation* g_sa_permutation;
 
 double unitSphereVolume(size_t dimension) {
     double numerator = pow(M_PI, dimension / 2.0);
@@ -69,13 +74,23 @@ double sa_pdf(gsl_vector* pattern, double localBandwidth){
 }
 
 void sa_allocate(size_t dimension){
-    printf("sa_allocate\n");
+    g_sa_globalInverse = gsl_matrix_alloc(dimension, dimension);
+    g_sa_LUDecompositionH = gsl_matrix_alloc(dimension, dimension);
+    g_sa_permutation = gsl_permutation_alloc(dimension);
 
     sa_computeDimensionDependentConstants(dimension);
 }
 
 void sa_computeConstants(gsl_matrix *globalBandwidthMatrix){
-    printf("sa_computeConstants\n");
+    //Copy the global bandwidth matrix so that we can change it
+    gsl_matrix_memcpy(g_sa_LUDecompositionH, globalBandwidthMatrix);
+
+    //Compute LU decompostion
+    int signum = 0;
+    gsl_linalg_LU_decomp(g_sa_LUDecompositionH, g_sa_permutation, &signum);
+
+    //Compute global inverse
+    gsl_linalg_LU_invert(g_sa_LUDecompositionH, g_sa_permutation, g_sa_globalInverse);
 }
 
 void sa_computeDimensionDependentConstants(size_t dimension){
@@ -83,5 +98,7 @@ void sa_computeDimensionDependentConstants(size_t dimension){
 }
 
 void sa_free(){
-    printf("sa_free\n");
+    gsl_matrix_free(g_sa_globalInverse);
+    gsl_matrix_free(g_sa_LUDecompositionH);
+    gsl_permutation_free(g_sa_permutation);
 }
