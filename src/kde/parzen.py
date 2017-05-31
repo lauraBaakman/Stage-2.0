@@ -4,7 +4,7 @@ import kde._kde as _kde
 import numpy as np
 
 from kde.estimatorimplementation import EstimatorImplementation
-from kde.kernels.standardGaussian import StandardGaussian
+from kde.kernels.gaussian import StandardGaussian
 
 
 class ParzenEstimator(object):

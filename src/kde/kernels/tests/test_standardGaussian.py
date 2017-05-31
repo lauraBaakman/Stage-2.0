@@ -3,7 +3,7 @@ from unittest import TestCase, skip, skipIf
 import numpy as np
 
 from kde.kernels.kernel import KernelException
-from kde.kernels.standardGaussian import StandardGaussian, _StandardGaussian_C, _StandardGaussian_Python
+from kde.kernels.gaussian import StandardGaussian, _StandardGaussian_C, _StandardGaussian_Python
 
 
 class TestStandardGaussian(TestCase):

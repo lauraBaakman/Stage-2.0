@@ -4,7 +4,7 @@ import numpy as np
 
 import kde
 from kde.kernels.epanechnikov import Epanechnikov
-from kde.kernels.standardGaussian import StandardGaussian
+from kde.kernels.gaussian import StandardGaussian
 from kde.kernels.testKernel import TestKernel
 from kde.modifeidbreiman import _MBEEstimator_Python, _MBEEstimator_C, ModifiedBreimanEstimator
 from kde.parzen import _ParzenEstimator_Python, _ParzenEstimator_C

@@ -7,7 +7,7 @@ import kde.utils as utils
 import kde.utils.automaticWindowWidthMethods as automaticWindowWidthMethods
 from kde.estimatorimplementation import EstimatorImplementation
 from kde.kernels.epanechnikov import Epanechnikov
-from kde.kernels.standardGaussian import StandardGaussian
+from kde.kernels.gaussian import StandardGaussian
 from kde.parzen import ParzenEstimator
 
 

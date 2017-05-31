@@ -3,7 +3,7 @@ from unittest import TestCase, skip
 import numpy as np
 
 from kde.kernels.epanechnikov import Epanechnikov
-from kde.kernels.standardGaussian import StandardGaussian
+from kde.kernels.gaussian import StandardGaussian
 from kde.kernels.testKernel import TestKernel
 from kde.parzen import _ParzenEstimator_C, _ParzenEstimator_Python, ParzenEstimator
 
