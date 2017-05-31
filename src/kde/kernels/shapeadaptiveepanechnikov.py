@@ -52,11 +52,6 @@ class _ShapeAdaptiveEpanechnikov_Python(ShapeAdaptiveKernel_Python):
         super(_ShapeAdaptiveEpanechnikov_Python, self).__init__(self._square_root_of_the_variance * bandwidth_matrix, *args, **kwargs)
         self._unit_sphere_volume = self._compute_unit_sphere_volume(self.dimension)
 
-    @property
-    def dimension(self):
-        (d, _) = self._global_bandwidth_matrix.shape
-        return d
-
     def to_C_enum(self):
         return _as_c_enum
 
