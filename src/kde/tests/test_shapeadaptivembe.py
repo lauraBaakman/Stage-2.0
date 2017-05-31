@@ -5,6 +5,7 @@ import numpy as np
 
 import kde
 from kde.kernels.shapeadaptivegaussian import ShapeAdaptiveGaussian
+from kde.kernels.shapeadaptiveepanechnikov import ShapeAdaptiveEpanechnikov
 from kde.kernels.testKernel import TestKernel
 from kde.parzen import _ParzenEstimator_Python, _ParzenEstimator_C
 from kde.sambe import \
@@ -55,9 +56,26 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
         super().setUp()
         self._estimator_class = None
 
-    @skip("The Epanechnikov kernel is not yet shape adaptive.")
     def test_estimate_epanechnikov(self):
-        self.fail("Test not yet implemented.")
+        xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+        x_s = xi_s
+        local_bandwidths = np.array([0.84089642,
+                                     1.18920712,
+                                     1.18920712,
+                                     0.84089642])
+        general_bandwidth = 0.721347520444482
+        kernel = ShapeAdaptiveEpanechnikov
+        estimator = self._estimator_class(
+            xi_s=xi_s, x_s=x_s, dimension=2,
+            kernel=kernel,
+            local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
+        )
+        actual = estimator.estimate()
+        expected = np.array([0.567734888282212,
+                             0.283867145804328,
+                             0.283867145804328,
+                             0.567734888282212])
+        np.testing.assert_array_almost_equal(actual, expected)
 
     def test_estimate_gaussian(self):
         xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
