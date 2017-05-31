@@ -26,19 +26,3 @@ expectedResult(x3, H, 1)
 expectedResult(x1, H, lambda1) 
 expectedResult(x2, H, lambda2)
 expectedResult(x3, H, lambda3)
-
-%% 2D
-
-H = [0.080225998475784, 0.000182273891304; 0.000182273891304, 0.081385767033078];
-
-x1 = [0.05; 0.05];
-x2 = [0.02; 0.03];
-
-lambda1 = 0.5;
-lambda2 = 0.2;
-
-expectedResult(x1, H, 1)
-expectedResult(x2, H, 1) 
-
-expectedResult(x1, H, lambda1) 
-expectedResult(x2, H, lambda2)
