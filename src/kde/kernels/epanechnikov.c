@@ -26,6 +26,8 @@ static gsl_matrix* g_sa_globalInverse;
 static gsl_matrix* g_sa_LUDecompositionH;
 static gsl_permutation* g_sa_permutation;
 static double g_sa_globalScalingFactor;
+static double g_sa_epanechnikovConstant;
+
 
 double epanechnikov_constant(size_t dimension){
     return ((double) (dimension + 2)) / (2 * unitSphereVolume(dimension));
@@ -99,7 +101,7 @@ void sa_computeConstants(gsl_matrix *globalBandwidthMatrix){
 }
 
 void sa_computeDimensionDependentConstants(size_t dimension){
-    printf("sa_computeDimensionDependentConstants\n");
+    g_sa_epanechnikovConstant = epanechnikov_constant(dimension);
 }
 
 void sa_free(){
@@ -108,4 +110,5 @@ void sa_free(){
     gsl_permutation_free(g_sa_permutation);
 
     g_sa_globalScalingFactor = 0.0;
+    g_sa_epanechnikovConstant = 0.0;
 }
