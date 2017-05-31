@@ -3,25 +3,25 @@ from unittest import TestCase, skip, skipIf
 import numpy as np
 
 from kde.kernels.kernel import KernelException
-from kde.kernels.gaussian import StandardGaussian, _StandardGaussian_C, _StandardGaussian_Python
+from kde.kernels.gaussian import Gaussian, _StandardGaussian_C, _StandardGaussian_Python
 
 
 class TestStandardGaussian(TestCase):
     def test_evaluate_default_implementation(self):
         x = np.array([0.5, 0.5])
-        actual = StandardGaussian().evaluate(x)
+        actual = Gaussian().evaluate(x)
         expected = np.array([0.123949994309653])
         np.testing.assert_array_almost_equal(actual, expected)
 
     def test_evaluate_alternative_implementation(self):
         x = np.array([0.5, 0.5])
-        actual = StandardGaussian(implementation=_StandardGaussian_Python).evaluate(x)
+        actual = Gaussian(implementation=_StandardGaussian_Python).evaluate(x)
         expected = np.array([0.123949994309653])
         np.testing.assert_array_almost_equal(actual, expected)
 
     def test_to_C_enum(self):
         expected = 1
-        actual = StandardGaussian().to_C_enum()
+        actual = Gaussian().to_C_enum()
         self.assertEqual(expected, actual)
 
 class StandardGaussianImpAbstractTest(object):

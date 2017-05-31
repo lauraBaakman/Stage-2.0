@@ -4,14 +4,14 @@ import kde._kde as _kde
 import numpy as np
 
 from kde.estimatorimplementation import EstimatorImplementation
-from kde.kernels.gaussian import StandardGaussian
+from kde.kernels.gaussian import Gaussian
 
 
 class ParzenEstimator(object):
     def __init__(self, dimension, bandwidth, kernel_class=None, estimator_implementation=None):
         self._dimension = dimension
         self._bandwidth = bandwidth
-        self._kernel = kernel_class() if kernel_class else StandardGaussian()
+        self._kernel = kernel_class() if kernel_class else Gaussian()
         self._estimator_implementation = estimator_implementation or _ParzenEstimator_C
 
     def estimate(self, xi_s, x_s=None):

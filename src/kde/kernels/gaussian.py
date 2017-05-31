@@ -7,7 +7,7 @@ from kde.kernels.kernel import Kernel, KernelException
 _as_C_enum = 1
 
 
-class StandardGaussian(Kernel):
+class Gaussian(Kernel):
 
     def __new__(cls, implementation=None):
         implementation_class = implementation or _StandardGaussian_C

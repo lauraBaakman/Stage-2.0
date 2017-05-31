@@ -3,7 +3,7 @@ from unittest import TestCase, skip
 import numpy as np
 
 from kde.kernels.epanechnikov import Epanechnikov
-from kde.kernels.gaussian import StandardGaussian
+from kde.kernels.gaussian import Gaussian
 from kde.kernels.testKernel import TestKernel
 from kde.parzen import _ParzenEstimator_C, _ParzenEstimator_Python, ParzenEstimator
 
@@ -12,7 +12,7 @@ class TestParzenEstimator(TestCase):
         xi_s = np.array([[-1, -1], [0, 0], [1 / 2.0, 1 / 2.0]])
         x_s = np.array([[0, 0], [1 / 4.0, 1 / 2.0]])
         estimator = ParzenEstimator(dimension=2,
-                                    bandwidth=4, kernel_class=StandardGaussian,
+                                    bandwidth=4, kernel_class=Gaussian,
                                     estimator_implementation=_ParzenEstimator_Python)
         actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
         expected = np.array([0.0096947375, 0.0095360625])
@@ -22,7 +22,7 @@ class TestParzenEstimator(TestCase):
         xi_s = np.array([[-1, -1], [0, 0], [1 / 2.0, 1 / 2.0]])
         x_s = np.array([[0, 0], [1 / 4.0, 1 / 2.0]])
         estimator = ParzenEstimator(dimension=2,
-                                    bandwidth=4, kernel_class=StandardGaussian,
+                                    bandwidth=4, kernel_class=Gaussian,
                                     estimator_implementation=_ParzenEstimator_C)
         actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
         expected = np.array([0.0096947375, 0.0095360625])
@@ -39,7 +39,7 @@ class ParzenEstimatorImpAbstractTest(object):
         x_s = np.array([[0, 0], [1 / 4.0, 1 / 2.0]])
         estimator = self._estimator_class(
             xi_s=xi_s, x_s=x_s, dimension=2,
-            kernel=StandardGaussian(), general_bandwidth=4)
+            kernel=Gaussian(), general_bandwidth=4)
         actual = estimator.estimate()
         expected = np.array([0.0096947375, 0.0095360625])
         np.testing.assert_array_almost_equal(actual, expected)
