@@ -18,4 +18,6 @@ gsl_vector_view pyObjectToGSLVectorView(PyObject *pythonObject, int requirements
 static PyObject * multi_pattern_symmetric(PyObject *args, KernelType kernelType);
 static PyObject* single_pattern_symmetric(PyObject *args, KernelType kernelType);
 
+static PyObject *single_pattern_shapeadaptive(PyObject *args, KernelType kernelType);
+
 #endif //KERNELS_KERNELS_MODULE_H
