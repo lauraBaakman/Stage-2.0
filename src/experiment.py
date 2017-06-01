@@ -93,7 +93,7 @@ def handle_dataset(data_set):
                                          data_set_file,
                                          estimator_name,
                                          sensitivity_name)
-            with open(out_path, 'a') as out_file:
+            with open(out_path, 'wb') as out_file:
                 result.to_file(out_file)
 
 
@@ -128,7 +128,9 @@ class InputDirectoryAction(argparse.Action):
 
 class OutputDirectoryAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
-        prospective_dir = Path(values).absolute()
+        prospective_dir = Path(values)
+        prospective_dir = prospective_dir.expand()
+        prospective_dir = prospective_dir.absolute()
         prospective_dir.mkdir(parents=True)
         if not os.path.isdir(prospective_dir):
             raise argparse.ArgumentTypeError(
