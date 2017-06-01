@@ -1,6 +1,6 @@
 from distutils.core import setup, Extension
 
-import globalConfigParameters
+import setup_globals
 
 sources = ['kernelsModule.c',
            'kernels.c',
@@ -14,9 +14,9 @@ sources = ['kernelsModule.c',
 
 if __name__ == "__main__":
     module = Extension('_kernels',
-                       library_dirs=globalConfigParameters.library_dirs,
-                       libraries=globalConfigParameters.libraries,
-                       include_dirs=globalConfigParameters.include_dirs,
+                       library_dirs=setup_globals.library_dirs,
+                       libraries=setup_globals.libraries,
+                       include_dirs=setup_globals.include_dirs,
                        sources=sources
                        )
     setup(name='_kernels', version='1.0', ext_modules=[module])
