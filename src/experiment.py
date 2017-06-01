@@ -7,6 +7,8 @@ from kde.modifeidbreiman import MBEstimator
 from inputoutput.dataset import DataSet
 from inputoutput.results import Results
 
+_data_set_path = Path('/Users/laura/Repositories/stage-2.0/data/simulated/')
+
 sensitivities = {
     'silverman': lambda d: 0.5,
     'breiman': lambda d: 1.0 / d
@@ -27,8 +29,8 @@ data_set_files = [
 ]
 
 
-def build_input_path(dataset_file):
-    raise NotImplementedError()
+def build_input_path(data_set_file):
+    return _data_set_path.child(data_set_file)
 
 
 def handle_dataset(data_set):
