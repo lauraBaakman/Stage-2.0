@@ -1,13 +1,14 @@
 import numpy as np
-
 from unipath import Path
 
 from kde.sambe import SAMBEstimator
 from kde.modifeidbreiman import MBEstimator
 import inputoutput
 
-_data_set_path = Path('/Users/laura/Repositories/stage-2.0/data/simulated/')
-_result_path = Path('/Users/laura/Repositories/stage-2.0/results/simulated/')
+_data_set_path = Path(
+    '/Users/laura/Repositories/stage-2.0/data/simulated/small/')
+_result_path = Path(
+    '/Users/laura/Repositories/stage-2.0/results/simulated/small/')
 
 sensitivities = {
     'silverman': lambda d: 0.5,
@@ -21,6 +22,7 @@ estimators = {
 
 
 ask_for_confirmation = False
+
 
 def partial_path(path):
     return Path(path.components()[-3:])
@@ -52,9 +54,14 @@ def get_data_set_files(input_path):
         return files
     else:
         files.extend(potential_data_sets)
-        print("Running the experiment on these datasets:\n{data_sets}\n".format(
-            data_sets='\n'.join([partial_path(file) for file in files]))
-        )
+        print("Running the experiment on these datasets:\n{data_sets}\n".
+              format(
+                     data_sets='\n'.join([
+                                         partial_path(file)
+                                         for file
+                                         in files])
+                     )
+              )
         return files
 
 
@@ -74,7 +81,10 @@ def handle_dataset(data_set):
                              dimension=data_set.dimension,
                              sensitivity=sensitivity))
 
-            out_path = build_output_path(data_set_file, estimator_name, sensitivity_name)
+            out_path = build_output_path(
+                                         data_set_file,
+                                         estimator_name,
+                                         sensitivity_name)
             with open(out_path, 'a') as out_file:
                 result.to_file(out_file)
 
