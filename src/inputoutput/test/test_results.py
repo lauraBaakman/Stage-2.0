@@ -27,7 +27,7 @@ class TestResults(TestCase):
                     0.0001832763582,
                 ])
             )
-        self._results_array = np.array([1.0, 2.0, 3.0, 4.0, 5.1234567891011121314])
+        self._results_array = np.array([1.0, 2.0, 3.0, 4.0, 5.1234567891011121314], dtype=np.float64)
 
     def test_num_results(self):
         results = Results(
