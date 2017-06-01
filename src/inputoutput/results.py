@@ -25,7 +25,7 @@ class _ResultsWriter(object):
         self._write_densities()
 
     def _write_densities(self):
-        np.savetxt(self._out_file, self._results, fmt='%.18f')
+        np.savetxt(self._out_file, self._results, fmt='%.15f')
 
 
 class _ResultsValidator(object):
