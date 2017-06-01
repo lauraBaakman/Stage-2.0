@@ -20,6 +20,12 @@ estimators = {
 }
 
 
+ask_for_confirmation = False
+
+def partial_path(path):
+    return Path(path.components()[-3:])
+
+
 def get_data_set_files(input_path):
 
     def add_data_set(data_set):
@@ -36,13 +42,20 @@ def get_data_set_files(input_path):
         'n': skip_data_set
     }
 
-    for data_set in potential_data_sets:
-        response = input(
-            'Include the data set in the file ..{}? [y/N]\n'.format(
-                Path(data_set.components()[-3:]))
-        ).lower()
-        responses.get(response, skip_data_set)(data_set)
-    return files
+    if ask_for_confirmation:
+        for data_set in potential_data_sets:
+            response = input(
+                'Include the data set in the file ..{}? [y/N]\n'.format(
+                    partial_path(data_set))
+            ).lower()
+            responses.get(response, skip_data_set)(data_set)
+        return files
+    else:
+        files.extend(potential_data_sets)
+        print("Running the experiment on these datasets:\n{data_sets}\n".format(
+            data_sets='\n'.join([partial_path(file) for file in files]))
+        )
+        return files
 
 
 def handle_dataset(data_set):
