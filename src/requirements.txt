@@ -1,5 +1,6 @@
 appnope==0.1.0
 decorator==4.0.10
+dev==0.4.0
 ipython==5.1.0
 ipython-genutils==0.1.0
 numpy==1.11.2
@@ -16,4 +17,5 @@ six==1.10.0
 sklearn==0.0
 tqdm==4.11.2
 traitlets==4.3.1
+Unipath==1.1
 wcwidth==0.1.7

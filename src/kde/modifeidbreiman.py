@@ -8,10 +8,10 @@ import kde.utils.automaticWindowWidthMethods as automaticWindowWidthMethods
 from kde.estimatorimplementation import EstimatorImplementation
 from kde.kernels.epanechnikov import Epanechnikov
 from kde.kernels.gaussian import Gaussian
-from kde.parzen import ParzenEstimator
+from kde.parzen import ParzenEstimator, _ParzenEstimator_C
 
 
-class ModifiedBreimanEstimator(object):
+class MBEstimator(object):
     """Implementation of the Modifeid Breiman EstimatorImplementation, as proposed by Wilkinson and Meijer.
     """
 
@@ -31,17 +31,17 @@ class ModifiedBreimanEstimator(object):
             window width. Defaults to ferdosi.
         :param number_of_grid_points: (int or list, optional) The number of grid points per dimension. If an int is
         passed the same number of grid points is used for each dimension.
-        Defaults to *ModifiedBreimanEstimator.default_number_of_grid_points*
+        Defaults to *MBEstimator.default_number_of_grid_points*
         :param final_estimator_implementation: Class that inherits from EstimatorImplementation.
         """
         self._dimension = dimension
         self._general_window_width_method = pilot_window_width_method
         self._sensitivity = sensitivity
         self._pilot_kernel_class = pilot_kernel_class or Epanechnikov
-        self._kernel = kernel_class() if kernel_class else Gaussian()
+        self._kernel = kernel_class() if kernel_class else Epanechnikov()
         self._number_of_grid_points = number_of_grid_points
 
-        self._pilot_estimator_implementation = pilot_estimator_implementation or ParzenEstimator
+        self._pilot_estimator_implementation = pilot_estimator_implementation or _ParzenEstimator_C
         self._final_estimator_implementation = final_estimator_implementation or _MBEEstimator_C
 
     def estimate(self, xi_s, x_s=None):

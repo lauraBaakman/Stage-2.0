@@ -1,5 +1,6 @@
 from unittest import TestCase
 import warnings
+import io
 
 import numpy as np
 
@@ -8,9 +9,9 @@ from inputoutput.results import _ResultsValidator, Results, InvalidResultsExcept
 
 
 class TestResults(TestCase):
-    def test_num_results(self):
-        results = Results(
-            data_set=DataSet(
+    def setUp(self):
+        super().setUp()
+        self._data_set = DataSet(
                 patterns=np.array([
                     [52.0, 45.0, 56.0],
                     [60.0, 52.0, 41.0],
@@ -25,12 +26,35 @@ class TestResults(TestCase):
                     7.288289757e-05,
                     0.0001832763582,
                 ])
-            ),
-            results_array=np.array([1.0, 2.0, 3.0, 4.0, 5.1234567891011121314])
+            )
+        self._results_array = np.array([1.0, 2.0, 3.0, 4.0, 5.1234567891011121314], dtype=np.float64)
+
+    def test_num_results(self):
+        results = Results(
+            data_set = self._data_set,
+            results_array=self._results_array
         )
         actual = results.num_results
         expected = 5
         self.assertEqual(actual, expected)
+
+    def test_to_file(self):
+        results = Results(
+            data_set = self._data_set,
+            results_array=self._results_array
+        )
+        expected_output = ("1.000000000000000\n"
+                           "2.000000000000000\n"
+                           "3.000000000000000\n"
+                           "4.000000000000000\n"
+                           "5.123456789101112\n").encode()
+        actual_file_buffer = io.BytesIO()
+        results.to_file(actual_file_buffer)
+        actual_file_buffer.seek(0)
+        actual_output = actual_file_buffer.read()
+
+        self.assertEqual(actual_output, expected_output)
+
 
 class Test_ResultsValidator(TestCase):
     def setUp(self):

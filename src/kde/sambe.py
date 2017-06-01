@@ -1,36 +1,36 @@
 import numpy as np
 import warnings
 
-from kde.modifeidbreiman import ModifiedBreimanEstimator
+from kde.modifeidbreiman import MBEstimator
 import kde.utils.automaticWindowWidthMethods as automaticWindowWidthMethods
 from kde.estimatorimplementation import EstimatorImplementation
-from kde.parzen import ParzenEstimator
+from kde.parzen import _ParzenEstimator_C
 from kde.utils.knn import KNN
 import kde.utils.covariance as covariance
-from kde.kernels.shapeadaptivegaussian import ShapeAdaptiveGaussian
 from kde.kernels.epanechnikov import Epanechnikov
+from kde.kernels.shapeadaptiveepanechnikov import ShapeAdaptiveEpanechnikov
 import kde.kernels.scaling
 import kde._kde as _kde
 
 
-class ShapeAdaptiveMBE(ModifiedBreimanEstimator):
+class SAMBEstimator(MBEstimator):
     """
     Implementation of the shape adaptive modified Breiman Estimator.
     """
 
     def __init__(self, dimension, sensitivity=1 / 2,
                  pilot_window_width_method=automaticWindowWidthMethods.ferdosi,
-                 number_of_grid_points=ModifiedBreimanEstimator.default_number_of_grid_points,
+                 number_of_grid_points=MBEstimator.default_number_of_grid_points,
                  pilot_kernel_class=None, pilot_estimator_implementation=None,
                  kernel_class=None, final_estimator_implementation=None):
         self._dimension = dimension
         self._general_window_width_method = pilot_window_width_method
         self._sensitivity = sensitivity
         self._pilot_kernel_class = pilot_kernel_class or Epanechnikov
-        self._kernel = kernel_class or ShapeAdaptiveGaussian
-        self._number_of_grid_points = number_of_grid_points or ModifiedBreimanEstimator.default_number_of_grid_points
+        self._kernel = kernel_class or ShapeAdaptiveEpanechnikov
+        self._number_of_grid_points = number_of_grid_points or MBEstimator.default_number_of_grid_points
 
-        self._pilot_estimator_implementation = pilot_estimator_implementation or ParzenEstimator
+        self._pilot_estimator_implementation = pilot_estimator_implementation or _ParzenEstimator_C
         self._final_estimator_implementation = final_estimator_implementation or _ShapeAdaptiveMBE_C
 
 
@@ -41,7 +41,7 @@ class _ShapeAdaptiveMBE(EstimatorImplementation):
         self._knn = KNN(patterns=self._xi_s)
         self._k = self._compute_k(self.num_xi_s, self.dimension)
         self._kernel = None
-        self._kernel_class = kernel or ShapeAdaptiveGaussian
+        self._kernel_class = kernel or ShapeAdaptiveEpanechnikov
 
     def _compute_k(self, num_patterns, dimension):
         potential_k = round(np.sqrt(num_patterns))
