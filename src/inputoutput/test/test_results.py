@@ -1,5 +1,6 @@
 from unittest import TestCase
 import warnings
+import io
 
 import numpy as np
 
@@ -36,6 +37,24 @@ class TestResults(TestCase):
         actual = results.num_results
         expected = 5
         self.assertEqual(actual, expected)
+
+    def test_to_file(self):
+        results = Results(
+            data_set = self._data_set,
+            results_array=self._results_array
+        )
+        expected_output = ("1.000000000000000\n"
+                           "2.000000000000000\n"
+                           "3.000000000000000\n"
+                           "4.000000000000000\n"
+                           "5.123456789101112\n").encode()
+        actual_file_buffer = io.BytesIO()
+        results.to_file(actual_file_buffer)
+        actual_file_buffer.seek(0)
+        actual_output = actual_file_buffer.read()
+
+        self.assertEqual(actual_output, expected_output)
+
 
 class Test_ResultsValidator(TestCase):
     def setUp(self):
