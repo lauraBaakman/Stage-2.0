@@ -25,7 +25,7 @@ class _ResultsWriter(object):
         self._write_densities()
 
     def _write_densities(self):
-        np.savetxt(self._out_file, self._results, fmt='%.18f')
+        np.savetxt(self._out_file, self._results, fmt='%.15f')
 
 
 class _ResultsValidator(object):
@@ -57,7 +57,7 @@ class _ResultsValidator(object):
 
     def _results_are_densities(self):
         def all_are_probability_densities(array):
-            np.all(array >= 0) and np.all(array <= 1)
+            np.all(array >= 0.0) and np.all(array <= 1.0)
 
         if not all_are_probability_densities(self._results_array):
             warnings.warn("Not all values in the results are in the range [0, 1].")
