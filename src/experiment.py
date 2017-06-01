@@ -62,8 +62,12 @@ def handle_dataset(data_set):
     for estimator_name, Estimator in estimators.items():
         print("\tEstimator: {}".format(estimator_name))
 
-        for sensitivity_name, sensitivity in sensitivities.items():
-            print("\t\tSensitivity: {}".format(sensitivity_name))
+        for sensitivity_name, sensitivity_method in sensitivities.items():
+            sensitivity = sensitivity_method(data_set.dimension)
+            print("\t\tSensitivity: {value} ({method_name})".format(
+                value=sensitivity,
+                method_name=sensitivity_name)
+            )
 
             result = run(data_set,
                          Estimator(
