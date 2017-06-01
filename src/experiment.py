@@ -28,7 +28,7 @@ def get_data_set_files(input_path):
     def skip_data_set(*args, **kwargs):
         pass
 
-    potential_data_sets = input_path.listdir("*.txt")
+    potential_data_sets = input_path.walk(filter=lambda x: x.ext == '.txt')
     files = list()
 
     responses = {
