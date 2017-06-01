@@ -31,40 +31,46 @@ def partial_path(path):
 
 
 def get_data_set_files(input_path):
+    files = input_path.walk(filter=lambda x: x.ext == '.txt')
+    if _ask_for_confirmation:
+        files = confirm_files(files)
+    show_files_to_user(files)
+    return files
 
+
+def confirm_files(potential_files):
     def add_data_set(data_set):
         files.append(data_set)
 
     def skip_data_set(*args, **kwargs):
         pass
 
-    potential_data_sets = input_path.walk(filter=lambda x: x.ext == '.txt')
-    files = list()
-
     responses = {
         'y': add_data_set,
         'n': skip_data_set
     }
 
-    if ask_for_confirmation:
-        for data_set in potential_data_sets:
-            response = input(
-                'Include the data set in the file ..{}? [y/N]\n'.format(
-                    partial_path(data_set))
-            ).lower()
-            responses.get(response, skip_data_set)(data_set)
-        return files
-    else:
-        files.extend(potential_data_sets)
-        print("Running the experiment on these datasets:\n{data_sets}\n".
-              format(
-                     data_sets='\n'.join([
-                                         partial_path(file)
-                                         for file
-                                         in files])
-                     )
-              )
-        return files
+    files = list()
+
+    for data_set in potential_files:
+        response = input(
+            'Include the data set in the file ..{}? [y/N] '.format(
+                partial_path(data_set))
+        ).lower()
+        responses.get(response, skip_data_set)(data_set)
+    print('\n')
+    return files
+
+
+def show_files_to_user(files):
+    print("Running the experiment on:\n{data_sets}\n".
+          format(
+                 data_sets='\n'.join([
+                                     "\t{}".format(partial_path(file))
+                                     for file
+                                     in files])
+                 )
+          )
 
 
 def handle_dataset(data_set):
