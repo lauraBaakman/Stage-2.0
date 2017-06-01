@@ -1,4 +1,6 @@
-import numpy as np
+import argparse
+import os
+
 from unipath import Path
 
 from kde.sambe import SAMBEstimator
@@ -103,13 +105,36 @@ def build_output_path(data_set_file, estimator, sensitivity):
     return _result_path.child(out_file_name)
 
 
-if __name__ == '__main__':
-    _result_path.mkdir(parents=True)
+class InputDirectoryAction(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        prospective_dir = Path(values).absolute()
+        if not os.path.isdir(prospective_dir):
+            raise argparse.ArgumentTypeError(
+                "{0} is not a valid path".format(prospective_dir)
+            )
+        if os.access(prospective_dir, os.R_OK):
+            setattr(namespace, self.dest, prospective_dir)
+        else:
+            raise argparse.ArgumentTypeError(
+                "{0} is not a readable dir".format(prospective_dir)
+            )
 
-    data_set_files = get_data_set_files(_data_set_path)
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--input_directory',
+                        action=InputDirectoryAction,
+                        default=_data_set_path)
+    args = parser.parse_args()
+
+    _result_path.mkdir(parents=True)
+    data_set_path = args.input_directory
+
 
     for data_set_file in data_set_files:
         with open(data_set_file, 'r') as in_file:
             print("Data set: {}".format(data_set_file))
             data_set = inputoutput.DataSet.from_file(in_file=data_set_file)
             handle_dataset(data_set)
+    data_set_files = get_data_set_files(data_set_path)
+
