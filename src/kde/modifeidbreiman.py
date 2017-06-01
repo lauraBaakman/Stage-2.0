@@ -8,7 +8,7 @@ import kde.utils.automaticWindowWidthMethods as automaticWindowWidthMethods
 from kde.estimatorimplementation import EstimatorImplementation
 from kde.kernels.epanechnikov import Epanechnikov
 from kde.kernels.gaussian import Gaussian
-from kde.parzen import ParzenEstimator
+from kde.parzen import ParzenEstimator, _ParzenEstimator_C
 
 
 class MBEstimator(object):
@@ -41,7 +41,7 @@ class MBEstimator(object):
         self._kernel = kernel_class() if kernel_class else Epanechnikov()
         self._number_of_grid_points = number_of_grid_points
 
-        self._pilot_estimator_implementation = pilot_estimator_implementation or ParzenEstimator
+        self._pilot_estimator_implementation = pilot_estimator_implementation or _ParzenEstimator_C
         self._final_estimator_implementation = final_estimator_implementation or _MBEEstimator_C
 
     def estimate(self, xi_s, x_s=None):
