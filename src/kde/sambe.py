@@ -4,7 +4,7 @@ import warnings
 from kde.modifeidbreiman import MBEstimator
 import kde.utils.automaticWindowWidthMethods as automaticWindowWidthMethods
 from kde.estimatorimplementation import EstimatorImplementation
-from kde.parzen import ParzenEstimator
+from kde.parzen import _ParzenEstimator_C
 from kde.utils.knn import KNN
 import kde.utils.covariance as covariance
 from kde.kernels.shapeadaptivegaussian import ShapeAdaptiveGaussian
@@ -30,7 +30,7 @@ class SAMBEstimator(MBEstimator):
         self._kernel = kernel_class or ShapeAdaptiveGaussian
         self._number_of_grid_points = number_of_grid_points or MBEstimator.default_number_of_grid_points
 
-        self._pilot_estimator_implementation = pilot_estimator_implementation or ParzenEstimator
+        self._pilot_estimator_implementation = pilot_estimator_implementation or _ParzenEstimator_C
         self._final_estimator_implementation = final_estimator_implementation or _ShapeAdaptiveMBE_C
 
 
