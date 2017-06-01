@@ -37,7 +37,10 @@ def get_data_set_files(input_path):
     }
 
     for data_set in potential_data_sets:
-        response = input('Include the data set in the file {}? [y/N]\n'.format(data_set)).lower()
+        response = input(
+            'Include the data set in the file ..{}? [y/N]\n'.format(
+                Path(data_set.components()[-3:]))
+        ).lower()
         responses.get(response, skip_data_set)(data_set)
     return files
 
