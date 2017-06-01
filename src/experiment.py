@@ -23,7 +23,7 @@ estimators = {
 }
 
 
-ask_for_confirmation = False
+_ask_for_confirmation = False
 
 
 def partial_path(path):
@@ -143,10 +143,16 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--output_directory',
                         action=OutputDirectoryAction,
                         default=_results_path)
+    parser.add_argument('--verify-files', dest='verify_files',
+                        action='store_true')
+    parser.add_argument('--no-verify-files', dest='verify_files',
+                        action='store_false')
+    parser.set_defaults(verify_files=_ask_for_confirmation)
     args = parser.parse_args()
 
     data_set_path = args.input_directory
     _results_path = args.output_directory
+    _ask_for_confirmation = args.verify_files
 
     data_set_files = get_data_set_files(data_set_path)
 
