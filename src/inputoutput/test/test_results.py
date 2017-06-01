@@ -8,9 +8,9 @@ from inputoutput.results import _ResultsValidator, Results, InvalidResultsExcept
 
 
 class TestResults(TestCase):
-    def test_num_results(self):
-        results = Results(
-            data_set=DataSet(
+    def setUp(self):
+        super().setUp()
+        self._data_set = DataSet(
                 patterns=np.array([
                     [52.0, 45.0, 56.0],
                     [60.0, 52.0, 41.0],
@@ -25,8 +25,13 @@ class TestResults(TestCase):
                     7.288289757e-05,
                     0.0001832763582,
                 ])
-            ),
-            results_array=np.array([1.0, 2.0, 3.0, 4.0, 5.1234567891011121314])
+            )
+        self._results_array = np.array([1.0, 2.0, 3.0, 4.0, 5.1234567891011121314])
+
+    def test_num_results(self):
+        results = Results(
+            data_set = self._data_set,
+            results_array=self._results_array
         )
         actual = results.num_results
         expected = 5
