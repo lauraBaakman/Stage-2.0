@@ -20,36 +20,28 @@ The simulated datasets are a superset of the sets used by \textcite{ferdosi2011c
 	\label{tab:3:simulated:datasets}
 \end{table*}
 
-%Data Set Ferdosi 1
-	Dataset \ferdosiOne, shown in \cref{fig:3:simulated:datasets:ferdosi1}, is the most simple set in this group. It is an unimodal Gaussian distribution with random noise added. 
+% Ferdosi 1/3
+Dataset \numberstringnum{\ferdosiOneNum} through \numberstringnum{\ferdosiThreeNum}, shown in \crefrange{fig:3:simulated:datasets:ferdosi1}{fig:3:simulated:datasets:ferdosi3}, are taken from \textcite{ferdosi2011comparison}. They consist of a number of spherical Gaussian distributions with random noise added. The means of the Gaussian distribution are chosen in such a way that it is unlikely that the distributions overlap.
 
-%Data Set Ferdosi 2
-	The \ordinalstringnum{\ferdosiTwoNum} dataset, depicted in \cref{fig:3:simulated:datasets:ferdosi2}, contains two Gaussian distributions with different covariance matrices and uniform noise. The means and covariance matrices of the Normal distributions are such that the two distributions are very unlikely to overlap. 
+%Baakman 1/3
+\Crefrange{fig:3:simulated:datasets:baakman1}{fig:3:simulated:datasets:baakman3} present dataset \numberstringnum{\baakmanOneNum} through \numberstringnum{\baakmanThreeNum}. These datasets are created from \numberstringnum{\ferdosiOneNum} through \numberstringnum{\ferdosiThreeNum} in such a way that the volumes of the eigenellipsoids defined by the covariance matrices of the components of these datasets are equal to volumes of the eigenspheres of the covariance matrix of the component in dataset \numberstringnum{\ferdosiOneNum} through \numberstringnum{\ferdosiThreeNum} that inspired them. Furthermore if $a$ is the eigenvalue of the original covariance matrix, the eigenvalues of the covariance matrix in dataset \numberstringnum{\baakmanOneNum} through \numberstringnum{\baakmanThreeNum} are $a^2$, $\sqrt{a}$ and $\sqrt{a}$. Consequently the minor axes of these datasets have the same length.
 
-%Data Set Ferdosi 3
-	Dataset \ferdosiThree, represented in \cref{fig:3:simulated:datasets:ferdosi3}, consists of four different normal distributions and uniformly distributed noise. The four Gaussian distributions are placed in such a way that it is unlikely that among them any overlap occurs.
-
-%Data Set Baakman 1
-	\todo[inline]{Baakman 1}
-
-%Data Set Baakman 2
-	\todo[inline]{Baakman 2}
-
-%Data Set Baakman 3
-	\todo[inline]{Baakman 3}
+% Baakman 4/5
+In dataset \numberstringnum{\baakmanFourNum} and \numberstringnum{\baakmanFiveNum}, illustrated in \crefrange{fig:3:simulated:datasets:baakman3}{fig:3:simulated:datasets:baakman4} the semi axes of the ellipsoids all have a different length. The largest minor axis of the Trivariate Gaussian in dataset \numberstringnum{\baakmanFourNum} is a factor two larger than the smallest minor axis in that dataset. Whereas in dataset \numberstringnum{\baakmanFiveNum} the largest minor axis is exponentially larger than the smallest minor axis. 
 
 %Data Set Ferdosi 4
-	\Cref{fig:3:simulated:datasets:ferdosi4} illustrates dataset \ferdosiFour. This set consists of a horizontal wall-like structure and a vertical filament-like structure. 
+	\Cref{fig:3:simulated:datasets:ferdosi4} illustrates dataset \numberstringnum{\ferdosiFourNum}. This set consists of a horizontal wall-like structure and a vertical filament-like structure. 
 
 %Data Set Ferdosi 5
 	The \ordinalstringnum{\ferdosiFiveNum} dataset, shown in \cref{fig:3:simulated:datasets:ferdosi5}, contains three intersecting walls. For each point in these walls its position in two of the three dimensions is drawn from a uniform distribution, the third coordinate is sampled from a Gaussian distribution.
 
-
-\todo[inline]{Update with macros}
 %Expectations for the datasets
-We expect comparable performance from all estimators on dataset one through three, as other than the randomly sampled noise these sets only contain data sampled from a Gaussian distribution with a diagonal covariance matrix. Which results in an equal spread of the data in all dimensions for the non-noise data. Dataset four and five are clearly spread more in one dimension than in others, thus we expect the shape adaptive estimator to outperform the MBE estimator.
-\todo[inline]{Add expectations for Baakman}
+% Ferdosi 1/3
+We expect comparable performance from all estimators on dataset \numberstringnum{\ferdosiOneNum} through \numberstringnum{\ferdosiThreeNum}, as other than the randomly sampled noise these sets only contain data sampled from a Gaussian distribution with a diagonal covariance matrix. Which results in an equal spread of the data in all dimensions for the non-noise data. 
+% Baakman 1/5
+Given the elongated shape of the non-noise components in \numberstringnum{\baakmanOneNum} through \numberstringnum{\baakmanFiveNum} we expect the shape-adaptive estimator to outperform the MBE. 
+% Ferdosi 4/5
+Dataset \numberstringnum{\ferdosiFourNum} and \numberstringnum{\ferdosiFiveNum} are clearly spread more in one dimension than in other dimensions, thus we expect the shape adaptive estimator to outperform the MBE estimator.
 
 %Conclusion
-The increasing complexity of these datasets allows us to investigate the performance of the classifier on simple situations, one cluster of data with some noise, to complex density fields that should better approximate real world data. The advantage of using simulated data is that the true densities of the data points are known, which allows us to test how well the different methods estimate the densities.
-\todo[inline]{Add Baakman in conclusion}
+The increasing complexity of these datasets allows us to investigate the performance of the classifier on simple situations, one cluster of data with some noise, to complex density fields that approximate real world data. The advantage of using simulated data is that the true densities of the data points are known, which allows us to test how well the different methods estimate the densities.
