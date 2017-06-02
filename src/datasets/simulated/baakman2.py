@@ -12,11 +12,22 @@ class Baakman2(SimulatedDataSet):
     def _init_components(self):
         self._components['trivariate gaussian 1'] = {
                 'component': components.MultivariateGaussian(
-                    mean=np.array([50, 50, 50]),
-                    covariance_matrix=np.diag(np.array([9, np.sqrt(3), np.sqrt(3)]))
+                    mean=np.array([25, 25, 25]),
+                    covariance_matrix=np.diag(
+                        np.array([25, np.sqrt(5), np.sqrt(5)])
+                    )
                 ),
-                'num elements': 40000,
+                'num elements': 20000,
             }
+        self._components['trivariate gaussian 2'] = {
+                'component': components.MultivariateGaussian(
+                    mean=np.array([65, 65, 65]),
+                    covariance_matrix=np.diag(
+                        np.array([np.sqrt(20), np.sqrt(20), 400])
+                    )
+                ),
+                'num elements': 20000,
+        }
         self._components['uniform random noise'] = {
                 'component': components.UniformRandomNoise(
                     minimum_value=0,
