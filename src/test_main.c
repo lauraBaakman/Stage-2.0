@@ -1,7 +1,7 @@
 #include <stdio.h>
 
-#include "CuTest.h"
-#include "test_sambe.h"
+#include "lib/CuTest.h"
+#include "kde/tests/test_sambe.h"
 
 CuSuite *StrUtilGetSuite();
 
