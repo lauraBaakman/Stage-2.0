@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-std=c99
-LDLIBS=-lgsl -lgslcblas
+LDLIBS=-lgsl -lgslcblas -lm
 LDDIRS=-L/usr/local/lib/
 IDIRS=-I/usr/local/include/
 
@@ -26,8 +26,12 @@ DEPS=test_constants.h CuTest.h CuTestUtils.h\
     ../utils/eigenvalues.h \
     ../utils/gsl_utils.h
 
-# Working command
+# Working command OS X
 # gcc test_main.c -I/usr/local/include/ -L/usr/local/lib/ -lgsl -lgslcblas
+
+# Working command Linux
+# gcc -Wall -I/usr/local/include -c temp.c
+# gcc temp.o -lgsl -lgslcblas -lm
 
 RM=rm
 
