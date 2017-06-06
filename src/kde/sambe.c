@@ -1,12 +1,11 @@
-#include <gsl/gsl_matrix.h>
-#include <gsl/gsl_vector_double.h>
 #include "sambe.ih"
+#include "utils/gsl_utils.h"
 
 gsl_matrix* g_xs;
 
 gsl_vector* g_localBandwidths;
 
-double g_globalBandwidth;
+double g_globalBandwidthFactor;
 gsl_matrix* g_globalBandwidthMatrix;
 
 ShapeAdaptiveKernel g_kernel;
@@ -55,7 +54,7 @@ double finalDensitySinglePattern(gsl_vector *x, size_t xIdx) {
         xi = gsl_matrix_row(g_xs, i);
 
         //x - xi
-        movedPattern = subtract(x, &xi.vector, g_movedPattern);
+        movedPattern = gsl_subtract(x, &xi.vector, g_movedPattern);
         localBandwidth = gsl_vector_get(g_localBandwidths, i);
 
         density += g_kernel.density(movedPattern, localBandwidth);
@@ -76,17 +75,10 @@ void determineGlobalKernelShape(size_t patternIdx) {
     computeCovarianceMatrix(g_nearestNeighbours, g_globalBandwidthMatrix);
 
     /* Compute the scaling factor */
-    double scalingFactor = computeScalingFactor(g_globalBandwidth, g_globalBandwidthMatrix);
+    double scalingFactor = computeScalingFactor(g_globalBandwidthFactor, g_globalBandwidthMatrix);
 
     /* Scale the shape matrix */
     gsl_matrix_scale(g_globalBandwidthMatrix, scalingFactor);
-}
-
-gsl_vector *subtract(gsl_vector *termA, gsl_vector *termB, gsl_vector *result) {
-    gsl_vector_memcpy(result, termA);
-    gsl_vector_sub(result, termB);
-
-    return result;
 }
 
 void allocateGlobals(size_t dataDimension, size_t num_xi_s, size_t k) {
@@ -109,7 +101,7 @@ void prepareGlobals(gsl_matrix *xs,
     g_xs = xs;
 
     g_localBandwidths = localBandwidths;
-    g_globalBandwidth = globalBandwidth;
+    g_globalBandwidthFactor = globalBandwidth;
     g_kernel = kernel;
     g_k = (size_t) k;
 

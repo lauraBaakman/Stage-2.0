@@ -14,9 +14,10 @@ set(SOURCE_FILES
         sambe.c sambe.h sambe.ih
         utils.c utils.h utils.ih
         modifeidbreiman.c modifeidbreiman.h
-        tests/test_main.c
+        ../test_main.c
         tests/test_sambe.c tests/test_sambe.h
-        tests/CuTest.c tests/CuTest.h tests/CuTestUtils.c tests/CuTestUtils.h
+        tests/test_parzen.c tests/test_parzen.h
+        ../lib/CuTest.c ../lib/CuTest.h ../lib/CuTestUtils.c ../lib/CuTestUtils.h
         utils/utilsModule.c utils/utilsModule.h
         utils/distancematrix.c utils/distancematrix.h utils/distancematrix.ih
         utils/knn.c utils/knn.h utils/knn.ih

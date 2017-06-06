@@ -13,35 +13,22 @@ static PyObject * kdeParzen(PyObject *self, PyObject *args){
     PyObject* outDensities = NULL;
 
     double inWindowWidth;
-    KernelType inKernelType;
+    KernelType kernelType;
 
     if (!PyArg_ParseTuple(args, "OOdiO",
                           &inPatterns,
                           &inDataPoints,
                           &inWindowWidth,
-                          &inKernelType,
+                          &kernelType,
                           &outDensities)) return NULL;
 
-    Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
-    Array dataPoints = pyObjectToArray(inDataPoints, NPY_ARRAY_IN_ARRAY);
-    Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
+    gsl_matrix_view xs = pyObjectToGSLMatrixView(inPatterns, NPY_ARRAY_IN_ARRAY);
+    gsl_matrix_view xis = pyObjectToGSLMatrixView(inDataPoints, NPY_ARRAY_IN_ARRAY);
+    gsl_vector_view densities = pyObjectToGSLVectorView(outDensities, NPY_ARRAY_OUT_ARRAY);
 
-    double parzenFactor = 1.0 / (dataPoints.length * pow(inWindowWidth, patterns.dimensionality));
+    SymmetricKernel kernel = selectSymmetricKernel(kernelType);
 
-    SymmetricKernel kernel = selectSymmetricKernel(inKernelType);
-    kernel.prepare(dataPoints.dimensionality);
-
-    double* current_pattern = patterns.data;
-
-    for(int j = 0;
-        j < patterns.length;
-        j++, current_pattern += patterns.rowStride)
-    {
-        densities.data[j] = parzen(current_pattern, &dataPoints,
-                                   inWindowWidth, parzenFactor,
-                                   kernel.density);
-    }
-    kernel.free();
+    parzen(&xs.matrix, &xis.matrix, inWindowWidth, kernel, &densities.vector);
 
     /* Create return object */
     Py_INCREF(Py_None);

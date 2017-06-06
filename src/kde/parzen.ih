@@ -3,11 +3,17 @@
 
 #include <printf.h>
 #include <math.h>
-
-#include <Python.h>
-#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
-#include <numpy/arrayobject.h>
+#include "utils/gsl_utils.h"
 
 #include "parzen.h"
+
+double singlePattern(gsl_vector *x);
+
+double computeParzenFactor(double globalBandwidth, gsl_matrix* xs);
+double computeGlobalBandwidthFactor(double globalBandwidth);
+
+static void prepareGlobals(gsl_matrix* xis, double globalBandwidth, SymmetricKernel kernel);
+static void allocateGlobals(size_t dataDimension);
+static void freeGlobals();
 
 #endif //PARZEN_IH

@@ -4,6 +4,8 @@
 #include <printf.h>
 
 #include <gsl/gsl_matrix.h>
+#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_vector_double.h>
 
 #include "utils/distancematrix.h"
 #include "utils/knn.h"
@@ -21,8 +23,6 @@ void determineGlobalKernelShape(size_t patternIdx);
 void prepareGlobals(gsl_matrix *xs,
                     gsl_vector *localBandwidths, double globalBandwidth,
                     ShapeAdaptiveKernel kernel, int k);
-
-static gsl_vector* subtract(gsl_vector* termA, gsl_vector* termB, gsl_vector* result);
 
 void allocateGlobals(size_t dataDimension, size_t num_xi_s, size_t k);
 

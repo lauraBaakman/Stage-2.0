@@ -47,3 +47,10 @@ gsl_matrix* gsl_matrix_view_copy_to_gsl_matrix(gsl_matrix_view origin) {
     gsl_matrix_memcpy(copy, &origin.matrix);
     return copy;
 }
+
+gsl_vector *gsl_subtract(gsl_vector *termA, gsl_vector *termB, gsl_vector *result) {
+    gsl_vector_memcpy(result, termA);
+    gsl_vector_sub(result, termB);
+
+    return result;
+}

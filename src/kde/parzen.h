@@ -1,14 +1,12 @@
-//
-// Created by Laura Baakman on 09/01/2017.
-//
-
 #ifndef PARZEN_H
 #define PARZEN_H
 
-#include "utils.h"
+#include <gsl/gsl_vector_double.h>
+#include <gsl/gsl_matrix.h>
+
 #include "kernels/kernels.h"
 
-double parzen(double *pattern, Array *dataPoints, double windowWidth, double parzenFactor,
-              SymmetricKernelDensityFunction kernel);
+void parzen(gsl_matrix* xs, gsl_matrix* xis, double windowWidth, SymmetricKernel kernel,
+            gsl_vector* outDensities);
 
 #endif //PARZEN_H

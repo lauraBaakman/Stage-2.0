@@ -13,4 +13,6 @@ int gsl_vector_print(FILE *f, const gsl_vector *vector);
 
 int gsl_permutation_print(FILE *f, const gsl_permutation *permutation);
 
+gsl_vector* gsl_subtract(gsl_vector *termA, gsl_vector *termB, gsl_vector *result);
+
 #endif //KERNELS_GSL_UTILS_H

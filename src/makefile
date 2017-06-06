@@ -6,6 +6,7 @@ IDIRS=-I/usr/local/include/
 
 SOURCES=./test_main.c ./lib/CuTest.c ./lib/CuTestUtils.c\
     ./kde/tests/test_sambe.c ./kde/sambe.c \
+    ./kde/tests/test_parzen.c ./kde/parzen.c \
     ./kde/kernels/kernels.c \
     ./kde/kernels/gaussian.c ./kde/kernels/epanechnikov.c ./kde/kernels/testkernel.c \
     ./kde/utils/distancematrix.c \
@@ -16,6 +17,7 @@ SOURCES=./test_main.c ./lib/CuTest.c ./lib/CuTestUtils.c\
 OBJECTS=$(SOURCES:.c=.o)
 DEPS=./test_constants.h ./lib/CuTest.h ./lib/CuTestUtils.h\
     ./kde/tests/test_sambe.h ./kde/sambe.h ./kde/sambe.ih \
+    ./kde/tests/test_parzen.h ./kde/parzen.h ./kde/parzen.ih \
     ./kde/kernels/kernels.h ./kde/kernels/kernels.ih \
     ./kde/kernels/gaussian.h ./kde/kernels/gaussian.ih \
     ./kde/kernels/epanechnikov.h ./kde/kernels/epanechnikov.ih \
@@ -38,7 +40,7 @@ RM=rm
 # http://www.cs.colby.edu/maxwell/courses/tutorials/maketutor/
 %.o: %.c $(DEPS)
 	$(CC) $(IDIRS) -c -o $@ $< $(CFLAGS)
-test: $(OBJECTS)
+tests: $(OBJECTS)
 	$(CC) $(CFLAGS) -o test_main.out $(OBJECTS) $(LDLIBS) $(LDDIRS) $(IDIRS)
 clean:
-	$(RM) *o *.out
+	$(RM) -f *o *.out

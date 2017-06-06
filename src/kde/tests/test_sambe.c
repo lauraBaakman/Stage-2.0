@@ -34,6 +34,7 @@ void testDetermineGlobalKernelShape(CuTest* tc){
 
     gsl_matrix_free(xs);
     gsl_vector_free(localBandwidths);
+    gsl_matrix_free(expected);
     freeGlobals();
 
 }
@@ -70,6 +71,8 @@ void testFinalDensitySinglePattern(CuTest* tc){
 
     CuAssertDblEquals(tc, expected, actual, delta);
 
+    gsl_matrix_free(xs);
+    gsl_vector_free(localBandwidths);
     freeGlobals();
     kernel.free();
 }
