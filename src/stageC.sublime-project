@@ -7,14 +7,16 @@
 				".idea",
 				"__pycache__",
 				"*build",
-				"*cmake-build-debug"
+				"*cmake-build-debug",
+				"datasets",
 			],
 			"file_exclude_patterns": [
 				"*.m",
 				"*.out",
 				"*.py",
 				"requirements.txt",
-				"*CMakeLists.txt"
+				"*CMakeLists.txt",
+				"stagePython.sublime-project",
 			]
 		}
 	]
