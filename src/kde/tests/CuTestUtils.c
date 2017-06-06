@@ -27,8 +27,6 @@ void CuAssertMatrixEquals_LineMsg(CuTest* tc,
             }
         }
     }
-
-
 }
 
 void CuAssertVectorEquals_LineMsg(CuTest *tc, const char *file, int line, const char *message, gsl_vector *expected,
