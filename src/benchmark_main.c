@@ -1,8 +1,10 @@
 #include <time.h>
+#include <math.h>
 
 #include <gsl/gsl_matrix.h>
 
 #include "kde/parzen.h"
+#include "kde/sambe.h"
 #include "kde/kernels/kernels.h"
 
 size_t numXs;
@@ -50,6 +52,35 @@ clock_t benchmarkParzen(){
     return toc - tic;	
 }
 
+// clock_t benchmarkMBE(){
+
+// }
+
+clock_t benchmarkSAMBE(){
+    gsl_matrix* xs = gsl_matrix_alloc(numXs, dimension);
+    gsl_matrix_set_all(xs, 0.5);
+
+    gsl_vector* densities = gsl_vector_alloc(numXs);
+
+    gsl_vector* localBandwidths = gsl_vector_alloc(numXs);
+
+    double globalBandwidth = 4;
+
+    ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(SHAPE_ADAPTIVE_EPANECHNIKOV);
+
+    int k = fmax(sqrt(round(numXs)), dimension) + 1;
+
+	clock_t tic = clock();
+  	sambeFinalDensity(xs, localBandwidths, globalBandwidth, kernel, k, densities);
+  	clock_t toc = clock();
+
+    gsl_vector_free(localBandwidths);
+    gsl_vector_free(densities);
+    gsl_matrix_free(xs);
+
+    return toc - tic;	
+}
+
 void printTimeInformation(clock_t tictoc, char* estimator){
 	 printf("%s: %f seconds\n", estimator, (double)(tictoc) / CLOCKS_PER_SEC);
 }
@@ -60,6 +91,9 @@ int main(int argc, char* argv[]){
 	printTimeInformation(
 		benchmarkParzen(), "parzen"
 	);
+	printTimeInformation(
+		benchmarkSAMBE(), "SAMBE"
+	);	
 
     return 0;
 }
