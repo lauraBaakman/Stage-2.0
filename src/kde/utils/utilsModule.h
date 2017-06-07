@@ -1,7 +1,3 @@
-//
-// Created by Laura Baakman on 16/02/2017.
-//
-
 #ifndef KERNELS_UTILSMODULE_H_H
 #define KERNELS_UTILSMODULE_H_H
 
@@ -10,7 +6,6 @@
 #include <numpy/arrayobject.h>
 
 #include "../utils.h"
-#include "distancematrix.h"
 #include "knn.h"
 #include "covariancematrix.h"
 #include "eigenvalues.h"

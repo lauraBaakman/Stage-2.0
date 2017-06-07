@@ -48,13 +48,12 @@ class _KNN_C(_KNN):
 
     def __init__(self, patterns):
         super(_KNN_C, self).__init__(patterns)
-        self._distance_matrix = distanceMatrix.compute_distance_matrix(patterns)
 
     def find_k_nearest_neighbours(self, pattern, k):
         (dimension,) = pattern.shape
         nearest_neighbours = np.zeros([k, dimension], dtype=np.float64)
         pattern_idx = self._find_idx_of_pattern(pattern)
-        _utils.knn(k, pattern_idx, self._patterns, self._distance_matrix, nearest_neighbours)
+        _utils.knn(k, pattern_idx, self._patterns, nearest_neighbours)
         return nearest_neighbours
 
     def _find_idx_of_pattern(self, pattern):

@@ -10,14 +10,14 @@
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include <numpy/arrayobject.h>
 
+#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_vector_double.h>
+
 #include "parzen.h"
 #include "mbe.h"
 #include "sambe.h"
-#include "sambe.ih" // Shouldn't be included anywhere, but the locals needed to be exposed somewhere for easy testing.
-#include "utils.h"
 #include "kernels/kernels.h"
 
-Array pyObjectToArray(PyObject *pythonObject, int requirements);
 gsl_matrix_view pyObjectToGSLMatrixView(PyObject *pythonObject, int requirements);
 gsl_vector_view pyObjectToGSLVectorView(PyObject *pythonObject, int requirements);
 

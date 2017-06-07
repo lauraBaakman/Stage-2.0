@@ -19,4 +19,6 @@ void listElementArraySort(ListElement* elements, size_t numElements);
 void listElementArrayPrint(ListElement* elements, size_t numElements);
 void listElementPrint(ListElement* element);
 
+double squaredEuclidean(gsl_vector* a, gsl_vector* b);
+
 #endif //KERNELS_KNN_IH

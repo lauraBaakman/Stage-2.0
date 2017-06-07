@@ -13,7 +13,6 @@ sources = [
     'kernels/gaussian.c',
     'kernels/testkernel.c',
     'utils/covariancematrix.c',
-    'utils/distancematrix.c',
     'utils/eigenvalues.c',
     'utils/geometricmean.c',
     'utils/gsl_utils.c',

@@ -15,7 +15,6 @@ size_t g_numXs;
 gsl_vector* g_movedPattern;
 
 size_t g_k;
-gsl_matrix* g_distanceMatrix;
 gsl_matrix* g_nearestNeighbours;
 
 void sambe(gsl_matrix *xs,
@@ -68,8 +67,7 @@ double singlePattern(gsl_vector *x, size_t xIdx) {
 void determineGlobalKernelShape(size_t patternIdx) {
     /* Compute K nearest neighbours */
     computeKNearestNeighbours(g_k, patternIdx,
-                              g_xs, g_distanceMatrix,
-                              g_nearestNeighbours);
+                              g_xs, g_nearestNeighbours);
 
     /* Compute the covariance matrix of the neighbours */
     computeCovarianceMatrix(g_nearestNeighbours, g_globalBandwidthMatrix);
@@ -83,16 +81,16 @@ void determineGlobalKernelShape(size_t patternIdx) {
 
 void allocateGlobals(size_t dataDimension, size_t num_xi_s, size_t k) {
     g_globalBandwidthMatrix = gsl_matrix_alloc(dataDimension, dataDimension);
-    g_distanceMatrix = gsl_matrix_alloc(num_xi_s, num_xi_s);
     g_nearestNeighbours = gsl_matrix_alloc(k, dataDimension);
     g_movedPattern = gsl_vector_alloc(dataDimension);
 }
 
 void freeGlobals() {
     gsl_matrix_free(g_globalBandwidthMatrix);
-    gsl_matrix_free(g_distanceMatrix);
     gsl_matrix_free(g_nearestNeighbours);
     gsl_vector_free(g_movedPattern);
+
+    nn_free();
 }
 
 void prepareGlobals(gsl_matrix *xs,
@@ -109,7 +107,7 @@ void prepareGlobals(gsl_matrix *xs,
 
     size_t dimension = g_xs->size2;
 
-    allocateGlobals(dimension, g_numXs, g_k);
+    nn_prepare(xs);
 
-    computeDistanceMatrix(g_xs, g_distanceMatrix);
+    allocateGlobals(dimension, g_numXs, g_k);
 }

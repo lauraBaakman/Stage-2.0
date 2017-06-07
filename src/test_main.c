@@ -1,9 +1,8 @@
 #include <stdio.h>
 
 #include "lib/CuTest.h"
-#include "kde/tests/test_sambe.h"
-#include "kde/tests/test_parzen.h"
-#include "kde/tests/test_mbe.h"
+#include "kde/tests/test_kde.h"
+#include "kde/utils/tests/test_utils.h"
 
 CuSuite *StrUtilGetSuite();
 
@@ -11,9 +10,8 @@ int RunAllTests(void) {
 	CuString *output = CuStringNew();
 	CuSuite *suite = CuSuiteNew();
 	
-	CuSuiteAddSuite(suite, SAMBEGetSuite());
-	CuSuiteAddSuite(suite, ParzenGetSuite());
-	CuSuiteAddSuite(suite, MBEGetSuite());
+	CuSuiteAddSuite(suite, KDEGetSuite());
+	CuSuiteAddSuite(suite, UtilsGetSuite());
 
     int exitCode = CuSuiteRun(suite);
 	CuSuiteSummary(suite, output);

@@ -1,8 +1,0 @@
-#ifndef KERNELS_DISTANCEMATRIX_IH
-#define KERNELS_DISTANCEMATRIX_IH
-
-#include "distancematrix.h"
-
-double squaredEuclidean(gsl_vector* a, gsl_vector* b);
-
-#endif //KERNELS_DISTANCEMATRIX_IH

@@ -1,9 +1,3 @@
-//
-// Created by Laura Baakman on 09/01/2017.
-//
-
-#include <gsl/gsl_matrix.h>
-#include <gsl/gsl_vector_double.h>
 #include "kdeModule.h"
 
 static char kde_parzen_docstring[] = "Estimate densities with Parzen.";
@@ -102,19 +96,6 @@ static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
     /* Create return object */
     Py_INCREF(Py_None);
     return Py_None;
-}
-
-
-Array pyObjectToArray(PyObject *pythonObject, int requirements){
-    PyArrayObject* arrayObject = NULL;
-    arrayObject = (PyArrayObject *)PyArray_FROM_OTF(pythonObject, NPY_DOUBLE, requirements);
-    if (arrayObject == NULL){
-        fprintf(stderr, "Error converting PyObject to PyArrayObject\n");
-        exit(-1);
-    }
-    Array array = arrayBuildFromPyArray(arrayObject);
-    Py_XDECREF(arrayObject);
-    return array;
 }
 
 gsl_vector_view pyObjectToGSLVectorView(PyObject *pythonObject, int requirements) {

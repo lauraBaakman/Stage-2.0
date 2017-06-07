@@ -1,50 +1,28 @@
+#include "utilsModule.h"
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_vector_double.h>
-#include "utilsModule.h"
-
-static char utils_distanceMatrix_docstring[] = "Compute the distance matrix for the input patterns with squared Euclidean distance as a metric.";
-static PyObject * distance_matrix(PyObject *self, PyObject *args){
-
-    /* Handle input */
-    PyObject* inPatterns = NULL;
-    PyObject* outDistanceMatrix = NULL;
-
-    if (!PyArg_ParseTuple(args, "OO", &inPatterns, &outDistanceMatrix)) return NULL;
-
-
-    gsl_matrix_view patterns = pyObjectToGSLMatrixView(inPatterns, NPY_ARRAY_IN_ARRAY);
-    gsl_matrix_view distanceMatrix = pyObjectToGSLMatrixView(outDistanceMatrix, NPY_ARRAY_OUT_ARRAY);
-
-    /* Do stuff */
-    computeDistanceMatrix(&patterns.matrix, &distanceMatrix.matrix);
-
-    /* Create return object */
-    Py_INCREF(Py_None);
-    return Py_None;
-}
 
 static char utils_knn_docstring[] = "Compute the K nearest neighbours of some pattern, based on the provided distance matrix.";
 static PyObject * knn(PyObject *self, PyObject *args){
 
     /* Handle input */
     PyObject* inPatterns = NULL;
-    PyObject* inDistanceMatrix = NULL;
     PyObject* outNearestNeighbours = NULL;
 
     int k;
     int patternIdx;
 
-    if (!PyArg_ParseTuple(args, "iiOOO",
-                          &k, &patternIdx, &inPatterns, &inDistanceMatrix, &outNearestNeighbours)) return NULL;
+    if (!PyArg_ParseTuple(args, "iiOO",
+                          &k, &patternIdx, &inPatterns, &outNearestNeighbours)) return NULL;
 
     gsl_matrix_view patterns = pyObjectToGSLMatrixView(inPatterns, NPY_ARRAY_IN_ARRAY);
-    gsl_matrix_view distanceMatrix = pyObjectToGSLMatrixView(inDistanceMatrix, NPY_ARRAY_IN_ARRAY);
     gsl_matrix_view nearestNeighbours = pyObjectToGSLMatrixView(outNearestNeighbours, NPY_ARRAY_OUT_ARRAY);
 
     /* Do stuff */
-    computeKNearestNeighbours(k, patternIdx,
-                              &patterns.matrix, &distanceMatrix.matrix,
+    nn_prepare(&patterns.matrix);
+    computeKNearestNeighbours(k, patternIdx, &patterns.matrix,
                               &nearestNeighbours.matrix);
+    nn_free();
 
     /* Create return object */
     Py_INCREF(Py_None);
@@ -164,7 +142,6 @@ gsl_matrix *pyObjectToGSLMatrix(PyObject *pythonObject, int requirements) {
 }
 
 static PyMethodDef method_table[] = {
-        {"distance_matrix",     distance_matrix,    METH_VARARGS,   utils_distanceMatrix_docstring},
         {"knn",                 knn,                METH_VARARGS,   utils_knn_docstring},
         {"covariance_matrix",   covariance_matrix,  METH_VARARGS,   utils_covarianceMatrix_docstring},
         {"eigen_values",        eigenValues,        METH_VARARGS,   utils_eigenValues_docstring},

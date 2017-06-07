@@ -5,19 +5,24 @@ LDDIRS=-L/usr/local/lib/
 IDIRS=-I/usr/local/include/
 
 TEST_SOURCES=./lib/CuTest.c ./lib/CuTestUtils.c \
+	./kde/tests/test_kde.c \
 	./kde/tests/test_sambe.c \
 	./kde/tests/test_parzen.c \
-	./kde/tests/test_mbe.c
+	./kde/tests/test_mbe.c \
+	./kde/utils/tests/test_utils.c \
+	./kde/utils/tests/test_knn.c 
 TEST_OBJECTS=$(TEST_SOURCES:.c=.o)
 TEST_DEPS=./test_constants.h ./lib/CuTest.h ./lib/CuTestUtils.h\
+	./kde/tests/test_kde.h \
 	./kde/tests/test_sambe.h \
 	./kde/tests/test_parzen.h \
-	./kde/tests/test_mbe.h
+	./kde/tests/test_mbe.h \
+	./kde/utils/tests/test_utils.h \
+	./kde/utils/tests/test_knn.h	
 
 SOURCES=./kde/sambe.c ./kde/parzen.c ./kde/mbe.c \
     ./kde/kernels/kernels.c \
     ./kde/kernels/gaussian.c ./kde/kernels/epanechnikov.c ./kde/kernels/testkernel.c \
-    ./kde/utils/distancematrix.c \
     ./kde/utils/knn.c \
     ./kde/utils/covariancematrix.c \
     ./kde/utils/eigenvalues.c \
@@ -30,7 +35,6 @@ DEPS=./kde/sambe.h ./kde/sambe.ih \
     ./kde/kernels/gaussian.h ./kde/kernels/gaussian.ih \
     ./kde/kernels/epanechnikov.h ./kde/kernels/epanechnikov.ih \
     ./kde/kernels/testkernel.h ./kde/kernels/testkernel.ih \
-    ./kde/utils/distancematrix.ih ./kde/utils/distancematrix.h \
     ./kde/utils/knn.h ./kde/utils/knn.ih \
     ./kde/utils/covariancematrix.h ./kde/utils/covariancematrix.ih \
     ./kde/utils/eigenvalues.h \

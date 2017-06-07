@@ -7,7 +7,6 @@
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_vector_double.h>
 
-#include "utils/distancematrix.h"
 #include "utils/knn.h"
 #include "utils/covariancematrix.h"
 

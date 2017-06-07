@@ -2,11 +2,9 @@ from unittest import TestCase
 
 import numpy as np
 
-from kde.utils.distanceMatrix import compute_distance_matrix, _compute_distance_matrix_C, _compute_distance_matrix_Python
+from kde.utils.distanceMatrix import compute_distance_matrix
 
 class TestCompute_distance_matrix(TestCase):
-
-
     def setUp(self):
         super().setUp()
         self.patterns = np.array([
@@ -22,51 +20,6 @@ class TestCompute_distance_matrix(TestCase):
             [65, 45, 20, 0]
         ], dtype=np.float64)
 
-    def test_compute_distance_matrix_C_implicit(self):
+    def test_compute_distance_matrix(self):
         actual = compute_distance_matrix(self.patterns)
         np.testing.assert_array_almost_equal(actual, self.expected)
-
-    def test_compute_distance_matrix_C_explicit(self):
-        actual = compute_distance_matrix(self.patterns, implementation=_compute_distance_matrix_C)
-        np.testing.assert_array_almost_equal(actual, self.expected)
-
-    def test_compute_distance_matrix_C_python(self):
-        actual = compute_distance_matrix(self.patterns, implementation=_compute_distance_matrix_Python)
-        np.testing.assert_array_almost_equal(actual, self.expected)
-
-
-class Compute_distance_matrixAbstractTest(object):
-
-    def setUp(self):
-        super().setUp()
-        self._implementation = None
-
-    def test_compute_distance(self):
-        patterns = np.array([
-            [0, 0],
-            [1, 1],
-            [2, 3],
-            [4, 7]
-        ])
-        expected = np.array([
-            [0, 2, 13, 65],
-            [2, 0, 5, 45],
-            [13, 5, 0, 20],
-            [65, 45, 20, 0]
-        ], dtype=np.float64)
-        actual = self._implementation(patterns)
-        np.testing.assert_array_almost_equal(actual, expected)
-
-
-class TestCompute_distance_matrix_C(Compute_distance_matrixAbstractTest, TestCase):
-
-    def setUp(self):
-        super().setUp()
-        self._implementation = _compute_distance_matrix_C
-
-
-class TestCompute_distance_matrix_Python(Compute_distance_matrixAbstractTest, TestCase):
-
-    def setUp(self):
-        super().setUp()
-        self._implementation = _compute_distance_matrix_Python

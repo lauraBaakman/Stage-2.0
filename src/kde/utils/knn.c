@@ -1,10 +1,12 @@
+#include <gsl/gsl_matrix.h>
 #include "knn.ih"
 
-void computeKNearestNeighbours(size_t k, size_t patternIdx, gsl_matrix *patterns, gsl_matrix *distanceMatrix,
-                               gsl_matrix *outNearestNeighbours) {
-    gsl_vector_view distances = gsl_matrix_row(distanceMatrix, patternIdx);
+static gsl_matrix* g_distanceMatrix;
 
-    size_t distanceCount = distanceMatrix->size1;
+void computeKNearestNeighbours(size_t k, size_t patternIdx, gsl_matrix *patterns, gsl_matrix *outNearestNeighbours) {
+    gsl_vector_view distances = gsl_matrix_row(g_distanceMatrix, patternIdx);
+
+    size_t distanceCount = g_distanceMatrix->size1;
 
     ListElement* elements = toArrayOfListElements(&distances.vector);
     listElementArraySort(elements, distanceCount);
@@ -57,4 +59,46 @@ void getKNearestElements(ListElement *sortedDistances, size_t k,
         pattern = gsl_matrix_row(patterns, idx);
         gsl_matrix_set_row(outNeighbours, i, &pattern.vector);
     }
+}
+
+void computeDistanceMatrix(gsl_matrix *patterns, gsl_matrix *distanceMatrix) {
+    gsl_matrix_set_zero(distanceMatrix);
+
+    gsl_vector_view a, b;
+
+    size_t patternCount = patterns->size1;
+
+    double distance;
+    for(size_t i = 0; i < patternCount; i++){
+        a = gsl_matrix_row(patterns, i);
+        for(size_t j = i + 1; j < patternCount; j++){
+            b = gsl_matrix_row(patterns, j);
+
+            distance = squaredEuclidean(&a.vector, &b.vector);
+
+            gsl_matrix_set(distanceMatrix, i, j, distance);
+            gsl_matrix_set(distanceMatrix, j, i, distance);
+        }
+    }
+}
+
+double squaredEuclidean(gsl_vector* a, gsl_vector* b){
+    size_t vectorDimension = a->size;
+    double distance = 0;
+    double difference;
+    for(size_t i = 0; i < vectorDimension; i++){
+        difference = a->data[i] - b->data[i];
+        distance += difference * difference;
+    }
+    return distance;
+}
+
+void nn_prepare(gsl_matrix* xs){
+    g_distanceMatrix = gsl_matrix_alloc(xs->size1, xs->size1);
+
+    computeDistanceMatrix(xs, g_distanceMatrix);
+}
+
+void nn_free(){
+    gsl_matrix_free(g_distanceMatrix);
 }

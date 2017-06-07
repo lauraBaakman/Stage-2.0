@@ -5,7 +5,7 @@ import setup_globals
 sources = [
     'utilsModule.c',
     '../utils.c',
-    'distancematrix.c',
+    'gsl_utils.c',
     'knn.c',
     'covariancematrix.c',
     'eigenvalues.c',

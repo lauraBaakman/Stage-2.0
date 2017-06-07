@@ -20,12 +20,13 @@ set(SOURCE_FILES
         tests/test_parzen.c tests/test_parzen.h
         ../lib/CuTest.c ../lib/CuTest.h ../lib/CuTestUtils.c ../lib/CuTestUtils.h
         utils/utilsModule.c utils/utilsModule.h
-        utils/distancematrix.c utils/distancematrix.h utils/distancematrix.ih
         utils/knn.c utils/knn.h utils/knn.ih
         utils/covariancematrix.c utils/covariancematrix.h utils/covariancematrix.ih
         utils/eigenvalues.c utils/eigenvalues.h
         utils/geometricmean.c utils/geometricmean.h
-        utils/gsl_utils.c utils/gsl_utils.h mbe.ih)
+        utils/gsl_utils.c utils/gsl_utils.h mbe.ih
+        ../lib/CuTestUtils.h ../lib/CuTest.h
+        utils/tests/test_utils.c utils/tests/test_utils.h utils/tests/test_knn.c utils/tests/test_knn.h)
 add_executable(kde ${SOURCE_FILES})
 
 find_package(gsl COMPONENTS system filesystem REQUIRED)
