@@ -35,12 +35,11 @@ DEPS=./test_constants.h ./lib/CuTest.h ./lib/CuTestUtils.h\
 # gcc -Wall -I/usr/local/include -c temp.c
 # gcc temp.o -lgsl -lgslcblas -lm
 
-RM=rm
-
 # http://www.cs.colby.edu/maxwell/courses/tutorials/maketutor/
 %.o: %.c $(DEPS)
 	$(CC) $(IDIRS) -c -o $@ $< $(CFLAGS)
 tests: $(OBJECTS)
 	$(CC) $(CFLAGS) -o test_main.out $(OBJECTS) $(LDLIBS) $(LDDIRS) $(IDIRS)
 clean:
-	$(RM) -f *o *.out
+	find . -name "*.o" -delete
+	find . -name "*.out" -delete
