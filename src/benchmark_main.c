@@ -5,6 +5,7 @@
 
 #include "kde/parzen.h"
 #include "kde/sambe.h"
+#include "kde/mbe.h"
 #include "kde/kernels/kernels.h"
 
 size_t numXs;
@@ -52,9 +53,31 @@ clock_t benchmarkParzen(){
     return toc - tic;	
 }
 
-// clock_t benchmarkMBE(){
+clock_t benchmarkMBE(){
+    gsl_matrix* xs = gsl_matrix_alloc(numXs, dimension);
+    gsl_matrix_set_all(xs, 0.5);
 
-// }
+    gsl_matrix* xis = gsl_matrix_alloc(numXis, dimension);
+    gsl_matrix_set_all(xis, 0.5);
+
+	gsl_vector* localBandwidths = gsl_vector_alloc(numXs);
+	gsl_vector_set_all(localBandwidths, 0.3);
+
+    gsl_vector* densities = gsl_vector_alloc(numXs);
+
+    double windowWidth = 4;
+
+    clock_t tic = clock();
+    mbe(xs, xis, windowWidth, localBandwidths, EPANECHNIKOV, densities);
+    clock_t toc = clock();
+
+    gsl_vector_free(densities);
+    gsl_vector_free(localBandwidths);
+    gsl_matrix_free(xis);
+    gsl_matrix_free(xs);
+
+    return toc - tic;	
+}
 
 clock_t benchmarkSAMBE(){
     gsl_matrix* xs = gsl_matrix_alloc(numXs, dimension);
@@ -63,6 +86,7 @@ clock_t benchmarkSAMBE(){
     gsl_vector* densities = gsl_vector_alloc(numXs);
 
     gsl_vector* localBandwidths = gsl_vector_alloc(numXs);
+    gsl_vector_set_all(localBandwidths, 0.3);
 
     double globalBandwidth = 4;
 
@@ -71,7 +95,7 @@ clock_t benchmarkSAMBE(){
     int k = fmax(sqrt(round(numXs)), dimension) + 1;
 
 	clock_t tic = clock();
-  	sambeFinalDensity(xs, localBandwidths, globalBandwidth, kernel, k, densities);
+    sambe(xs, localBandwidths, globalBandwidth, kernel, k, densities);
   	clock_t toc = clock();
 
     gsl_vector_free(localBandwidths);
@@ -82,7 +106,7 @@ clock_t benchmarkSAMBE(){
 }
 
 void printTimeInformation(clock_t tictoc, char* estimator){
-	 printf("%s: %f seconds\n", estimator, (double)(tictoc) / CLOCKS_PER_SEC);
+	 printf("%-10s: %3.7f seconds\n", estimator, (double)(tictoc) / CLOCKS_PER_SEC);
 }
 
 int main(int argc, char* argv[]){
@@ -91,6 +115,9 @@ int main(int argc, char* argv[]){
 	printTimeInformation(
 		benchmarkParzen(), "parzen"
 	);
+	printTimeInformation(
+		benchmarkMBE(), "MBE"
+	);			
 	printTimeInformation(
 		benchmarkSAMBE(), "SAMBE"
 	);	

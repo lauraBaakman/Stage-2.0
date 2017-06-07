@@ -3,6 +3,7 @@
 #include "lib/CuTest.h"
 #include "kde/tests/test_sambe.h"
 #include "kde/tests/test_parzen.h"
+#include "kde/tests/test_mbe.h"
 
 CuSuite *StrUtilGetSuite();
 
@@ -12,6 +13,7 @@ int RunAllTests(void) {
 	
 	CuSuiteAddSuite(suite, SAMBEGetSuite());
 	CuSuiteAddSuite(suite, ParzenGetSuite());
+	CuSuiteAddSuite(suite, MBEGetSuite());
 
     int exitCode = CuSuiteRun(suite);
 	CuSuiteSummary(suite, output);
@@ -30,9 +32,6 @@ int main (void)
 	setbuf(stdout, NULL);
 
 	int result =  RunAllTests();
-
-	CuSuiteDelete(SAMBEGetSuite());
-	CuSuiteDelete(ParzenGetSuite());
 
 	return result;
 }

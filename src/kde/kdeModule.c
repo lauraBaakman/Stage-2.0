@@ -54,25 +54,15 @@ static PyObject *kde_modified_breiman(PyObject *self, PyObject *args){
                           &inKernelType,
                           &outDensities)) return NULL;
 
-    Array patterns = pyObjectToArray(inPatterns, NPY_ARRAY_IN_ARRAY);
-    Array dataPoints = pyObjectToArray(inDataPoints, NPY_ARRAY_IN_ARRAY);
-    Array localBandwidths = pyObjectToArray(inLocalBandwidths, NPY_ARRAY_IN_ARRAY);
-    Array densities = pyObjectToArray(outDensities, NPY_ARRAY_OUT_ARRAY);
+    gsl_matrix_view xs = pyObjectToGSLMatrixView(inPatterns, NPY_ARRAY_IN_ARRAY);
+    gsl_matrix_view xis = pyObjectToGSLMatrixView(inDataPoints, NPY_ARRAY_IN_ARRAY);
+    gsl_vector_view localBandwidths = pyObjectToGSLVectorView(inLocalBandwidths, NPY_ARRAY_IN_ARRAY);
+    gsl_vector_view densities = pyObjectToGSLVectorView(outDensities, NPY_ARRAY_OUT_ARRAY);
 
-    SymmetricKernel kernel = selectSymmetricKernel(inKernelType);
-    kernel.prepare(patterns.dimensionality);
-
-    double* current_pattern = patterns.data;
-
-    for(int j = 0;
-        j < patterns.length;
-        j++, current_pattern += patterns.rowStride)
-    {
-        densities.data[j] = modifiedBreimanFinalDensity(current_pattern, &dataPoints,
-                                                        globalBandwidth, &localBandwidths,
-                                                        kernel.density);
-    }
-    kernel.free();
+    mbe(&xs.matrix, &xis.matrix,
+        globalBandwidth, &localBandwidths.vector,
+        inKernelType,
+        &densities.vector);
 
     /* Create return object */
     Py_INCREF(Py_None);
@@ -105,9 +95,9 @@ static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
 
     /* Do computations */
     ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(kernelType);
-    sambeFinalDensity(&xs.matrix, &localBandwidths.vector, globalBandwidth,
-                      kernel, k,
-                      &densities.vector);
+    sambe(&xs.matrix, &localBandwidths.vector, globalBandwidth,
+          kernel, k,
+          &densities.vector);
 
     /* Create return object */
     Py_INCREF(Py_None);

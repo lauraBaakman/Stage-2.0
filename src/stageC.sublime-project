@@ -1,23 +1,34 @@
 {
+	"build_systems":
+	[
+		{
+			"file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
+			"name": "Anaconda Python Builder",
+			"selector": "source.python",
+			"shell_cmd": "\"python\" -u \"$file\""
+		}
+	],
 	"folders":
 	[
 		{
-			"path": ".",
-			"folder_exclude_patterns": [
-				".idea",
-				"__pycache__",
-				"*build",
-				"*cmake-build-debug",
-				"datasets",
-			],
-			"file_exclude_patterns": [
+			"file_exclude_patterns":
+			[
 				"*.m",
 				"*.out",
 				"*.py",
 				"requirements.txt",
 				"*CMakeLists.txt",
-				"stagePython.sublime-project",
-			]
+				"stagePython.sublime-project"
+			],
+			"folder_exclude_patterns":
+			[
+				".idea",
+				"__pycache__",
+				"*build",
+				"*cmake-build-debug",
+				"datasets"
+			],
+			"path": "."
 		}
 	]
 }

@@ -16,17 +16,16 @@
 extern gsl_matrix* g_globalBandwidthMatrix;
 
 
-double finalDensitySinglePattern(gsl_vector *x, size_t xIdx);
+static double singlePattern(gsl_vector *x, size_t xIdx);
 
-void determineGlobalKernelShape(size_t patternIdx);
+static void determineGlobalKernelShape(size_t patternIdx);
 
-void prepareGlobals(gsl_matrix *xs,
+static void prepareGlobals(gsl_matrix *xs,
                     gsl_vector *localBandwidths, double globalBandwidth,
                     ShapeAdaptiveKernel kernel, int k);
 
-void allocateGlobals(size_t dataDimension, size_t num_xi_s, size_t k);
+static void allocateGlobals(size_t dataDimension, size_t num_xi_s, size_t k);
 
-void freeGlobals();
-
+static void freeGlobals();
 
 #endif //PARZEN_IH

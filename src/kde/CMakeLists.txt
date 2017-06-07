@@ -14,7 +14,7 @@ set(SOURCE_FILES
         parzen.c parzen.h parzen.ih
         sambe.c sambe.h sambe.ih
         utils.c utils.h utils.ih
-        modifeidbreiman.c modifeidbreiman.h
+        mbe.c mbe.h
         ../test_main.c
         tests/test_sambe.c tests/test_sambe.h
         tests/test_parzen.c tests/test_parzen.h
@@ -25,7 +25,7 @@ set(SOURCE_FILES
         utils/covariancematrix.c utils/covariancematrix.h utils/covariancematrix.ih
         utils/eigenvalues.c utils/eigenvalues.h
         utils/geometricmean.c utils/geometricmean.h
-        utils/gsl_utils.c utils/gsl_utils.h)
+        utils/gsl_utils.c utils/gsl_utils.h mbe.ih)
 add_executable(kde ${SOURCE_FILES})
 
 find_package(gsl COMPONENTS system filesystem REQUIRED)

@@ -11,7 +11,7 @@
 #include <numpy/arrayobject.h>
 
 #include "parzen.h"
-#include "modifeidbreiman.h"
+#include "mbe.h"
 #include "sambe.h"
 #include "sambe.ih" // Shouldn't be included anywhere, but the locals needed to be exposed somewhere for easy testing.
 #include "utils.h"

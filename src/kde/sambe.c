@@ -18,10 +18,10 @@ size_t g_k;
 gsl_matrix* g_distanceMatrix;
 gsl_matrix* g_nearestNeighbours;
 
-void sambeFinalDensity(gsl_matrix* xs,
-                       gsl_vector* localBandwidths, double globalBandwidth,
-                       ShapeAdaptiveKernel kernel, int k,
-                       gsl_vector* outDensities){
+void sambe(gsl_matrix *xs,
+           gsl_vector *localBandwidths, double globalBandwidth,
+           ShapeAdaptiveKernel kernel, int k,
+           gsl_vector *outDensities){
 
     prepareGlobals(xs, localBandwidths, globalBandwidth, kernel, k);
 
@@ -33,7 +33,7 @@ void sambeFinalDensity(gsl_matrix* xs,
     for(size_t i = 0; i < g_numXs; i++){
         x = gsl_matrix_row(xs, i);
 
-        density = finalDensitySinglePattern(&x.vector, i);
+        density = singlePattern(&x.vector, i);
 
         gsl_vector_set(outDensities, i, density);
     }
@@ -42,7 +42,7 @@ void sambeFinalDensity(gsl_matrix* xs,
     freeGlobals();
 }
 
-double finalDensitySinglePattern(gsl_vector *x, size_t xIdx) {
+double singlePattern(gsl_vector *x, size_t xIdx) {
     double localBandwidth, density = 0.0;
 
     gsl_vector_view xi;

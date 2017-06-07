@@ -1,0 +1,19 @@
+#ifndef KERNELS_MBE_IH_H
+#define KERNELS_MBE_IH_H
+
+#include "mbe.h"
+#include <math.h>
+
+static double computeBandwidth(double localBandwidth);
+
+static double computeFactor(double bandwidth, size_t dimension);
+
+static void scale(gsl_vector* x, gsl_vector* xi, gsl_vector* result, double bandwidth);
+
+static double estimateSinglePattern(gsl_vector *x);
+
+static void prepareGlobals(gsl_matrix* xis, double globalBandwidth, gsl_vector* localBandwidths, KernelType kernelType);
+static void allocateGlobals(size_t dataDimension);
+static void freeGlobals();
+
+#endif //KERNELS_MBE_IH_H

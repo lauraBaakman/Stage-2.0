@@ -6,14 +6,15 @@ IDIRS=-I/usr/local/include/
 
 TEST_SOURCES=./lib/CuTest.c ./lib/CuTestUtils.c \
 	./kde/tests/test_sambe.c \
-	./kde/tests/test_parzen.c
+	./kde/tests/test_parzen.c \
+	./kde/tests/test_mbe.c
 TEST_OBJECTS=$(TEST_SOURCES:.c=.o)
 TEST_DEPS=./test_constants.h ./lib/CuTest.h ./lib/CuTestUtils.h\
 	./kde/tests/test_sambe.h \
-	./kde/tests/test_parzen.h
+	./kde/tests/test_parzen.h \
+	./kde/tests/test_mbe.h
 
-SOURCES=./kde/sambe.c \
-    ./kde/parzen.c \
+SOURCES=./kde/sambe.c ./kde/parzen.c ./kde/mbe.c \
     ./kde/kernels/kernels.c \
     ./kde/kernels/gaussian.c ./kde/kernels/epanechnikov.c ./kde/kernels/testkernel.c \
     ./kde/utils/distancematrix.c \
@@ -24,6 +25,7 @@ SOURCES=./kde/sambe.c \
 OBJECTS=$(SOURCES:.c=.o)
 DEPS=./kde/sambe.h ./kde/sambe.ih \
     ./kde/parzen.h ./kde/parzen.ih \
+    ./kde/mbe.h ./kde/mbe.ih \
     ./kde/kernels/kernels.h ./kde/kernels/kernels.ih \
     ./kde/kernels/gaussian.h ./kde/kernels/gaussian.ih \
     ./kde/kernels/epanechnikov.h ./kde/kernels/epanechnikov.ih \

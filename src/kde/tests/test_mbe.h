@@ -1,5 +1,5 @@
-#ifndef __kde__test_sambe__
-#define __kde__test_sambe__
+#ifndef __kde__test_mbe__
+#define __kde__test_mbe__
 
 #include <stdio.h>
 
@@ -10,8 +10,8 @@
 #include <gsl/gsl_matrix.h>
 
 #include "../../test_constants.h"
-#include "../sambe.h"
+#include "../mbe.h"
 
-CuSuite* SAMBEGetSuite();
+CuSuite* MBEGetSuite();
 
 #endif

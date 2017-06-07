@@ -4,7 +4,7 @@ import setup_globals
 
 sources = [
     'kdeModule.c',
-    'modifeidbreiman.c',
+    'mbe.c',
     'parzen.c',
     'sambe.c',
     'utils.c',
