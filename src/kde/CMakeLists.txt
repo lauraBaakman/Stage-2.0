@@ -4,6 +4,7 @@ project(kernels)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(SOURCE_FILES
+        ../benchmark_main.c
         kdeModule.c kdeModule.h
         kernels/kernels.c kernels/kernels.h kernels/kernels.ih
         kernels/kernelsModule.c kernels/kernelsModule.h

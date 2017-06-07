@@ -4,7 +4,7 @@ LDLIBS=-lgsl -lgslcblas -lm
 LDDIRS=-L/usr/local/lib/
 IDIRS=-I/usr/local/include/
 
-SOURCES=./test_main.c ./lib/CuTest.c ./lib/CuTestUtils.c\
+SOURCES=./lib/CuTest.c ./lib/CuTestUtils.c\
     ./kde/tests/test_sambe.c ./kde/sambe.c \
     ./kde/tests/test_parzen.c ./kde/parzen.c \
     ./kde/kernels/kernels.c \
@@ -38,8 +38,14 @@ DEPS=./test_constants.h ./lib/CuTest.h ./lib/CuTestUtils.h\
 # http://www.cs.colby.edu/maxwell/courses/tutorials/maketutor/
 %.o: %.c $(DEPS)
 	$(CC) $(IDIRS) -c -o $@ $< $(CFLAGS)
-tests: $(OBJECTS)
-	$(CC) $(CFLAGS) -o test_main.out $(OBJECTS) $(LDLIBS) $(LDDIRS) $(IDIRS)
+test_main: test_main.o	
+	$(CC) $(IDIRS) -c -o $@ $< $(CFLAGS)
+tests: $(OBJECTS) test_main.o
+	$(CC) $(CFLAGS) -o tests.out $(OBJECTS) test_main.o $(LDLIBS) $(LDDIRS) $(IDIRS)	
+benchmark_main: benchmark_main.o	
+	$(CC) $(IDIRS) -c -o $@ $< $(CFLAGS)
+benchmark: $(OBJECTS) benchmark_main.o
+	$(CC) $(CFLAGS) -o benchmark.out $(OBJECTS) benchmark_main.o $(LDLIBS) $(LDDIRS) $(IDIRS)	
 clean:
 	find . -name "*.o" -delete
 	find . -name "*.out" -delete
