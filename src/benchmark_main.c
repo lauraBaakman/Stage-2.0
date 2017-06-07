@@ -11,9 +11,9 @@ void readInput(int argc, char* argv[]){
 		exit(-1);		
 	}
 	if (
-		1 != sscanf(argv[1], "%zu", &numXs) ||
-		1 != sscanf(argv[2], "%zu", &numXis) ||
-		1 != sscanf(argv[3], "%zu", &dimension)
+			1 != sscanf(argv[1], "%zu", &numXs)
+		|| 	1 != sscanf(argv[2], "%zu", &numXis)
+		||	1 != sscanf(argv[3], "%zu", &dimension)
 	){
 		fprintf(stderr, "Sscanf failed.\n");
 		exit(-1);
