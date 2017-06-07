@@ -4,9 +4,16 @@ LDLIBS=-lgsl -lgslcblas -lm
 LDDIRS=-L/usr/local/lib/
 IDIRS=-I/usr/local/include/
 
-SOURCES=./lib/CuTest.c ./lib/CuTestUtils.c\
-    ./kde/tests/test_sambe.c ./kde/sambe.c \
-    ./kde/tests/test_parzen.c ./kde/parzen.c \
+TEST_SOURCES=./lib/CuTest.c ./lib/CuTestUtils.c \
+	./kde/tests/test_sambe.c \
+	./kde/tests/test_parzen.c
+TEST_OBJECTS=$(TEST_SOURCES:.c=.o)
+TEST_DEPS=./test_constants.h ./lib/CuTest.h ./lib/CuTestUtils.h\
+	./kde/tests/test_sambe.h \
+	./kde/tests/test_parzen.h
+
+SOURCES=./kde/sambe.c \
+    ./kde/parzen.c \
     ./kde/kernels/kernels.c \
     ./kde/kernels/gaussian.c ./kde/kernels/epanechnikov.c ./kde/kernels/testkernel.c \
     ./kde/utils/distancematrix.c \
@@ -15,9 +22,8 @@ SOURCES=./lib/CuTest.c ./lib/CuTestUtils.c\
     ./kde/utils/eigenvalues.c \
     ./kde/utils/gsl_utils.c
 OBJECTS=$(SOURCES:.c=.o)
-DEPS=./test_constants.h ./lib/CuTest.h ./lib/CuTestUtils.h\
-    ./kde/tests/test_sambe.h ./kde/sambe.h ./kde/sambe.ih \
-    ./kde/tests/test_parzen.h ./kde/parzen.h ./kde/parzen.ih \
+DEPS=./kde/sambe.h ./kde/sambe.ih \
+    ./kde/parzen.h ./kde/parzen.ih \
     ./kde/kernels/kernels.h ./kde/kernels/kernels.ih \
     ./kde/kernels/gaussian.h ./kde/kernels/gaussian.ih \
     ./kde/kernels/epanechnikov.h ./kde/kernels/epanechnikov.ih \
@@ -36,12 +42,12 @@ DEPS=./test_constants.h ./lib/CuTest.h ./lib/CuTestUtils.h\
 # gcc temp.o -lgsl -lgslcblas -lm
 
 # http://www.cs.colby.edu/maxwell/courses/tutorials/maketutor/
-%.o: %.c $(DEPS)
+%.o: %.c $(DEPS) $(TEST_DEPS)
 	$(CC) $(IDIRS) -c -o $@ $< $(CFLAGS)
 test_main: test_main.o	
 	$(CC) $(IDIRS) -c -o $@ $< $(CFLAGS)
-tests: $(OBJECTS) test_main.o
-	$(CC) $(CFLAGS) -o tests.out $(OBJECTS) test_main.o $(LDLIBS) $(LDDIRS) $(IDIRS)	
+tests: $(OBJECTS) $(TEST_OBJECTS) test_main.o
+	$(CC) $(CFLAGS) -o tests.out $(OBJECTS) $(TEST_OBJECTS) test_main.o $(LDLIBS) $(LDDIRS) $(IDIRS)	
 benchmark_main: benchmark_main.o	
 	$(CC) $(IDIRS) -c -o $@ $< $(CFLAGS)
 benchmark: $(OBJECTS) benchmark_main.o
