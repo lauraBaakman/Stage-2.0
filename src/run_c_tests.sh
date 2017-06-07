@@ -1,4 +1,4 @@
 #!/bin/bash 
-make tests && ./test_main.out
+make tests && ./tests.out
 
 exit $?
