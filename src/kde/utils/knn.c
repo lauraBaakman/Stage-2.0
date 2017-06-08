@@ -109,5 +109,5 @@ void nn_free(){
 }
 
 void buildKDTree(gsl_matrix* xs){
-    kdTree = kd_create(2);
+    kdTree = kd_create((int) xs->size2);
 }
