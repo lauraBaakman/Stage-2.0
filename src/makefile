@@ -27,7 +27,7 @@ SOURCES=./kde/sambe.c ./kde/parzen.c ./kde/mbe.c \
     ./kde/utils/covariancematrix.c \
     ./kde/utils/eigenvalues.c \
     ./kde/utils/gsl_utils.c \
-    ./lib/kdetree/kdetree.c
+    ./lib/kdtree/kdtree.c
 OBJECTS=$(SOURCES:.c=.o)
 DEPS=./kde/sambe.h ./kde/sambe.ih \
     ./kde/parzen.h ./kde/parzen.ih \
@@ -40,7 +40,7 @@ DEPS=./kde/sambe.h ./kde/sambe.ih \
     ./kde/utils/covariancematrix.h ./kde/utils/covariancematrix.ih \
     ./kde/utils/eigenvalues.h \
     ./kde/utils/gsl_utils.h \
-    ./lib/kdetree/kdetree.h
+    ./lib/kdtree/kdtree.h
 
 # Working command OS X
 # gcc test_main.c -I/usr/local/include/ -L/usr/local/lib/ -lgsl -lgslcblas

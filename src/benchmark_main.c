@@ -15,7 +15,7 @@ size_t dimension;
 
 void readInput(int argc, char* argv[]){
 	if(argc != 4){
-		fprintf(stderr, "Expected usage:\n\t./benchmark.out numXs, numXis dimension\n");
+		fprintf(stderr, "Expected usage:\n\t./benchmark.out numXs numXis dimension\n");
 		exit(-1);		
 	}
 	if (
