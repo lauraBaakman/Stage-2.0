@@ -12,6 +12,8 @@ typedef struct ListElement{
 
 void getKNearestElements(ListElement* sortedDistances, size_t k, gsl_matrix* patterns, gsl_matrix* outNeighbours);
 
+void computeDistanceMatrix(gsl_matrix* patterns, gsl_matrix* distanceMatrix);
+
 ListElement* toArrayOfListElements(gsl_vector *distances);
 
 int listElementCompare(const void *s1, const void *s2);

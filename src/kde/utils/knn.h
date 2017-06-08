@@ -6,8 +6,6 @@
 void computeKNearestNeighbours(size_t k, size_t patternIdx, gsl_matrix *patterns,
                                gsl_matrix *outNearestNeighbours);
 
-void computeDistanceMatrix(gsl_matrix* patterns, gsl_matrix* distanceMatrix);
-
 void nn_prepare(gsl_matrix* xs);
 
 void nn_free();
