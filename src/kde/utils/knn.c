@@ -1,7 +1,9 @@
 #include <gsl/gsl_matrix.h>
 #include "knn.ih"
+#include "../../lib/kdtree/kdtree.h"
 
 static gsl_matrix* g_distanceMatrix;
+struct kdtree* kdTree;
 
 void computeKNearestNeighbours(size_t k, size_t patternIdx, gsl_matrix *patterns, gsl_matrix *outNearestNeighbours) {
     gsl_vector_view distances = gsl_matrix_row(g_distanceMatrix, patternIdx);
@@ -97,8 +99,15 @@ void nn_prepare(gsl_matrix* xs){
     g_distanceMatrix = gsl_matrix_alloc(xs->size1, xs->size1);
 
     computeDistanceMatrix(xs, g_distanceMatrix);
+
+    buildKDTree(xs);
 }
 
 void nn_free(){
     gsl_matrix_free(g_distanceMatrix);
+    kd_free(kdTree);
+}
+
+void buildKDTree(gsl_matrix* xs){
+    kdTree = kd_create(2);
 }
