@@ -23,23 +23,23 @@ void computeKNearestNeighbours(size_t k, size_t patternIdx, gsl_matrix *patterns
 }
 
 void computeNearestNeighboursKD(gsl_vector* pattern, int k){
-    gsl_matrix* data2 = gsl_matrix_alloc(6, 3);
-    gsl_matrix_set(data2, 0, 0, 2); gsl_matrix_set(data2, 0, 1, 3);
-    gsl_matrix_set(data2, 1, 0, 5); gsl_matrix_set(data2, 1, 1, 4);
-    gsl_matrix_set(data2, 2, 0, 9); gsl_matrix_set(data2, 2, 1, 6);
-    gsl_matrix_set(data2, 3, 0, 4); gsl_matrix_set(data2, 3, 1, 7);
-    gsl_matrix_set(data2, 4, 0, 8); gsl_matrix_set(data2, 4, 1, 1);
-    gsl_matrix_set(data2, 5, 0, 7); gsl_matrix_set(data2, 5, 1, 2);
+    gsl_matrix* xs = gsl_matrix_alloc(6, 3);
+    gsl_matrix_set(xs, 0, 0, 2); gsl_matrix_set(xs, 0, 1, 3);
+    gsl_matrix_set(xs, 1, 0, 5); gsl_matrix_set(xs, 1, 1, 4);
+    gsl_matrix_set(xs, 2, 0, 9); gsl_matrix_set(xs, 2, 1, 6);
+    gsl_matrix_set(xs, 3, 0, 4); gsl_matrix_set(xs, 3, 1, 7);
+    gsl_matrix_set(xs, 4, 0, 8); gsl_matrix_set(xs, 4, 1, 1);
+    gsl_matrix_set(xs, 5, 0, 7); gsl_matrix_set(xs, 5, 1, 2);
 
     // Allocate memory
     k = 3;
-    struct kdtree* tree = kd_create((int) data2->size2);
+    struct kdtree* tree = kd_create((int) xs->size2);
     gsl_matrix* result = gsl_matrix_alloc(k, (size_t) kd_dimension(tree));
 
     // Build Tree
     double *row;
-    for (size_t i = 0; i < data2->size1; ++i) {
-        row = &data2->data[i * data2->tda];
+    for (size_t i = 0; i < xs->size1; ++i) {
+        row = &xs->data[i * xs->tda];
         kd_insert(tree, row, NULL);
     }
 
