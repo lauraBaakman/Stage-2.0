@@ -27,15 +27,15 @@ void computeNearestNeighboursKDHelper(gsl_matrix* xs, gsl_vector *pattern, int k
     gsl_matrix* result = gsl_matrix_alloc((size_t) k, xs->size2);
 
     // KNN
-    computeNearestNeighboursKD(kdTree, pattern, k, result);
+    computeNearestNeighboursKD(pattern, k, result);
 
     // Free Memory
     gsl_matrix_free(result);
 }
 
-void computeNearestNeighboursKD(struct kdtree* tree, gsl_vector* pattern, int k, gsl_matrix* neighbours){
+void computeNearestNeighboursKD(gsl_vector* pattern, int k, gsl_matrix* neighbours){
     double* resultRow;
-    struct kdres* res = kd_nearest_n(tree, pattern->data, k);
+    struct kdres* res = kd_nearest_n(kdTree, pattern->data, k);
     for(int i = 0; i < kd_res_size(res); i++, kd_res_next(res)){
         resultRow = &neighbours->data[i * neighbours->tda];
         kd_res_item(res, resultRow);

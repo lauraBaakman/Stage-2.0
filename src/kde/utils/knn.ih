@@ -29,6 +29,6 @@ static void buildKDTree(gsl_matrix* xs);
 
 static void computeNearestNeighboursKDHelper(gsl_matrix* patterns, gsl_vector *pattern, int k);
 
-static void computeNearestNeighboursKD(struct kdtree* tree, gsl_vector* pattern, int k, gsl_matrix* neighbours);
+static void computeNearestNeighboursKD(gsl_vector* pattern, int k, gsl_matrix* neighbours);
 
 #endif //KERNELS_KNN_IH
