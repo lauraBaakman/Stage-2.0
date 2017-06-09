@@ -17,44 +17,28 @@ void computeKNearestNeighbours(size_t k, size_t patternIdx, gsl_matrix *patterns
                         patterns, outNearestNeighbours);
 
     gsl_vector_view pattern = gsl_matrix_row(patterns, patternIdx);
-    computeNearestNeighboursKDHelper(&pattern.vector, (int) k);
+    computeNearestNeighboursKDHelper(patterns, &pattern.vector, (int) k);
 
     free(elements);
 }
 
-void computeNearestNeighboursKDHelper(gsl_vector *pattern, int k){
-    gsl_matrix* xs = gsl_matrix_alloc(6, 3);
-    gsl_matrix_set(xs, 0, 0, 2); gsl_matrix_set(xs, 0, 1, 3);
-    gsl_matrix_set(xs, 1, 0, 5); gsl_matrix_set(xs, 1, 1, 4);
-    gsl_matrix_set(xs, 2, 0, 9); gsl_matrix_set(xs, 2, 1, 6);
-    gsl_matrix_set(xs, 3, 0, 4); gsl_matrix_set(xs, 3, 1, 7);
-    gsl_matrix_set(xs, 4, 0, 8); gsl_matrix_set(xs, 4, 1, 1);
-    gsl_matrix_set(xs, 5, 0, 7); gsl_matrix_set(xs, 5, 1, 2);
-
+void computeNearestNeighboursKDHelper(gsl_matrix* xs, gsl_vector *pattern, int k){
     // Allocate memory
-    k = 3;
     struct kdtree* tree = kd_create((int) xs->size2);
-    gsl_matrix* result = gsl_matrix_alloc(k, (size_t) kd_dimension(tree));
+    gsl_matrix* result = gsl_matrix_alloc((size_t) k, xs->size2);
 
     // Build Tree
     buildKDTree(tree, xs);
 
     // KNN
-    gsl_vector* position = gsl_vector_alloc(kd_dimension(tree));
-    gsl_vector_set(position, 0, 9);
-    gsl_vector_set(position, 1, 2);
-    gsl_vector_set(position, 2, 0);
-
-    computeNearestNeighboursKD(tree, position, k, result);
+    computeNearestNeighboursKD(tree, pattern, k, result);
 
     printf("Nearest neighbours\n");
     gsl_matrix_print(stdout, result);
 
     // Free Memory
     kd_free(tree);
-    gsl_matrix_free(xs);
     gsl_matrix_free(result);
-    gsl_vector_free(position);
 }
 
 void computeNearestNeighboursKD(struct kdtree* tree, gsl_vector* pattern, int k, gsl_matrix* neighbours){
