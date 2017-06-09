@@ -32,11 +32,6 @@ void computeNearestNeighboursKD(gsl_vector* pattern, int k){
             8, 1, 0,
             7, 2, 0,
     };
-
-    // Allocate memory
-    void* tree = kd_create(3);
-
-    // Build Tree
     gsl_matrix* data2 = gsl_matrix_alloc(6, 3);
     gsl_matrix_set(data2, 0, 0, 2); gsl_matrix_set(data2, 0, 1, 3);
     gsl_matrix_set(data2, 1, 0, 5); gsl_matrix_set(data2, 1, 1, 4);
@@ -45,6 +40,12 @@ void computeNearestNeighboursKD(gsl_vector* pattern, int k){
     gsl_matrix_set(data2, 4, 0, 8); gsl_matrix_set(data2, 4, 1, 1);
     gsl_matrix_set(data2, 5, 0, 7); gsl_matrix_set(data2, 5, 1, 2);
 
+    // Allocate memory
+    k = 3;
+    struct kdtree* tree = kd_create((int) data2->size2);
+    gsl_matrix* result = gsl_matrix_alloc(k, (size_t) kd_dimension(tree));
+
+    // Build Tree
     double *row;
     for (size_t i = 0; i < data2->size1; ++i) {
         row = &data2->data[i * data2->tda];
@@ -54,12 +55,15 @@ void computeNearestNeighboursKD(gsl_vector* pattern, int k){
     // KNN
     double pos[3] = {9, 2, 0};
 
-    void* res = kd_nearest_n(tree, pos, 3);
-    while(!kd_res_end(res)) {
-        kd_res_item(res, &data[0]);
-        printf("%1.0f %1.0f %1.0f distance: %2.3f\n", data[0], data[1], data[2],  kd_res_dist(res));
-        kd_res_next(res);
+    double* resultRow;
+    struct kdres* res = kd_nearest_n(tree, pos, k);
+    for(int i = 0; i < kd_res_size(res); i++, kd_res_next(res)){
+        resultRow = &result->data[i * result->tda];
+        kd_res_item(res, resultRow);
     }
+
+    printf("Nearest neighbours\n");
+    gsl_matrix_print(stdout, result);
 
     // Free Memory
     kd_res_free(res);
