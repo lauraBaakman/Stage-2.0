@@ -26,9 +26,6 @@ void computeNearestNeighboursKDHelper(gsl_matrix* xs, gsl_vector *pattern, int k
     // Allocate memory
     gsl_matrix* result = gsl_matrix_alloc((size_t) k, xs->size2);
 
-    // Build Tree
-    buildKDTree(kdTree, xs);
-
     // KNN
     computeNearestNeighboursKD(kdTree, pattern, k, result);
 
@@ -130,6 +127,7 @@ void nn_prepare(gsl_matrix* xs){
     computeDistanceMatrix(xs, g_distanceMatrix);
 
     kdTree = kd_create((int) xs->size2);
+    buildKDTree(kdTree, xs);
 }
 
 void nn_free(){
