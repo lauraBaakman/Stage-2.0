@@ -23,15 +23,6 @@ void computeKNearestNeighbours(size_t k, size_t patternIdx, gsl_matrix *patterns
 }
 
 void computeNearestNeighboursKD(gsl_vector* pattern, int k){
-
-    double data[] = {
-            2, 3, 0,
-            5, 4, 0,
-            9, 6, 0,
-            4, 7, 0,
-            8, 1, 0,
-            7, 2, 0,
-    };
     gsl_matrix* data2 = gsl_matrix_alloc(6, 3);
     gsl_matrix_set(data2, 0, 0, 2); gsl_matrix_set(data2, 0, 1, 3);
     gsl_matrix_set(data2, 1, 0, 5); gsl_matrix_set(data2, 1, 1, 4);
