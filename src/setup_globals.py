@@ -1,15 +1,28 @@
+from unipath import Path
 import numpy.distutils.misc_util as npdisutils
+from environs import Env
 
+_environment = Env()
 
-include_dirs = ['/Users/laura/.virtualenvs/stage/include/python3.5m',
-                '/Users/laura/.virtualenvs/stage/lib/python3.5/site-packages/numpy/core/include/numpy',
-                '/Users/laura/.virtualenvs/stage/include',
-                '/usr/local/include']
+_virtual_env_path = Path(_environment('VIRTUALENVPATH'))
+_local_path = Path(_environment('LOCALPATH', 'usr/local'))
+
+include_dirs = [
+    _virtual_env_path.child('include').child('python3.5m'),
+    _virtual_env_path.child('include'),
+    _local_path.child('include')
+]
 include_dirs.extend(npdisutils.get_numpy_include_dirs())
 
-library_dirs = ['/Users/laura/.virtualenvs/stage/lib',
-                '/usr/local/lib']
+library_dirs = [
+    _virtual_env_path.child('lib'),
+    _local_path.child('lib')
+]
 
-libraries = ['gsl',
-             'gslcblas',
-             'm']
+libraries = [
+    'gsl',
+    'gslcblas',
+    'm'
+]
+
+lib_path = Path(__file__).ancestor(1).child('lib')

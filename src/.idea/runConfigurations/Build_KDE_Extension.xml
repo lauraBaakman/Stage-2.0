@@ -4,6 +4,7 @@
     <option name="PARENT_ENVS" value="true" />
     <envs>
       <env name="PYTHONUNBUFFERED" value="1" />
+      <env name="VIRTUALENVPATH" value="/Users/laura/.virtualenvs/stage" />
       <env name="ARCHFLAGS" value="&quot;-arch x86_64&quot;" />
     </envs>
     <option name="SDK_HOME" value="$USER_HOME$/.virtualenvs/stage/bin/python" />

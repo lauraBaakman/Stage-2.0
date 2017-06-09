@@ -1,5 +1,7 @@
 from distutils.core import setup, Extension
 
+from unipath import Path
+
 import setup_globals
 
 sources = [
@@ -10,9 +12,11 @@ sources = [
     'covariancematrix.c',
     'eigenvalues.c',
     'geometricmean.c'
-    ]
+]
 
 if __name__ == "__main__":
+    print(sources)
+
     module = Extension('_utils',
                        library_dirs=setup_globals.library_dirs,
                        libraries=setup_globals.libraries,
