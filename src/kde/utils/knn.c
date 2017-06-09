@@ -1,6 +1,6 @@
+#include <gsl/gsl_vector_double.h>
 #include <gsl/gsl_matrix.h>
 #include "knn.ih"
-#include "../../lib/kdtree/kdtree.h"
 
 static gsl_matrix* g_distanceMatrix;
 struct kdtree* kdTree;
@@ -16,7 +16,39 @@ void computeKNearestNeighbours(size_t k, size_t patternIdx, gsl_matrix *patterns
     getKNearestElements(elements, k,
                         patterns, outNearestNeighbours);
 
+    gsl_vector_view pattern = gsl_matrix_row(patterns, patternIdx);
+    computeNearestNeighboursKD(&pattern.vector, (int) k);
+
     free(elements);
+}
+
+void computeNearestNeighboursKD(gsl_vector* pattern, int k){
+    void* tree = kd_create(2);
+    void* res;
+    double data[] = {
+            2, 3,
+            5, 4,
+            9, 6,
+            4, 7,
+            8, 1,
+            7, 2
+    };
+    double pos[2] = {9, 2};
+    kd_insert(tree, &data[0], NULL);
+    kd_insert(tree, &data[2], NULL);
+    kd_insert(tree, &data[4], NULL);
+    kd_insert(tree, &data[6], NULL);
+    kd_insert(tree, &data[8], NULL);
+    kd_insert(tree, &data[10], NULL);
+
+    res = kd_nearest_n(tree, pos, 3);
+    while(!kd_res_end(res)) {
+        kd_res_item(res, &data[0]);
+        printf("%f %f %f\n", data[0], data[1], kd_res_dist(res));
+        kd_res_next(res);
+    }
+    kd_res_free(res);
+    kd_free(tree);
 }
 
 ListElement* toArrayOfListElements(gsl_vector *distances){
@@ -110,4 +142,18 @@ void nn_free(){
 
 void buildKDTree(gsl_matrix* xs){
     kdTree = kd_create((int) xs->size2);
+
+    gsl_vector_view row;
+
+    double  x, y, z;
+
+     for (size_t i = 0; i < xs->size1; i++)
+     {
+         row = gsl_matrix_row(xs, i);
+         x = gsl_vector_get(&row.vector, 0);
+         y = gsl_vector_get(&row.vector, 1);
+         z = 0;
+
+        kd_insert3(kdTree, x, y, z, NULL);
+     }
 }

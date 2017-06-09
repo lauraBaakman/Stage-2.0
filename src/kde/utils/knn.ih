@@ -3,6 +3,8 @@
 
 #include "knn.h"
 #include <gsl/gsl_vector_double.h>
+#include "gsl_utils.h"
+#include "../../lib/kdtree/kdtree.h"
 
 
 typedef struct ListElement{
@@ -24,5 +26,7 @@ void listElementPrint(ListElement* element);
 double squaredEuclidean(gsl_vector* a, gsl_vector* b);
 
 static void buildKDTree(gsl_matrix* xs);
+
+static void computeNearestNeighboursKD(gsl_vector* pattern, int k);
 
 #endif //KERNELS_KNN_IH
