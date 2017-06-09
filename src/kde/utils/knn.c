@@ -29,9 +29,6 @@ void computeNearestNeighboursKDHelper(gsl_matrix* xs, gsl_vector *pattern, int k
     // KNN
     computeNearestNeighboursKD(kdTree, pattern, k, result);
 
-    printf("Nearest neighbours\n");
-    gsl_matrix_print(stdout, result);
-
     // Free Memory
     gsl_matrix_free(result);
 }
@@ -127,7 +124,7 @@ void nn_prepare(gsl_matrix* xs){
     computeDistanceMatrix(xs, g_distanceMatrix);
 
     kdTree = kd_create((int) xs->size2);
-    buildKDTree(kdTree, xs);
+    buildKDTree(xs);
 }
 
 void nn_free(){
@@ -135,10 +132,10 @@ void nn_free(){
     kd_free(kdTree);
 }
 
-void buildKDTree(struct kdtree* tree, gsl_matrix* xs){
+void buildKDTree(gsl_matrix* xs){
     double *row;
     for (size_t i = 0; i < xs->size1; ++i) {
         row = &xs->data[i * xs->tda];
-        kd_insert(tree, row, NULL);
+        kd_insert(kdTree, row, NULL);
     }
 }

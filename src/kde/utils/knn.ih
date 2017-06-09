@@ -25,7 +25,7 @@ void listElementPrint(ListElement* element);
 
 double squaredEuclidean(gsl_vector* a, gsl_vector* b);
 
-static void buildKDTree(struct kdtree* tree, gsl_matrix* xs);
+static void buildKDTree(gsl_matrix* xs);
 
 static void computeNearestNeighboursKDHelper(gsl_matrix* patterns, gsl_vector *pattern, int k);
 
