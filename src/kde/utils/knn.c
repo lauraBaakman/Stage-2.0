@@ -59,6 +59,8 @@ void computeNearestNeighboursKD(gsl_vector* pattern, int k){
     // Free Memory
     kd_res_free(res);
     kd_free(tree);
+    gsl_matrix_free(xs);
+    gsl_matrix_free(result);
 }
 
 ListElement* toArrayOfListElements(gsl_vector *distances){
