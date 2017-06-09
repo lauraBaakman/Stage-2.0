@@ -60,7 +60,6 @@ struct kdhyperrect {
     int dim;
     double *min, *max; /* minimum/maximum coords */
 };
-
 struct kdnode {
     double* pos;
     int dir;
