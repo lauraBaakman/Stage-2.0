@@ -27,6 +27,8 @@ double squaredEuclidean(gsl_vector* a, gsl_vector* b);
 
 static void buildKDTree(struct kdtree* tree, gsl_matrix* xs);
 
-static void computeNearestNeighboursKD(gsl_vector* pattern, int k);
+static void computeNearestNeighboursKDHelper(gsl_vector *pattern, int k);
+
+static void computeNearestNeighboursKD(struct kdtree* tree, gsl_vector* pattern, int k, gsl_matrix* neighbours);
 
 #endif //KERNELS_KNN_IH

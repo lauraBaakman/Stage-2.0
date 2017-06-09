@@ -17,12 +17,12 @@ void computeKNearestNeighbours(size_t k, size_t patternIdx, gsl_matrix *patterns
                         patterns, outNearestNeighbours);
 
     gsl_vector_view pattern = gsl_matrix_row(patterns, patternIdx);
-    computeNearestNeighboursKD(&pattern.vector, (int) k);
+    computeNearestNeighboursKDHelper(&pattern.vector, (int) k);
 
     free(elements);
 }
 
-void computeNearestNeighboursKD(gsl_vector* pattern, int k){
+void computeNearestNeighboursKDHelper(gsl_vector *pattern, int k){
     gsl_matrix* xs = gsl_matrix_alloc(6, 3);
     gsl_matrix_set(xs, 0, 0, 2); gsl_matrix_set(xs, 0, 1, 3);
     gsl_matrix_set(xs, 1, 0, 5); gsl_matrix_set(xs, 1, 1, 4);
@@ -45,22 +45,26 @@ void computeNearestNeighboursKD(gsl_vector* pattern, int k){
     gsl_vector_set(position, 1, 2);
     gsl_vector_set(position, 2, 0);
 
-    double* resultRow;
-    struct kdres* res = kd_nearest_n(tree, position->data, k);
-    for(int i = 0; i < kd_res_size(res); i++, kd_res_next(res)){
-        resultRow = &result->data[i * result->tda];
-        kd_res_item(res, resultRow);
-    }
+    computeNearestNeighboursKD(tree, position, k, result);
 
     printf("Nearest neighbours\n");
     gsl_matrix_print(stdout, result);
 
     // Free Memory
-    kd_res_free(res);
     kd_free(tree);
     gsl_matrix_free(xs);
     gsl_matrix_free(result);
     gsl_vector_free(position);
+}
+
+void computeNearestNeighboursKD(struct kdtree* tree, gsl_vector* pattern, int k, gsl_matrix* neighbours){
+    double* resultRow;
+    struct kdres* res = kd_nearest_n(tree, pattern->data, k);
+    for(int i = 0; i < kd_res_size(res); i++, kd_res_next(res)){
+        resultRow = &neighbours->data[i * neighbours->tda];
+        kd_res_item(res, resultRow);
+    }
+    kd_res_free(res);
 }
 
 ListElement* toArrayOfListElements(gsl_vector *distances){
