@@ -37,17 +37,16 @@ void computeNearestNeighboursKD(gsl_vector* pattern, int k){
     gsl_matrix* result = gsl_matrix_alloc(k, (size_t) kd_dimension(tree));
 
     // Build Tree
-    double *row;
-    for (size_t i = 0; i < xs->size1; ++i) {
-        row = &xs->data[i * xs->tda];
-        kd_insert(tree, row, NULL);
-    }
+    buildKDTree(tree, xs);
 
     // KNN
-    double pos[3] = {9, 2, 0};
+    gsl_vector* position = gsl_vector_alloc(kd_dimension(tree));
+    gsl_vector_set(position, 0, 9);
+    gsl_vector_set(position, 1, 2);
+    gsl_vector_set(position, 2, 0);
 
     double* resultRow;
-    struct kdres* res = kd_nearest_n(tree, pos, k);
+    struct kdres* res = kd_nearest_n(tree, position->data, k);
     for(int i = 0; i < kd_res_size(res); i++, kd_res_next(res)){
         resultRow = &result->data[i * result->tda];
         kd_res_item(res, resultRow);
@@ -61,6 +60,7 @@ void computeNearestNeighboursKD(gsl_vector* pattern, int k){
     kd_free(tree);
     gsl_matrix_free(xs);
     gsl_matrix_free(result);
+    gsl_vector_free(position);
 }
 
 ListElement* toArrayOfListElements(gsl_vector *distances){
@@ -141,10 +141,7 @@ double squaredEuclidean(gsl_vector* a, gsl_vector* b){
 
 void nn_prepare(gsl_matrix* xs){
     g_distanceMatrix = gsl_matrix_alloc(xs->size1, xs->size1);
-
     computeDistanceMatrix(xs, g_distanceMatrix);
-
-    buildKDTree(xs);
 }
 
 void nn_free(){
@@ -152,20 +149,10 @@ void nn_free(){
     kd_free(kdTree);
 }
 
-void buildKDTree(gsl_matrix* xs){
-    kdTree = kd_create((int) xs->size2);
-
-    gsl_vector_view row;
-
-    double  x, y, z;
-
-     for (size_t i = 0; i < xs->size1; i++)
-     {
-         row = gsl_matrix_row(xs, i);
-         x = gsl_vector_get(&row.vector, 0);
-         y = gsl_vector_get(&row.vector, 1);
-         z = 0;
-
-        kd_insert3(kdTree, x, y, z, NULL);
-     }
+void buildKDTree(struct kdtree* tree, gsl_matrix* xs){
+    double *row;
+    for (size_t i = 0; i < xs->size1; ++i) {
+        row = &xs->data[i * xs->tda];
+        kd_insert(tree, row, NULL);
+    }
 }
