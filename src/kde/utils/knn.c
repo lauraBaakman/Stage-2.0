@@ -24,20 +24,18 @@ void computeKNearestNeighbours(size_t k, size_t patternIdx, gsl_matrix *patterns
 
 void computeNearestNeighboursKDHelper(gsl_matrix* xs, gsl_vector *pattern, int k){
     // Allocate memory
-    struct kdtree* tree = kd_create((int) xs->size2);
     gsl_matrix* result = gsl_matrix_alloc((size_t) k, xs->size2);
 
     // Build Tree
-    buildKDTree(tree, xs);
+    buildKDTree(kdTree, xs);
 
     // KNN
-    computeNearestNeighboursKD(tree, pattern, k, result);
+    computeNearestNeighboursKD(kdTree, pattern, k, result);
 
     printf("Nearest neighbours\n");
     gsl_matrix_print(stdout, result);
 
     // Free Memory
-    kd_free(tree);
     gsl_matrix_free(result);
 }
 
@@ -130,6 +128,8 @@ double squaredEuclidean(gsl_vector* a, gsl_vector* b){
 void nn_prepare(gsl_matrix* xs){
     g_distanceMatrix = gsl_matrix_alloc(xs->size1, xs->size1);
     computeDistanceMatrix(xs, g_distanceMatrix);
+
+    kdTree = kd_create((int) xs->size2);
 }
 
 void nn_free(){
