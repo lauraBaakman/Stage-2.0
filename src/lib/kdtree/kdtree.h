@@ -44,6 +44,9 @@ void kd_free(struct kdtree *tree);
 /* remove all the elements from the tree */
 void kd_clear(struct kdtree *tree);
 
+/* request the dimension of the kd-tree */
+int kd_dimension(struct kdtree *tree);
+
 /* if called with non-null 2nd argument, the function provided
  * will be called on data pointers (see kd_insert) when nodes
  * are to be removed from the tree.

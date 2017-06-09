@@ -143,6 +143,14 @@ void kd_free(struct kdtree* tree)
 #endif
 }
 
+int kd_dimension(struct kdtree *tree)
+{
+    if(tree){
+        return tree->dim;    
+    }
+    return 0;
+}
+
 static void
 clear_rec(struct kdnode* node, void (*destr)(void*))
 {
