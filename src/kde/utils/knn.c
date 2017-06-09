@@ -3,9 +3,9 @@
 #include "knn.ih"
 
 static gsl_matrix* g_distanceMatrix;
-struct kdtree* kdTree;
+struct kdtree* g_tree;
 
-void computeKNearestNeighbours(size_t k, size_t patternIdx, gsl_matrix *patterns, gsl_matrix *outNearestNeighbours) {
+void computeKNearestNeighboursOld(size_t k, size_t patternIdx, gsl_matrix *patterns, gsl_matrix *outNearestNeighbours) {
     gsl_vector_view distances = gsl_matrix_row(g_distanceMatrix, patternIdx);
 
     size_t distanceCount = g_distanceMatrix->size1;
@@ -16,26 +16,12 @@ void computeKNearestNeighbours(size_t k, size_t patternIdx, gsl_matrix *patterns
     getKNearestElements(elements, k,
                         patterns, outNearestNeighbours);
 
-    gsl_vector_view pattern = gsl_matrix_row(patterns, patternIdx);
-    computeNearestNeighboursKDHelper(patterns, &pattern.vector, (int) k);
-
     free(elements);
 }
 
-void computeNearestNeighboursKDHelper(gsl_matrix* xs, gsl_vector *pattern, int k){
-    // Allocate memory
-    gsl_matrix* result = gsl_matrix_alloc((size_t) k, xs->size2);
-
-    // KNN
-    computeNearestNeighboursKD(pattern, k, result);
-
-    // Free Memory
-    gsl_matrix_free(result);
-}
-
-void computeNearestNeighboursKD(gsl_vector* pattern, int k, gsl_matrix* neighbours){
+void computeKNearestNeighbours(gsl_vector *pattern, size_t k, gsl_matrix *neighbours) {
     double* resultRow;
-    struct kdres* res = kd_nearest_n(kdTree, pattern->data, k);
+    struct kdres* res = kd_nearest_n(g_tree, pattern->data, k);
     for(int i = 0; i < kd_res_size(res); i++, kd_res_next(res)){
         resultRow = &neighbours->data[i * neighbours->tda];
         kd_res_item(res, resultRow);
@@ -123,19 +109,19 @@ void nn_prepare(gsl_matrix* xs){
     g_distanceMatrix = gsl_matrix_alloc(xs->size1, xs->size1);
     computeDistanceMatrix(xs, g_distanceMatrix);
 
-    kdTree = kd_create((int) xs->size2);
+    g_tree = kd_create((int) xs->size2);
     buildKDTree(xs);
 }
 
 void nn_free(){
     gsl_matrix_free(g_distanceMatrix);
-    kd_free(kdTree);
+    kd_free(g_tree);
 }
 
 void buildKDTree(gsl_matrix* xs){
     double *row;
     for (size_t i = 0; i < xs->size1; ++i) {
         row = &xs->data[i * xs->tda];
-        kd_insert(kdTree, row, NULL);
+        kd_insert(g_tree, row, NULL);
     }
 }

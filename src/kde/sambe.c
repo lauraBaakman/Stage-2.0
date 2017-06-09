@@ -66,8 +66,8 @@ double singlePattern(gsl_vector *x, size_t xIdx) {
 
 void determineGlobalKernelShape(size_t patternIdx) {
     /* Compute K nearest neighbours */
-    computeKNearestNeighbours(g_k, patternIdx,
-                              g_xs, g_nearestNeighbours);
+    computeKNearestNeighboursOld(g_k, patternIdx,
+                                 g_xs, g_nearestNeighbours);
 
     /* Compute the covariance matrix of the neighbours */
     computeCovarianceMatrix(g_nearestNeighbours, g_globalBandwidthMatrix);

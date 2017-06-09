@@ -20,8 +20,8 @@ static PyObject * knn(PyObject *self, PyObject *args){
 
     /* Do stuff */
     nn_prepare(&patterns.matrix);
-    computeKNearestNeighbours(k, patternIdx, &patterns.matrix,
-                              &nearestNeighbours.matrix);
+    computeKNearestNeighboursOld(k, patternIdx, &patterns.matrix,
+                                 &nearestNeighbours.matrix);
     nn_free();
 
     /* Create return object */
