@@ -46,7 +46,7 @@ double singlePattern(gsl_vector *x, size_t xIdx) {
 
     gsl_vector_view xi;
     gsl_vector* movedPattern;
-    determineGlobalKernelShape(xIdx);
+    determineGlobalKernelShape(x);
     g_kernel.computeConstants(g_globalBandwidthMatrix);
 
     for(size_t i = 0; i < g_numXs; i++){
@@ -64,10 +64,9 @@ double singlePattern(gsl_vector *x, size_t xIdx) {
     return density;
 }
 
-void determineGlobalKernelShape(size_t patternIdx) {
+void determineGlobalKernelShape(gsl_vector* x) {
     /* Compute K nearest neighbours */
-    computeKNearestNeighboursOld(g_k, patternIdx,
-                                 g_xs, g_nearestNeighbours);
+    computeKNearestNeighbours(x, g_k, g_nearestNeighbours);
 
     /* Compute the covariance matrix of the neighbours */
     computeCovarianceMatrix(g_nearestNeighbours, g_globalBandwidthMatrix);
