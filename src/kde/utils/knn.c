@@ -1,5 +1,4 @@
-#include <gsl/gsl_vector_double.h>
-#include <gsl/gsl_matrix.h>
+
 #include "knn.ih"
 
 static gsl_matrix* g_distanceMatrix;

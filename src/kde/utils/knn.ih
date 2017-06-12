@@ -2,9 +2,16 @@
 #define KERNELS_KNN_IH
 
 #include "knn.h"
+
 #include <gsl/gsl_vector_double.h>
-#include "gsl_utils.h"
+#include <gsl/gsl_matrix.h>
+#include <float.h>
+
 #include "../../lib/kdtree/kdtree.h"
+
+#include "gsl_utils.h"
+
+
 
 
 typedef struct ListElement{
