@@ -3,14 +3,11 @@ import warnings
 from sklearn.neighbors import KDTree
 import numpy as np
 
-import kde.utils.distanceMatrix as distanceMatrix
-import kde.utils._utils as _utils
-
 
 class KNN(object):
 
-    def __init__(self, patterns, implementation=None):
-        implementation_class = implementation or _KNN_C
+    def __init__(self, patterns):
+        implementation_class = _KNN_Python
         (self._num_patterns, _) = patterns.shape
         self._patterns = patterns
         self._implementation = implementation_class(patterns=patterns)
@@ -34,7 +31,6 @@ class KNN(object):
                 self._num_patterns, k)
             )
 
-
 class _KNN(object):
 
     def __init__(self, patterns):
@@ -43,30 +39,6 @@ class _KNN(object):
     def find_k_nearest_neighbours(self, pattern, k):
         raise NotImplementedError()
 
-
-class _KNN_C(_KNN):
-
-    def __init__(self, patterns):
-        super(_KNN_C, self).__init__(patterns)
-
-    def find_k_nearest_neighbours(self, pattern, k):
-        (dimension,) = pattern.shape
-        nearest_neighbours = np.zeros([k, dimension], dtype=np.float64)
-        pattern_idx = self._find_idx_of_pattern(pattern)
-        _utils.knn(k, pattern_idx, self._patterns, nearest_neighbours)
-        return nearest_neighbours
-
-    def _find_idx_of_pattern(self, pattern):
-        (idx_array,) = np.where(np.all(self._patterns == pattern, axis=1))
-        self._validate_pattern_frequency(pattern, idx_array)
-        return idx_array[0]
-
-    def _validate_pattern_frequency(self, pattern, pattern_idx):
-        if len(pattern_idx) != 1:
-            raise KNNException(
-                "The pattern {} occurred an unexpected number of times.".format(pattern),
-                len(pattern_idx)
-            )
 
 class _KNN_Python(_KNN):
 
