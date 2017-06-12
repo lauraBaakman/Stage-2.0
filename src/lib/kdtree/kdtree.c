@@ -113,6 +113,10 @@ static void free_resnode_buffer();
 #define free_resnode(n) free(n)
 #endif
 
+static void rslist_fprintf(FILE *f, const struct res_node *list);
+void res_node_fprintf(FILE *f, const struct res_node *node);
+void kd_node_fprintf(FILE *f, const struct kdnode *node);
+
 struct kdtree*
 kd_create(int k)
 {
@@ -982,3 +986,27 @@ clear_results(struct kdres* rset)
 
     rset->rlist->next = 0;
 }
+
+
+void rslist_fprintf(FILE *f, const struct res_node *list) {
+    while (list->next) {
+        res_node_fprintf(stdout, list->next);
+        fprintf(f, "\n");
+        list = list->next;
+    }
+}
+
+void res_node_fprintf(FILE *f, const struct res_node *node) {
+    kd_node_fprintf(f, node->item);
+    fprintf(f, " (dist %2.5f)", node->dist_sq);
+}
+
+void kd_node_fprintf(FILE *f, const struct kdnode *node){
+    if(node) {
+        fprintf(f, "[%1.1f %1.1f]", node->pos[0], node->pos[1]);
+    } else {
+        fprintf(f, "[??? ???]");
+    }
+}
+
+
