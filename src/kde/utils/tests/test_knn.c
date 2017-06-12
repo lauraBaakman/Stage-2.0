@@ -15,6 +15,9 @@ void testKNNOld(CuTest *tc){
     gsl_matrix_set(xs, 2, 0, 2); gsl_matrix_set(xs, 2, 1, 3);
     gsl_matrix_set(xs, 3, 0, 4); gsl_matrix_set(xs, 3, 1, 7);
 
+    gsl_matrix* xs_copy = gsl_matrix_alloc(xs->size1, xs->size2);
+    gsl_matrix_memcpy(xs_copy, xs);
+
     int k = 2;
 
     gsl_matrix* expected = gsl_matrix_alloc(2, 2);
@@ -30,6 +33,8 @@ void testKNNOld(CuTest *tc){
     computeKNearestNeighboursOld(k, patternIdx, xs, actual);
 
     CuAssertMatrixEquals(tc, expected, actual, delta);
+    //Check if the function does not influence xs
+    CuAssertMatrixEquals(tc, xs_copy, xs, delta);
 
     gsl_matrix_free(xs);
     gsl_matrix_free(expected);
@@ -43,6 +48,9 @@ void testKNN_x_in_xs(CuTest *tc){
     gsl_matrix_set(xs, 1, 0, 1); gsl_matrix_set(xs, 1, 1, 1);
     gsl_matrix_set(xs, 2, 0, 2); gsl_matrix_set(xs, 2, 1, 3);
     gsl_matrix_set(xs, 3, 0, 4); gsl_matrix_set(xs, 3, 1, 7);
+
+    gsl_matrix* xs_copy = gsl_matrix_alloc(xs->size1, xs->size2);
+    gsl_matrix_memcpy(xs_copy, xs);
 
     size_t k = 2;
 
@@ -59,6 +67,8 @@ void testKNN_x_in_xs(CuTest *tc){
     computeKNearestNeighbours(&pattern.vector, k, actual);
 
     CuAssertMatrixEquals(tc, expected, actual, delta);
+    //Check if the function does not influence xs
+    CuAssertMatrixEquals(tc, xs_copy, xs, delta);
 
     gsl_matrix_free(xs);
     gsl_matrix_free(expected);
@@ -72,6 +82,9 @@ void testKNN_x_not_in_xs(CuTest *tc){
     gsl_matrix_set(xs, 1, 0, 1); gsl_matrix_set(xs, 1, 1, 1);
     gsl_matrix_set(xs, 2, 0, 2); gsl_matrix_set(xs, 2, 1, 3);
     gsl_matrix_set(xs, 3, 0, 4); gsl_matrix_set(xs, 3, 1, 7);
+
+    gsl_matrix* xs_copy = gsl_matrix_alloc(xs->size1, xs->size2);
+    gsl_matrix_memcpy(xs_copy, xs);
 
     size_t k = 2;
 
@@ -90,6 +103,8 @@ void testKNN_x_not_in_xs(CuTest *tc){
     computeKNearestNeighbours(pattern, k, actual);
 
     CuAssertMatrixEquals(tc, expected, actual, delta);
+    //Check if the function does not influence xs
+    CuAssertMatrixEquals(tc, xs_copy, xs, delta);
 
     gsl_matrix_free(xs);
     gsl_matrix_free(expected);
