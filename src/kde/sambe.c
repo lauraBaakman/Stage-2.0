@@ -32,7 +32,7 @@ void sambe(gsl_matrix *xs,
     for(size_t i = 0; i < g_numXs; i++){
         x = gsl_matrix_row(xs, i);
 
-        density = singlePattern(&x.vector, i);
+        density = singlePattern(&x.vector);
 
         gsl_vector_set(outDensities, i, density);
     }
@@ -41,7 +41,7 @@ void sambe(gsl_matrix *xs,
     freeGlobals();
 }
 
-double singlePattern(gsl_vector *x, size_t xIdx) {
+double singlePattern(gsl_vector *x) {
     double localBandwidth, density = 0.0;
 
     gsl_vector_view xi;
