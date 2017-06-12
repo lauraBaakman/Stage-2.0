@@ -42,7 +42,7 @@ void testKNNOld(CuTest *tc){
     nn_free();
 }
 
-void testKNN_x_in_xs(CuTest *tc){
+void testKNN_x_in_xs_1(CuTest *tc){
     gsl_matrix* xs = gsl_matrix_alloc(4, 2);
     gsl_matrix_set(xs, 0, 0, 0); gsl_matrix_set(xs, 0, 1, 0);
     gsl_matrix_set(xs, 1, 0, 1); gsl_matrix_set(xs, 1, 1, 1);
@@ -190,7 +190,7 @@ void testKNN_x_not_in_xs_3(CuTest *tc){
 CuSuite *KNNGetSuite() {
     CuSuite *suite = CuSuiteNew();
     SUITE_ADD_TEST(suite, testKNNOld);
-    SUITE_ADD_TEST(suite, testKNN_x_in_xs);
+    SUITE_ADD_TEST(suite, testKNN_x_in_xs_1);
     SUITE_ADD_TEST(suite, testKNN_x_not_in_xs_1);
     SUITE_ADD_TEST(suite, testKNN_x_not_in_xs_2);
     SUITE_ADD_TEST(suite, testKNN_x_not_in_xs_3);
