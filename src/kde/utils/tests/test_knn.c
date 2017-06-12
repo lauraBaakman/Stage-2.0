@@ -76,12 +76,12 @@ void testKNN_x_not_in_xs(CuTest *tc){
     size_t k = 2;
 
     gsl_matrix* expected = gsl_matrix_alloc(k, xs->size2);
-    gsl_matrix_set(expected, 0, 0, 1); gsl_matrix_set(expected, 0, 1, 1);
-    gsl_matrix_set(expected, 1, 0, 2); gsl_matrix_set(expected, 1, 1, 3);
+    gsl_matrix_set(expected, 0, 0, 2); gsl_matrix_set(expected, 0, 1, 3);
+    gsl_matrix_set(expected, 1, 0, 1); gsl_matrix_set(expected, 1, 1, 1);
 
     gsl_vector* pattern = gsl_vector_alloc(xs->size2);
     gsl_vector_set(pattern, 0, 0.5);
-    gsl_vector_set(pattern, 0, 3.5);
+    gsl_vector_set(pattern, 1, 3.5);
 
     gsl_matrix* actual = gsl_matrix_alloc(k, xs->size2);
 
