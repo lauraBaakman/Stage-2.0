@@ -2,33 +2,6 @@
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_vector_double.h>
 
-static char utils_knn_docstring[] = "Compute the K nearest neighbours of some pattern, based on the provided distance matrix.";
-static PyObject * knn(PyObject *self, PyObject *args){
-
-    /* Handle input */
-    PyObject* inPatterns = NULL;
-    PyObject* outNearestNeighbours = NULL;
-
-    int k;
-    int patternIdx;
-
-    if (!PyArg_ParseTuple(args, "iiOO",
-                          &k, &patternIdx, &inPatterns, &outNearestNeighbours)) return NULL;
-
-    gsl_matrix_view patterns = pyObjectToGSLMatrixView(inPatterns, NPY_ARRAY_IN_ARRAY);
-    gsl_matrix_view nearestNeighbours = pyObjectToGSLMatrixView(outNearestNeighbours, NPY_ARRAY_OUT_ARRAY);
-
-    /* Do stuff */
-    nn_prepare(&patterns.matrix);
-    computeKNearestNeighbours(k, patternIdx, &patterns.matrix,
-                              &nearestNeighbours.matrix);
-    nn_free();
-
-    /* Create return object */
-    Py_INCREF(Py_None);
-    return Py_None;
-}
-
 static char utils_covarianceMatrix_docstring[] = "Compute the covariance matrix of the data.";
 static PyObject * covariance_matrix(PyObject *self, PyObject *args){
 
@@ -142,7 +115,6 @@ gsl_matrix *pyObjectToGSLMatrix(PyObject *pythonObject, int requirements) {
 }
 
 static PyMethodDef method_table[] = {
-        {"knn",                 knn,                METH_VARARGS,   utils_knn_docstring},
         {"covariance_matrix",   covariance_matrix,  METH_VARARGS,   utils_covarianceMatrix_docstring},
         {"eigen_values",        eigenValues,        METH_VARARGS,   utils_eigenValues_docstring},
         {"geometric_mean",      geometric_mean,     METH_VARARGS,   utils_geometricmean_docstring},

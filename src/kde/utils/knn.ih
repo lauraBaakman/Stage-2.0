@@ -2,7 +2,16 @@
 #define KERNELS_KNN_IH
 
 #include "knn.h"
+
 #include <gsl/gsl_vector_double.h>
+#include <gsl/gsl_matrix.h>
+#include <float.h>
+
+#include "../../lib/kdtree/kdtree.h"
+
+#include "gsl_utils.h"
+
+
 
 
 typedef struct ListElement{
@@ -12,6 +21,8 @@ typedef struct ListElement{
 
 void getKNearestElements(ListElement* sortedDistances, size_t k, gsl_matrix* patterns, gsl_matrix* outNeighbours);
 
+void computeDistanceMatrix(gsl_matrix* patterns, gsl_matrix* distanceMatrix);
+
 ListElement* toArrayOfListElements(gsl_vector *distances);
 
 int listElementCompare(const void *s1, const void *s2);
@@ -20,5 +31,9 @@ void listElementArrayPrint(ListElement* elements, size_t numElements);
 void listElementPrint(ListElement* element);
 
 double squaredEuclidean(gsl_vector* a, gsl_vector* b);
+
+static void buildKDTree(gsl_matrix* xs);
+
+static void computeNearestNeighboursKDHelper(gsl_matrix* patterns, gsl_vector *pattern, int k);
 
 #endif //KERNELS_KNN_IH

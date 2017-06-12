@@ -26,6 +26,7 @@ set(SOURCE_FILES
         utils/geometricmean.c utils/geometricmean.h
         utils/gsl_utils.c utils/gsl_utils.h mbe.ih
         ../lib/CuTestUtils.h ../lib/CuTest.h
+        ../lib/kdtree/kdtree.c ../lib/kdtree/kdtree.h
         utils/tests/test_utils.c utils/tests/test_utils.h utils/tests/test_knn.c utils/tests/test_knn.h)
 add_executable(kde ${SOURCE_FILES})
 
