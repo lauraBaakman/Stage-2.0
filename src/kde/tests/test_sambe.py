@@ -79,7 +79,6 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
                              0.567734888282212])
         np.testing.assert_array_almost_equal(actual, expected)
 
-    @skip('This test assumes that the result of nearest neighbours is exact, since we use a KD tree it is approximate.')
     def test_estimate_gaussian(self):
         xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
         x_s = xi_s
@@ -198,3 +197,23 @@ class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
         else:
             self.fail('ExpectedException not raised')
 
+    def test_estimate_gaussian(self):
+        xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+        x_s = xi_s
+        local_bandwidths = np.array([0.84089642,
+                                     1.18920712,
+                                     1.18920712,
+                                     0.84089642])
+        general_bandwidth = 0.721347520444482
+        kernel = ShapeAdaptiveGaussian
+        estimator = self._estimator_class(
+            xi_s=xi_s, x_s=x_s, dimension=2,
+            kernel=kernel,
+            local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
+        )
+        actual = estimator.estimate()
+        expected = np.array([0.143018801263046,
+                             0.077446155260620,
+                             0.077446155260620,
+                             0.143018801263046])
+        np.testing.assert_array_almost_equal(actual, expected)
