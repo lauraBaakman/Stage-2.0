@@ -17,6 +17,7 @@ sources = [
     'utils/geometricmean.c',
     'utils/gsl_utils.c',
     'utils/knn.c',
+    setup_globals.lib_path.child('kdtree').child('kdtree.c')
 ]
 
 if __name__ == "__main__":

@@ -12,7 +12,7 @@ sources = [
     'covariancematrix.c',
     'eigenvalues.c',
     'geometricmean.c',
-    Path(setup_globals.lib_path).child('kdtree').child('kdtree.c')
+    setup_globals.lib_path.child('kdtree').child('kdtree.c')
 ]
 
 if __name__ == "__main__":
