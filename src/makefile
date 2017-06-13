@@ -54,9 +54,14 @@ DEPS=./kde/sambe.h ./kde/sambe.ih \
 # gcc -Wall -I/usr/local/include -c temp.c
 # gcc temp.o -lgsl -lgslcblas -lm
 
+.PHONY: clean
+.PHONY: run_tests
+.PHONY: modules
+
 # http://www.cs.colby.edu/maxwell/courses/tutorials/maketutor/
 %.o: %.c $(DEPS) $(TEST_DEPS)
 	$(CC) $(IDIRS) -c -o $@ $< $(CFLAGS)
+default: clean run_tests
 test_main: test_main.o	
 	$(CC) $(IDIRS) -c -o $@ $< $(CFLAGS)
 tests: $(OBJECTS) $(TEST_OBJECTS) test_main.o
@@ -65,17 +70,17 @@ benchmark_main: benchmark_main.o
 	$(CC) $(IDIRS) -c -o $@ $< $(CFLAGS)
 benchmark: $(OBJECTS) benchmark_main.o
 	$(CC) $(CFLAGS) -o benchmark.out $(OBJECTS) benchmark_main.o $(LDLIBS) $(LDDIRS) $(IDIRS)	
-kde_module: $(OBJECTS)
+_kde: $(OBJECTS)
 	$(PYTHON) kde/setup.py $(PYFLAGS)
-	@mv _kde.so ./kde/_kde.so
-kernels_module: $(OBJECTS)
+	@cp _kde.so ./kde/_kde.so
+_kernels: $(OBJECTS)
 	$(PYTHON) kde/kernels/setup.py $(PYFLAGS)	
-	@mv _kernels.so ./kde/kernels/_kernels.so
-utils_module: $(OBJECTS)
+	@cp _kernels.so ./kde/kernels/_kernels.so
+_utils: $(OBJECTS)
 	$(PYTHON) kde/utils/setup.py $(PYFLAGS)		
-	@mv _utils.so ./kde/utils/_utils.so
+	@cp _utils.so ./kde/utils/_utils.so
 modules: kde_module kernels_module utils_module
-run_tests: tests
+run_tests: _kde _utils _kernels tests
 	@echo -e "\n\033[0;31m Python Tests \033[0m\n"
 	@$(PYTHON) -m unittest discover -s . -t .
 	@echo -e "\n\033[0;31m C Tests \033[0m"
