@@ -3,7 +3,8 @@ close all; clear variables; clc;
 xis = [0, 0; 0, 1; 1, 0; 1, 1];
 xis = xis';
 
-xs = xis;
+xs = [0, 0; 1, 1];
+xs = xs';
 
 [d, N] = size(xis);
 
@@ -14,9 +15,9 @@ localBandwidths = [0.840896194313949, 1.189207427458816, 1.189207427458816, 0.84
 k = 3;
 
 %% estimate the density of one pattern Gaussian Kernel
-x = xs(:, 1);
+x = xs(:, 2);
 
-ck = [0, 0; 1, 0; 1, 1];
+ck = [0, 0; 0, 1; 1, 0];
 
 covarianceMatrix = cov(ck, 1);
 
@@ -37,7 +38,7 @@ fhatTerms = [fhatTerm(H(:, :, 1), x, xis(:, 1)),...
     fhatTerm(H(:, :, 3), x, xis(:, 3)),...
     fhatTerm(H(:, :, 4), x, xis(:, 4))];
 
-fhat = 1 / N * sum(fhatTerms)
+fhat = 1 / N * sum(fhatTerms);
 
 %% estimate the density of one pattern Epanechnikov Kernel
 x = xis(:, 4);
@@ -67,4 +68,4 @@ fhatTerms = [fhatTerm(H(:, :, 1), x, xis(:, 1)),...
     fhatTerm(H(:, :, 3), x, xis(:, 3)),...
     fhatTerm(H(:, :, 4), x, xis(:, 4))];
 
-fhat = 1 / N * sum(fhatTerms);
+fhat = 1 / N * sum(fhatTerms)
