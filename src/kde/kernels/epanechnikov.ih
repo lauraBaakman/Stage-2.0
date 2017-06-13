@@ -2,6 +2,10 @@
 #define KERNELS_EPANECHNIKOV_IH_H
 
 #include <math.h>
+#ifndef M_PI
+#define M_PI           3.14159265358979323846
+#endif
+
 
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_vector_double.h>
