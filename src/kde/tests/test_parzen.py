@@ -1,4 +1,6 @@
-from unittest import TestCase, skip
+from __future__ import division
+
+from unittest import TestCase
 
 import numpy as np
 
@@ -31,7 +33,7 @@ class TestParzenEstimator(TestCase):
 
 class ParzenEstimatorImpAbstractTest(object):
     def setUp(self):
-        super().setUp()
+        super(ParzenEstimatorImpAbstractTest, self).setUp()
         self._estimator_class = None
 
     def test_estimate_standard_gaussian(self):
@@ -67,7 +69,7 @@ class ParzenEstimatorImpAbstractTest(object):
 
 class Test_ParzenEstimator_Python(ParzenEstimatorImpAbstractTest, TestCase):
     def setUp(self):
-        super().setUp()
+        super(Test_ParzenEstimator_Python, self).setUp()
         self._estimator_class = _ParzenEstimator_Python
 
     def test_estimate_pattern(self):
@@ -86,5 +88,5 @@ class Test_ParzenEstimator_Python(ParzenEstimatorImpAbstractTest, TestCase):
 
 class Test_ParzenEstimator_C(ParzenEstimatorImpAbstractTest, TestCase):
     def setUp(self):
-        super().setUp()
+        super(Test_ParzenEstimator_C, self).setUp()
         self._estimator_class = _ParzenEstimator_C

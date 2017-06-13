@@ -78,12 +78,12 @@ class StandardGaussianImpAbstractTest(object):
 class Test_StandardGaussian_Python(StandardGaussianImpAbstractTest, TestCase):
 
     def setUp(self):
-        super().setUp()
+        super(Test_StandardGaussian_Python, self).setUp()
         self._kernel_class = _Gaussian_Python
 
 
 class Test_StandardGaussian_C(StandardGaussianImpAbstractTest, TestCase):
 
     def setUp(self):
-        super().setUp()
+        super(Test_StandardGaussian_C, self).setUp()
         self._kernel_class = _Gaussian_C

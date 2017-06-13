@@ -4,7 +4,7 @@ import numpy as np
 class Grid(object):
     """Class to represent a uniform grid."""
 
-    def __init__(self, *ranges, number_of_grid_points):
+    def __init__(self, number_of_grid_points, *ranges):
         """
         Init method of Grid.
         :param number_of_grid_points: How many grid points should be used to cover one dimension, can be either a single
@@ -33,7 +33,7 @@ class Grid(object):
         minima = np.min(points, axis=0) - padding
         maxima = np.max(points, axis=0) + padding
         ranges = zip(minima, maxima)
-        return cls(*ranges, **kwargs)
+        return cls(kwargs['number_of_grid_points'], *ranges)
 
 
 class _GridBuilder(object):

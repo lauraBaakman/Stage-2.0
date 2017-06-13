@@ -276,7 +276,10 @@ class TestShapeAdaptiveKernel(TestCase):
         num_patterns = 1
         expected = np.array([1.0])
 
-        actual = ShapeAdaptiveKernel._create_default_local_bandwidths_array(None, num_patterns)
+        dimension = 3
+        bandwidth_matrix = np.random.rand(dimension, dimension)
+
+        actual = ShapeAdaptiveKernel(bandwidth_matrix)._create_default_local_bandwidths_array(num_patterns)
 
         np.testing.assert_array_equal(actual, expected)
 
@@ -284,7 +287,10 @@ class TestShapeAdaptiveKernel(TestCase):
         num_patterns = 5
         expected = np.array([1.0, 1.0, 1.0, 1.0, 1.0])
 
-        actual = ShapeAdaptiveKernel._create_default_local_bandwidths_array(None, num_patterns)
+        dimension = 3
+        bandwidth_matrix = np.random.rand(dimension, dimension)
+
+        actual = ShapeAdaptiveKernel(bandwidth_matrix)._create_default_local_bandwidths_array(num_patterns)
 
         np.testing.assert_array_equal(actual, expected)
 
@@ -292,8 +298,10 @@ class TestShapeAdaptiveKernel(TestCase):
         # Too short
         local_bandwidths = np.random.rand(7)
         num_patterns = 10
+        dimension = 3
+        bandwidth_matrix = np.random.rand(dimension, dimension)
         try:
-            ShapeAdaptiveKernel._validate_local_bandwidths(None, local_bandwidths, num_patterns)
+            ShapeAdaptiveKernel(bandwidth_matrix)._validate_local_bandwidths(local_bandwidths, num_patterns)
         except KernelException:
             pass
         except Exception as e:
@@ -305,8 +313,10 @@ class TestShapeAdaptiveKernel(TestCase):
         # Too long
         local_bandwidths = np.random.rand(15)
         num_patterns = 10
+        dimension = 3
+        bandwidth_matrix = np.random.rand(dimension, dimension)
         try:
-            ShapeAdaptiveKernel._validate_local_bandwidths(None, local_bandwidths, num_patterns)
+            ShapeAdaptiveKernel(bandwidth_matrix)._validate_local_bandwidths(local_bandwidths, num_patterns)
         except KernelException:
             pass
         except Exception as e:
@@ -318,7 +328,9 @@ class TestShapeAdaptiveKernel(TestCase):
         # Fine
         num_patterns = 10
         local_bandwidths = np.random.rand(num_patterns)
-        actual = ShapeAdaptiveKernel._validate_local_bandwidths(None, local_bandwidths, num_patterns)
+        dimension = 3
+        bandwidth_matrix = np.random.rand(dimension, dimension)
+        actual = ShapeAdaptiveKernel(bandwidth_matrix)._validate_local_bandwidths(local_bandwidths, num_patterns)
         self.assertIsNone(actual)
 
 
@@ -327,7 +339,9 @@ class TestShapeAdaptiveKernel(TestCase):
         num_patterns = 10
         local_bandwidths = np.random.rand(num_patterns, 1)
         try:
-            ShapeAdaptiveKernel._validate_local_bandwidths(None, local_bandwidths, num_patterns)
+            dimension = 3
+            bandwidth_matrix = np.random.rand(dimension, dimension)
+            ShapeAdaptiveKernel(bandwidth_matrix)._validate_local_bandwidths(local_bandwidths, num_patterns)
         except KernelException:
             pass
         except Exception as e:
@@ -340,7 +354,9 @@ class TestShapeAdaptiveKernel(TestCase):
         num_patterns = 10
         local_bandwidths = np.random.rand(num_patterns, 3)
         try:
-            ShapeAdaptiveKernel._validate_local_bandwidths(None, local_bandwidths, num_patterns)
+            dimension = 3
+            bandwidth_matrix = np.random.rand(dimension, dimension)
+            ShapeAdaptiveKernel(bandwidth_matrix)._validate_local_bandwidths(local_bandwidths, num_patterns)
         except KernelException:
             pass
         except Exception as e:
@@ -369,13 +385,17 @@ class TestShapeAdaptiveKernel_Python(TestCase):
     def test__handle_return_0(self):
         densities = np.array([0.5])
         expected = 0.5
-        actual = ShapeAdaptiveKernel_Python._handle_return(None, densities)
+        dimension = 3
+        bandwidth_matrix = np.random.rand(dimension, dimension)
+        actual = ShapeAdaptiveKernel_Python(bandwidth_matrix)._handle_return(densities)
         self.assertEqual(actual, expected)
 
     def test__handle_return_1(self):
         densities = np.array([0.5, 0.2])
         expected = np.array([0.5, 0.2])
-        actual = ShapeAdaptiveKernel_Python._handle_return(None, densities)
+        dimension = 3
+        bandwidth_matrix = np.random.rand(dimension, dimension)
+        actual = ShapeAdaptiveKernel_Python(bandwidth_matrix)._handle_return(densities)
         np.testing.assert_array_equal(actual, expected)
 
     def test__compute_local_scaling_factor(self):

@@ -8,7 +8,7 @@ from datasets.simulated.components import UniformRandomNoise
 class TestUniformRandomNoise(TestCase):
 
     def setUp(self):
-        super().setUp()
+        super(TestUniformRandomNoise, self).setUp()
         self._min_value = 2
         self._max_value = 4
         self._component3D = UniformRandomNoise(minimum_value=self._min_value,

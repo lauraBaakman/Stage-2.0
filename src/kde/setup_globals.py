@@ -26,3 +26,5 @@ libraries = [
 ]
 
 lib_path = Path(__file__).ancestor(2).child('lib')
+
+wd_path = Path(__file__).ancestor(1)

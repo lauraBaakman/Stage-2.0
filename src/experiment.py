@@ -4,7 +4,7 @@ import os
 from unipath import Path
 
 from kde.sambe import SAMBEstimator
-from kde.modifeidbreiman import MBEstimator
+from kde.mbe import MBEstimator
 import inputoutput
 
 _data_set_path = Path(
@@ -23,7 +23,7 @@ estimators = {
 }
 
 
-_ask_for_confirmation = False
+_ask_for_confirmation = True
 
 
 def partial_path(path):
@@ -53,7 +53,7 @@ def confirm_files(potential_files):
     files = list()
 
     for data_set in potential_files:
-        response = input(
+        response = raw_input(
             'Include the data set in the file ..{}? [y/N] '.format(
                 partial_path(data_set))
         ).lower()

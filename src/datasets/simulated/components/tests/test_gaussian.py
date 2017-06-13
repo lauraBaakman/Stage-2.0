@@ -8,7 +8,7 @@ from datasets.simulated.components import MultivariateGaussian, UnivariateGaussi
 class TestMultivariateGaussian(TestCase):
 
     def setUp(self):
-        super().setUp()
+        super(TestMultivariateGaussian, self).setUp()
         mean3D = np.array([50, 50, 50])
         covariance3D = np.diag(np.array([30, 30, 30]))
         self._component3D = MultivariateGaussian(mean=mean3D,
@@ -127,7 +127,7 @@ class TestMultivariateGaussian(TestCase):
 class TestUnivariateGaussian(TestCase):
 
     def setUp(self):
-        super().setUp()
+        super(TestUnivariateGaussian, self).setUp()
         self._mean = 10
         self._variance = 0.5
         self._component = UnivariateGaussian(mean=self._mean, variance=self._variance)

@@ -10,7 +10,7 @@ from inputoutput.results import _ResultsValidator, Results, InvalidResultsExcept
 
 class TestResults(TestCase):
     def setUp(self):
-        super().setUp()
+        super(TestResults, self).setUp()
         self._data_set = DataSet(
                 patterns=np.array([
                     [52.0, 45.0, 56.0],
@@ -162,39 +162,3 @@ class Test_ResultsValidator(TestCase):
         validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
         actual = validator._results_is_1D_array()
         self.assertIsNone(actual)
-
-    def test__results_are_densities_1(self):
-        results_array = np.array([
-            0.0, 0.2, 33.0, 0.444, 0.55, 0.66
-        ])
-        validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
-        with warnings.catch_warnings(record=True) as warning:
-            warnings.simplefilter("always")
-
-            validator._results_are_densities()
-
-            self.assertEqual(len(warning), 1)
-
-            expected_message = "Not all values in the results are in the range [0, 1]."
-            actual_message = str(warning[-1].message)
-            self.assertEqual(expected_message, actual_message)
-
-            assert issubclass(warning[-1].category, UserWarning)
-
-    def test__results_are_densities_2(self):
-        results_array = np.array([
-            0.0, 0.2, 0.33, 0.444, -0.55, 0.66
-        ])
-        validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
-        with warnings.catch_warnings(record=True) as warning:
-            warnings.simplefilter("always")
-
-            validator._results_are_densities()
-
-            self.assertEqual(len(warning), 1)
-
-            expected_message = "Not all values in the results are in the range [0, 1]."
-            actual_message = str(warning[-1].message)
-            self.assertEqual(expected_message, actual_message)
-
-            assert issubclass(warning[-1].category, UserWarning)

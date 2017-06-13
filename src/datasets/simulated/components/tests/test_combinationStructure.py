@@ -9,7 +9,7 @@ from datasets.simulated.components.combinationstructure import CombinationStruct
 class TestWallLikeStructure(TestCase):
 
     def setUp(self):
-        super().setUp()
+        super(TestWallLikeStructure, self).setUp()
         self._min_value = 10
         self._max_value = 20
         x_component = components.UniformRandomNoise(

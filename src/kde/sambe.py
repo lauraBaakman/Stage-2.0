@@ -1,7 +1,8 @@
-import numpy as np
-import warnings
+from __future__ import division
 
-from kde.modifeidbreiman import MBEstimator
+import numpy as np
+
+from kde.mbe import MBEstimator
 import kde.utils.automaticWindowWidthMethods as automaticWindowWidthMethods
 from kde.estimatorimplementation import EstimatorImplementation
 from kde.parzen import _ParzenEstimator_C
@@ -36,7 +37,7 @@ class SAMBEstimator(MBEstimator):
 
 class _ShapeAdaptiveMBE(EstimatorImplementation):
     def __init__(self, xi_s, x_s, dimension, kernel, local_bandwidths, general_bandwidth):
-        super().__init__(xi_s, x_s, dimension, kernel, general_bandwidth)
+        super(_ShapeAdaptiveMBE, self).__init__(xi_s, x_s, dimension, kernel, general_bandwidth)
         self._local_bandwidths = local_bandwidths.astype(float, copy=False)
         self._knn = KNN(patterns=self._xi_s)
         self._k = self._compute_k(self.num_xi_s, self.dimension)

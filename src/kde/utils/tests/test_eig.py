@@ -44,7 +44,7 @@ class TestEig(TestCase):
 class EigImpAbstractTest(object):
 
     def setUp(self):
-        super().setUp()
+        super(EigImpAbstractTest, self).setUp()
         self._implementation = None
 
     def test_eigenValues_0(self):
@@ -70,7 +70,7 @@ class EigImpAbstractTest(object):
 class Test_Eig_C(EigImpAbstractTest, TestCase):
 
     def setUp(self):
-        super().setUp()
+        super(Test_Eig_C, self).setUp()
         self._implementation = _eigenvalues_C
 
     def test__is_square_1(self):
@@ -182,5 +182,5 @@ class Test_Eig_C(EigImpAbstractTest, TestCase):
 class Test_Eig_Python(EigImpAbstractTest, TestCase):
 
     def setUp(self):
-        super().setUp()
+        super(Test_Eig_Python, self).setUp()
         self._implementation = _eigenvalues_Python

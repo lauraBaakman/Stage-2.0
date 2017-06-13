@@ -40,12 +40,12 @@ class TestKernelImpAbstractTest(object):
 
 class TestTestKernel_C(TestKernelImpAbstractTest, TestCase):
     def setUp(self):
-        super().setUp()
+        super(TestTestKernel_C, self).setUp()
         self._kernel_class = _TestKernel_C
 
 
 class TestTestKernel_Python(TestKernelImpAbstractTest, TestCase):
     def setUp(self):
-        super().setUp()
+        super(TestTestKernel_Python, self).setUp()
         self._kernel_class = _TestKernel_Python
 

@@ -8,7 +8,7 @@ from inputoutput.dataset import DataSet, InvalidDataSetException, _DataSetValida
 
 class TestDataSet(TestCase):
     def setUp(self):
-        super().setUp()
+        super(TestDataSet, self).setUp()
 
     def test_num_patterns(self):
         data_set = DataSet(
@@ -191,7 +191,7 @@ class TestDataSet(TestCase):
 
 class Test_DataSetReader(TestCase):
     def setUp(self):
-        super().setUpClass()
+        super(Test_DataSetReader, self).setUpClass()
         self._input_file = BytesIO("""5 3\n"""
                                    """2 3\n"""
                                    """52.0 45.0 56.0\n"""

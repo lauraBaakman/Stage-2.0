@@ -6,7 +6,7 @@ import kde
 from kde.kernels.epanechnikov import Epanechnikov
 from kde.kernels.gaussian import Gaussian
 from kde.kernels.testKernel import TestKernel
-from kde.modifeidbreiman import _MBEEstimator_Python, _MBEEstimator_C, MBEstimator
+from kde.mbe import _MBEEstimator_Python, _MBEEstimator_C, MBEstimator
 from kde.parzen import _ParzenEstimator_Python, _ParzenEstimator_C
 
 
@@ -71,13 +71,13 @@ class TestModifiedBreimanEstimator(TestCase):
 
 class ModifiedBreimanEstimatorImpAbstractTest(object):
     def setUp(self):
-        super().setUp()
+        super(ModifiedBreimanEstimatorImpAbstractTest, self).setUp()
         self._estimator_class = None
 
     def test_estimate_epanechnikov(self):
         xi_s = np.array([[-1, -1], [1, 1], [0, 0]])
         x_s = np.array([[0, 0], [1, 1], [0, 1]])
-        local_bandwidths = np.array([10, 20, 50])
+        local_bandwidths = np.array([10.0, 20.0, 50.0])
         general_bandwidth = 0.5
         kernel = Epanechnikov()
         estimator = self._estimator_class(
@@ -107,7 +107,7 @@ class ModifiedBreimanEstimatorImpAbstractTest(object):
 
 class Test_MBEEstimator_Python(ModifiedBreimanEstimatorImpAbstractTest, TestCase):
     def setUp(self):
-        super().setUp()
+        super(Test_MBEEstimator_Python, self).setUp()
         self._estimator_class = _MBEEstimator_Python
 
     def test_estimate_pattern_gaussian(self):
@@ -145,5 +145,5 @@ class Test_MBEEstimator_Python(ModifiedBreimanEstimatorImpAbstractTest, TestCase
 
 class Test_MBEEstimator_C(ModifiedBreimanEstimatorImpAbstractTest, TestCase):
     def setUp(self):
-        super().setUp()
+        super(Test_MBEEstimator_C, self).setUp()
         self._estimator_class = _MBEEstimator_C

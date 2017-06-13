@@ -1,3 +1,5 @@
+from __future__ import division
+
 import kde._kde as _kde
 import numpy as np
 import scipy.interpolate as interpolate
@@ -96,7 +98,7 @@ class MBEstimator(object):
 class _MBEEstimator(EstimatorImplementation):
 
     def __init__(self, xi_s, x_s, dimension, kernel, local_bandwidths, general_bandwidth):
-        super().__init__(
+        super(_MBEEstimator, self).__init__(
             xi_s=xi_s, x_s=x_s, dimension=dimension,
             general_bandwidth=general_bandwidth, kernel=kernel)
         self._local_bandwidths = local_bandwidths.astype(float, copy=False)
@@ -104,7 +106,7 @@ class _MBEEstimator(EstimatorImplementation):
 
 class _MBEEstimator_Python(_MBEEstimator):
     def __init__(self, xi_s, x_s, dimension, kernel, local_bandwidths, general_bandwidth):
-        super().__init__(
+        super(_MBEEstimator_Python, self).__init__(
             xi_s=xi_s, x_s=x_s, dimension=dimension,
             general_bandwidth=general_bandwidth, local_bandwidths=local_bandwidths,
             kernel=kernel)
@@ -129,7 +131,7 @@ class _MBEEstimator_Python(_MBEEstimator):
 
 class _MBEEstimator_C(_MBEEstimator):
     def __init__(self, xi_s, x_s, dimension, kernel, local_bandwidths, general_bandwidth):
-        super().__init__(
+        super(_MBEEstimator_C, self).__init__(
             xi_s=xi_s, x_s=x_s, dimension=dimension,
             general_bandwidth=general_bandwidth, local_bandwidths=local_bandwidths,
             kernel=kernel)

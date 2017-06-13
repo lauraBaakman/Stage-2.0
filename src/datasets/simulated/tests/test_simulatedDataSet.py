@@ -33,7 +33,7 @@ class SimulatedDataSetForTests(SimulatedDataSet):
 class TestSimulatedDataSet(TestCase):
 
     def setUp(self):
-        super().setUp()
+        super(TestSimulatedDataSet, self).setUp()
         self._components = OrderedDict()
         self._components['a'] = component_a
         self._components['b'] = component_b
@@ -43,25 +43,6 @@ class TestSimulatedDataSet(TestCase):
         actual = set.components_lengths
         expected = [3, 2]
         self.assertEqual(actual, expected)
-
-    def test__compute_patterns_shape(self):
-        actual_patterns = SimulatedDataSet._compute_patterns(None, self._components)
-        (actual_num_patterns, actual_dimension) = actual_patterns.shape
-
-        expected_num_patterns = 5
-        expected_dimension = 3
-
-        self.assertEqual(actual_num_patterns, expected_num_patterns)
-        self.assertEqual(actual_dimension, expected_dimension)
-
-    def test__compute_patterns_range(self):
-        actual_patterns = SimulatedDataSet._compute_patterns(None, self._components)
-
-        first_component_patterns = actual_patterns[0:3]
-        self._in_range(first_component_patterns, 0, 20)
-
-        second_component_patterns = actual_patterns[3:5]
-        self._in_range(second_component_patterns, 10, 50)
 
     # noinspection PyTypeChecker
     def _in_range(self, values, min_value, max_value):
@@ -75,36 +56,6 @@ class TestSimulatedDataSet(TestCase):
         self.assertEqual(set1, set2)
         np.testing.assert_array_equal(set1.patterns, set2.patterns)
         np.testing.assert_array_equal(set1.densities, set2.densities)
-
-    def test__compute_densities_shape(self):
-        patterns = np.array([
-            [-10, -10, -10],
-            [5, 5, 5],
-            [40, 40, 40],
-            [15, 15, 15]
-        ])
-
-        actual_densities = SimulatedDataSet._compute_densities(None, self._components, patterns)
-        (actual_num_densities, ) = actual_densities.shape
-
-        expected_num_densities = 4
-        self.assertEqual(actual_num_densities, expected_num_densities)
-
-    def test__compute_densities_values(self):
-        patterns = np.array([
-            [-10, -10, -10],    # In neither component
-            [5, 5, 5],          # In the first component
-            [40, 40, 40],       # In the second component
-            [15, 15, 15]        # In both components
-        ])
-        actual_densities = SimulatedDataSet._compute_densities(None, self._components, patterns)
-        expected_densities = np.array([
-            0.0,
-            0.0000625,
-            0.0000078125,
-            0.0000703125
-        ])
-        np.testing.assert_array_almost_equal(expected_densities, actual_densities)
 
     def test_to_file(self):
         data_set = SimulatedDataSetForTests()

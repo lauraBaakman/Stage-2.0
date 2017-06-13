@@ -6,7 +6,7 @@ from kde.utils.distanceMatrix import compute_distance_matrix
 
 class TestCompute_distance_matrix(TestCase):
     def setUp(self):
-        super().setUp()
+        super(TestCompute_distance_matrix, self).setUp()
         self.patterns = np.array([
             [0, 0],
             [1, 1],

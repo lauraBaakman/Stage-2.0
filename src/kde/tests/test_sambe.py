@@ -91,7 +91,7 @@ class TestShapeAdaptiveMBE(TestCase):
 class ShapeAdaptiveMBEImpAbstractTest(object):
 
     def setUp(self):
-        super().setUp()
+        super(ShapeAdaptiveMBEImpAbstractTest, self).setUp()
         self._estimator_class = None
 
     def test_estimate_epanechnikov(self):
@@ -139,7 +139,7 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
 
 class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
     def setUp(self):
-        super().setUp()
+        super(Test_ShapeAdaptiveMBE_Python, self).setUp()
         self._estimator_class = _ShapeAdaptiveMBE_Python
 
     def test__determine_kernel_shape(self):
@@ -207,7 +207,7 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
 
 class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
     def setUp(self):
-        super().setUp()
+        super(Test_ShapeAdaptiveMBE_C, self).setUp()
         self._estimator_class = _ShapeAdaptiveMBE_C
 
     def test_warning(self):

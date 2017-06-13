@@ -21,7 +21,7 @@ static double normal_pdf(gsl_vector* pattern){
 }
 
 static void normal_prepare(size_t dimension){
-    g_normal_constant = testKernelConstant(dimension);
+    g_normal_constant = testKernelConstant((int)dimension);
 }
 
 static void normal_free(){

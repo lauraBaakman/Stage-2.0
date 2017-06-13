@@ -5,7 +5,7 @@ struct kdtree* g_tree;
 
 void computeKNearestNeighbours(gsl_vector *pattern, size_t k, gsl_matrix *neighbours) {
     double* resultRow;
-    struct kdres* res = kd_nearest_n(g_tree, pattern->data, k);
+    struct kdres* res = kd_nearest_n(g_tree, pattern->data, (int) k);
     for(int i = 0; i < kd_res_size(res); i++, kd_res_next(res)){
         resultRow = &neighbours->data[i * neighbours->tda];
         kd_res_item(res, resultRow);

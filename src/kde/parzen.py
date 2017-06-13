@@ -1,3 +1,5 @@
+from __future__ import division
+
 import math
 
 import kde._kde as _kde

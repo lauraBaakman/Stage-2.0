@@ -1,8 +1,13 @@
+# C Stuff
 CC=gcc
 CFLAGS=-std=c99
 LDLIBS=-lgsl -lgslcblas -lm
 LDDIRS=-L/usr/local/lib/
 IDIRS=-I/usr/local/include/
+
+# PYTHON STUFF
+PYTHON=python
+PYFLAGS=build_ext --inplace
 
 TEST_SOURCES=./lib/CuTest.c ./lib/CuTestUtils.c \
 	./kde/tests/test_kde.c \
@@ -60,6 +65,22 @@ benchmark_main: benchmark_main.o
 	$(CC) $(IDIRS) -c -o $@ $< $(CFLAGS)
 benchmark: $(OBJECTS) benchmark_main.o
 	$(CC) $(CFLAGS) -o benchmark.out $(OBJECTS) benchmark_main.o $(LDLIBS) $(LDDIRS) $(IDIRS)	
+kde_module: $(OBJECTS)
+	$(PYTHON) kde/setup.py $(PYFLAGS)
+	@mv _kde.so ./kde/_kde.so
+kernels_module: $(OBJECTS)
+	$(PYTHON) kde/kernels/setup.py $(PYFLAGS)	
+	@mv _kernels.so ./kde/kernels/_kernels.so
+utils_module: $(OBJECTS)
+	$(PYTHON) kde/utils/setup.py $(PYFLAGS)		
+	@mv _utils.so ./kde/utils/_utils.so
+modules: kde_module kernels_module utils_module
+run_tests: tests
+	@echo -e "\n\033[0;31m Python Tests \033[0m\n"
+	@$(PYTHON) -m unittest discover -s . -t .
+	@echo -e "\n\033[0;31m C Tests \033[0m"
+	@./tests.out
 clean:
 	find . -name "*.o" -delete
 	find . -name "*.out" -delete
+	find . -name "*.so" -delete

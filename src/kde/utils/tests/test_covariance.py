@@ -51,7 +51,7 @@ class TestCovariance(TestCase):
 class CovarianceImpAbstractTest(object):
 
     def setUp(self):
-        super().setUp()
+        super(CovarianceImpAbstractTest, self).setUp()
         self._implementation = None
 
     def test_covariance_0(self):
@@ -83,11 +83,11 @@ class CovarianceImpAbstractTest(object):
 
 class Test_Covariance_C(CovarianceImpAbstractTest, TestCase):
     def setUp(self):
-        super().setUp()
+        super(Test_Covariance_C, self).setUp()
         self._implementation = _covariance_C
 
 
 class Test_Covariance_Python(CovarianceImpAbstractTest, TestCase):
     def setUp(self):
-        super().setUp()
+        super(Test_Covariance_Python, self).setUp()
         self._implementation = _covariance_Python

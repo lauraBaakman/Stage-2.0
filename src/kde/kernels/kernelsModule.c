@@ -258,17 +258,8 @@ static PyMethodDef method_table[] = {
         {NULL,                              NULL,                                   0,              NULL}
 };
 
-static struct PyModuleDef kernelModule = {
-        PyModuleDef_HEAD_INIT, "_kernels",
-        "C implementation of some kernels.",
-        -1, method_table
-};
+PyMODINIT_FUNC init_kernels(void) {
+    (void)Py_InitModule("_kernels", method_table);
 
-PyMODINIT_FUNC PyInit__kernels(void) {
-    PyObject *module = PyModule_Create(&kernelModule);
-
-    if(!module) return NULL;
     import_array();
-
-    return module;
 }

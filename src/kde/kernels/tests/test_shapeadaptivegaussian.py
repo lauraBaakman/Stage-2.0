@@ -163,7 +163,7 @@ class ShapeAdaptiveGaussianImpAbstractTest(object):
 class ShapeAdaptiveGaussian_Python(ShapeAdaptiveGaussianImpAbstractTest, TestCase):
 
     def setUp(self):
-        super().setUp()
+        super(ShapeAdaptiveGaussian_Python, self).setUp()
         self._kernel_class = _ShapeAdaptiveGaussian_Python
 
     def test_evaluate_pattern_0(self):
@@ -188,5 +188,5 @@ class ShapeAdaptiveGaussian_Python(ShapeAdaptiveGaussianImpAbstractTest, TestCas
 class ShapeAdaptiveGaussian_C(ShapeAdaptiveGaussianImpAbstractTest, TestCase):
 
     def setUp(self):
-        super().setUp()
+        super(ShapeAdaptiveGaussian_C, self).setUp()
         self._kernel_class = _ShapeAdaptiveGaussian_C

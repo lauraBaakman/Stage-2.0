@@ -36,9 +36,9 @@ find_package(PythonLibs REQUIRED)
 include_directories(
         SYSTEM
         ${gsl_INCLUDE_DIRS}
-        /Users/laura/.virtualenvs/stage/lib/python3.5/site-packages/numpy/core/include
-        /Users/laura/.virtualenvs/stage/include/python3.5m
-        /Users/laura/.virtualenvs/stage/include/python3.5m/Python.h
+        /Users/laura/.virtualenvs/stageTo27/lib/python2.7/site-packages/numpy/core/include
+        /Users/laura/.virtualenvs/stageTo27/include/python2.7
+        /Users/laura/.virtualenvs/stageTo27/include/python2.7/Python.h
         /Library/Frameworks/Python.framework/Headers
         /usr/include
         /usr/local/include

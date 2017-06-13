@@ -122,17 +122,7 @@ static PyMethodDef method_table[] = {
         {NULL,                  NULL,               0,              NULL}
 };
 
-static struct PyModuleDef utilsModule = {
-        PyModuleDef_HEAD_INIT, "_utils",
-        "C implementation of some utility functions.",
-        -1, method_table
-};
-
-PyMODINIT_FUNC PyInit__utils(void) {
-    PyObject *module = PyModule_Create(&utilsModule);
-
-    if(!module) return NULL;
+PyMODINIT_FUNC init_utils(void) {
+    (void)Py_InitModule("_utils", method_table);
     import_array();
-
-    return module;
 }

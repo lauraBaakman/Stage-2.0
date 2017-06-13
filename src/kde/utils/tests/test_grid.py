@@ -11,7 +11,7 @@ class TestGrid(TestCase):
         number_of_points = 6
 
         expected = np.array([[0], [1], [2], [3], [4], [5]])
-        actual = Grid(range_1, number_of_grid_points=number_of_points).grid_points
+        actual = Grid(number_of_points, range_1).grid_points
         np.testing.assert_array_equal(expected, actual)
 
     def test___init__2D_int(self):
@@ -30,7 +30,7 @@ class TestGrid(TestCase):
             [3, 2],
             [6, 2],
         ])
-        actual = Grid(range_1, range_2, number_of_grid_points=number_of_points).grid_points
+        actual = Grid(number_of_points, range_1, range_2).grid_points
         np.testing.assert_array_equal(expected, actual)
 
     def test_cover_with_padding_1d(self):

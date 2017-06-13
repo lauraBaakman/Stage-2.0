@@ -101,7 +101,7 @@ class EpanechnikovImpAbstractTest(object):
 
 class TestEpanechnikov_Python(EpanechnikovImpAbstractTest, TestCase):
     def setUp(self):
-        super().setUp()
+        super(TestEpanechnikov_Python, self).setUp()
         self._kernel_class = _Epanechnikov_Python
 
     def test___unit_sphere_volume_1D(self):
@@ -137,5 +137,5 @@ class TestEpanechnikov_Python(EpanechnikovImpAbstractTest, TestCase):
 
 class TestEpanechnikov_C(EpanechnikovImpAbstractTest, TestCase):
     def setUp(self):
-        super().setUp()
+        super(TestEpanechnikov_C, self).setUp()
         self._kernel_class = _Epanechnikov_C

@@ -153,12 +153,12 @@ class ShapeAdaptiveGaussianImpAbstractTest(object):
 class Test_ShapeAdaptiveEpanechnikov_Python(ShapeAdaptiveGaussianImpAbstractTest, TestCase):
 
     def setUp(self):
-        super().setUp()
+        super(Test_ShapeAdaptiveEpanechnikov_Python, self).setUp()
         self._kernel_class = _ShapeAdaptiveEpanechnikov_Python
 
 
 class Test_ShapeAdaptiveEpanechnikov_C(ShapeAdaptiveGaussianImpAbstractTest, TestCase):
 
     def setUp(self):
-        super().setUp()
+        super(Test_ShapeAdaptiveEpanechnikov_C, self).setUp()
         self._kernel_class = _ShapeAdaptiveEpanechnikov_C
