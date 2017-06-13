@@ -197,6 +197,7 @@ class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
         else:
             self.fail('ExpectedException not raised')
 
+    # Different test than the Python implementation, since the C implementation uses a KD tree, which gives an approximation.
     def test_estimate_gaussian(self):
         xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
         x_s = xi_s
@@ -212,7 +213,7 @@ class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
         actual = estimator.estimate()
-        expected = np.array([0.143018801263046,
+        expected = np.array([0.186693239491116,
                              0.077446155260620,
                              0.077446155260620,
                              0.143018801263046])
