@@ -27,6 +27,7 @@ OF SUCH DAMAGE.
 /* single nearest neighbor search written by Tamas Nepusz <tamas@cs.rhul.ac.uk>
  */
 
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -233,11 +234,6 @@ int kd_insertf(struct kdtree* tree, const float* pos, void* data)
     int res, dim = tree->dim;
 
     if (dim > 16) {
-#ifndef NO_ALLOCA
-        if (dim <= 256)
-            bptr = buf = alloca(dim * sizeof *bptr);
-        else
-#endif
         if (!(bptr = buf = malloc(dim * sizeof *bptr))) {
             return -1;
         }
@@ -250,11 +246,7 @@ int kd_insertf(struct kdtree* tree, const float* pos, void* data)
     }
 
     res = kd_insert(tree, buf, data);
-#ifndef NO_ALLOCA
-    if (tree->dim > 256)
-#else
-        if (tree->dim > 16)
-#endif
+    if (tree->dim > 16)
         free(buf);
     return res;
 }
@@ -484,11 +476,6 @@ kd_nearestf(struct kdtree* tree, const float* pos)
     struct kdres* res;
 
     if (dim > 16) {
-#ifndef NO_ALLOCA
-        if (dim <= 256)
-            bptr = buf = alloca(dim * sizeof *bptr);
-        else
-#endif
         if (!(bptr = buf = malloc(dim * sizeof *bptr))) {
             return 0;
         }
@@ -501,11 +488,7 @@ kd_nearestf(struct kdtree* tree, const float* pos)
     }
 
     res = kd_nearest(tree, buf);
-#ifndef NO_ALLOCA
-    if (tree->dim > 256)
-#else
-        if (tree->dim > 16)
-#endif
+    if (tree->dim > 16)
         free(buf);
     return res;
 }
@@ -567,11 +550,6 @@ kd_nearest_nf(struct kdtree* tree, const float* pos, int num)
     struct kdres* res;
 
     if (dim > 16) {
-#ifndef NO_ALLOCA
-        if (dim <= 256)
-            bptr = buf = alloca(dim * sizeof *bptr);
-        else
-#endif
         if (!(bptr = buf = malloc(dim * sizeof *bptr))) {
             return 0;
         }
@@ -584,11 +562,7 @@ kd_nearest_nf(struct kdtree* tree, const float* pos, int num)
     }
 
     res = kd_nearest_n(tree, buf, num);
-#ifndef NO_ALLOCA
-    if (tree->dim > 256)
-#else
-        if (tree->dim > 16)
-#endif
+    if (tree->dim > 16)
         free(buf);
     return res;
 }
@@ -647,11 +621,6 @@ kd_nearest_rangef(struct kdtree* kd, const float* pos, float range)
     struct kdres* res;
 
     if (dim > 16) {
-#ifndef NO_ALLOCA
-        if (dim <= 256)
-            bptr = buf = alloca(dim * sizeof *bptr);
-        else
-#endif
         if (!(bptr = buf = malloc(dim * sizeof *bptr))) {
             return 0;
         }
@@ -664,11 +633,7 @@ kd_nearest_rangef(struct kdtree* kd, const float* pos, float range)
     }
 
     res = kd_nearest_range(kd, buf, range);
-#ifndef NO_ALLOCA
-    if (kd->dim > 256)
-#else
-        if (kd->dim > 16)
-#endif
+    if (kd->dim > 16)
         free(buf);
     return res;
 }
