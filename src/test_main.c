@@ -3,6 +3,7 @@
 #include "lib/CuTest.h"
 #include "kde/tests/test_kde.h"
 #include "kde/utils/tests/test_utils.h"
+#include "kde/kernels/tests/test_kernels.h"
 
 CuSuite *StrUtilGetSuite();
 
@@ -12,6 +13,7 @@ int RunAllTests(void) {
 	
 	CuSuiteAddSuite(suite, KDEGetSuite());
 	CuSuiteAddSuite(suite, UtilsGetSuite());
+	CuSuiteAddSuite(suite, KernelsGetSuite());
 
     int exitCode = CuSuiteRun(suite);
 	CuSuiteSummary(suite, output);
