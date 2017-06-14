@@ -1,0 +1,206 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      6815,        198]
+NotebookOptionsPosition[      6337,        178]
+NotebookOutlinePosition[      6692,        194]
+CellTagsIndexPosition[      6649,        191]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.704614517162595*^9, 3.7046145192715187`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Compute", " ", "the", " ", "variance", " ", "of", " ", "the", " ", 
+    "Epanechnikov", " ", "Kernel"}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"lower", " ", "=", " ", 
+     RowBox[{"-", "1"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"upper", " ", "=", " ", "1"}], ";"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"EV", "[", "x_", "]"}], " ", "=", " ", 
+    RowBox[{"Integrate", "[", 
+     RowBox[{
+      RowBox[{"x", " ", "*", " ", 
+       RowBox[{"(", 
+        RowBox[{
+         FractionBox["1", "2"], 
+         RowBox[{"(", 
+          RowBox[{"1", " ", "-", " ", 
+           RowBox[{"x", " ", "*", " ", "x"}]}], ")"}]}], ")"}]}], ",", " ", 
+      RowBox[{"{", 
+       RowBox[{"x", ",", " ", "lower", ",", " ", "upper"}], "}"}]}], "]"}]}], 
+   " ", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"V", "[", "x_", "]"}], " ", "=", " ", 
+    RowBox[{"Integrate", "[", 
+     RowBox[{
+      RowBox[{"Integrate", "[", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{
+          SuperscriptBox["x", "2"], " ", "*", " ", 
+          RowBox[{"(", 
+           RowBox[{"1", " ", "-", " ", 
+            RowBox[{
+             SuperscriptBox["x", "2"], " ", "*", " ", 
+             SuperscriptBox["x", "2"]}]}], ")"}]}], ")"}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"x", ",", " ", "lower", " ", ",", "upper"}], "}"}]}], "]"}], 
+      ",", " ", 
+      RowBox[{"{", 
+       RowBox[{"x", ",", " ", "lower", ",", " ", "upper"}], "}"}]}], 
+     "]"}]}]}]}]], "Input",
+ CellChangeTimes->{{3.704614639276845*^9, 3.704614679847333*^9}, {
+  3.704614749594963*^9, 3.704614794424501*^9}, {3.704614831679659*^9, 
+  3.704614838102624*^9}, {3.7046148832062263`*^9, 3.70461494033225*^9}, {
+  3.70461513581518*^9, 3.704615145559168*^9}, {3.704615319954159*^9, 
+  3.7046153324409437`*^9}, {3.706422289936039*^9, 3.706422298720752*^9}}],
+
+Cell[BoxData[""], "Input"],
+
+Cell[BoxData[
+ RowBox[{"(*", " ", 
+  RowBox[{
+  "Does", " ", "the", " ", "scaled", " ", "1", "D", " ", "Epanechnikov", " ", 
+   "Kernel", " ", "integrate", " ", "to", " ", 
+   RowBox[{"one", "?"}]}], "*)"}]], "Input",
+ CellChangeTimes->{{3.706255182257777*^9, 3.7062551968941717`*^9}, 
+   3.706261351745768*^9, {3.7064223796728687`*^9, 3.7064223800711718`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"dim", " ", "=", " ", "1"}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"v", " ", "=", " ", 
+     FractionBox["16", "21"]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"boundary", " ", "=", " ", 
+    SqrtBox["v"]}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"lower", " ", "=", " ", 
+     RowBox[{
+      RowBox[{"-", " ", "1"}], " ", "*", " ", "boundary"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"upper", " ", "=", " ", 
+     RowBox[{
+      RowBox[{"+", " ", "1"}], " ", "*", " ", "boundary"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     SubscriptBox["c", "d"], " ", "=", " ", 
+     RowBox[{
+      FractionBox["2", "dim"], " ", "*", " ", 
+      FractionBox[
+       SuperscriptBox["Pi", 
+        FractionBox["dim", "2"]], 
+       RowBox[{"Gamma", "[", 
+        FractionBox["dim", "2"], "]"}]]}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"kernel", " ", "=", " ", 
+     RowBox[{
+      FractionBox[
+       RowBox[{"2", " ", "+", " ", "dim"}], 
+       RowBox[{"2", " ", "*", " ", 
+        SubscriptBox["c", "d"]}]], "*", " ", 
+      RowBox[{"(", 
+       FractionBox["1", 
+        SqrtBox["v"]], ")"}], "*", " ", 
+      RowBox[{"(", 
+       RowBox[{"1", " ", "-", " ", 
+        RowBox[{
+         FractionBox["1", "v"], 
+         RowBox[{"(", 
+          SuperscriptBox["x", "2"], ")"}]}]}], ")"}]}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"Integrate", "[", 
+    RowBox[{"kernel", ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"x", ",", " ", "lower", ",", " ", "upper"}], "}"}]}], "]"}]}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.7062552013243093`*^9, 3.706255236698371*^9}, {
+  3.706255341580853*^9, 3.706255391082919*^9}, {3.70625624000312*^9, 
+  3.706256390100635*^9}, {3.70625713990554*^9, 3.706257379768482*^9}, {
+  3.706258081889145*^9, 3.7062580948198843`*^9}, {3.706258142694786*^9, 
+  3.706258223743379*^9}, {3.706258557265044*^9, 3.7062585616296053`*^9}, {
+  3.706260558834763*^9, 3.706260561648649*^9}, {3.706260687090206*^9, 
+  3.706260724412674*^9}, {3.706261307764618*^9, 3.706261344922929*^9}, {
+  3.7062615633559933`*^9, 3.7062615714273376`*^9}, {3.70642228742062*^9, 
+  3.706422287872727*^9}, {3.7064223188000803`*^9, 3.706422330763989*^9}},
+ EmphasizeSyntaxErrors->True],
+
+Cell[BoxData[
+ RowBox[{"(*", " ", 
+  RowBox[{"Compute", " ", "the", " ", "integral", " ", "of", " ", 
+   RowBox[{"the", " ", "'"}], 
+   RowBox[{"normal", "'"}], " ", "1", "D", " ", "Epanechnikov", " ", 
+   "kernel"}], " ", "*)"}]], "Input",
+ CellChangeTimes->{{3.706261753907811*^9, 3.706261789196932*^9}, {
+  3.7062623357149887`*^9, 3.70626233878445*^9}, {3.706422384670086*^9, 
+  3.706422385094599*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"kernel", " ", "=", " ", 
+   RowBox[{
+    FractionBox[
+     RowBox[{"2", " ", "+", " ", "dim"}], 
+     RowBox[{"2", " ", "*", " ", 
+      SubscriptBox["c", "d"]}]], "*", " ", 
+    RowBox[{"(", 
+     RowBox[{"1", " ", "-", 
+      SuperscriptBox["x", "2"]}], ")"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Integrate", "[", 
+  RowBox[{"kernel", ",", " ", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", " ", 
+     RowBox[{"-", "1"}], ",", " ", "1"}], "}"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.7062617913950653`*^9, 3.706261831875918*^9}}]
+},
+WindowSize->{1920, 1151},
+WindowMargins->{{0, Automatic}, {Automatic, -1}},
+FrontEndVersion->"11.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (July 28, \
+2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 94, 1, 32, "Input"],
+Cell[655, 23, 1970, 51, 158, "Input"],
+Cell[2628, 76, 26, 0, 32, "Input"],
+Cell[2657, 78, 361, 7, 32, "Input"],
+Cell[3021, 87, 2327, 61, 277, "Input"],
+Cell[5351, 150, 405, 8, 32, "Input"],
+Cell[5759, 160, 574, 16, 76, "Input"]
+}
+]
+*)
+
