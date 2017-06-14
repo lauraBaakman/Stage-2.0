@@ -40,10 +40,13 @@ absolute_sources.extend(map(
 absolute_sources = map(str, absolute_sources)
 
 if __name__ == "__main__":
-    module = Extension('_kernels',
-                       library_dirs=setup_globals.library_dirs,
-                       libraries=setup_globals.libraries,
-                       include_dirs=setup_globals.include_dirs,
-                       sources=absolute_sources
-                       )
+    module = Extension(
+        '_kernels',
+        library_dirs=setup_globals.library_dirs,
+        libraries=setup_globals.libraries,
+        include_dirs=setup_globals.include_dirs,
+        sources=absolute_sources,
+        extra_compile_args=setup_globals.extra_compile_args,
+        extra_link_args=setup_globals.extra_link_args
+    )
     setup(name='_kernels', version='1.0', ext_modules=[module])

@@ -5,9 +5,16 @@ LDLIBS=-lgsl -lgslcblas -lm
 LDDIRS=-L/usr/local/lib/
 IDIRS=-I/usr/local/include/
 
+OS := $(shell uname)
+ifeq ($(OS),Darwin)
+	# PYRUNFLAGS=arch -i386 this breaks stuff, as soonas openmp is added other stuff will break, for now lets run only on Zeus.
+endif
+ifeq ($(OS),LINUX)
+endif
+
 # PYTHON STUFF
 PYTHON=python
-PYFLAGS=build_ext --inplace
+PYBUILDFLAGS=build_ext --inplace
 
 TEST_SOURCES=./lib/CuTest.c ./lib/CuTestUtils.c \
 	./kde/tests/test_kde.c \
@@ -71,20 +78,30 @@ benchmark_main: benchmark_main.o
 benchmark: $(OBJECTS) benchmark_main.o
 	$(CC) $(CFLAGS) -o benchmark.out $(OBJECTS) benchmark_main.o $(LDLIBS) $(LDDIRS) $(IDIRS)	
 _kde: $(OBJECTS)
-	$(PYTHON) kde/setup.py $(PYFLAGS)
+	$(PYTHON) kde/setup.py $(PYBUILDFLAGS)
 	@cp _kde.so ./kde/_kde.so
 _kernels: $(OBJECTS)
-	$(PYTHON) kde/kernels/setup.py $(PYFLAGS)	
+	$(PYTHON) kde/kernels/setup.py $(PYBUILDFLAGS)	
 	@cp _kernels.so ./kde/kernels/_kernels.so
 _utils: $(OBJECTS)
-	$(PYTHON) kde/utils/setup.py $(PYFLAGS)		
+	$(PYTHON) kde/utils/setup.py $(PYBUILDFLAGS)		
 	@cp _utils.so ./kde/utils/_utils.so
 modules: kde_module kernels_module utils_module
 run_tests: _kde _utils _kernels tests
 	@echo -e "\n\033[0;31m Python Tests \033[0m\n"
-	@$(PYTHON) -m unittest discover -s . -t .
+	@$(PYRUNFLAGS) $(PYTHON) -m unittest discover -s . -t .
 	@echo -e "\n\033[0;31m C Tests \033[0m"
 	@./tests.out
+run_tests: _kde _utils _kernels tests
+	@echo -e "\n\033[0;31m Python Tests \033[0m\n"
+	@$(PYRUNFLAGS) $(PYTHON) -m unittest discover -s . -t .
+	@echo -e "\n\033[0;31m C Tests \033[0m"
+	@./tests.out	
+run_kernel_tests: _kernels tests
+	@echo -e "\n\033[0;31m Python Tests \033[0m\n"
+	@$(PYRUNFLAGS) $(PYTHON) -m unittest discover -s ./kde/kernels -t .
+	@echo -e "\n\033[0;31m C Tests \033[0m"
+	@./tests.out		
 clean:
 	find . -name "*.o" -delete
 	find . -name "*.out" -delete

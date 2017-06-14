@@ -28,3 +28,14 @@ libraries = [
 lib_path = Path(__file__).ancestor(2).child('lib')
 
 wd_path = Path(__file__).ancestor(1)
+
+extra_link_args = [
+    '-lgomp',
+    "-fopenmp"
+]
+
+extra_compile_args = [
+    "-fopenmp",
+    '-fpic',
+    '-O3'
+]
