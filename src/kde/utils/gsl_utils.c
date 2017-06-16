@@ -54,3 +54,48 @@ gsl_vector *gsl_subtract(gsl_vector *termA, gsl_vector *termB, gsl_vector *resul
 
     return result;
 }
+
+gsl_matrix** gsl_matrices_alloc(size_t size1, size_t size2, int numMatrices){
+    gsl_matrix** matrices = (gsl_matrix**) malloc(numMatrices * sizeof(gsl_matrix*));
+    for(int i = 0; i < numMatrices; i++)   {
+        matrices[i] = gsl_matrix_alloc(size1, size2);
+    }
+    return matrices;
+}
+
+void gsl_matrices_free(gsl_matrix** matrices, int numMatrices){
+    for(int i = 0; i < numMatrices; i++)   {
+        gsl_matrix_free(matrices[i]);
+    }
+    free(matrices);
+}
+
+gsl_vector** gsl_vectors_alloc(size_t size1, int numVectors){
+    gsl_vector** vectors = (gsl_vector**) malloc(numVectors * sizeof(gsl_vector*));
+    for(int i = 0; i < numVectors; i++)   {
+        vectors[i] = gsl_vector_alloc(size1);
+    }
+    return vectors;
+}
+
+void gsl_vectors_free(gsl_vector** vectors, int numVectors){
+    for(int i = 0; i < numVectors; i++)   {
+        gsl_vector_free(vectors[i]);
+    }
+    free(vectors);
+}
+
+gsl_permutation** gsl_permutations_alloc(size_t size, int numPermutations){
+    gsl_permutation** permutations = (gsl_permutation**) malloc(numPermutations * sizeof(gsl_permutation*));
+    for(int i = 0; i < numPermutations; i++)   {
+        permutations[i] = gsl_permutation_alloc(size);
+    }
+    return permutations;
+}
+
+void gsl_permutations_free(gsl_permutation** permutations, int numPermutations){
+    for(int i = 0; i < numPermutations; i++)   {
+        gsl_permutation_free(permutations[i]);
+    }
+    free(permutations);
+}

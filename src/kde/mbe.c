@@ -55,10 +55,7 @@ void prepareGlobals(gsl_matrix *xis, double globalBandwidth, gsl_vector *localBa
 }
 
 void allocateGlobals(size_t dataDimension){
-    g_scaledPatterns = (gsl_vector**) malloc(g_numThreads * sizeof(gsl_vector*));
-    for(int i = 0; i < g_numThreads; i++){
-        g_scaledPatterns[i] = gsl_vector_alloc(dataDimension);
-    }
+    g_scaledPatterns = gsl_vectors_alloc(dataDimension, g_numThreads);
 }
 
 double estimateSinglePattern(gsl_vector *x, int pid) {
@@ -105,7 +102,5 @@ void freeGlobals(){
     g_globalBandwidth = 0.0;
     g_localBandwidths = NULL;
 
-    for(int i = 0; i < g_numThreads; i++){
-        gsl_vector_free(g_scaledPatterns[i]);
-    }
+    gsl_vectors_free(g_scaledPatterns, g_numThreads);
 }

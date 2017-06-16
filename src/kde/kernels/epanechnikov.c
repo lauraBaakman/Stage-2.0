@@ -20,7 +20,7 @@ static double squareRootOfTheVariance = 0.8728715609439694;
 
 static int g_numThreads;
 
-static gsl_vector** g_scaledPattern;
+static gsl_vector** g_scaledPatterns;
 
 static double g_normal_constant;
 static double g_normal_one_over_unit_variance_constant;
@@ -61,24 +61,18 @@ void normal_prepare(size_t dimension, int numThreads) {
 
     g_numThreads = numThreads;
 
-    g_scaledPattern = (gsl_vector**) malloc(numThreads * sizeof(gsl_vector*));
-    for(int i = 0; i < numThreads; i++){
-        g_scaledPattern[i] = gsl_vector_alloc(dimension);
-    }
+    g_scaledPatterns = gsl_vectors_alloc(dimension, g_numThreads);
 }
 
 void normal_free() {
     g_normal_constant = 0.0;
     g_normal_one_over_unit_variance_constant = 0.0;
 
-    for(int i = 0; i < g_numThreads; i++){
-        gsl_vector_free(g_scaledPattern[i]);
-    }
-    free(g_scaledPattern);
+    gsl_vectors_free(g_scaledPatterns, g_numThreads);
 }
 
 double normal_pdf(gsl_vector *pattern, int pid) {
-    gsl_vector* scaled_pattern = g_scaledPattern[pid];
+    gsl_vector* scaled_pattern = g_scaledPatterns[pid];
     gsl_vector_memcpy(scaled_pattern, pattern);
     gsl_vector_scale(scaled_pattern, g_normal_one_over_unit_variance_constant);
     return epanechnikov_kernel(scaled_pattern, g_normal_constant);
@@ -117,17 +111,12 @@ void sa_allocate(size_t dimension, int numThreads){
 
     g_numThreads = numThreads;
 
-    g_sa_scaledPatterns = (gsl_vector**) malloc(numThreads * sizeof(gsl_vector*));
-    g_sa_globalInverses = (gsl_matrix**) malloc(numThreads * sizeof(gsl_matrix*));
-    g_sa_LUDecompositionsH = (gsl_matrix**) malloc(numThreads * sizeof(gsl_matrix*));
-    g_sa_permutations = (gsl_permutation**) malloc(numThreads * sizeof(gsl_permutation*));
     g_sa_globalScalingFactors = (double*) malloc(numThreads * sizeof(double));
-    for(int i = 0; i < numThreads; i++){
-        g_sa_scaledPatterns[i] = gsl_vector_alloc(dimension);
-        g_sa_globalInverses[i] = gsl_matrix_alloc(dimension, dimension);
-        g_sa_LUDecompositionsH[i] = gsl_matrix_alloc(dimension, dimension);
-        g_sa_permutations[i] = gsl_permutation_alloc(dimension);
-    }    
+
+    g_sa_scaledPatterns = gsl_vectors_alloc(dimension, g_numThreads);
+    g_sa_globalInverses = gsl_matrices_alloc(dimension, dimension, g_numThreads);
+    g_sa_LUDecompositionsH = gsl_matrices_alloc(dimension, dimension, g_numThreads);
+    g_sa_permutations = gsl_permutations_alloc(dimension, g_numThreads);
 }
 
 void sa_computeConstants(gsl_matrix *globalBandwidthMatrix, int pid){
@@ -158,17 +147,12 @@ void sa_computeDimensionDependentConstants(size_t dimension){
 }
 
 void sa_free(){
-    for(int i = 0; i < g_numThreads; i++){
-        gsl_vector_free(g_sa_scaledPatterns[i]);
-        gsl_matrix_free(g_sa_globalInverses[i]);
-        gsl_matrix_free(g_sa_LUDecompositionsH[i]);
-        gsl_permutation_free(g_sa_permutations[i]);
-    }
-    free(g_sa_scaledPatterns);
-    free(g_sa_globalInverses);
-    free(g_sa_LUDecompositionsH);
-    free(g_sa_permutations);
     free(g_sa_globalScalingFactors);
+
+    gsl_vectors_free(g_sa_scaledPatterns, g_numThreads);
+    gsl_matrices_free(g_sa_globalInverses, g_numThreads);
+    gsl_matrices_free(g_sa_LUDecompositionsH, g_numThreads);
+    gsl_permutations_free(g_sa_permutations, g_numThreads);
 
     g_sa_epanechnikovConstant = 0.0;
 }
