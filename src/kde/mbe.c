@@ -7,7 +7,9 @@ static gsl_matrix* g_xis;
 static double g_globalBandwidth;
 static gsl_vector* g_localBandwidths;
 
-static gsl_vector* g_scaledPattern;
+static gsl_vector** g_scaledPatterns;
+
+static int g_numThreads;
 
 void mbe(gsl_matrix *xs, gsl_matrix *xis,
          double globalBandwidth, gsl_vector *localBandwidths,
@@ -15,13 +17,19 @@ void mbe(gsl_matrix *xs, gsl_matrix *xis,
 
     prepareGlobals(xis, globalBandwidth, localBandwidths, kernelType);
 
-    double density;
-
-    for(size_t j = 0; j < xs->size1; j++)
+    #pragma omp parallel shared(xs, densities)
     {
-        gsl_vector_view x = gsl_matrix_row(xs, j);
-        density = estimateSinglePattern(&x.vector);
-        gsl_vector_set(densities, j, density);
+        double density;
+        int pid = omp_get_thread_num();
+        gsl_vector_view x;
+
+        #pragma omp for
+        for(size_t j = 0; j < xs->size1; j++)
+        {
+            x = gsl_matrix_row(xs, j);
+            density = estimateSinglePattern(&x.vector, pid);
+            gsl_vector_set(densities, j, density);
+        }
     }
 
     freeGlobals();
@@ -29,8 +37,14 @@ void mbe(gsl_matrix *xs, gsl_matrix *xis,
 
 void prepareGlobals(gsl_matrix *xis, double globalBandwidth, gsl_vector *localBandwidths, KernelType kernelType) {
 
+    g_numThreads = 1;
+    #pragma omp parallel 
+    {
+        g_numThreads = omp_get_num_threads();
+    }
+
     g_kernel = selectSymmetricKernel(kernelType);
-    g_kernel.prepare(xis->size2, 1);
+    g_kernel.prepare(xis->size2, g_numThreads);
 
     g_xis = xis;
 
@@ -41,14 +55,19 @@ void prepareGlobals(gsl_matrix *xis, double globalBandwidth, gsl_vector *localBa
 }
 
 void allocateGlobals(size_t dataDimension){
-    g_scaledPattern = gsl_vector_alloc(dataDimension);
+    g_scaledPatterns = (gsl_vector**) malloc(g_numThreads * sizeof(gsl_vector*));
+    for(int i = 0; i < g_numThreads; i++){
+        g_scaledPatterns[i] = gsl_vector_alloc(dataDimension);
+    }
 }
 
-double estimateSinglePattern(gsl_vector *x) {
+double estimateSinglePattern(gsl_vector *x, int pid) {
     gsl_vector_view xi;
 
     double density = 0;
     double factor, bandwidth;
+
+    gsl_vector* scaledPattern = g_scaledPatterns[pid];
 
     for(size_t i = 0; i < g_xis->size1; ++i){
         xi = gsl_matrix_row(g_xis, i);
@@ -56,9 +75,9 @@ double estimateSinglePattern(gsl_vector *x) {
         bandwidth = computeBandwidth(gsl_vector_get(g_localBandwidths, i));
         factor = computeFactor(bandwidth, g_xis->size2);
 
-        scale(x, &xi.vector, g_scaledPattern, bandwidth);
+        scale(x, &xi.vector, scaledPattern, bandwidth);
 
-        density += (factor * g_kernel.density(g_scaledPattern, 0));
+        density += (factor * g_kernel.density(scaledPattern, pid));
     }
     density /= (double) g_xis->size1;
 
@@ -86,5 +105,7 @@ void freeGlobals(){
     g_globalBandwidth = 0.0;
     g_localBandwidths = NULL;
 
-    gsl_vector_free(g_scaledPattern);
+    for(int i = 0; i < g_numThreads; i++){
+        gsl_vector_free(g_scaledPatterns[i]);
+    }
 }

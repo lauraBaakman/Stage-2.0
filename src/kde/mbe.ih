@@ -3,6 +3,7 @@
 
 #include "mbe.h"
 #include <math.h>
+#include <omp.h>
 
 static double computeBandwidth(double localBandwidth);
 
@@ -10,7 +11,7 @@ static double computeFactor(double bandwidth, size_t dimension);
 
 static void scale(gsl_vector* x, gsl_vector* xi, gsl_vector* result, double bandwidth);
 
-static double estimateSinglePattern(gsl_vector *x);
+static double estimateSinglePattern(gsl_vector *x, int pid);
 
 static void prepareGlobals(gsl_matrix* xis, double globalBandwidth, gsl_vector* localBandwidths, KernelType kernelType);
 static void allocateGlobals(size_t dataDimension);

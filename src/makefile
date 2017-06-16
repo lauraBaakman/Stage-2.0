@@ -61,31 +61,24 @@ DEPS=./kde/sambe.h ./kde/sambe.ih \
     ./kde/utils/gsl_utils.h \
     ./lib/kdtree/kdtree.h
 
-# Working command OS X
-# gcc test_main.c -I/usr/local/include/ -L/usr/local/lib/ -lgsl -lgslcblas
-
-# Working command Linux
-# gcc -Wall -I/usr/local/include -c temp.c
-# gcc temp.o -lgsl -lgslcblas -lm
-
 .PHONY: clean
 .PHONY: run_tests
 .PHONY: modules
 
 # http://www.cs.colby.edu/maxwell/courses/tutorials/maketutor/
 %.o: %.c $(DEPS) $(TEST_DEPS)
-	$(CC) $(IDIRS) -c -o $@ $< $(CFLAGS)
+	@$(CC) $(IDIRS) -c -o $@ $< $(CFLAGS)
 default: clean run_tests
 test_main: test_main.o	
-	$(CC) $(IDIRS) -c -o $@ $< $(CFLAGS)
+	@$(CC) $(IDIRS) -c -o $@ $< $(CFLAGS)
 tests: $(OBJECTS) $(TEST_OBJECTS) test_main.o
-	$(CC) $(CFLAGS) $(LDFLAGS) -o tests.out $(OBJECTS) $(TEST_OBJECTS) test_main.o $(LDLIBS) $(LDDIRS) $(IDIRS)	
+	@$(CC) $(CFLAGS) $(LDFLAGS) -o tests.out $(OBJECTS) $(TEST_OBJECTS) test_main.o $(LDLIBS) $(LDDIRS) $(IDIRS)	
 benchmark_main: benchmark_main.o	
-	$(CC) $(IDIRS) -c -o $@ $< $(CFLAGS)
+	@$(CC) $(IDIRS) -c -o $@ $< $(CFLAGS)
 benchmark: $(OBJECTS) benchmark_main.o
-	$(CC) $(CFLAGS) $(LDFLAGS) -o benchmark.out $(OBJECTS) benchmark_main.o $(LDLIBS) $(LDDIRS) $(IDIRS)	
+	@$(CC) $(CFLAGS) $(LDFLAGS) -o benchmark.out $(OBJECTS) benchmark_main.o $(LDLIBS) $(LDDIRS) $(IDIRS)	
 _kde: $(OBJECTS)
-	$(PYTHON) kde/setup.py $(PYBUILDFLAGS)
+	@$(PYTHON) kde/setup.py $(PYBUILDFLAGS)
 	@cp _kde.so ./kde/_kde.so
 _kernels: $(OBJECTS)
 	$(PYTHON) kde/kernels/setup.py $(PYBUILDFLAGS)	
@@ -104,6 +97,11 @@ run_kernel_tests: _kernels _utils tests
 	@$(PYRUNFLAGS) $(PYTHON) -m unittest discover -s ./kde/kernels -t .
 	@echo -e "\n\033[0;31m C Tests \033[0m"
 	@./tests.out		
+run_kde_tests: _kernels _utils _kde tests
+	@echo -e "\n\033[0;31m Python Tests \033[0m\n"
+	@$(PYRUNFLAGS) $(PYTHON) -m unittest discover -s ./kde/ -t .
+	@echo -e "\n\033[0;31m C Tests \033[0m"
+	@./tests.out			
 clean:
 	@find . -name "*.o" -delete
 	@find . -name "*.out" -delete
