@@ -24,7 +24,9 @@ void sambe(gsl_matrix *xs,
 
     prepareGlobals(xs, localBandwidths, globalBandwidth, kernel, k);
 
-    kernel.allocate(xs->size2);
+    int numThreads = 1;
+
+    kernel.allocate(xs->size2, numThreads);
 
     double density;
     gsl_vector_view x;
@@ -47,8 +49,10 @@ double singlePattern(gsl_vector *x) {
     gsl_vector_view xi;
     gsl_vector* movedPattern;
     determineGlobalKernelShape(x);
-    g_kernel.computeConstants(g_globalBandwidthMatrix);
 
+    int pid = 0;
+    g_kernel.computeConstants(g_globalBandwidthMatrix, pid);
+    
     for(size_t i = 0; i < g_numXs; i++){
         xi = gsl_matrix_row(g_xs, i);
 
@@ -56,7 +60,7 @@ double singlePattern(gsl_vector *x) {
         movedPattern = gsl_subtract(x, &xi.vector, g_movedPattern);
         localBandwidth = gsl_vector_get(g_localBandwidths, i);
 
-        density += g_kernel.density(movedPattern, localBandwidth);
+        density += g_kernel.density(movedPattern, localBandwidth, pid);
     }
 
     density /= g_numXs;

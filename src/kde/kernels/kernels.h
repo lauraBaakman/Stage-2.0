@@ -9,9 +9,9 @@ typedef void (*KernelFreeFunction)(void);
 typedef void (*SymmetricKernelPrepareFunction)(size_t dimensionality, int numThreads);
 typedef double (*SymmetricKernelDensityFunction)(gsl_vector* pattern, int pid);
 
-typedef void (*ShapeAdaptiveKernelAllocFunction)(size_t dimensionality);
-typedef void (*ShapeAdaptiveKernelConstantsFunction)(gsl_matrix* globalBandwidthMatrix);
-typedef double (*ShapeAdaptiveKernelDensityFunction)(gsl_vector* pattern, double localBandwidth);
+typedef void (*ShapeAdaptiveKernelAllocFunction)(size_t dimensionality, int numThreads);
+typedef void (*ShapeAdaptiveKernelConstantsFunction)(gsl_matrix* globalBandwidthMatrix, int pid);
+typedef double (*ShapeAdaptiveKernelDensityFunction)(gsl_vector* pattern, double localBandwidth, int pid);
 
 typedef struct SymmetricKernel {
     SymmetricKernelDensityFunction density;

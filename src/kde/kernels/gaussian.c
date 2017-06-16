@@ -50,7 +50,7 @@ void normal_free() {
 
 /* Shape Adaptive Kernel */
 
-double sa_pdf(gsl_vector *pattern, double localBandwidth){
+double sa_pdf(gsl_vector *pattern, double localBandwidth, int pid){
 
     size_t dimension = pattern->size;
 
@@ -72,7 +72,7 @@ double sa_pdf(gsl_vector *pattern, double localBandwidth){
     return density;
 }
 
-void sa_allocate(size_t dimension) {
+void sa_allocate(size_t dimension, int numThreads) {
     g_sa_globalInverse = gsl_matrix_alloc(dimension, dimension);
     g_sa_LUDecompositionH = gsl_matrix_alloc(dimension, dimension);
     g_sa_scaledPattern = gsl_vector_alloc(dimension);
@@ -87,7 +87,7 @@ void sa_computeDimensionDependentConstants(size_t dimension) {
     g_standardGaussianConstant = computeStandardGaussianConstant(dimension);
 }
 
-void sa_computeConstants(gsl_matrix *globalBandwidthMatrix) {
+void sa_computeConstants(gsl_matrix *globalBandwidthMatrix, int pid) {
     //Copy the global bandwidth matrix so that we can change it
     gsl_matrix_memcpy(g_sa_LUDecompositionH, globalBandwidthMatrix);
 

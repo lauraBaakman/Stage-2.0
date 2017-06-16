@@ -30,7 +30,7 @@ PyObject *multi_pattern_symmetric(PyObject *args, KernelType kernelType) {
         double density;
         int pid = omp_get_thread_num();
         
-        #pragma omp parallel for
+        #pragma omp for
         for(size_t j = 0; j < patterns.matrix.size1; j++) {
             current_pattern = gsl_matrix_row(&patterns.matrix, j);
             density = kernel.density(&current_pattern.vector, pid);
@@ -81,10 +81,13 @@ PyObject *single_pattern_shape_adaptive(PyObject *args, KernelType kernelType){
 
     ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(kernelType);
 
-    kernel.allocate(pattern.vector.size);
-    kernel.computeConstants(&globalBandwidthMatrix.matrix);
+    int numThreads = 1;
+    int pid = 0;
 
-    double density = kernel.density(&pattern.vector, localBandwidth);
+    kernel.allocate(pattern.vector.size, numThreads);
+    kernel.computeConstants(&globalBandwidthMatrix.matrix, pid);
+
+    double density = kernel.density(&pattern.vector, localBandwidth, pid);
 
     /* Free memory */
     kernel.free();
@@ -118,13 +121,16 @@ PyObject *multiple_patterns_shape_adaptive(PyObject *args, KernelType kernelType
 
     gsl_vector_view pattern;
 
-    kernel.allocate(patterns.matrix.size2);
-    kernel.computeConstants(globalBandwidthMatrix);
+    int numThreads = 1;
+    int pid = 0;
+
+    kernel.allocate(patterns.matrix.size2, numThreads);
+    kernel.computeConstants(globalBandwidthMatrix, pid);
 
     for(size_t j = 0; j < patterns.matrix.size1; j++) {
         pattern = gsl_matrix_row(&patterns.matrix, j);
         localBandwidth = gsl_vector_get(&localBandwidths.vector, j);
-        density = kernel.density(&pattern.vector, localBandwidth);
+        density = kernel.density(&pattern.vector, localBandwidth, pid);
         gsl_vector_set(&densities.vector, j, density);
     }
 
