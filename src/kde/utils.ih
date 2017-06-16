@@ -7,6 +7,10 @@
 
 #include "utils.h"
 
+#include <gsl/gsl_vector_double.h>
+#include <gsl/gsl_matrix.h>
+#include "utils/gsl_utils.h"
+
 int determine_dimensionality(PyArrayObject* arrayObject);
 
 void arrayPrintElement(double *element, int dimension);

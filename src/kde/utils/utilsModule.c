@@ -1,6 +1,4 @@
 #include "utilsModule.h"
-#include <gsl/gsl_matrix.h>
-#include <gsl/gsl_vector_double.h>
 
 static char utils_covarianceMatrix_docstring[] = "Compute the covariance matrix of the data.";
 static PyObject * covariance_matrix(PyObject *self, PyObject *args){

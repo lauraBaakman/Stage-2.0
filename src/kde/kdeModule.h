@@ -5,10 +5,10 @@
 #ifndef KDE_MODULE_H
 #define KDE_MODULE_H
 
-#include <math.h>
 #include <Python.h>
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include <numpy/arrayobject.h>
+#include <math.h>
 
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_vector_double.h>

@@ -6,9 +6,15 @@
 #include <numpy/arrayobject.h>
 #include <gsl/gsl_matrix.h>
 
+#include <omp.h>
+
 #include "kernels.h"
 #include "../utils.h"
 #include "../utils/gsl_utils.h"
+
+#include <gsl/gsl_matrix.h>
+#include <gsl/gsl_vector_double.h>
+
 
 Array pyObjectToArray(PyObject *pythonObject, int requirements);
 gsl_matrix_view pyObjectToGSLMatrixView(PyObject *pythonObject, int requirements);

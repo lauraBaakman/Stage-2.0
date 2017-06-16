@@ -1,10 +1,5 @@
-//
-// Created by Laura Baakman on 20/01/2017.
-//
-#include <gsl/gsl_vector_double.h>
-#include <gsl/gsl_matrix.h>
 #include "utils.ih"
-#include "utils/gsl_utils.h"
+
 
 Array arrayBuildFromPyArray(PyArrayObject *arrayObject){
 
