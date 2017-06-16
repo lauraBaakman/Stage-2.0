@@ -138,5 +138,8 @@ static PyMethodDef method_table[] = {
 PyMODINIT_FUNC init_kde(void) {
     (void)Py_InitModule("_kde", method_table);
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
     import_array();
+#pragma GCC diagnostic pop   
 }

@@ -14,18 +14,30 @@ PyObject *multi_pattern_symmetric(PyObject *args, KernelType kernelType) {
     gsl_matrix_view patterns = pyObjectToGSLMatrixView(inPatterns, NPY_ARRAY_IN_ARRAY);
     gsl_vector_view densities = pyObjectToGSLVectorView(outDensities, NPY_ARRAY_OUT_ARRAY);
 
+    int numThreads = 1;
+    #pragma omp parallel
+    {
+        numThreads = omp_get_num_threads();
+    }
+
     /* Do computations */
     SymmetricKernel kernel = selectSymmetricKernel(kernelType);
+    kernel.prepare(patterns.matrix.size2, numThreads);
 
-    gsl_vector_view current_pattern;
-    double density;
-    kernel.prepare(patterns.matrix.size2);
-
-    for( size_t j = 0; j < patterns.matrix.size1; j++) {
-        current_pattern = gsl_matrix_row(&patterns.matrix, j);
-        density = kernel.density(&current_pattern.vector);
-        gsl_vector_set(&densities.vector, j, density);
+    #pragma omp parallel shared(patterns, densities)
+    {
+        gsl_vector_view current_pattern;
+        double density;
+        int pid = omp_get_thread_num();
+        
+        #pragma omp parallel for
+        for(size_t j = 0; j < patterns.matrix.size1; j++) {
+            current_pattern = gsl_matrix_row(&patterns.matrix, j);
+            density = kernel.density(&current_pattern.vector, pid);
+            gsl_vector_set(&densities.vector, j, density);
+        }
     }
+
     kernel.free();
 
     /* Create return object */
@@ -46,8 +58,8 @@ PyObject *single_pattern_symmetric(PyObject *args, KernelType kernelType) {
 
     SymmetricKernel kernel = selectSymmetricKernel(kernelType);
 
-    kernel.prepare(pattern.vector.size);
-    density = kernel.density(&pattern.vector);
+    kernel.prepare(pattern.vector.size, 1);
+    density = kernel.density(&pattern.vector, 0);
     kernel.free();
 
     /* Create return object */
@@ -262,5 +274,8 @@ static PyMethodDef method_table[] = {
 PyMODINIT_FUNC init_kernels(void) {
     (void)Py_InitModule("_kernels", method_table);
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
     import_array();
+#pragma GCC diagnostic pop   
 }

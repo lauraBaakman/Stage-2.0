@@ -124,5 +124,8 @@ static PyMethodDef method_table[] = {
 
 PyMODINIT_FUNC init_utils(void) {
     (void)Py_InitModule("_utils", method_table);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
     import_array();
+#pragma GCC diagnostic pop   
 }

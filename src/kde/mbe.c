@@ -30,7 +30,7 @@ void mbe(gsl_matrix *xs, gsl_matrix *xis,
 void prepareGlobals(gsl_matrix *xis, double globalBandwidth, gsl_vector *localBandwidths, KernelType kernelType) {
 
     g_kernel = selectSymmetricKernel(kernelType);
-    g_kernel.prepare(xis->size2);
+    g_kernel.prepare(xis->size2, 1);
 
     g_xis = xis;
 
@@ -58,7 +58,7 @@ double estimateSinglePattern(gsl_vector *x) {
 
         scale(x, &xi.vector, g_scaledPattern, bandwidth);
 
-        density += (factor * g_kernel.density(g_scaledPattern));
+        density += (factor * g_kernel.density(g_scaledPattern, 0));
     }
     density /= (double) g_xis->size1;
 

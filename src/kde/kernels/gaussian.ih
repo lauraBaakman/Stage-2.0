@@ -16,8 +16,8 @@
 double computeStandardGaussianConstant(size_t dimension);
 
 /* Symmetric */
-static double normal_pdf(gsl_vector* pattern);
-static void normal_prepare(size_t dimension);
+static double normal_pdf(gsl_vector* pattern, int pid);
+static void normal_prepare(size_t dimension, int numThreads);
 static void normal_free();
 
 /* Shape Adaptive */

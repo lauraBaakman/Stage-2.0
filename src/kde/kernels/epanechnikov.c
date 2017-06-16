@@ -18,11 +18,14 @@ Kernel shapeAdaptiveEpanechnikovKernel = {
 
 static double squareRootOfTheVariance = 0.8728715609439694;
 
-static gsl_vector* g_scaledPattern;
+static int g_numThreads;
+
+static gsl_vector** g_scaledPattern;
 
 static double g_normal_constant;
 static double g_normal_one_over_unit_variance_constant;
 
+static gsl_vector* g_sa_scaledPattern;
 static gsl_matrix* g_sa_globalInverse;
 static gsl_matrix* g_sa_LUDecompositionH;
 static gsl_permutation* g_sa_permutation;
@@ -51,22 +54,33 @@ double epanechnikov_kernel(gsl_vector *pattern, double constant) {
 
 /* Normal Kernel */
 
-void normal_prepare(size_t dimension) {
+void normal_prepare(size_t dimension, int numThreads) {
     g_normal_constant = epanechnikov_constant(dimension) * normal_unitVarianceConstant(dimension);
     g_normal_one_over_unit_variance_constant = 1.0 / squareRootOfTheVariance;
-    g_scaledPattern = gsl_vector_alloc(dimension);
+
+    g_numThreads = numThreads;
+
+    g_scaledPattern = (gsl_vector**) malloc(numThreads * sizeof(gsl_vector*));
+    for(int i = 0; i < numThreads; i++){
+        g_scaledPattern[i] = gsl_vector_alloc(dimension);
+    }
 }
 
 void normal_free() {
     g_normal_constant = 0.0;
     g_normal_one_over_unit_variance_constant = 0.0;
-    gsl_vector_free(g_scaledPattern);
+
+    for(int i = 0; i < g_numThreads; i++){
+        gsl_vector_free(g_scaledPattern[i]);
+    }
+    free(g_scaledPattern);
 }
 
-double normal_pdf(gsl_vector *pattern) {
-    gsl_vector_memcpy(g_scaledPattern, pattern);
-    gsl_vector_scale(g_scaledPattern, g_normal_one_over_unit_variance_constant);
-    return epanechnikov_kernel(g_scaledPattern, g_normal_constant);
+double normal_pdf(gsl_vector *pattern, int pid) {
+    gsl_vector* scaled_pattern = g_scaledPattern[pid];
+    gsl_vector_memcpy(scaled_pattern, pattern);
+    gsl_vector_scale(scaled_pattern, g_normal_one_over_unit_variance_constant);
+    return epanechnikov_kernel(scaled_pattern, g_normal_constant);
 }
 
 double normal_unitVarianceConstant(size_t dimension) {
@@ -78,20 +92,20 @@ double normal_unitVarianceConstant(size_t dimension) {
 double sa_pdf(gsl_vector* pattern, double localBandwidth){
     size_t dimension = pattern->size;
 
-    gsl_vector_set_zero(g_scaledPattern);
+    gsl_vector_set_zero(g_sa_scaledPattern);
 
     // Multiply the transpose of the global inverse with the pattern
     // Since the bandwidth matrix is always symmetric we don't need to compute the transpose.
-    gsl_blas_dsymv(CblasLower, 1.0, g_sa_globalInverse, pattern, 1.0, g_scaledPattern);
+    gsl_blas_dsymv(CblasLower, 1.0, g_sa_globalInverse, pattern, 1.0, g_sa_scaledPattern);
 
     //Apply the local inverse
-    gsl_vector_scale(g_scaledPattern, 1.0 / localBandwidth);
+    gsl_vector_scale(g_sa_scaledPattern, 1.0 / localBandwidth);
 
     // Compute local scaling factor
     double localScalingFactor = computeLocalScalingFactor(g_sa_globalScalingFactor, localBandwidth, dimension);
 
     //Determine the result of the kernel
-    return localScalingFactor * epanechnikov_kernel(g_scaledPattern, g_sa_epanechnikovConstant);
+    return localScalingFactor * epanechnikov_kernel(g_sa_scaledPattern, g_sa_epanechnikovConstant);
 }
 
 void sa_allocate(size_t dimension){
@@ -99,7 +113,7 @@ void sa_allocate(size_t dimension){
     g_sa_LUDecompositionH = gsl_matrix_alloc(dimension, dimension);
     g_sa_permutation = gsl_permutation_alloc(dimension);
 
-    g_scaledPattern = gsl_vector_alloc(dimension);
+    g_sa_scaledPattern = gsl_vector_alloc(dimension);
 
     sa_computeDimensionDependentConstants(dimension);
 }
@@ -132,7 +146,7 @@ void sa_free(){
     gsl_matrix_free(g_sa_LUDecompositionH);
     gsl_permutation_free(g_sa_permutation);
 
-    gsl_vector_free(g_scaledPattern);
+    gsl_vector_free(g_sa_scaledPattern);
 
     g_sa_globalScalingFactor = 0.0;
     g_sa_epanechnikovConstant = 0.0;

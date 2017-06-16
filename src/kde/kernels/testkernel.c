@@ -10,7 +10,7 @@ Kernel testKernel = {
 
 static double g_normal_constant;
 
-static double normal_pdf(gsl_vector* pattern){
+static double normal_pdf(gsl_vector* pattern, int pid){
     double density = 0;
     for ( size_t i = 0; i < pattern->size; i++ ) {
         density += pattern->data[i];
@@ -20,7 +20,7 @@ static double normal_pdf(gsl_vector* pattern){
     return density;
 }
 
-static void normal_prepare(size_t dimension){
+static void normal_prepare(size_t dimension, int numThreads){
     g_normal_constant = testKernelConstant((int)dimension);
 }
 

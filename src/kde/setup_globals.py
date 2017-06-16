@@ -37,5 +37,6 @@ extra_link_args = [
 extra_compile_args = [
     "-fopenmp",
     '-fpic',
-    '-O3'
+    '-O3',
+    '-Wno-strict-prototypes'
 ]

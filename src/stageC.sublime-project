@@ -1,13 +1,4 @@
 {
-	"build_systems":
-	[
-		{
-			"file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
-			"name": "Anaconda Python Builder",
-			"selector": "source.python",
-			"shell_cmd": "\"python\" -u \"$file\""
-		}
-	],
 	"folders":
 	[
 		{
@@ -18,7 +9,8 @@
 				"*.py",
 				"requirements.txt",
 				"*CMakeLists.txt",
-				"stagePython.sublime-project"
+				"stagePython.sublime-project",
+				"._.DS_Store"
 			],
 			"folder_exclude_patterns":
 			[
@@ -46,7 +38,8 @@
             		"${project_folder}/kde/utils/tests",
                 	"${project_folder}/lib",
                 	"${project_folder}/lib/kdtree",
-                	"/usr/local/include"
+                	"/usr/local/include",
+                	"${project_folder}/include"
             	]
             }
         }

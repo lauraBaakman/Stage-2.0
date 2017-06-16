@@ -19,8 +19,8 @@ double normal_unitVarianceConstant(size_t dimension);
 double epanechnikov_kernel(gsl_vector *pattern, double constant);
 
 /* Symmetric */
-static double normal_pdf(gsl_vector* pattern);
-static void normal_prepare(size_t dimension);
+static double normal_pdf(gsl_vector* pattern, int pid);
+static void normal_prepare(size_t dimension, int numThreads);
 static void normal_free();
 
 /* Shape Adaptive */

@@ -6,8 +6,8 @@
 
 typedef void (*KernelFreeFunction)(void);
 
-typedef void (*SymmetricKernelPrepareFunction)(size_t dimensionality);
-typedef double (*SymmetricKernelDensityFunction)(gsl_vector* pattern);
+typedef void (*SymmetricKernelPrepareFunction)(size_t dimensionality, int numThreads);
+typedef double (*SymmetricKernelDensityFunction)(gsl_vector* pattern, int pid);
 
 typedef void (*ShapeAdaptiveKernelAllocFunction)(size_t dimensionality);
 typedef void (*ShapeAdaptiveKernelConstantsFunction)(gsl_matrix* globalBandwidthMatrix);

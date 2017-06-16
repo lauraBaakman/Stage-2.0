@@ -1,8 +1,12 @@
 # C Stuff
 CC=gcc
-CFLAGS=-std=c99
-LDLIBS=-lgsl -lgslcblas -lm
+
+CFLAGS=-std=c99 -fopenmp
+
+LDLIBS=-lgsl -lgslcblas -lm -lpthread
 LDDIRS=-L/usr/local/lib/
+LDFLAGS=-fopenmp
+
 IDIRS=-I/usr/local/include/
 
 OS := $(shell uname)
@@ -23,7 +27,8 @@ TEST_SOURCES=./lib/CuTest.c ./lib/CuTestUtils.c \
 	./kde/tests/test_mbe.c \
 	./kde/utils/tests/test_utils.c \
 	./kde/utils/tests/test_knn.c \
-	./kde/kernels/tests/test_kernels.c 
+	./kde/kernels/tests/test_kernels.c \
+	./kde/kernels/tests/test_epanechnikov.c 
 TEST_OBJECTS=$(TEST_SOURCES:.c=.o)
 TEST_DEPS=./test_constants.h ./lib/CuTest.h ./lib/CuTestUtils.h\
 	./kde/tests/test_kde.h \
@@ -32,8 +37,8 @@ TEST_DEPS=./test_constants.h ./lib/CuTest.h ./lib/CuTestUtils.h\
 	./kde/tests/test_mbe.h \
 	./kde/utils/tests/test_utils.h \
 	./kde/utils/tests/test_knn.h \
-	./kde/kernels/tests/test_kernels.h	
-
+	./kde/kernels/tests/test_kernels.h \
+	./kde/kernels/tests/test_epanechnikov.h 
 SOURCES=./kde/sambe.c ./kde/parzen.c ./kde/mbe.c \
     ./kde/kernels/kernels.c \
     ./kde/kernels/gaussian.c ./kde/kernels/epanechnikov.c ./kde/kernels/testkernel.c \
@@ -74,11 +79,11 @@ default: clean run_tests
 test_main: test_main.o	
 	$(CC) $(IDIRS) -c -o $@ $< $(CFLAGS)
 tests: $(OBJECTS) $(TEST_OBJECTS) test_main.o
-	$(CC) $(CFLAGS) -o tests.out $(OBJECTS) $(TEST_OBJECTS) test_main.o $(LDLIBS) $(LDDIRS) $(IDIRS)	
+	$(CC) $(CFLAGS) $(LDFLAGS) -o tests.out $(OBJECTS) $(TEST_OBJECTS) test_main.o $(LDLIBS) $(LDDIRS) $(IDIRS)	
 benchmark_main: benchmark_main.o	
 	$(CC) $(IDIRS) -c -o $@ $< $(CFLAGS)
 benchmark: $(OBJECTS) benchmark_main.o
-	$(CC) $(CFLAGS) -o benchmark.out $(OBJECTS) benchmark_main.o $(LDLIBS) $(LDDIRS) $(IDIRS)	
+	$(CC) $(CFLAGS) $(LDFLAGS) -o benchmark.out $(OBJECTS) benchmark_main.o $(LDLIBS) $(LDDIRS) $(IDIRS)	
 _kde: $(OBJECTS)
 	$(PYTHON) kde/setup.py $(PYBUILDFLAGS)
 	@cp _kde.so ./kde/_kde.so
@@ -88,23 +93,18 @@ _kernels: $(OBJECTS)
 _utils: $(OBJECTS)
 	$(PYTHON) kde/utils/setup.py $(PYBUILDFLAGS)		
 	@cp _utils.so ./kde/utils/_utils.so
-modules: kde_module kernels_module utils_module
-run_tests: _kde _utils _kernels tests
-	@echo -e "\n\033[0;31m Python Tests \033[0m\n"
-	@$(PYRUNFLAGS) $(PYTHON) -m unittest discover -s . -t .
-	@echo -e "\n\033[0;31m C Tests \033[0m"
-	@./tests.out
-run_tests: _kde _utils _kernels tests
+modules: _kde _kernels _utils
+run_tests: modules tests
 	@echo -e "\n\033[0;31m Python Tests \033[0m\n"
 	@$(PYRUNFLAGS) $(PYTHON) -m unittest discover -s . -t .
 	@echo -e "\n\033[0;31m C Tests \033[0m"
 	@./tests.out	
-run_kernel_tests: _kernels tests
+run_kernel_tests: _kernels _utils tests
 	@echo -e "\n\033[0;31m Python Tests \033[0m\n"
 	@$(PYRUNFLAGS) $(PYTHON) -m unittest discover -s ./kde/kernels -t .
 	@echo -e "\n\033[0;31m C Tests \033[0m"
 	@./tests.out		
 clean:
-	find . -name "*.o" -delete
-	find . -name "*.out" -delete
-	find . -name "*.so" -delete
+	@find . -name "*.o" -delete
+	@find . -name "*.out" -delete
+	@find . -name "*.so" -delete

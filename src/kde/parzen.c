@@ -38,7 +38,7 @@ double singlePattern(gsl_vector *x){
         gsl_subtract(x, &xi.vector, g_scaledPattern);
         gsl_vector_scale(g_scaledPattern, g_globalBandwidthFactor);
 
-        density += g_kernel.density(g_scaledPattern);
+        density += g_kernel.density(g_scaledPattern, 0);
     }
     density *= g_parzenFactor;
 
@@ -54,7 +54,7 @@ void prepareGlobals(gsl_matrix *xis, double globalBandwidth, SymmetricKernel ker
     g_parzenFactor = computeParzenFactor(globalBandwidth, xis);
 
     g_kernel = kernel;
-    g_kernel.prepare(dimension);
+    g_kernel.prepare(dimension, 1);
 
     allocateGlobals(dimension);
 }

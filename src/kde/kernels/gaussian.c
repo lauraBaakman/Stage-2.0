@@ -31,11 +31,11 @@ double computeStandardGaussianConstant(size_t dimension){
     return pow(2 * M_PI, -1 * (double) dimension * 0.5);
 }
 
-void normal_prepare(size_t dimension) {
+void normal_prepare(size_t dimension, int numThreads) {
     g_standardGaussianConstant = computeStandardGaussianConstant(dimension);
 }
 
-double normal_pdf(gsl_vector *pattern) {
+double normal_pdf(gsl_vector *pattern, int pid) {
     double dotProduct = 0.0;
     gsl_blas_ddot(pattern,  pattern, &dotProduct);
 
@@ -67,7 +67,7 @@ double sa_pdf(gsl_vector *pattern, double localBandwidth){
     double localScalingFactor = computeLocalScalingFactor(g_sa_globalScalingFactor, localBandwidth, dimension);
 
     //Determine the result of the kernel
-    double density = localScalingFactor * normal_pdf(g_sa_scaledPattern);
+    double density = localScalingFactor * normal_pdf(g_sa_scaledPattern, 0);
 
     return density;
 }
