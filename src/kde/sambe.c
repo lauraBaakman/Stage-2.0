@@ -21,9 +21,8 @@ void sambe(gsl_matrix *xs,
            KernelType kernelType, int k,
            gsl_vector *outDensities){
 
-    ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(kernelType);
-    prepareGlobals(xs, localBandwidths, globalBandwidth, kernel, k);
-    kernel.allocate(xs->size2, g_numThreads);
+    prepareGlobals(xs, localBandwidths, globalBandwidth, kernelType, k);
+    g_kernel.allocate(xs->size2, g_numThreads);
 
     double density;
     gsl_vector_view x;
@@ -37,7 +36,7 @@ void sambe(gsl_matrix *xs,
         gsl_vector_set(outDensities, i, density);
     }
 
-    kernel.free();
+    g_kernel.free();
     freeGlobals();
 }
 
@@ -95,7 +94,7 @@ void freeGlobals() {
 
 void prepareGlobals(gsl_matrix *xs,
                     gsl_vector *localBandwidths, double globalBandwidth,
-                    ShapeAdaptiveKernel kernel, int k) {
+                    KernelType kernelType, int k) {
     g_numThreads = 1;
     #pragma omp parallel 
     {
@@ -103,11 +102,12 @@ void prepareGlobals(gsl_matrix *xs,
     }
     printf("Num Threads: %d\n", g_numThreads);    
 
+    g_kernel = selectShapeAdaptiveKernel(kernelType);
+
     g_xs = xs;
 
     g_localBandwidths = localBandwidths;
     g_globalBandwidthFactor = globalBandwidth;
-    g_kernel = kernel;
     g_k = (size_t) k;
 
     g_numXs = xs->size1;
