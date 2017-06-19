@@ -15,7 +15,7 @@ void testSambe(CuTest* tc){
 
     double globalBandwidth = 0.721347520444482;
 
-    ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(SHAPE_ADAPTIVE_EPANECHNIKOV);
+    KernelType kernel = SHAPE_ADAPTIVE_EPANECHNIKOV;
 
     gsl_vector* actual = gsl_vector_alloc(xs->size1);
 

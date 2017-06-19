@@ -18,12 +18,11 @@ int g_numThreads;
 
 void sambe(gsl_matrix *xs,
            gsl_vector *localBandwidths, double globalBandwidth,
-           ShapeAdaptiveKernel kernel, int k,
+           KernelType kernelType, int k,
            gsl_vector *outDensities){
 
+    ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(kernelType);
     prepareGlobals(xs, localBandwidths, globalBandwidth, kernel, k);
-
-
     kernel.allocate(xs->size2, g_numThreads);
 
     double density;

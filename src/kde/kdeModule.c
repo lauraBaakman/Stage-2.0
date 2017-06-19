@@ -88,9 +88,8 @@ static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
     gsl_vector_view densities = pyObjectToGSLVectorView(outDensities, NPY_ARRAY_OUT_ARRAY);
 
     /* Do computations */
-    ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(kernelType);
     sambe(&xs.matrix, &localBandwidths.vector, globalBandwidth,
-          kernel, k,
+          kernelType, k,
           &densities.vector);
 
     /* Create return object */
