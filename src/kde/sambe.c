@@ -22,7 +22,6 @@ void sambe(gsl_matrix *xs,
            gsl_vector *outDensities){
 
     prepareGlobals(xs, localBandwidths, globalBandwidth, kernelType, k);
-    g_kernel.allocate(xs->size2, g_numThreads);
 
     double density;
     gsl_vector_view x;
@@ -35,8 +34,6 @@ void sambe(gsl_matrix *xs,
 
         gsl_vector_set(outDensities, i, density);
     }
-
-    g_kernel.free();
     freeGlobals();
 }
 
@@ -82,13 +79,16 @@ void allocateGlobals(size_t dataDimension, size_t num_xi_s, size_t k) {
     g_globalBandwidthMatrix = gsl_matrix_alloc(dataDimension, dataDimension);
     g_nearestNeighbours = gsl_matrix_alloc(k, dataDimension);
     g_movedPattern = gsl_vector_alloc(dataDimension);
+
+    g_kernel.allocate(dataDimension, g_numThreads);
 }
 
 void freeGlobals() {
     gsl_matrix_free(g_globalBandwidthMatrix);
     gsl_matrix_free(g_nearestNeighbours);
     gsl_vector_free(g_movedPattern);
-
+    
+    g_kernel.free();
     nn_free();
 }
 
