@@ -1,7 +1,11 @@
 #ifndef SAMBE_IH
 #define SAMBE_IH
 
+#include "sambe.h"
+
 #include <printf.h>
+
+#include <omp.h>
 
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_matrix.h>
@@ -9,8 +13,9 @@
 
 #include "utils/knn.h"
 #include "utils/covariancematrix.h"
+#include "utils/gsl_utils.h"
 
-#include "sambe.h"
+
 
 extern gsl_matrix* g_globalBandwidthMatrix;
 
