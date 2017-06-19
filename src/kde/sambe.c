@@ -1,17 +1,13 @@
 #include "sambe.ih"
 
-
-
 gsl_matrix* g_xs;
+size_t g_numXs;
 
 gsl_vector* g_localBandwidths;
-
 double g_globalBandwidthFactor;
 gsl_matrix* g_globalBandwidthMatrix;
 
 ShapeAdaptiveKernel g_kernel;
-
-size_t g_numXs;
 
 gsl_vector* g_movedPattern;
 
