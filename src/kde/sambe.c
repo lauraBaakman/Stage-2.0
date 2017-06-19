@@ -62,17 +62,20 @@ double singlePattern(gsl_vector *x, int pid) {
 }
 
 void determineGlobalKernelShape(gsl_vector* x, int pid) {
+    gsl_matrix* nearestNeighbours = g_nearestNeighbours;
+    gsl_matrix* globalBandwidthMatrix = g_globalBandwidthMatrix;
+
     /* Compute K nearest neighbours */
-    computeKNearestNeighbours(x, g_k, g_nearestNeighbours);
+    computeKNearestNeighbours(x, g_k, nearestNeighbours);
 
     /* Compute the covariance matrix of the neighbours */
-    computeCovarianceMatrix(g_nearestNeighbours, g_globalBandwidthMatrix);
+    computeCovarianceMatrix(nearestNeighbours, globalBandwidthMatrix);
 
     /* Compute the scaling factor */
-    double scalingFactor = computeScalingFactor(g_globalBandwidthFactor, g_globalBandwidthMatrix);
+    double scalingFactor = computeScalingFactor(g_globalBandwidthFactor, globalBandwidthMatrix);
 
     /* Scale the shape matrix */
-    gsl_matrix_scale(g_globalBandwidthMatrix, scalingFactor);
+    gsl_matrix_scale(globalBandwidthMatrix, scalingFactor);
 }
 
 void allocateGlobals(size_t dataDimension, size_t num_xi_s, size_t k) {
@@ -100,7 +103,6 @@ void prepareGlobals(gsl_matrix *xs,
     {
         g_numThreads = omp_get_num_threads();
     }
-    printf("Num Threads: %d\n", g_numThreads);    
 
     g_kernel = selectShapeAdaptiveKernel(kernelType);
 
