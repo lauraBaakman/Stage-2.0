@@ -1,5 +1,6 @@
 #include "sambe.ih"
-#include "utils/gsl_utils.h"
+
+
 
 gsl_matrix* g_xs;
 
@@ -17,6 +18,8 @@ gsl_vector* g_movedPattern;
 size_t g_k;
 gsl_matrix* g_nearestNeighbours;
 
+int g_numThreads;
+
 void sambe(gsl_matrix *xs,
            gsl_vector *localBandwidths, double globalBandwidth,
            ShapeAdaptiveKernel kernel, int k,
@@ -24,9 +27,8 @@ void sambe(gsl_matrix *xs,
 
     prepareGlobals(xs, localBandwidths, globalBandwidth, kernel, k);
 
-    int numThreads = 1;
 
-    kernel.allocate(xs->size2, numThreads);
+    kernel.allocate(xs->size2, g_numThreads);
 
     double density;
     gsl_vector_view x;
@@ -99,6 +101,13 @@ void freeGlobals() {
 void prepareGlobals(gsl_matrix *xs,
                     gsl_vector *localBandwidths, double globalBandwidth,
                     ShapeAdaptiveKernel kernel, int k) {
+    g_numThreads = 1;
+    #pragma omp parallel 
+    {
+        g_numThreads = omp_get_num_threads();
+    }
+    printf("Num Threads: %d\n", g_numThreads);    
+
     g_xs = xs;
 
     g_localBandwidths = localBandwidths;
