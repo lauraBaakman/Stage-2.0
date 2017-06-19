@@ -91,17 +91,17 @@ _utils: $(OBJECTS)
 modules: _kde _kernels _utils
 run_tests: modules tests
 	@echo -e "\n\033[0;31m Python Tests \033[0m\n"
-	@$(PYRUNFLAGS) $(PYTHON) -m unittest discover -s . -t .
+	@export PYTHONWARNINGS="ignore"; $(PYRUNFLAGS) $(PYTHON) -m unittest discover -s . -t .
 	@echo -e "\n\033[0;31m C Tests \033[0m"
 	@./tests.out	
 run_kernel_tests: _kernels _utils tests
 	@echo -e "\n\033[0;31m Python Tests \033[0m\n"
-	@$(PYRUNFLAGS) $(PYTHON) -m unittest discover -s ./kde/kernels -t .
+	@export PYTHONWARNINGS="ignore"; $(PYRUNFLAGS) $(PYTHON) -m unittest discover -s ./kde/kernels -t .
 	@echo -e "\n\033[0;31m C Tests \033[0m"
 	@./tests.out		
 run_kde_tests: _kernels _utils _kde tests
 	@echo -e "\n\033[0;31m Python Tests \033[0m\n"
-	@$(PYRUNFLAGS) $(PYTHON) -m unittest discover -s ./kde/ -t .
+	@export PYTHONWARNINGS="ignore"; $(PYRUNFLAGS) $(PYTHON) -m unittest discover -s ./kde/ -t .
 	@echo -e "\n\033[0;31m C Tests \033[0m"
 	@./tests.out			
 clean:
