@@ -23,8 +23,7 @@ void sambe(gsl_matrix *xs,
 
     prepareGlobals(xs, localBandwidths, globalBandwidth, kernelType, k);    
 
-
-    #pragma omp parallel
+    #pragma omp parallel shared(g_numXs, xs, densities)
     {
         int pid = omp_get_thread_num();
         double density;
@@ -53,7 +52,7 @@ double singlePattern(gsl_vector *x, int pid) {
     determineGlobalKernelShape(x, pid);
 
     g_kernel.computeConstants(globalBandwidthMatrix, pid);
-    
+
     for(size_t i = 0; i < g_numXs; i++){
         xi = gsl_matrix_row(g_xs, i);
 
@@ -61,7 +60,9 @@ double singlePattern(gsl_vector *x, int pid) {
         movedPattern = gsl_subtract(x, &xi.vector, movedPattern);
         localBandwidth = gsl_vector_get(g_localBandwidths, i);
 
-        density += g_kernel.density(movedPattern, localBandwidth, pid);
+        double kernelResult = g_kernel.density(movedPattern, localBandwidth, pid);
+
+        density += kernelResult;
     }
 
     density /= g_numXs;

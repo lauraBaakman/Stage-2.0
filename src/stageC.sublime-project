@@ -1,4 +1,36 @@
 {
+	"SublimeLinter":
+	{
+		"linters":
+		{
+			"clang":
+			{
+				"extra_flags": "-Wall -I/usr/local/include/ -std=c99",
+				"include_dirs":
+				[
+					"${project_folder}/kde",
+					"${project_folder}/kde/kernels",
+					"${project_folder}/kde/kernels/tests",
+					"${project_folder}/kde/tests",
+					"${project_folder}/kde/utils",
+					"${project_folder}/kde/utils/tests",
+					"${project_folder}/lib",
+					"${project_folder}/lib/kdtree",
+					"/usr/local/include",
+					"${project_folder}/include"
+				]
+			}
+		}
+	},
+	"build_systems":
+	[
+		{
+			"file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
+			"name": "Anaconda Python Builder",
+			"selector": "source.python",
+			"shell_cmd": "\"python\" -u \"$file\""
+		}
+	],
 	"folders":
 	[
 		{
@@ -22,26 +54,5 @@
 			],
 			"path": "."
 		}
-	],
-    "SublimeLinter":
-    {
-        "linters":
-        {
-            "clang": {
-            	"extra_flags": "-Wall -I/usr/local/include/ -std=c99",
-            	"include_dirs": [
-            		"${project_folder}/kde",
-            		"${project_folder}/kde/kernels",
-            		"${project_folder}/kde/kernels/tests",
-            		"${project_folder}/kde/tests",            		
-            		"${project_folder}/kde/utils",
-            		"${project_folder}/kde/utils/tests",
-                	"${project_folder}/lib",
-                	"${project_folder}/lib/kdtree",
-                	"/usr/local/include",
-                	"${project_folder}/include"
-            	]
-            }
-        }
-    }	
+	]
 }
