@@ -115,21 +115,30 @@ PyObject *multiple_patterns_shape_adaptive(PyObject *args, KernelType kernelType
 
     ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(kernelType);
 
-    double localBandwidth, density;
-
-    gsl_vector_view pattern;
-
     int numThreads = 1;
-    int pid = 0;
+    #pragma omp parallel
+    {
+        numThreads = omp_get_num_threads();
+    }
 
     kernel.allocate(patterns.matrix.size2, numThreads);
-    kernel.computeConstants(globalBandwidthMatrix, pid);
 
-    for(size_t j = 0; j < patterns.matrix.size1; j++) {
-        pattern = gsl_matrix_row(&patterns.matrix, j);
-        localBandwidth = gsl_vector_get(&localBandwidths.vector, j);
-        density = kernel.density(&pattern.vector, localBandwidth, pid);
-        gsl_vector_set(&densities.vector, j, density);
+    #pragma omp parallel
+    {
+        int pid = omp_get_thread_num();
+
+        double localBandwidth, density;
+        gsl_vector_view pattern;
+
+        kernel.computeConstants(globalBandwidthMatrix, pid);
+
+        #pragma omp for
+        for(size_t j = 0; j < patterns.matrix.size1; j++) {
+            pattern = gsl_matrix_row(&patterns.matrix, j);
+            localBandwidth = gsl_vector_get(&localBandwidths.vector, j);
+            density = kernel.density(&pattern.vector, localBandwidth, pid);
+            gsl_vector_set(&densities.vector, j, density);
+        }        
     }
 
     kernel.free();
