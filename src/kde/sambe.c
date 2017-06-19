@@ -38,19 +38,21 @@ void sambe(gsl_matrix *xs,
 }
 
 double singlePattern(gsl_vector *x, int pid) {
+    gsl_matrix* globalBandwidthMatrix = g_globalBandwidthMatrix;
+    gsl_vector* movedPattern = g_movedPattern;
+
     double localBandwidth, density = 0.0;
 
     gsl_vector_view xi;
-    gsl_vector* movedPattern;
     determineGlobalKernelShape(x, pid);
 
-    g_kernel.computeConstants(g_globalBandwidthMatrix, pid);
+    g_kernel.computeConstants(globalBandwidthMatrix, pid);
     
     for(size_t i = 0; i < g_numXs; i++){
         xi = gsl_matrix_row(g_xs, i);
 
         //x - xi
-        movedPattern = gsl_subtract(x, &xi.vector, g_movedPattern);
+        movedPattern = gsl_subtract(x, &xi.vector, movedPattern);
         localBandwidth = gsl_vector_get(g_localBandwidths, i);
 
         density += g_kernel.density(movedPattern, localBandwidth, pid);
