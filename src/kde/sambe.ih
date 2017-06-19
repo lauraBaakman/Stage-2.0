@@ -15,9 +15,9 @@
 extern gsl_matrix* g_globalBandwidthMatrix;
 
 
-static double singlePattern(gsl_vector *x);
+static double singlePattern(gsl_vector *x, int pid);
 
-static void determineGlobalKernelShape(gsl_vector* x);
+static void determineGlobalKernelShape(gsl_vector* x, int pid);
 
 static void prepareGlobals(gsl_matrix *xs,
                     gsl_vector *localBandwidths, double globalBandwidth,

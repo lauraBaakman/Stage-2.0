@@ -31,10 +31,11 @@ void sambe(gsl_matrix *xs,
     double density;
     gsl_vector_view x;
 
+    int pid = 0;
     for(size_t i = 0; i < g_numXs; i++){
         x = gsl_matrix_row(xs, i);
 
-        density = singlePattern(&x.vector);
+        density = singlePattern(&x.vector, pid);
 
         gsl_vector_set(outDensities, i, density);
     }
@@ -43,14 +44,13 @@ void sambe(gsl_matrix *xs,
     freeGlobals();
 }
 
-double singlePattern(gsl_vector *x) {
+double singlePattern(gsl_vector *x, int pid) {
     double localBandwidth, density = 0.0;
 
     gsl_vector_view xi;
     gsl_vector* movedPattern;
-    determineGlobalKernelShape(x);
+    determineGlobalKernelShape(x, pid);
 
-    int pid = 0;
     g_kernel.computeConstants(g_globalBandwidthMatrix, pid);
     
     for(size_t i = 0; i < g_numXs; i++){
@@ -68,7 +68,7 @@ double singlePattern(gsl_vector *x) {
     return density;
 }
 
-void determineGlobalKernelShape(gsl_vector* x) {
+void determineGlobalKernelShape(gsl_vector* x, int pid) {
     /* Compute K nearest neighbours */
     computeKNearestNeighbours(x, g_k, g_nearestNeighbours);
 
