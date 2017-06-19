@@ -5,14 +5,14 @@ size_t g_numXs;
 
 gsl_vector* g_localBandwidths;
 double g_globalBandwidthFactor;
-gsl_matrix* g_globalBandwidthMatrix;
+gsl_matrix** g_globalBandwidthMatrices;
 
 ShapeAdaptiveKernel g_kernel;
 
-gsl_vector* g_movedPattern;
+gsl_vector** g_movedPatterns;
 
 size_t g_k;
-gsl_matrix* g_nearestNeighbours;
+gsl_matrix** g_nearestNeighbourMatrices;
 
 int g_numThreads;
 
@@ -30,6 +30,8 @@ void sambe(gsl_matrix *xs,
     for(size_t i = 0; i < g_numXs; i++){
         x = gsl_matrix_row(xs, i);
 
+        pid = (int) i;
+
         density = singlePattern(&x.vector, pid);
 
         gsl_vector_set(outDensities, i, density);
@@ -38,8 +40,8 @@ void sambe(gsl_matrix *xs,
 }
 
 double singlePattern(gsl_vector *x, int pid) {
-    gsl_matrix* globalBandwidthMatrix = g_globalBandwidthMatrix;
-    gsl_vector* movedPattern = g_movedPattern;
+    gsl_matrix* globalBandwidthMatrix = g_globalBandwidthMatrices[pid];
+    gsl_vector* movedPattern = g_movedPatterns[pid];
 
     double localBandwidth, density = 0.0;
 
@@ -64,8 +66,8 @@ double singlePattern(gsl_vector *x, int pid) {
 }
 
 void determineGlobalKernelShape(gsl_vector* x, int pid) {
-    gsl_matrix* nearestNeighbours = g_nearestNeighbours;
-    gsl_matrix* globalBandwidthMatrix = g_globalBandwidthMatrix;
+    gsl_matrix* nearestNeighbours = g_nearestNeighbourMatrices[pid];
+    gsl_matrix* globalBandwidthMatrix = g_globalBandwidthMatrices[pid];
 
     /* Compute K nearest neighbours */
     computeKNearestNeighbours(x, g_k, nearestNeighbours);
@@ -81,17 +83,17 @@ void determineGlobalKernelShape(gsl_vector* x, int pid) {
 }
 
 void allocateGlobals(size_t dataDimension, size_t num_xi_s, size_t k) {
-    g_globalBandwidthMatrix = gsl_matrix_alloc(dataDimension, dataDimension);
-    g_nearestNeighbours = gsl_matrix_alloc(k, dataDimension);
-    g_movedPattern = gsl_vector_alloc(dataDimension);
+    g_globalBandwidthMatrices = gsl_matrices_alloc(dataDimension, dataDimension, g_numThreads);
+    g_nearestNeighbourMatrices = gsl_matrices_alloc(k, dataDimension, g_numThreads);
+    g_movedPatterns = gsl_vectors_alloc(dataDimension, g_numThreads);
 
     g_kernel.allocate(dataDimension, g_numThreads);
 }
 
 void freeGlobals() {
-    gsl_matrix_free(g_globalBandwidthMatrix);
-    gsl_matrix_free(g_nearestNeighbours);
-    gsl_vector_free(g_movedPattern);
+    gsl_matrices_free(g_globalBandwidthMatrices, g_numThreads);
+    gsl_matrices_free(g_nearestNeighbourMatrices, g_numThreads);
+    gsl_vectors_free(g_movedPatterns, g_numThreads);
     
     g_kernel.free();
     nn_free();
