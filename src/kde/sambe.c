@@ -19,23 +19,26 @@ int g_numThreads;
 void sambe(gsl_matrix *xs,
            gsl_vector *localBandwidths, double globalBandwidth,
            KernelType kernelType, int k,
-           gsl_vector *outDensities){
+           gsl_vector *densities){
 
-    prepareGlobals(xs, localBandwidths, globalBandwidth, kernelType, k);
+    prepareGlobals(xs, localBandwidths, globalBandwidth, kernelType, k);    
 
-    double density;
-    gsl_vector_view x;
+    // #pragma omp parallel shared(xs, densities)
+    // {
 
-    int pid = 0;
-    for(size_t i = 0; i < g_numXs; i++){
-        x = gsl_matrix_row(xs, i);
+        int pid = omp_get_thread_num();
+        double density;
+        gsl_vector_view x;
 
-        pid = (int) i;
+        // #pragma omp for
+        for(size_t i = 0; i < g_numXs; i++){
+            x = gsl_matrix_row(xs, i);
 
-        density = singlePattern(&x.vector, pid);
+            density = singlePattern(&x.vector, pid);
 
-        gsl_vector_set(outDensities, i, density);
-    }
+            gsl_vector_set(densities, i, density);
+        }
+    // }
     freeGlobals();
 }
 
