@@ -6,4 +6,4 @@
 
 CuSuite *EpanechnikovGetSuite();
 
-#endif //TEST_PARZEN_H
+#endif

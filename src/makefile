@@ -28,7 +28,8 @@ TEST_SOURCES=./lib/CuTest.c ./lib/CuTestUtils.c \
 	./kde/utils/tests/test_utils.c \
 	./kde/utils/tests/test_knn.c \
 	./kde/kernels/tests/test_kernels.c \
-	./kde/kernels/tests/test_epanechnikov.c 
+	./kde/kernels/tests/test_epanechnikov.c \
+	./kde/kernels/tests/test_gaussian.c 
 TEST_OBJECTS=$(TEST_SOURCES:.c=.o)
 TEST_DEPS=./test_constants.h ./lib/CuTest.h ./lib/CuTestUtils.h\
 	./kde/tests/test_kde.h \
@@ -38,7 +39,8 @@ TEST_DEPS=./test_constants.h ./lib/CuTest.h ./lib/CuTestUtils.h\
 	./kde/utils/tests/test_utils.h \
 	./kde/utils/tests/test_knn.h \
 	./kde/kernels/tests/test_kernels.h \
-	./kde/kernels/tests/test_epanechnikov.h 
+	./kde/kernels/tests/test_epanechnikov.h \
+	./kde/kernels/tests/test_gaussian.h 
 SOURCES=./kde/sambe.c ./kde/parzen.c ./kde/mbe.c \
     ./kde/kernels/kernels.c \
     ./kde/kernels/gaussian.c ./kde/kernels/epanechnikov.c ./kde/kernels/testkernel.c \

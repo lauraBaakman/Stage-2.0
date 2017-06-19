@@ -19,11 +19,13 @@ Kernel shapeAdaptiveGaussianKernel = {
 
 static double g_standardGaussianConstant;
 
-static gsl_matrix* g_sa_globalInverse;
-static double g_sa_globalScalingFactor;
-static gsl_matrix* g_sa_LUDecompositionH;
-static gsl_vector* g_sa_scaledPattern;
-static gsl_permutation* g_sa_permutation;
+static gsl_matrix** g_sa_globalInverses;
+static double* g_sa_globalScalingFactors;
+static gsl_matrix** g_sa_LUDecompositionsH;
+static gsl_vector** g_sa_scaledPatterns;
+static gsl_permutation** g_sa_permutations;
+
+int g_numThreads;
 
 /* Normal Kernel */
 
@@ -51,32 +53,40 @@ void normal_free() {
 /* Shape Adaptive Kernel */
 
 double sa_pdf(gsl_vector *pattern, double localBandwidth, int pid){
+    gsl_vector* scaledPattern = g_sa_scaledPatterns[pid];
+    gsl_matrix* globalInverse = g_sa_globalInverses[pid];
+    double globalScalingFactor = g_sa_globalScalingFactors[pid];
+
 
     size_t dimension = pattern->size;
 
-    gsl_vector_set_zero(g_sa_scaledPattern);
+    gsl_vector_set_zero(scaledPattern);
 
     // Multiply the transpose of the global inverse with the pattern
     // Since the bandwidth matrix is always symmetric we don't need to compute the transpose.
-    gsl_blas_dsymv(CblasLower, 1.0, g_sa_globalInverse, pattern, 1.0, g_sa_scaledPattern);
+    gsl_blas_dsymv(CblasLower, 1.0, globalInverse, pattern, 1.0, scaledPattern);
 
     //Apply the local inverse
-    gsl_vector_scale(g_sa_scaledPattern, 1.0 / localBandwidth);
+    gsl_vector_scale(scaledPattern, 1.0 / localBandwidth);
 
     // Compute local scaling factor
-    double localScalingFactor = computeLocalScalingFactor(g_sa_globalScalingFactor, localBandwidth, dimension);
+    double localScalingFactor = computeLocalScalingFactor(globalScalingFactor, localBandwidth, dimension);
 
     //Determine the result of the kernel
-    double density = localScalingFactor * normal_pdf(g_sa_scaledPattern, 0);
+    double density = localScalingFactor * normal_pdf(scaledPattern, 0);
 
     return density;
 }
 
 void sa_allocate(size_t dimension, int numThreads) {
-    g_sa_globalInverse = gsl_matrix_alloc(dimension, dimension);
-    g_sa_LUDecompositionH = gsl_matrix_alloc(dimension, dimension);
-    g_sa_scaledPattern = gsl_vector_alloc(dimension);
-    g_sa_permutation = gsl_permutation_alloc(dimension);
+    g_numThreads = numThreads;
+
+    g_sa_globalInverses = gsl_matrices_alloc(dimension, dimension, numThreads);
+    g_sa_LUDecompositionsH = gsl_matrices_alloc(dimension, dimension, numThreads);
+    g_sa_scaledPatterns = gsl_vectors_alloc(dimension, numThreads);
+    g_sa_permutations = gsl_permutations_alloc(dimension, numThreads);
+
+    g_sa_globalScalingFactors = (double*) malloc(numThreads * sizeof(double));
 
     //Compute the Standard Gaussian Constant
     sa_computeDimensionDependentConstants(dimension);
@@ -88,27 +98,31 @@ void sa_computeDimensionDependentConstants(size_t dimension) {
 }
 
 void sa_computeConstants(gsl_matrix *globalBandwidthMatrix, int pid) {
+    gsl_matrix* LUDecompositionH = g_sa_LUDecompositionsH[pid];
+    gsl_permutation* permutation = g_sa_permutations[pid];
+    gsl_matrix* globalInverse = g_sa_globalInverses[pid];    
+
     //Copy the global bandwidth matrix so that we can change it
-    gsl_matrix_memcpy(g_sa_LUDecompositionH, globalBandwidthMatrix);
+    gsl_matrix_memcpy(LUDecompositionH, globalBandwidthMatrix);
 
     //Compute LU decompostion
     int signum = 0;
-    gsl_linalg_LU_decomp(g_sa_LUDecompositionH, g_sa_permutation, &signum);
+    gsl_linalg_LU_decomp(LUDecompositionH, permutation, &signum);
 
     //Compute global inverse
-    gsl_linalg_LU_invert(g_sa_LUDecompositionH, g_sa_permutation, g_sa_globalInverse);
+    gsl_linalg_LU_invert(LUDecompositionH, permutation, globalInverse);
 
     //Compute global scaling factor
-    double determinant = gsl_linalg_LU_det(g_sa_LUDecompositionH, signum);
-    g_sa_globalScalingFactor = 1.0 / determinant;
+    double determinant = gsl_linalg_LU_det(LUDecompositionH, signum);
+    g_sa_globalScalingFactors[pid] = 1.0 / determinant;
 
 }
 
 void sa_free() {
     g_standardGaussianConstant = 0.0;
-    g_sa_globalScalingFactor = 0.0;
-    gsl_matrix_free(g_sa_globalInverse);
-    gsl_matrix_free(g_sa_LUDecompositionH);
-    gsl_vector_free(g_sa_scaledPattern);
-    gsl_permutation_free(g_sa_permutation);
+    gsl_matrices_free(g_sa_globalInverses, g_numThreads);
+    gsl_matrices_free(g_sa_LUDecompositionsH, g_numThreads);
+    gsl_vectors_free(g_sa_scaledPatterns, g_numThreads);
+    gsl_permutations_free(g_sa_permutations, g_numThreads);
+    free(g_sa_globalScalingFactors);
 }
