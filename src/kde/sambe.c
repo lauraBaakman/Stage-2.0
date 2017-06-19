@@ -23,17 +23,23 @@ void sambe(gsl_matrix *xs,
 
     prepareGlobals(xs, localBandwidths, globalBandwidth, kernelType, k);    
 
-    int pid = omp_get_thread_num();
-    double density;
-    gsl_vector_view x;
 
-    for(size_t i = 0; i < g_numXs; i++){
-        x = gsl_matrix_row(xs, i);
+    #pragma omp parallel
+    {
+        int pid = omp_get_thread_num();
+        double density;
+        gsl_vector_view x;
 
-        density = singlePattern(&x.vector, pid);
+        #pragma omp for
+        for(size_t i = 0; i < g_numXs; i++){
+            x = gsl_matrix_row(xs, i);
 
-        gsl_vector_set(densities, i, density);
+            density = singlePattern(&x.vector, pid);
+
+            gsl_vector_set(densities, i, density);
+        }        
     }
+
     freeGlobals();
 }
 
