@@ -1,10 +1,10 @@
 close all; clear variables; clc;
 
-kernel_variance = 16/ 21;
+kernel_variance_factor = 1 / sqrt(1 / 5);
 
 unitSphereVolume = @(d) (2 /d) * (pi^(d / 2) / gamma(d / 2));
 epanechnikov = @(x) ((length(x) + 2) / (2 * unitSphereVolume(length(x)))) * (1 - dot(x, x)) * (dot(x,x) < 1);
-unitVarianceEpanechnikov = @(x) (1 / sqrt(kernel_variance))^length(x) * epanechnikov((1 / sqrt(kernel_variance) * x));
+unitVarianceEpanechnikov = @(x) sqrt(5)^(-length(x)) * ((length(x) + 2) / (2 * unitSphereVolume(length(x)))) * (1 - 1/5 * dot(x, x)) * (dot(x,x) < sqrt(5));
 
 %% 1D
 sprintf('1D\n')

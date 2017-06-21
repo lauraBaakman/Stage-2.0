@@ -1,12 +1,9 @@
-import math
-
 import numpy as np
-from numpy import linalg as LA
-import scipy.special
 
 
 import kde.kernels._kernels as _kernels
 from kde.kernels.kernel import ShapeAdaptiveKernel_C, ShapeAdaptiveKernel_Python, ShapeAdaptive
+from kde.kernels.epanechnikov import _Epanechnikov_Python
 
 _as_c_enum = 3
 
@@ -43,12 +40,9 @@ class _ShapeAdaptiveEpanechnikov_C(ShapeAdaptiveKernel_C):
 
 
 class _ShapeAdaptiveEpanechnikov_Python(ShapeAdaptiveKernel_Python):
-    _kernel_variance = 16.0 / 21.0
-    _square_root_of_the_variance = np.sqrt(_kernel_variance)
 
     def __init__(self, bandwidth_matrix, *args, **kwargs):
-        super(_ShapeAdaptiveEpanechnikov_Python, self).__init__(self._square_root_of_the_variance * bandwidth_matrix, *args, **kwargs)
-        self._unit_sphere_volume = self._compute_unit_sphere_volume(self.dimension)
+        super(_ShapeAdaptiveEpanechnikov_Python, self).__init__(bandwidth_matrix, *args, **kwargs)
 
     def to_C_enum(self):
         return _as_c_enum
@@ -59,12 +53,4 @@ class _ShapeAdaptiveEpanechnikov_Python(ShapeAdaptiveKernel_Python):
         return local_scaling_factor * self._epanechnikov(np.matmul(pattern, local_inverse))
 
     def _epanechnikov(self, pattern):
-        dot_product = np.dot(pattern, pattern)
-        if dot_product < 1.0:
-            return (2 + self.dimension) / (2 * self._unit_sphere_volume) * (1 - dot_product)
-        return 0
-
-    def _compute_unit_sphere_volume(self, dimension):
-        numerator = math.pow(math.pi, dimension / 2.0)
-        denominator = scipy.special.gamma(dimension / 2.0 + 1)
-        return numerator / denominator
+        return _Epanechnikov_Python().evaluate(pattern)

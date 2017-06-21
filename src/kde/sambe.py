@@ -80,12 +80,11 @@ class _ShapeAdaptiveMBE_Python(_ShapeAdaptiveMBE):
         # Define the kernel
         kernel = self._kernel_class(kernel_shape)
 
-        #Density estimation
+        # Density estimation
         density = sum(map(kernel.evaluate, pattern - self._xi_s, self._local_bandwidths))
 
         density *= (1 / self.num_xi_s)
         return density
-
 
     def _determine_kernel_shape(self, pattern):
         # Find the K nearest neighbours

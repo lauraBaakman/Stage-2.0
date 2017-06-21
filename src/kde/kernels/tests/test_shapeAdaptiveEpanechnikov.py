@@ -17,7 +17,7 @@ class TestShapeAdaptiveEpanechnikov(TestCase):
                       [-1, 2, -1],
                       [0, -1, 2]])
         x = np.array([0.05, 0.05, 0.05])
-        expected = 0.218099920681630
+        expected = 0.013288829111394
         actual = ShapeAdaptiveEpanechnikov(H).evaluate(x)
         self.assertAlmostEqual(actual, expected)
 
@@ -26,9 +26,12 @@ class TestShapeAdaptiveEpanechnikov(TestCase):
                       [-1, 2, -1],
                       [0, -1, 2]])
         x = np.array([0.05, 0.05, 0.05])
-        expected = 0.218099920681630
+        expected = 0.013288829111394
         local_bandwidth = 1.0
-        actual = ShapeAdaptiveEpanechnikov(H, implementation=_ShapeAdaptiveEpanechnikov_Python).evaluate(x, local_bandwidth)
+        actual = ShapeAdaptiveEpanechnikov(
+            H,
+            implementation=_ShapeAdaptiveEpanechnikov_Python
+        ).evaluate(x, local_bandwidth)
         self.assertAlmostEqual(actual, expected)
 
     def test_default_implementation_single_pattern_l_neq_1(self):
@@ -37,7 +40,7 @@ class TestShapeAdaptiveEpanechnikov(TestCase):
                       [0, -1, 2]])
         x = np.array([0.05, 0.05, 0.05])
         local_bandwidth = 0.5
-        expected = 1.594620138546325
+        expected = 0.104949387026863
         actual = ShapeAdaptiveEpanechnikov(H).evaluate(x, local_bandwidth)
         self.assertAlmostEqual(actual, expected)
 
@@ -46,9 +49,12 @@ class TestShapeAdaptiveEpanechnikov(TestCase):
                       [-1, 2, -1],
                       [0, -1, 2]])
         x = np.array([0.05, 0.05, 0.05])
-        expected = 1.594620138546325
+        expected = 0.104949387026863
         local_bandwidth = 0.5
-        actual = ShapeAdaptiveEpanechnikov(H, implementation=_ShapeAdaptiveEpanechnikov_Python).evaluate(x, local_bandwidth)
+        actual = ShapeAdaptiveEpanechnikov(
+            H,
+            implementation=_ShapeAdaptiveEpanechnikov_Python
+        ).evaluate(x, local_bandwidth)
         self.assertAlmostEqual(actual, expected)
 
     def test_default_implementation_multiple_patterns_l_neq_1(self):
@@ -62,9 +68,9 @@ class TestShapeAdaptiveEpanechnikov(TestCase):
         ])
         local_bandwidths = np.array([0.5, 0.7, 0.2])
         expected = np.array([
-            1.594620138546325,
-            0.640612295429235,
-            14.759057207783757
+            0.104949387026863,
+            0.038786019064700,
+            1.547770745658397
         ])
         actual = ShapeAdaptiveEpanechnikov(H).evaluate(x, local_bandwidths)
         np.testing.assert_array_almost_equal(actual, expected)
@@ -80,11 +86,14 @@ class TestShapeAdaptiveEpanechnikov(TestCase):
         ])
         local_bandwidths = np.array([0.5, 0.7, 0.2])
         expected = np.array([
-            1.594620138546325,
-            0.640612295429235,
-            14.759057207783757
+            0.104949387026863,
+            0.038786019064700,
+            1.547770745658397
         ])
-        actual = ShapeAdaptiveEpanechnikov(H, implementation=_ShapeAdaptiveEpanechnikov_Python).evaluate(x, local_bandwidths)
+        actual = ShapeAdaptiveEpanechnikov(
+            H,
+            implementation=_ShapeAdaptiveEpanechnikov_Python
+        ).evaluate(x, local_bandwidths)
         np.testing.assert_array_almost_equal(actual, expected)
 
 
@@ -101,7 +110,7 @@ class ShapeAdaptiveGaussianImpAbstractTest(object):
                       [0, -1, 2]])
         x = np.array([0.05, 0.05, 0.05])
         actual = self._kernel_class(H).evaluate(x, 1.0)
-        expected = 0.218099920681630
+        expected = 0.013288829111394
         self.assertAlmostEqual(actual, expected)
 
     def test_evalute_single_pattern_l_neq_one(self):
@@ -111,7 +120,7 @@ class ShapeAdaptiveGaussianImpAbstractTest(object):
         x = np.array([0.05, 0.05, 0.05])
         local_bandwidth = 0.5
         actual = self._kernel_class(H).evaluate(x, local_bandwidth)
-        expected = 1.594620138546325
+        expected = 0.104949387026863
         self.assertAlmostEqual(actual, expected)
 
     def test_evalute_multiple_patterns_l_eq_one(self):
@@ -124,9 +133,9 @@ class ShapeAdaptiveGaussianImpAbstractTest(object):
             [0.04, 0.05, 0.03]
         ])
         expected = np.array([
-            0.218099920681630,
-            0.222089976612190,
-            0.220105991237124
+            0.013288829111394,
+            0.013324995545631,
+            0.013307012420120
         ])
         actual = self._kernel_class(H).evaluate(x)
         np.testing.assert_array_almost_equal(actual, expected)
@@ -142,9 +151,9 @@ class ShapeAdaptiveGaussianImpAbstractTest(object):
             [0.04, 0.05, 0.03]
         ])
         expected = np.array([
-            1.594620138546325,
-            0.640612295429235,
-            14.759057207783757
+            0.104949387026863,
+            0.038786019064700,
+            1.547770745658397
         ])
         actual = self._kernel_class(H).evaluate(x, local_bandwidths=local_bandwidths)
         np.testing.assert_array_almost_equal(actual, expected)

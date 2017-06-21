@@ -6,16 +6,15 @@
 #define M_PI           3.14159265358979323846
 #endif
 
-
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_vector_double.h>
 
 #include "epanechnikov.h"
 
-
+double computeEpanechnikovConstant(size_t dimension);
+double computeUnitVarianceConstant(size_t dimension);
+double computeUnitSphereConstant(size_t dimension);
 double unitSphereVolume(size_t dimension);
-double epanechnikov_constant(size_t dimension);
-double normal_unitVarianceConstant(size_t dimension);
 double epanechnikov_kernel(gsl_vector *pattern, double constant);
 
 /* Symmetric */

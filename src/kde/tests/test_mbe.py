@@ -1,9 +1,8 @@
-from unittest import TestCase, skip
+from unittest import TestCase
 
 import numpy as np
 
 import kde
-from kde.kernels.epanechnikov import Epanechnikov
 from kde.kernels.gaussian import Gaussian
 from kde.kernels.testKernel import TestKernel
 from kde.mbe import _MBEEstimator_Python, _MBEEstimator_C, MBEstimator
@@ -74,21 +73,6 @@ class ModifiedBreimanEstimatorImpAbstractTest(object):
         super(ModifiedBreimanEstimatorImpAbstractTest, self).setUp()
         self._estimator_class = None
 
-    def test_estimate_epanechnikov(self):
-        xi_s = np.array([[-1, -1], [1, 1], [0, 0]])
-        x_s = np.array([[0, 0], [1, 1], [0, 1]])
-        local_bandwidths = np.array([10.0, 20.0, 50.0])
-        general_bandwidth = 0.5
-        kernel = Epanechnikov()
-        estimator = self._estimator_class(
-            xi_s=xi_s, x_s=x_s, dimension=2,
-            kernel=kernel,
-            local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
-        )
-        actual = estimator.estimate()
-        expected = np.array([0.013128790727490, 0.009690664372166, 0.011409727549828])
-        np.testing.assert_array_almost_equal(actual, expected)
-
     def test_estimate_gaussian(self):
         xi_s = np.array([[-1, -1], [1, 1], [0, 0]])
         x_s = np.array([[0, 0], [1, 1], [0, 1]])
@@ -124,22 +108,6 @@ class Test_MBEEstimator_Python(ModifiedBreimanEstimatorImpAbstractTest, TestCase
         )
         actual = estimator._estimate_pattern(pattern)
         expected = 0.00264898 * 3
-        self.assertAlmostEqual(actual, expected)
-
-    def test_estimate_pattern_epanechnikov(self):
-        xi_s = np.array([[-1, -1], [1, 1], [0, 0]])
-        x_s = np.array([[0, 0], [1, 1]])
-        local_bandwidths = np.array([10, 20, 50])
-        general_bandwidth = 0.5
-        kernel = Epanechnikov()
-        pattern = x_s[0]
-        estimator = self._estimator_class(
-            xi_s=xi_s, x_s=x_s, dimension=2,
-            kernel=kernel,
-            local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
-        )
-        actual = estimator._estimate_pattern(pattern)
-        expected = 0.013128790727490 * 3
         self.assertAlmostEqual(actual, expected)
 
 

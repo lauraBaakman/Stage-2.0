@@ -1,6 +1,6 @@
 from __future__ import division
 
-from unittest import TestCase
+from unittest import TestCase, skip
 
 import numpy as np
 
@@ -8,6 +8,7 @@ from kde.kernels.epanechnikov import Epanechnikov
 from kde.kernels.gaussian import Gaussian
 from kde.kernels.testKernel import TestKernel
 from kde.parzen import _ParzenEstimator_C, _ParzenEstimator_Python, ParzenEstimator
+
 
 class TestParzenEstimator(TestCase):
     def test_estimate_python(self):
@@ -54,16 +55,6 @@ class ParzenEstimatorImpAbstractTest(object):
             kernel=TestKernel(), general_bandwidth=4)
         actual = estimator.estimate()
         expected = np.array([3 / 384.0, 15 / 1536.0])
-        np.testing.assert_array_almost_equal(actual, expected)
-
-    def test_estimate_epanechnikov(self):
-        xi_s = np.array([[-1, -1], [0, 0], [1 / 2.0, 1 / 2.0]])
-        x_s = np.array([[0, 0], [1 / 4.0, 1 / 2.0]])
-        estimator = self._estimator_class(
-            xi_s=xi_s, x_s=x_s, dimension=2,
-            kernel=Epanechnikov(), general_bandwidth=4)
-        actual = estimator.estimate()
-        expected = np.array([0.048652803495835, 0.046243112756654])
         np.testing.assert_array_almost_equal(actual, expected)
 
 

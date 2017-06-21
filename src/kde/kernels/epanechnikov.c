@@ -16,14 +16,11 @@ Kernel shapeAdaptiveEpanechnikovKernel = {
         .kernel.shapeAdaptiveKernel.computeConstants = sa_computeConstants,
 };
 
-static double squareRootOfTheVariance = 0.8728715609439694;
 
 static int g_numThreads;
 
-static gsl_vector** g_scaledPatterns;
-
+static double sqrtFive = 2.236067977499790; // 1 / sqrt(1 / 5) == sqrt(5)
 static double g_normal_constant;
-static double g_normal_one_over_unit_variance_constant;
 
 static gsl_vector** g_sa_scaledPatterns;
 static gsl_matrix** g_sa_globalInverses;
@@ -33,9 +30,18 @@ static double* g_sa_globalScalingFactors;
 
 static double g_sa_epanechnikovConstant;
 
+double computeEpanechnikovConstant(size_t dimension){
+    double unitVarianceConstant = computeUnitVarianceConstant(dimension);
+    double unitSphereConstant = computeUnitSphereConstant(dimension);
+    return unitVarianceConstant * unitSphereConstant;    
+}
 
-double epanechnikov_constant(size_t dimension){
-    return ((double) (dimension + 2)) / (2 * unitSphereVolume(dimension));
+double computeUnitVarianceConstant(size_t dimension){
+    return pow(sqrtFive, - (int) dimension);
+}
+
+double computeUnitSphereConstant(size_t dimension){
+    return (2.0 + dimension) / (2 * unitSphereVolume(dimension));
 }
 
 double unitSphereVolume(size_t dimension) {
@@ -48,38 +54,25 @@ double epanechnikov_kernel(gsl_vector *pattern, double constant) {
     double dotProduct = 0.0;
     gsl_blas_ddot(pattern,  pattern, &dotProduct);
 
-    if (dotProduct >= 1) return 0;
+    if (dotProduct >= sqrtFive) return 0;
 
-    return constant * (1 - dotProduct);
+    return constant * (1 - (1 / 5.0 * dotProduct));
 }
 
 /* Normal Kernel */
 
 void normal_prepare(size_t dimension, int numThreads) {
-    g_normal_constant = epanechnikov_constant(dimension) * normal_unitVarianceConstant(dimension);
-    g_normal_one_over_unit_variance_constant = 1.0 / squareRootOfTheVariance;
+    g_normal_constant = computeEpanechnikovConstant(dimension);
 
     g_numThreads = numThreads;
-
-    g_scaledPatterns = gsl_vectors_alloc(dimension, g_numThreads);
 }
 
 void normal_free() {
-    g_normal_constant = 0.0;
-    g_normal_one_over_unit_variance_constant = 0.0;
-
-    gsl_vectors_free(g_scaledPatterns, g_numThreads);
+    //nothing to free
 }
 
 double normal_pdf(gsl_vector *pattern, int pid) {
-    gsl_vector* scaled_pattern = g_scaledPatterns[pid];
-    gsl_vector_memcpy(scaled_pattern, pattern);
-    gsl_vector_scale(scaled_pattern, g_normal_one_over_unit_variance_constant);
-    return epanechnikov_kernel(scaled_pattern, g_normal_constant);
-}
-
-double normal_unitVarianceConstant(size_t dimension) {
-    return pow(1.0 / squareRootOfTheVariance, dimension);
+    return epanechnikov_kernel(pattern, g_normal_constant);
 }
 
 /* Shape Adaptive Kernel */
@@ -127,9 +120,6 @@ void sa_computeConstants(gsl_matrix *globalBandwidthMatrix, int pid){
     //Copy the global bandwidth matrix so that we can change it
     gsl_matrix_memcpy(LUDecompositionH, globalBandwidthMatrix);
 
-    //Scale the copy with sqrt(var(epanechnikov kernel)) to ensure unitvariance
-    gsl_matrix_scale(LUDecompositionH, squareRootOfTheVariance);
-
     //Compute LU decompostion
     int signum = 0;
     gsl_linalg_LU_decomp(LUDecompositionH, permutation, &signum);
@@ -143,7 +133,7 @@ void sa_computeConstants(gsl_matrix *globalBandwidthMatrix, int pid){
 }
 
 void sa_computeDimensionDependentConstants(size_t dimension){
-    g_sa_epanechnikovConstant = epanechnikov_constant(dimension);
+    g_sa_epanechnikovConstant = computeEpanechnikovConstant(dimension);
 }
 
 void sa_free(){

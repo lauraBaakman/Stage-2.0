@@ -1,14 +1,13 @@
 close all; clear variables; clc;
 
-kernel_variance = 16/ 21;
+kernel_variance_factor = 1 / sqrt(1/5);
 
 unitSphereVolume = @(d) (2 /d) * (pi^(d / 2) / gamma(d / 2));
 epanechnikov = @(x) ((length(x) + 2) / (2 * unitSphereVolume(length(x)))) * (1 - dot(x, x)) * (dot(x,x) < 1);
-expectedResult = @(pattern, H, localBandwidth) 1 / det(sqrt(kernel_variance) * localBandwidth * H) ...
-    * epanechnikov(inv(sqrt(kernel_variance) * localBandwidth * H) * pattern);
+expectedResult = @(pattern, H, localBandwidth) 1 / det(kernel_variance_factor * localBandwidth * H) ...
+    * epanechnikov(inv(kernel_variance_factor * localBandwidth * H) * pattern);
 
 %% 3D
-
 H = [2, -1, 0; -1, 2, -1; 0, -1, 2];
 
 x1 = [0.05; 0.05; 0.05];
