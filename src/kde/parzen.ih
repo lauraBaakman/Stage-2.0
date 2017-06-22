@@ -1,18 +1,20 @@
 #ifndef PARZEN_IH
 #define PARZEN_IH
 
-#include <printf.h>
-#include <math.h>
-#include "utils/gsl_utils.h"
-
 #include "parzen.h"
 
-double singlePattern(gsl_vector *x);
+#include <printf.h>
+#include <math.h>
+#include <omp.h>
+
+#include "utils/gsl_utils.h"
+
+double singlePattern(gsl_vector *x, int pid);
 
 double computeParzenFactor(double globalBandwidth, gsl_matrix* xs);
 double computeGlobalBandwidthFactor(double globalBandwidth);
 
-static void prepareGlobals(gsl_matrix* xis, double globalBandwidth, SymmetricKernel kernel);
+static void prepareGlobals(gsl_matrix* xis, double globalBandwidth, KernelType kernel);
 static void allocateGlobals(size_t dataDimension);
 static void freeGlobals();
 

@@ -20,9 +20,7 @@ static PyObject * kdeParzen(PyObject *self, PyObject *args){
     gsl_matrix_view xis = pyObjectToGSLMatrixView(inDataPoints, NPY_ARRAY_IN_ARRAY);
     gsl_vector_view densities = pyObjectToGSLVectorView(outDensities, NPY_ARRAY_OUT_ARRAY);
 
-    SymmetricKernel kernel = selectSymmetricKernel(kernelType);
-
-    parzen(&xs.matrix, &xis.matrix, inWindowWidth, kernel, &densities.vector);
+    parzen(&xs.matrix, &xis.matrix, inWindowWidth, kernelType, &densities.vector);
 
     /* Create return object */
     Py_INCREF(Py_None);

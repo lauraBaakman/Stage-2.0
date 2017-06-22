@@ -7,26 +7,36 @@ static double g_globalBandwidthFactor;
 
 static gsl_matrix* g_xis;
 
-static gsl_vector* g_scaledPattern;
+static int g_numThreads;
+
+static gsl_vector** g_scaledPatterns;
 
 void parzen(gsl_matrix *xs, gsl_matrix *xis,
-            double windowWidth, SymmetricKernel kernel,
-            gsl_vector* outDensities) {
+            double windowWidth, KernelType kernelType,
+            gsl_vector* densities) {
 
-    prepareGlobals(xis, windowWidth, kernel);
+    prepareGlobals(xis, windowWidth, kernelType);
 
-    gsl_vector_view x;
-
-    for(size_t j = 0; j < xs->size1; j++)
+    #pragma omp parallel shared(densities, xs)
     {
-        x = gsl_matrix_row(xs, j);
-        double density = singlePattern(&x.vector);
-        gsl_vector_set(outDensities, j, density);
+        int pid = omp_get_thread_num();
+        gsl_vector_view x;
+        double density;
+
+        #pragma omp for
+        for(size_t j = 0; j < xs->size1; j++)
+        {
+            x = gsl_matrix_row(xs, j);
+            density = singlePattern(&x.vector, pid);
+            gsl_vector_set(densities, j, density);
+        }
     }
     freeGlobals();
 }
 
-double singlePattern(gsl_vector *x){
+double singlePattern(gsl_vector *x, int pid){
+    gsl_vector* scaledPattern = g_scaledPatterns[pid];
+
     double density = 0;
 
     gsl_vector_view xi;
@@ -35,17 +45,23 @@ double singlePattern(gsl_vector *x){
     {
         xi = gsl_matrix_row(g_xis, i);
 
-        gsl_subtract(x, &xi.vector, g_scaledPattern);
-        gsl_vector_scale(g_scaledPattern, g_globalBandwidthFactor);
+        gsl_subtract(x, &xi.vector, scaledPattern);
+        gsl_vector_scale(scaledPattern, g_globalBandwidthFactor);
 
-        density += g_kernel.density(g_scaledPattern, 0);
+        density += g_kernel.density(scaledPattern, 0);
     }
     density *= g_parzenFactor;
 
     return density;
 }
 
-void prepareGlobals(gsl_matrix *xis, double globalBandwidth, SymmetricKernel kernel) {
+void prepareGlobals(gsl_matrix *xis, double globalBandwidth, KernelType kernelType) {
+    g_numThreads = 1;
+    #pragma omp parallel 
+    { 
+        g_numThreads = omp_get_num_threads(); 
+    }    
+
     size_t dimension = xis->size2;
 
     g_xis = xis;
@@ -53,7 +69,8 @@ void prepareGlobals(gsl_matrix *xis, double globalBandwidth, SymmetricKernel ker
     g_globalBandwidthFactor = computeGlobalBandwidthFactor(globalBandwidth);
     g_parzenFactor = computeParzenFactor(globalBandwidth, xis);
 
-    g_kernel = kernel;
+
+    g_kernel = selectSymmetricKernel(kernelType);
     g_kernel.prepare(dimension, 1);
 
     allocateGlobals(dimension);
@@ -68,14 +85,14 @@ double computeGlobalBandwidthFactor(double globalBandwidth) {
 }
 
 void allocateGlobals(size_t dataDimension) {
-    g_scaledPattern = gsl_vector_alloc(dataDimension);
+    g_scaledPatterns = gsl_vectors_alloc(dataDimension, g_numThreads);
 }
 
 void freeGlobals() {
     g_parzenFactor = 0.0;
     g_globalBandwidthFactor = 0.0;
 
-    gsl_vector_free(g_scaledPattern);
+    gsl_vectors_free(g_scaledPatterns, g_numThreads);
 
     g_xis = NULL;
 

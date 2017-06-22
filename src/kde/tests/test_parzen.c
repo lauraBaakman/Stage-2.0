@@ -24,7 +24,7 @@ void testParzen(CuTest *tc){
 
     double globalBandwidth = 4.0;
 
-    SymmetricKernel kernel = selectSymmetricKernel(STANDARD_GAUSSIAN);
+    KernelType kernelType = STANDARD_GAUSSIAN;
 
     gsl_vector* actual = gsl_vector_alloc(2);
 
@@ -32,7 +32,7 @@ void testParzen(CuTest *tc){
     gsl_vector_set(expected, 0, 0.0096947375);
     gsl_vector_set(expected, 1, 0.0095360625);
 
-    parzen(xs, xis, globalBandwidth, kernel, actual);
+    parzen(xs, xis, globalBandwidth, kernelType, actual);
 
     CuAssertVectorEquals(tc, expected, actual, delta);
 

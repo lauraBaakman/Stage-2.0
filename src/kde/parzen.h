@@ -6,7 +6,7 @@
 
 #include "kernels/kernels.h"
 
-void parzen(gsl_matrix* xs, gsl_matrix* xis, double windowWidth, SymmetricKernel kernel,
+void parzen(gsl_matrix* xs, gsl_matrix* xis, double windowWidth, KernelType kernel,
             gsl_vector* outDensities);
 
 #endif //PARZEN_H
