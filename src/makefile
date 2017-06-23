@@ -22,9 +22,7 @@ PYBUILDFLAGS=build_ext --inplace
 
 TEST_SOURCES=./lib/CuTest.c ./lib/CuTestUtils.c \
 	./kde/tests/test_kde.c \
-	./kde/tests/test_sambe.c \
 	./kde/tests/test_parzen.c \
-	./kde/tests/test_mbe.c \
 	./kde/utils/tests/test_utils.c \
 	./kde/utils/tests/test_knn.c \
 	./kde/kernels/tests/test_kernels.c \
@@ -33,9 +31,7 @@ TEST_SOURCES=./lib/CuTest.c ./lib/CuTestUtils.c \
 TEST_OBJECTS=$(TEST_SOURCES:.c=.o)
 TEST_DEPS=./test_constants.h ./lib/CuTest.h ./lib/CuTestUtils.h\
 	./kde/tests/test_kde.h \
-	./kde/tests/test_sambe.h \
 	./kde/tests/test_parzen.h \
-	./kde/tests/test_mbe.h \
 	./kde/utils/tests/test_utils.h \
 	./kde/utils/tests/test_knn.h \
 	./kde/kernels/tests/test_kernels.h \
@@ -66,6 +62,9 @@ DEPS=./kde/sambe.h ./kde/sambe.ih \
 .PHONY: clean
 .PHONY: run_tests
 .PHONY: modules
+.PHONY: run_kernel_tests
+.PHONY: run_kde_tests
+.PHONY: run_utils_tests
 
 # http://www.cs.colby.edu/maxwell/courses/tutorials/maketutor/
 %.o: %.c $(DEPS) $(TEST_DEPS)
@@ -104,6 +103,11 @@ run_kde_tests: _kernels _utils _kde tests
 	@export PYTHONWARNINGS="ignore"; $(PYRUNFLAGS) $(PYTHON) -m unittest discover -s ./kde/ -t .
 	@echo -e "\n\033[0;31m C Tests \033[0m"
 	@./tests.out			
+run_utils_tests: _utils tests
+	@echo -e "\n\033[0;31m Python Tests \033[0m\n"
+	@export PYTHONWARNINGS="ignore"; $(PYRUNFLAGS) $(PYTHON) -m unittest discover -s ./kde/utils -t .
+	@echo -e "\n\033[0;31m C Tests \033[0m"
+	@./tests.out				
 clean:
 	@find . -name "*.o" -delete
 	@find . -name "*.out" -delete
