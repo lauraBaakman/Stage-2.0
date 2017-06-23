@@ -1,10 +1,9 @@
-from unittest import TestCase, skip
+from unittest import TestCase
 
 import numpy as np
 
 import kde
 from kde.kernels.shapeadaptivegaussian import ShapeAdaptiveGaussian
-from kde.kernels.shapeadaptiveepanechnikov import ShapeAdaptiveEpanechnikov
 from kde.kernels.testKernel import TestKernel
 from kde.parzen import _ParzenEstimator_Python, _ParzenEstimator_C
 from kde.sambe import \
@@ -25,7 +24,9 @@ class TestShapeAdaptiveMBE(TestCase):
         estimator = SAMBEstimator(
             pilot_kernel_class=pilot_kernel, pilot_estimator_implementation=pilot_implementation,
             kernel_class=final_kernel, final_estimator_implementation=final_implementation,
-            dimension=2, number_of_grid_points=number_of_grid_points,
+            dimension=2,
+            number_of_grid_points=number_of_grid_points,
+            kernel_radius_fraction=0.2772588722239781,
             sensitivity=sensitivity,
             pilot_window_width_method=kde.utils.automaticWindowWidthMethods.ferdosi
         )
@@ -50,7 +51,8 @@ class TestShapeAdaptiveMBE(TestCase):
         estimator = SAMBEstimator(
             pilot_kernel_class=pilot_kernel, pilot_estimator_implementation=_ParzenEstimator_Python,
             kernel_class=final_kernel, final_estimator_implementation=_ShapeAdaptiveMBE_C,
-            dimension=2, number_of_grid_points=number_of_grid_points,
+            dimension=2,
+            number_of_grid_points=number_of_grid_points, kernel_radius_fraction=0.2772588722239781,
             sensitivity=sensitivity,
             pilot_window_width_method=kde.utils.automaticWindowWidthMethods.ferdosi
         )
@@ -75,7 +77,8 @@ class TestShapeAdaptiveMBE(TestCase):
         estimator = SAMBEstimator(
             pilot_kernel_class=pilot_kernel, pilot_estimator_implementation=_ParzenEstimator_C,
             kernel_class=final_kernel, final_estimator_implementation=_ShapeAdaptiveMBE_C,
-            dimension=2, number_of_grid_points=number_of_grid_points,
+            dimension=2,
+            number_of_grid_points=number_of_grid_points, kernel_radius_fraction=0.2772588722239781,
             sensitivity=sensitivity,
             pilot_window_width_method=kde.utils.automaticWindowWidthMethods.ferdosi
         )

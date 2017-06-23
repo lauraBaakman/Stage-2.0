@@ -34,26 +34,30 @@ class Grid(object):
 
 class _GridBuilder(object):
     def __init__(self, ranges, **kwargs):
-        cell_size = kwargs.get('cell_size')
-        if(cell_size):
-            (grid_ranges, number_of_grid_points) = self._grid_from_cell_size(cell_size, ranges)
+        if'cell_size' in kwargs:
+            (grid_ranges, number_of_grid_points) = self._grid_from_cell_size(ranges, **kwargs)
         else:
             grid_ranges = ranges
             number_of_grid_points = kwargs.get('number_of_grid_points', _default_number_of_grid_points)
         self.num_grid_point_list = self._compute_num_grid_point_list(number_of_grid_points, grid_ranges)
 
-    def _grid_from_cell_size(self, cell_size, data_ranges):
+    def _grid_from_cell_size(self, data_ranges, cell_size, **kwargs):
         if(cell_size == float('inf')):
-            import warnings
-            warnings.warn(
-                'Use a {default} x ... x {default} grid, as infinite cells are not supported.'.format(
-                    default=_default_number_of_grid_points)
-            )
-            return data_ranges, _default_number_of_grid_points
+            return self._handle_infinite_cell(data_ranges, **kwargs)
 
         grid_ranges = self._compute_grid_ranges(cell_size, data_ranges)
         number_of_grid_points = self._compute_number_of_grid_points(cell_size, grid_ranges)
         return grid_ranges, number_of_grid_points
+
+    def _handle_infinite_cell(self, data_ranges, **kwargs):
+        num_grid_points = kwargs.get('number_of_grid_points', _default_number_of_grid_points)
+
+        import warnings
+        warnings.warn(
+            'Use a {num_grid_points} x ... x {num_grid_points} grid, as infinite cells are not supported.'.format(
+                num_grid_points=num_grid_points)
+        )
+        return data_ranges, num_grid_points
 
     def _compute_num_grid_point_list(self, number_of_grid_points, ranges):
         self.ranges = list(ranges)
@@ -66,9 +70,15 @@ class _GridBuilder(object):
 
     def _compute_grid_ranges(self, cellsize, ranges):
         def compute_grid_range(minimum, maximum):
-            difference = maximum - minimum
-            padding = 0.5 * (cellsize - (difference % cellsize))
+            domain = maximum - minimum
+            padding = compute_padding(cellsize, domain)
             return (minimum - padding, maximum + padding)
+
+        def compute_padding(cellsize, domain):
+            remainder = domain % cellsize
+            if remainder == 0:
+                return 0
+            return 0.5 * (cellsize - remainder)
 
         grid_ranges = list()
         for (minimum, maximum) in ranges:
