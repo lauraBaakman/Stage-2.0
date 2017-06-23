@@ -1,5 +1,7 @@
 import numpy as np
 
+_default_number_of_grid_points = 20
+
 
 class Grid(object):
     """Class to represent a uniform grid."""
@@ -32,39 +34,44 @@ class Grid(object):
 
 class _GridBuilder(object):
     def __init__(self, ranges, **kwargs):
-        number_of_grid_points = kwargs.get('number_of_grid_points')
-        if(number_of_grid_points):
-            self._prepare_with_num_grid_points(number_of_grid_points, ranges)
+        cell_size = kwargs.get('cell_size')
+        if(cell_size):
+            grid_ranges = self._compute_grid_ranges(cell_size, ranges)
+            number_of_grid_points = self._compute_number_of_grid_points(cell_size, grid_ranges)
         else:
-            cellsize = kwargs.get('cell_size', 1.0)
-            self._prepare_with_cell_size(cellsize, ranges)
+            grid_ranges = ranges
+            number_of_grid_points = kwargs.get('number_of_grid_points', _default_number_of_grid_points)
+        self.num_grid_point_list = self._compute_num_grid_point_list(number_of_grid_points, grid_ranges)
 
-    def _prepare_with_num_grid_points(self, number_of_grid_points, ranges):
+    def _compute_num_grid_point_list(self, number_of_grid_points, ranges):
         self.ranges = list(ranges)
         if np.isscalar(number_of_grid_points):
-            self.num_grid_point_list = [number_of_grid_points] * self.grid_dimension
+            return [number_of_grid_points] * self.grid_dimension
         elif len(number_of_grid_points) is self.grid_dimension:
-            self.num_grid_point_list = number_of_grid_points
+            return number_of_grid_points
         else:
             raise ValueError("Number of grid points should be a scalar or a array like with length equal to ranges.")
 
-    def _prepare_with_cell_size(self, cellsize, ranges):
-        def compute_grid_domain(minimum, maximum):
+    def _compute_grid_ranges(self, cellsize, ranges):
+        def compute_grid_range(minimum, maximum):
             difference = maximum - minimum
             padding = 0.5 * (cellsize - (difference % cellsize))
             return (minimum - padding, maximum + padding)
 
-        def compute_number_of_grid_points(minimum, maximum):
+        grid_ranges = list()
+        for (minimum, maximum) in ranges:
+            grid_ranges.append(compute_grid_range(minimum, maximum))
+        return grid_ranges
+
+    def _compute_number_of_grid_points(self, cellsize, grid_ranges):
+        def compute_number_of_grid_points_for_range(minimum, maximum):
             number_of_grid_points = ((maximum - minimum) / cellsize) + 1
             return number_of_grid_points
 
-        grid_ranges = list()
         number_of_grid_points = list()
-        for (minimum, maximum) in ranges:
-            grid_range = compute_grid_domain(minimum, maximum)
-            grid_ranges.append(grid_range)
-            number_of_grid_points.append(compute_number_of_grid_points(grid_range[0], grid_range[1]))
-        self._prepare_with_num_grid_points(number_of_grid_points, grid_ranges)
+        for (minimum, maximum) in grid_ranges:
+            number_of_grid_points.append(compute_number_of_grid_points_for_range(minimum, maximum))
+        return number_of_grid_points
 
     @property
     def grid_dimension(self):
