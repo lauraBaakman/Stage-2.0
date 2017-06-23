@@ -23,7 +23,7 @@ estimators = {
 }
 
 
-_ask_for_confirmation = True
+_ask_for_confirmation = False
 
 
 def partial_path(path):
