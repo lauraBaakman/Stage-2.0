@@ -8,9 +8,9 @@ from kde.mbe import MBEstimator
 import inputoutput
 
 _data_set_path = Path(
-    '/Users/laura/Repositories/stage-2.0/data/simulated/small/')
+    '/home/laura/Stage-2.0/data/simulated/small/')
 _results_path = Path(
-    '/Users/laura/Repositories/stage-2.0/results/simulated/small/')
+    '/home/laura/Stage-2.0/results/simulated/')
 
 sensitivities = {
     'silverman': lambda d: 0.5,
