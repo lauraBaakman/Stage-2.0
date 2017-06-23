@@ -36,12 +36,24 @@ class _GridBuilder(object):
     def __init__(self, ranges, **kwargs):
         cell_size = kwargs.get('cell_size')
         if(cell_size):
-            grid_ranges = self._compute_grid_ranges(cell_size, ranges)
-            number_of_grid_points = self._compute_number_of_grid_points(cell_size, grid_ranges)
+            (grid_ranges, number_of_grid_points) = self._grid_from_cell_size(cell_size, ranges)
         else:
             grid_ranges = ranges
             number_of_grid_points = kwargs.get('number_of_grid_points', _default_number_of_grid_points)
         self.num_grid_point_list = self._compute_num_grid_point_list(number_of_grid_points, grid_ranges)
+
+    def _grid_from_cell_size(self, cell_size, data_ranges):
+        if(cell_size == float('inf')):
+            import warnings
+            warnings.warn(
+                'Use a {default} x ... x {default} grid, as infinite cells are not supported.'.format(
+                    default=_default_number_of_grid_points)
+            )
+            return data_ranges, _default_number_of_grid_points
+
+        grid_ranges = self._compute_grid_ranges(cell_size, data_ranges)
+        number_of_grid_points = self._compute_number_of_grid_points(cell_size, grid_ranges)
+        return grid_ranges, number_of_grid_points
 
     def _compute_num_grid_point_list(self, number_of_grid_points, ranges):
         self.ranges = list(ranges)

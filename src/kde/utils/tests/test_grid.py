@@ -68,6 +68,17 @@ class TestGrid(TestCase):
         actual = Grid.cover(points, cell_size=cell_size).grid_points
         np.testing.assert_almost_equal(expected, actual)
 
+    def test_cover_with_cellsize_without_padding_infinite(self):
+        points = np.array([[0], [1.1], [1.9], [3.2], [4.3], [5.4], [95]])
+        cell_size = float('inf')
+        expected = np.array([
+            [00], [05], [10], [15], [20], [25], [30],
+            [35], [40], [45], [50], [55], [60], [65],
+            [70], [75], [80], [85], [90], [95]]
+        )
+        actual = Grid.cover(points, cell_size=cell_size).grid_points
+        np.testing.assert_almost_equal(expected, actual)
+
     def test_cover_with_cellsize_without_padding_1d_floats(self):
         points = np.array([[-7.3], [-5.5], [8.2]])
         cell_size = 4.5
