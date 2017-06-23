@@ -2,12 +2,12 @@ import numpy as np
 import scipy.stats as stats
 
 import kde.kernels._kernels as _kernels
-from kde.kernels.kernel import Kernel, KernelException
+from kde.kernels.kernel import SymmetricKernel
 
 _as_C_enum = 1
 
 
-class Gaussian(Kernel):
+class Gaussian(SymmetricKernel):
 
     def __new__(cls, implementation=None):
         implementation_class = implementation or _Gaussian_C
@@ -18,10 +18,14 @@ class Gaussian(Kernel):
         return _as_C_enum
 
 
-class _Gaussian(Kernel):
+class _Gaussian(SymmetricKernel):
 
     def __init__(self):
         pass
+
+    @staticmethod
+    def radius(bandwidth):
+        return float("inf")
 
     @staticmethod
     def to_C_enum():

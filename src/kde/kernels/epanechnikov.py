@@ -4,12 +4,12 @@ import numpy as np
 import scipy.special
 
 import kde.kernels._kernels as _kernels
-from kde.kernels.kernel import Kernel
+from kde.kernels.kernel import SymmetricKernel
 
 _as_C_enum = 2
 
 
-class Epanechnikov(Kernel):
+class Epanechnikov(SymmetricKernel):
     def __new__(cls, implementation=None):
         implementation_class = implementation or _Epanechnikov_C
         return implementation_class()
@@ -19,10 +19,14 @@ class Epanechnikov(Kernel):
         return _as_C_enum
 
 
-class _Epanechnikov(Kernel):
+class _Epanechnikov(SymmetricKernel):
 
     def __init__(self):
         pass
+
+    @staticmethod
+    def radius(bandwidth):
+        return np.sqrt(5) * bandwidth
 
     @staticmethod
     def to_C_enum():

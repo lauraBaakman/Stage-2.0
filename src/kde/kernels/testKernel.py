@@ -1,12 +1,12 @@
 import kde.kernels._kernels as _kernels
 import numpy as np
 
-from kde.kernels.kernel import Kernel
-
+from kde.kernels.kernel import SymmetricKernel
 
 _as_c_enum = 0
 
-class TestKernel(object):
+
+class TestKernel(SymmetricKernel):
 
     @staticmethod
     def __new__(cls, implementation=None):
@@ -17,10 +17,15 @@ class TestKernel(object):
     def to_C_enum():
         return _as_c_enum
 
-class _TestKernel(Kernel):
+
+class _TestKernel(SymmetricKernel):
 
     def __init__(self):
         pass
+
+    @staticmethod
+    def radius(bandwidth):
+        return bandwidth * 5
 
     @staticmethod
     def to_C_enum():

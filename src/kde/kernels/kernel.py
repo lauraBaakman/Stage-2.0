@@ -24,6 +24,14 @@ class Kernel(object):
         return dimension
 
 
+class SymmetricKernel(Kernel):
+    def __init__(self):
+        pass
+
+    def radius(bandwidth):
+        raise NotImplementedError()
+
+
 class ShapeAdaptive(object):
 
     @staticmethod

@@ -1,4 +1,4 @@
-from unittest import TestCase,skip
+from unittest import TestCase
 
 import numpy as np
 
@@ -22,6 +22,12 @@ class TestTestKernel(TestCase):
         expected = 0
         actual = TestKernel().to_C_enum()
         self.assertEqual(expected, actual)
+
+    def test_radius(self):
+        bandwidth = 2.5
+        actual = TestKernel().radius(bandwidth)
+        expected = 2.5 * 5
+        self.assertAlmostEqual(actual, expected)
 
 
 class TestKernelImpAbstractTest(object):
@@ -48,4 +54,3 @@ class TestTestKernel_Python(TestKernelImpAbstractTest, TestCase):
     def setUp(self):
         super(TestTestKernel_Python, self).setUp()
         self._kernel_class = _TestKernel_Python
-

@@ -24,6 +24,12 @@ class TestEpanechnikov(TestCase):
         actual = Epanechnikov().to_C_enum()
         self.assertEqual(expected, actual)
 
+    def test_radius(self):
+        bandwidth = 2.5
+        actual = Epanechnikov().radius(bandwidth)
+        expected = 2.5 * np.sqrt(5)
+        self.assertAlmostEqual(actual, expected)
+
 
 class EpanechnikovImpAbstractTest(object):
 
