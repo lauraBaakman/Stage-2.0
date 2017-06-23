@@ -19,7 +19,7 @@ class SAMBEstimator(MBEstimator):
     Implementation of the shape adaptive modified Breiman Estimator.
     """
 
-    def __init__(self, dimension, sensitivity=1 / 2,
+    def __init__(self, dimension, sensitivity=1 / 2, kernel_radius_fraction=1/4,
                  pilot_window_width_method=automaticWindowWidthMethods.ferdosi,
                  number_of_grid_points=MBEstimator.default_number_of_grid_points,
                  pilot_kernel_class=None, pilot_estimator_implementation=None,
@@ -29,7 +29,9 @@ class SAMBEstimator(MBEstimator):
         self._sensitivity = sensitivity
         self._pilot_kernel_class = pilot_kernel_class or Epanechnikov
         self._kernel = kernel_class or ShapeAdaptiveEpanechnikov
+
         self._number_of_grid_points = number_of_grid_points or MBEstimator.default_number_of_grid_points
+        self._kernel_radius_fraction = kernel_radius_fraction
 
         self._pilot_estimator_implementation = pilot_estimator_implementation or _ParzenEstimator_C
         self._final_estimator_implementation = final_estimator_implementation or _ShapeAdaptiveMBE_C

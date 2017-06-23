@@ -9,7 +9,6 @@ import kde.utils as utils
 import kde.utils.automaticWindowWidthMethods as automaticWindowWidthMethods
 from kde.estimatorimplementation import EstimatorImplementation
 from kde.kernels.epanechnikov import Epanechnikov
-from kde.kernels.gaussian import Gaussian
 from kde.parzen import ParzenEstimator, _ParzenEstimator_C
 
 
@@ -19,7 +18,7 @@ class MBEstimator(object):
 
     default_number_of_grid_points = 50
 
-    def __init__(self, dimension, kernel_class=None, sensitivity=1 / 2,
+    def __init__(self, dimension, kernel_class=None, sensitivity=1 / 2, kernel_radius_fraction=1/4,
                  pilot_kernel_class=None,
                  pilot_window_width_method=automaticWindowWidthMethods.ferdosi,
                  number_of_grid_points=default_number_of_grid_points,
@@ -42,6 +41,7 @@ class MBEstimator(object):
         self._pilot_kernel_class = pilot_kernel_class or Epanechnikov
         self._kernel = kernel_class() if kernel_class else Epanechnikov()
         self._number_of_grid_points = number_of_grid_points
+        self._kernel_radius_fraction = kernel_radius_fraction
 
         self._pilot_estimator_implementation = pilot_estimator_implementation or _ParzenEstimator_C
         self._final_estimator_implementation = final_estimator_implementation or _MBEEstimator_C
@@ -74,9 +74,18 @@ class MBEstimator(object):
         densities = estimator.estimate()
         return densities
 
+    def _compute_cell_size(self, bandwidth):
+        return self._kernel_radius_fraction * self._pilot_kernel_class().radius(bandwidth)
+
     def _estimate_pilot_densities(self, general_bandwidth, xi_s):
+        cell_size = self._compute_cell_size(general_bandwidth)
+
         # Compute grid for pilot densities
-        grid_points = utils.Grid.cover(xi_s, number_of_grid_points=self._number_of_grid_points).grid_points
+        grid_points = utils.Grid.cover(
+            xi_s,
+            number_of_grid_points=self._number_of_grid_points,
+            cell_size=cell_size
+        ).grid_points
 
         # Compute densities of the points on the grid
         pilot_estimator = ParzenEstimator(
