@@ -3,12 +3,13 @@
 #include <omp.h>
 
 #include "../../../lib/CuTestUtils.h"
-#include "../../../test_constants.h"
+#include "../../../test_utils.h"
 
 #include "../epanechnikov.h"
 #include "../kernels.h"
 #include "../../utils/gsl_utils.h"
 
+static int g_numThreads = 2;
 
 void testSymmetricEpanechnikovSingle1D1(CuTest *tc){
 	size_t dimension = 1;
@@ -212,7 +213,7 @@ void testSymmetricEpanechnikovMultipleParallel1(CuTest *tc){
 	size_t numPatterns = 7;
 	int numThreads = 1;
 
-	#pragma omp parallel
+	#pragma omp parallel num_threads(g_numThreads)
 	{
 		numThreads = omp_get_num_threads();
 	}
@@ -240,7 +241,7 @@ void testSymmetricEpanechnikovMultipleParallel1(CuTest *tc){
 
 	gsl_vector* actual = gsl_vector_alloc(numPatterns);
 
-	#pragma omp parallel shared(actual, patterns)
+	#pragma omp parallel shared(actual, patterns) num_threads(g_numThreads)
 	{
 		int pid = omp_get_thread_num();
 		gsl_vector_view pattern;
@@ -361,7 +362,7 @@ void testShapeAdaptiveEpanechhnikovMultipleParallel1(CuTest *tc){
 	size_t numPatterns = 3;
 
 	int numThreads = 1;
-	#pragma omp parallel
+	#pragma omp parallel num_threads(g_numThreads)
 	{
 		numThreads = omp_get_num_threads();
 	}
@@ -392,7 +393,7 @@ void testShapeAdaptiveEpanechhnikovMultipleParallel1(CuTest *tc){
 
 	kernel.allocate(dimension, numThreads);
 
-	#pragma omp parallel shared(actual, patterns)
+	#pragma omp parallel shared(actual, patterns) num_threads(g_numThreads)
 	{
 		int pid = omp_get_thread_num();
 		gsl_vector_view pattern;
@@ -425,7 +426,7 @@ void testShapeAdaptiveEpanechhnikovMultipleParallel2(CuTest *tc){
 	size_t numPatterns = 800;
 
 	int numThreads = 1;
-	#pragma omp parallel
+	#pragma omp parallel num_threads(g_numThreads)
 	{
 		numThreads = omp_get_num_threads();
 	}
@@ -469,7 +470,7 @@ void testShapeAdaptiveEpanechhnikovMultipleParallel2(CuTest *tc){
 
 	kernel.allocate(dimension, numThreads);
 
-	#pragma omp parallel shared(actual, patterns)
+	#pragma omp parallel shared(actual, patterns) num_threads(g_numThreads)
 	{
 		int pid = omp_get_thread_num();
 		gsl_vector_view pattern;

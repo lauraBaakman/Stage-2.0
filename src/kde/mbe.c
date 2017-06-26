@@ -17,6 +17,8 @@ void mbe(gsl_matrix *xs, gsl_matrix *xis,
 
     prepareGlobals(xis, globalBandwidth, localBandwidths, kernelType);
 
+    printf("MBE num threads: %d\n", g_numThreads);
+
     #pragma omp parallel shared(xs, densities)
     {
         double density;

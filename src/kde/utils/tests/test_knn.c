@@ -4,7 +4,7 @@
 #include <gsl/gsl_vector_double.h>
 
 #include "../../../lib/CuTestUtils.h"
-#include "../../../test_constants.h"
+#include "../../../test_utils.h"
 
 #include "../knn.h"
 

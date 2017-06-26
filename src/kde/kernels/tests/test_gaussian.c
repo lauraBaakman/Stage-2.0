@@ -3,11 +3,13 @@
 #include <omp.h>
 
 #include "../../../lib/CuTestUtils.h"
-#include "../../../test_constants.h"
+#include "../../../test_utils.h"
 
 #include "../gaussian.h"
 #include "../kernels.h"
 #include "../../utils/gsl_utils.h"
+
+static int g_numThreads = 2;
 
 void testSymmetricGaussianSingle(CuTest *tc){
 	size_t dimension = 2;
@@ -78,7 +80,7 @@ void testSymmetricGaussianMultipleParallel(CuTest *tc){
 	size_t numPatterns = 3;
 	
 	int numThreads = 1;
-	#pragma omp parallel 
+	#pragma omp parallel num_threads(g_numThreads)
 	{
 		numThreads = omp_get_num_threads();
 	}
@@ -99,7 +101,7 @@ void testSymmetricGaussianMultipleParallel(CuTest *tc){
 	gsl_vector* actual = gsl_vector_alloc(numPatterns);
 	
 
-	#pragma omp parallel shared(patterns, actual)
+	#pragma omp parallel shared(patterns, actual) num_threads(g_numThreads)
 	{
 		gsl_vector_view pattern;
 		double density;
@@ -219,7 +221,11 @@ void testSAGaussianMultipleParallel(CuTest *tc){
 	size_t dimension = 3;
 	size_t numPatterns = 3;
 
-	int numThreads = 3;
+	int numThreads = 1;
+	#pragma omp parallel num_threads(g_numThreads)
+	{
+		numThreads = omp_get_num_threads();
+	}
 
 	ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(SHAPE_ADAPTIVE_GAUSSIAN);
 
@@ -247,7 +253,7 @@ void testSAGaussianMultipleParallel(CuTest *tc){
 
 	kernel.allocate(dimension, numThreads);
 
-	#pragma omp parallel num_threads(numThreads) shared(actual, patterns, kernel, H, numThreads, dimension, localBandwidths) 
+	#pragma omp parallel num_threads(g_numThreads) shared(actual, patterns, kernel, H, numThreads, dimension, localBandwidths) 
 	{
 		int pid = omp_get_thread_num();
 

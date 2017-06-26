@@ -20,18 +20,22 @@ endif
 PYTHON=python
 PYBUILDFLAGS=build_ext --inplace
 
-TEST_SOURCES=./lib/CuTest.c ./lib/CuTestUtils.c \
+TEST_SOURCES=./test_utils.c ./lib/CuTest.c ./lib/CuTestUtils.c \
 	./kde/tests/test_kde.c \
 	./kde/tests/test_parzen.c \
+	./kde/tests/test_mbe.c \
+	./kde/tests/test_sambe.c \
 	./kde/utils/tests/test_utils.c \
 	./kde/utils/tests/test_knn.c \
 	./kde/kernels/tests/test_kernels.c \
 	./kde/kernels/tests/test_epanechnikov.c \
 	./kde/kernels/tests/test_gaussian.c 
 TEST_OBJECTS=$(TEST_SOURCES:.c=.o)
-TEST_DEPS=./test_constants.h ./lib/CuTest.h ./lib/CuTestUtils.h\
+TEST_DEPS=./test_utils.h ./lib/CuTest.h ./lib/CuTestUtils.h\
 	./kde/tests/test_kde.h \
 	./kde/tests/test_parzen.h \
+	./kde/tests/test_mbe.h \
+	./kde/tests/test_sambe.h \
 	./kde/utils/tests/test_utils.h \
 	./kde/utils/tests/test_knn.h \
 	./kde/kernels/tests/test_kernels.h \

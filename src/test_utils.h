@@ -3,4 +3,7 @@
 
 static const double delta = 1/100000.0;
 
+void limit_num_threads_to(int numThreads);
+void reset_omp();
+
 #endif
