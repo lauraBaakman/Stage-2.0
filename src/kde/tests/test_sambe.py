@@ -10,9 +10,16 @@ from kde.sambe import \
     SAMBEstimator, \
     _ShapeAdaptiveMBE_C, \
     _ShapeAdaptiveMBE_Python
+import kde.utils._utils as _utils
 
 
 class TestShapeAdaptiveMBE(TestCase):
+
+    def setUp(self):
+        _utils.set_num_threads(2)
+
+    def tearDown(self):
+        _utils.reset_num_threads()
 
     def estimate_test_helper(self, pilot_implementation, final_implementation):
         xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
@@ -96,6 +103,9 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
         super(ShapeAdaptiveMBEImpAbstractTest, self).setUp()
         self._estimator_class = None
 
+    def tearDown(self):
+        _utils.reset_num_threads()
+
     def test_estimate_gaussian(self):
         xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
         x_s = xi_s
@@ -122,6 +132,10 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
     def setUp(self):
         super(Test_ShapeAdaptiveMBE_Python, self).setUp()
         self._estimator_class = _ShapeAdaptiveMBE_Python
+        _utils.set_num_threads(2)
+
+    def tearDown(self):
+        _utils.reset_num_threads()
 
     def test__determine_kernel_shape(self):
         xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
@@ -190,6 +204,10 @@ class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
     def setUp(self):
         super(Test_ShapeAdaptiveMBE_C, self).setUp()
         self._estimator_class = _ShapeAdaptiveMBE_C
+        _utils.set_num_threads(2)
+
+    def tearDown(self):
+        _utils.reset_num_threads()
 
     def test_warning(self):
         try:

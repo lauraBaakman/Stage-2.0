@@ -7,9 +7,16 @@ from kde.kernels.gaussian import Gaussian
 from kde.kernels.testKernel import TestKernel
 from kde.mbe import _MBEEstimator_Python, _MBEEstimator_C, MBEstimator
 from kde.parzen import _ParzenEstimator_Python, _ParzenEstimator_C
+import kde.utils._utils as _utils
 
 
 class TestModifiedBreimanEstimator(TestCase):
+    def setUp(self):
+        _utils.set_num_threads(2)
+
+    def tearDown(self):
+        _utils.reset_num_threads()
+
     def estimate_test_helper(self, pilot_implementation, final_implementation):
         xi_s = np.array([[0, 0], [1, 1]])
         x_s = np.array([[0, 0]])
@@ -93,6 +100,10 @@ class Test_MBEEstimator_Python(ModifiedBreimanEstimatorImpAbstractTest, TestCase
     def setUp(self):
         super(Test_MBEEstimator_Python, self).setUp()
         self._estimator_class = _MBEEstimator_Python
+        _utils.set_num_threads(2)
+
+    def tearDown(self):
+        _utils.reset_num_threads()
 
     def test_estimate_pattern_gaussian(self):
         xi_s = np.array([[-1, -1], [1, 1], [0, 0]])
@@ -115,3 +126,7 @@ class Test_MBEEstimator_C(ModifiedBreimanEstimatorImpAbstractTest, TestCase):
     def setUp(self):
         super(Test_MBEEstimator_C, self).setUp()
         self._estimator_class = _MBEEstimator_C
+        _utils.set_num_threads(2)
+
+    def tearDown(self):
+        _utils.reset_num_threads()

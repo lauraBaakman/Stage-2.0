@@ -1,5 +1,7 @@
 #include "utilsModule.h"
 
+#include "omp.h"
+
 static char utils_covarianceMatrix_docstring[] = "Compute the covariance matrix of the data.";
 static PyObject * covariance_matrix(PyObject *self, PyObject *args){
 
@@ -63,6 +65,29 @@ static PyObject * geometric_mean(PyObject *self, PyObject *args){
     return returnObject;
 }
 
+static char utils_setNumThreads_docstring[] = "Set the number of threads to be used by openMP.";
+static PyObject * set_num_threads(PyObject *self, PyObject *args){
+    int numThreads;
+    if (!PyArg_ParseTuple(args, "i", &numThreads)) return NULL;
+
+    omp_set_num_threads(numThreads);
+
+    /* Create return object */
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
+static char utils_resetNumThreads_docstring[] = "Set the number of threads to be used by openMP.";
+static PyObject * reset_num_threads(PyObject *self, PyObject *args){
+    
+    int numThreads = omp_get_num_procs();
+    omp_set_num_threads(numThreads);
+
+    /* Create return object */
+    Py_INCREF(Py_None);
+    return Py_None;
+}
+
 Array pyObjectToArray(PyObject *pythonObject, int requirements){
     PyArrayObject* arrayObject = NULL;
     arrayObject = (PyArrayObject *)PyArray_FROM_OTF(pythonObject, NPY_DOUBLE, requirements);
@@ -116,6 +141,8 @@ static PyMethodDef method_table[] = {
         {"covariance_matrix",   covariance_matrix,  METH_VARARGS,   utils_covarianceMatrix_docstring},
         {"eigen_values",        eigenValues,        METH_VARARGS,   utils_eigenValues_docstring},
         {"geometric_mean",      geometric_mean,     METH_VARARGS,   utils_geometricmean_docstring},
+        {"set_num_threads",     set_num_threads,    METH_VARARGS,   utils_setNumThreads_docstring},
+        {"reset_num_threads",   reset_num_threads,  METH_VARARGS,   utils_resetNumThreads_docstring},
         /* Sentinel */
         {NULL,                  NULL,               0,              NULL}
 };

@@ -1,16 +1,22 @@
 from __future__ import division
 
-from unittest import TestCase, skip
+from unittest import TestCase
 
 import numpy as np
 
-from kde.kernels.epanechnikov import Epanechnikov
 from kde.kernels.gaussian import Gaussian
 from kde.kernels.testKernel import TestKernel
 from kde.parzen import _ParzenEstimator_C, _ParzenEstimator_Python, ParzenEstimator
+import kde.utils._utils as _utils
 
 
 class TestParzenEstimator(TestCase):
+    def setUp(self):
+        _utils.set_num_threads(2)
+
+    def tearDown(self):
+        _utils.reset_num_threads()
+
     def test_estimate_python(self):
         xi_s = np.array([[-1, -1], [0, 0], [1 / 2.0, 1 / 2.0]])
         x_s = np.array([[0, 0], [1 / 4.0, 1 / 2.0]])
@@ -62,6 +68,10 @@ class Test_ParzenEstimator_Python(ParzenEstimatorImpAbstractTest, TestCase):
     def setUp(self):
         super(Test_ParzenEstimator_Python, self).setUp()
         self._estimator_class = _ParzenEstimator_Python
+        _utils.set_num_threads(2)
+
+    def tearDown(self):
+        _utils.reset_num_threads()
 
     def test_estimate_pattern(self):
         xi_s = np.array([[-1, -1], [0, 0], [1 / 2.0, 1 / 2.0]])
@@ -81,3 +91,7 @@ class Test_ParzenEstimator_C(ParzenEstimatorImpAbstractTest, TestCase):
     def setUp(self):
         super(Test_ParzenEstimator_C, self).setUp()
         self._estimator_class = _ParzenEstimator_C
+        _utils.set_num_threads(2)
+
+    def tearDown(self):
+        _utils.reset_num_threads()
