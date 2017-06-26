@@ -1,25 +1,32 @@
 close all; clear variables; clc;
 
-kernel_variance = 16/ 21;
-
-unitSphereVolume = @(d) (2 /d) * (pi^(d / 2) / gamma(d / 2));
-epanechnikov = @(x) ((length(x) + 2) / (2 * unitSphereVolume(length(x)))) * (1 - dot(x, x)) * (dot(x,x) < 1);
-epanechnikovKernel = @(x) (1 / sqrt(kernel_variance))^length(x) * epanechnikov((1 / sqrt(kernel_variance) * x));
+kernel = @(x) mvnpdf(x);
 
 mbe_singlePattern = @(x, xs, h, l, kernel) (l * h)^(-length(x)) * kernel((x - xs) ./ (l * h));
+
 mbe = @(x, xs, general_bandwidth, local_bandwidths, kernel) 1 / 3 * (...
     mbe_singlePattern(x, xs(1, :), general_bandwidth, local_bandwidths(1), kernel) + ...
     mbe_singlePattern(x, xs(2, :), general_bandwidth, local_bandwidths(2), kernel) + ...
     mbe_singlePattern(x, xs(3, :), general_bandwidth, local_bandwidths(3), kernel));
 
-%% Shared Variables
-
-xi_s = [-1, -1; 1, 1; 0, 0];
-x_s = [0, 0; 1, 1; 0, 1];
+xi_s = [-1, -1; ...
+        +1, +1; ...
+        +0, +0];
+x_s = [0, 0; ...
+       1, 1; ...
+       0, 1];
 local_bandwidths = [10, 20, 50];
 general_bandwidth = 0.5;
 
-%% Epanechnikov
-result_epanechnikov_1 = mbe(x_s(1, :), xi_s, general_bandwidth, local_bandwidths, epanechnikovKernel)
-result_epanechnikov_2 = mbe(x_s(2, :), xi_s, general_bandwidth, local_bandwidths, epanechnikovKernel)
-result_epanechnikov_3 = mbe(x_s(3, :), xi_s, general_bandwidth, local_bandwidths, epanechnikovKernel)
+
+print_gsl_matrix(x_s, 'xs');
+fprintf('\n')
+
+print_gsl_matrix(xi_s, 'xis');
+
+fprintf('\n');
+for i = 1:size(x_s, 1)
+    fprintf('gsl_vector_set(expected, %d, %2.15f);\n', ...
+        i - 1, ...
+        mbe(x_s(i, :), xi_s, general_bandwidth, local_bandwidths, kernel));
+end
