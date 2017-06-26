@@ -10,7 +10,7 @@ import inputoutput
 _data_set_path = Path(
     '/home/laura/Stage-2.0/data/simulated/small/')
 _results_path = Path(
-    '/home/laura/Stage-2.0/results/simulated/')
+    '/home/laura/Stage-2.0/results/simulated')
 
 sensitivities = {
     'silverman': lambda d: 0.5,
@@ -31,7 +31,7 @@ def partial_path(path):
 
 
 def get_data_set_files(input_path):
-    files = input_path.walk(filter=lambda x: x.ext == '.txt')
+    files = list(input_path.walk(filter=lambda x: x.ext == '.txt'))
     if _ask_for_confirmation:
         files = confirm_files(files)
     show_files_to_user(files)
