@@ -127,3 +127,18 @@ class TestGrid(TestCase):
         ])
         actual = Grid.cover(points, cell_size=cell_size).grid_points
         np.testing.assert_almost_equal(expected, actual)
+
+    def test_array_flags_array_order(self):
+        points = np.array([[-2.0], [-1.5], [2.0]])
+        cell_size = 2
+        expected = np.array([[-2.0], [0.0], [2.0]])
+        actual = Grid.cover(points, cell_size=cell_size).grid_points
+        self.assertTrue(actual.flags['C_CONTIGUOUS'])
+        self.assertFalse(actual.flags['F_CONTIGUOUS'])
+
+    def test_array_flags_array_owndata(self):
+        points = np.array([[-2.0], [-1.5], [2.0]])
+        cell_size = 2
+        expected = np.array([[-2.0], [0.0], [2.0]])
+        actual = Grid.cover(points, cell_size=cell_size).grid_points
+        self.assertTrue(actual.flags['OWNDATA'])

@@ -109,4 +109,4 @@ class _GridBuilder(object):
         # Generate the list of grid positions
         grid = np.meshgrid(*points, indexing='xy')
         positions = np.vstack(map(np.ravel, grid)).transpose()
-        return positions
+        return np.ascontiguousarray(positions)
