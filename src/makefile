@@ -116,5 +116,8 @@ clean:
 	@find . -name "*.o" -delete
 	@find . -name "*.out" -delete
 	@find . -name "*.so" -delete
+	@find . -name "*.pyc" -delete
+	@find . -path '*build*' -delete
+	@find . -path '*/__pycache__*' -delete
 #Use print-VAR to print the value of the make variable VAR
 print-%  : ; @echo $* = $($*) 
