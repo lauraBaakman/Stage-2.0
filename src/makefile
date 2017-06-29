@@ -1,6 +1,4 @@
 # C Stuff
-CC=gcc
-
 CFLAGS=-std=c99 -fopenmp
 
 LDLIBS=-lgsl -lgslcblas -lm -lpthread
@@ -12,8 +10,10 @@ IDIRS=-I/usr/local/include/
 OS := $(shell uname)
 ifeq ($(OS),Darwin)
 	# PYRUNFLAGS=arch -i386 this breaks stuff, as soonas openmp is added other stuff will break, for now lets run only on Zeus.
+	CC=/usr/local/Cellar/gcc/7.1.0/bin/gcc-7
 endif
 ifeq ($(OS),LINUX)
+	CC=gcc
 endif
 
 # PYTHON STUFF
@@ -83,13 +83,13 @@ benchmark_main: benchmark_main.o
 benchmark: $(OBJECTS) benchmark_main.o
 	@$(CC) $(CFLAGS) $(LDFLAGS) -o benchmark.out $(OBJECTS) benchmark_main.o $(LDLIBS) $(LDDIRS) $(IDIRS)	
 _kde: $(OBJECTS)
-	@$(PYTHON) kde/setup.py $(PYBUILDFLAGS)
+	@CC=$(CC) $(PYTHON) kde/setup.py $(PYBUILDFLAGS)
 	@cp _kde.so ./kde/_kde.so
 _kernels: $(OBJECTS)
-	$(PYTHON) kde/kernels/setup.py $(PYBUILDFLAGS)	
+	@CC=$(CC) $(PYTHON) kde/kernels/setup.py $(PYBUILDFLAGS)	
 	@cp _kernels.so ./kde/kernels/_kernels.so
 _utils: $(OBJECTS)
-	$(PYTHON) kde/utils/setup.py $(PYBUILDFLAGS)		
+	@CC=$(CC) $(PYTHON) kde/utils/setup.py $(PYBUILDFLAGS)		
 	@cp _utils.so ./kde/utils/_utils.so
 modules: _kde _kernels _utils
 run_tests: modules tests
@@ -116,3 +116,5 @@ clean:
 	@find . -name "*.o" -delete
 	@find . -name "*.out" -delete
 	@find . -name "*.so" -delete
+#Use print-VAR to print the value of the make variable VAR
+print-%  : ; @echo $* = $($*) 

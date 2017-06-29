@@ -14,7 +14,7 @@ gsl_vector** g_movedPatterns;
 size_t g_k;
 gsl_matrix** g_nearestNeighbourMatrices;
 
-int g_numThreads;
+static int g_numThreads;
 
 void sambe(gsl_matrix *xs,
            gsl_vector *localBandwidths, double globalBandwidth,

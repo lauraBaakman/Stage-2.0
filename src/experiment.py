@@ -1,5 +1,6 @@
 import argparse
 import os
+import platform
 
 from unipath import Path
 
@@ -7,10 +8,14 @@ from kde.sambe import SAMBEstimator
 from kde.mbe import MBEstimator
 import inputoutput
 
-_data_set_path = Path(
-    '/home/laura/Stage-2.0/data/simulated/small/')
-_results_path = Path(
-    '/home/laura/Stage-2.0/results/simulated')
+if platform.system() == 'Darwin':
+    _data_set_path = Path('/Users/laura/Repositories/stage-2.0/data/simulated/small')
+    _results_path = Path('/Users/laura/Repositories/stage-2.0/results/simulated')
+elif platform.system() == 'Linux':
+    _data_set_path = Path('/home/laura/Stage-2.0/data/simulated/small')
+    _results_path = Path('/home/laura/Stage-2.0/results/simulated')
+else:
+    print('No default paths supported for this system, use -i and -o')
 
 sensitivities = {
     'silverman': lambda d: 0.5,
@@ -21,7 +26,6 @@ estimators = {
     'sambe': SAMBEstimator,
     'mbe': MBEstimator
 }
-
 
 _ask_for_confirmation = False
 
@@ -63,6 +67,8 @@ def confirm_files(potential_files):
 
 
 def show_files_to_user(files):
+    if not files:
+        print("No files selected")
     print("Running the experiment on:\n{data_sets}\n".
           format(
                  data_sets='\n'.join([

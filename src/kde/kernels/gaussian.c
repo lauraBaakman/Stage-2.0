@@ -25,7 +25,7 @@ static gsl_matrix** g_sa_LUDecompositionsH;
 static gsl_vector** g_sa_scaledPatterns;
 static gsl_permutation** g_sa_permutations;
 
-int g_numThreads;
+static int g_numThreads;
 
 /* Normal Kernel */
 
