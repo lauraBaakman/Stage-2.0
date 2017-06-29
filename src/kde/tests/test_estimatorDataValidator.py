@@ -7,6 +7,18 @@ from kde.datavalidation import EstimatorDataValidator, InvalidEstimatorArguments
 
 class TestEstimatorDataValidator(TestCase):
 
+    def test_integration_flags(self):
+        x_s = np.array(np.random.rand(10, 3), order='F')
+        xi_s = np.array(np.random.rand(10, 3), order='C')
+        try:
+            EstimatorDataValidator(x_s, xi_s).validate()
+        except InvalidEstimatorArguments as e:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
     def test__array_has_two_dimensions_1(self):
         x_s = np.array([[0.5, 0.5], [0.1, 0.1]])
 
@@ -81,6 +93,34 @@ class TestEstimatorDataValidator(TestCase):
         x2_s = np.array([[0.5, 0.5, 0.5], [0.1, 0.1, 0.1], [0.1, 0.1, 0.1]])
         x_s = np.array([[0.5, 0.5], [0.1, 0.1]])
         self._do_elements_have_same_dimension_helper(xi_s, x2_s, x_s)
+
+    def test___array_has_correct_flags_succeed(self):
+        array = np.random.rand(10, 3)
+        actual = EstimatorDataValidator._array_has_correct_flags(array)
+        self.assertIsNone(actual)
+
+    def test___array_has_correct_flags_fail_C_order(self):
+        array = np.array(np.random.rand(10, 3), order='F')
+        try:
+            EstimatorDataValidator._array_has_correct_flags(array)
+        except InvalidEstimatorArguments as e:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test___array_has_correct_flags_fail_data_not_owned(self):
+        data_owner = np.array([1, 2, 3, 4, 5, 6], dtype=np.uint8)
+        array = data_owner.reshape(2, 3)
+        try:
+            EstimatorDataValidator._array_has_correct_flags(array)
+        except InvalidEstimatorArguments as e:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
 
 
 class TestMBEDataValidator(TestEstimatorDataValidator):
