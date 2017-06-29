@@ -6,8 +6,10 @@ import numpy as np
 
 from kde.kernels.gaussian import Gaussian
 from kde.kernels.testKernel import TestKernel
+from kde.kernels.epanechnikov import Epanechnikov
 from kde.parzen import _ParzenEstimator_C, _ParzenEstimator_Python, ParzenEstimator
 import kde.utils._utils as _utils
+from kde.utils.grid import Grid
 
 
 class TestParzenEstimator(TestCase):
@@ -61,6 +63,33 @@ class ParzenEstimatorImpAbstractTest(object):
             kernel=TestKernel(), general_bandwidth=4)
         actual = estimator.estimate()
         expected = np.array([3 / 384.0, 15 / 1536.0])
+        np.testing.assert_array_almost_equal(actual, expected)
+
+    def test_estimate_epanechnikov(self):
+        xi_s = Grid.cover(
+            points=np.array([[0, 0], [3, 3]]),
+            number_of_grid_points=4
+        ).grid_points
+        x_s = np.array([
+            [0.5, 0.7],
+            [2.3, 1.8],
+            [0.7, 2.8],
+            [0.1, 2.3],
+            [2.7, 1.6],
+            [1.3, 0.9]
+        ])
+        estimator = self._estimator_class(
+            xi_s=xi_s, x_s=x_s, dimension=2,
+            kernel=Epanechnikov(), general_bandwidth=4)
+        actual = estimator.estimate()
+        expected = np.array([
+            0.007545933739,
+            0.007636453113,
+            0.00747729817,
+            0.007450440773,
+            0.007564833389,
+            0.00766927882
+        ])
         np.testing.assert_array_almost_equal(actual, expected)
 
 

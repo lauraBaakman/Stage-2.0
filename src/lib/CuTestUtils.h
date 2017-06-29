@@ -6,14 +6,6 @@
 #include <gsl/gsl_vector.h>
 #include <stdbool.h>
 
-#ifdef __APPLE__
-	#ifndef isnan
-	inline bool isnan(double x) {
-	    return x != x;
-	}
-	#endif
-#endif
-
 void CuAssertMatrixEquals_LineMsg(CuTest* tc,
                                const char* file, int line, const char* message,
                                gsl_matrix* expected, gsl_matrix* actual, double delta);
