@@ -11,10 +11,12 @@ from kde.parzen import _ParzenEstimator_C, _ParzenEstimator_Python, ParzenEstima
 import kde.utils._utils as _utils
 from kde.utils.grid import Grid
 
+number_of_threads = 1
+
 
 class TestParzenEstimator(TestCase):
     def setUp(self):
-        _utils.set_num_threads(2)
+        _utils.set_num_threads(number_of_threads)
 
     def tearDown(self):
         _utils.reset_num_threads()
@@ -78,6 +80,7 @@ class ParzenEstimatorImpAbstractTest(object):
             [2.7, 1.6],
             [1.3, 0.9]
         ])
+        import pdb; pdb.set_trace()  # breakpoint a7d4370c //
         estimator = self._estimator_class(
             xi_s=xi_s, x_s=x_s, dimension=2,
             kernel=Epanechnikov(), general_bandwidth=4)
@@ -97,7 +100,7 @@ class Test_ParzenEstimator_Python(ParzenEstimatorImpAbstractTest, TestCase):
     def setUp(self):
         super(Test_ParzenEstimator_Python, self).setUp()
         self._estimator_class = _ParzenEstimator_Python
-        _utils.set_num_threads(2)
+        _utils.set_num_threads(number_of_threads)
 
     def tearDown(self):
         _utils.reset_num_threads()
@@ -120,7 +123,7 @@ class Test_ParzenEstimator_C(ParzenEstimatorImpAbstractTest, TestCase):
     def setUp(self):
         super(Test_ParzenEstimator_C, self).setUp()
         self._estimator_class = _ParzenEstimator_C
-        _utils.set_num_threads(2)
+        _utils.set_num_threads(number_of_threads)
 
     def tearDown(self):
         _utils.reset_num_threads()

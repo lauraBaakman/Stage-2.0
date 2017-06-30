@@ -12,4 +12,4 @@ if __name__ == "__main__":
     kernel_tests = unittest.TestSuite(loader.discover('./kde/kernels/tests'))
     util_tests = unittest.TestSuite(loader.discover('./kde/utils/tests'))
 
-    unittest.TextTestRunner(verbosity=1).run(all_tests)
+    unittest.TextTestRunner(verbosity=1).run(kde_tests)
