@@ -9,10 +9,10 @@ from kde.mbe import MBEstimator
 import inputoutput
 
 if platform.system() == 'Darwin':
-    _data_set_path = Path('/Users/laura/Repositories/stage-2.0/data/simulated/small')
+    _data_set_path = Path('/Users/laura/Repositories/stage-2.0/data/simulated')
     _results_path = Path('/Users/laura/Repositories/stage-2.0/results/simulated')
 elif platform.system() == 'Linux':
-    _data_set_path = Path('/home/laura/Stage-2.0/data/simulated/small')
+    _data_set_path = Path('/home/laura/Stage-2.0/data/simulated')
     _results_path = Path('/home/laura/Stage-2.0/results/simulated')
 else:
     print('No default paths supported for this system, use -i and -o')
