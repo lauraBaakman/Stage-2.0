@@ -1,11 +1,12 @@
 from __future__ import division
 
-import kde._kde as _kde
+import os
+
 import numpy as np
 import scipy.interpolate as interpolate
 import scipy.stats.mstats as stats
 
-import kde.utils as utils
+import kde._kde as _kde
 import kde.utils.automaticWindowWidthMethods as automaticWindowWidthMethods
 from kde.estimatorimplementation import EstimatorImplementation
 from kde.kernels.epanechnikov import Epanechnikov
@@ -60,12 +61,18 @@ class MBEstimator(object):
         general_window_width = self._general_window_width_method(xi_s)
 
         # Compute pilot densities
+        if os.environ.get('DEBUGOUTPUT'):
+            print('\t\t\tComputing {} pilot densities'.format(xi_s.shape[0]))
         pilot_densities = self._estimate_pilot_densities(general_window_width, xi_s=xi_s)
 
         # Compute local bandwidths
+        if os.environ.get('DEBUGOUTPUT'):
+            print('\t\t\tComputing {} local bandwidths'.format(pilot_densities.shape[0]))
         local_bandwidths = self._compute_local_bandwidths(pilot_densities)
 
         # Compute densities
+        if os.environ.get('DEBUGOUTPUT'):
+            print('\t\t\tEstimating {} densities'.format(x_s.shape[0]))
         estimator = self._final_estimator_implementation(xi_s=xi_s, x_s=x_s,
                                                          dimension=self._dimension,
                                                          kernel=self._kernel,
@@ -78,14 +85,15 @@ class MBEstimator(object):
         return self._kernel_radius_fraction * self._pilot_kernel_class().radius(bandwidth)
 
     def _estimate_pilot_densities(self, general_bandwidth, xi_s):
-        cell_size = self._compute_cell_size(general_bandwidth)
+        # cell_size = self._compute_cell_size(general_bandwidth)
 
         # Compute grid for pilot densities
-        grid_points = utils.Grid.cover(
-            xi_s,
-            number_of_grid_points=self._number_of_grid_points,
-            cell_size=cell_size
-        ).grid_points
+        grid_points = xi_s
+        # grid_points = utils.Grid.cover(
+        #     xi_s,
+        #     number_of_grid_points=self._number_of_grid_points,
+        #     cell_size=cell_size
+        # ).grid_points
 
         # Compute densities of the points on the grid
         pilot_estimator = ParzenEstimator(
@@ -95,7 +103,8 @@ class MBEstimator(object):
         grid_densities = pilot_estimator.estimate(xi_s=xi_s, x_s=grid_points)
 
         # Interpolation: note it is not bilinear interpolation, but uses a triangulation
-        pilot_densities = interpolate.griddata(grid_points, grid_densities, xi_s, method='linear')
+        # pilot_densities = interpolate.griddata(grid_points, grid_densities, xi_s, method='linear')
+        pilot_densities = grid_densities
 
         return pilot_densities
 
