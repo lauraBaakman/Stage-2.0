@@ -112,6 +112,9 @@ void prepareGlobals(gsl_matrix *xs,
     {
         g_numThreads = omp_get_num_threads();
     }
+    if(getenv("DEBUGOUTPUT") != NULL){
+        printf("\t\t\tnum threads: %d\n", g_numThreads);
+    }
 
     g_kernel = selectShapeAdaptiveKernel(kernelType);
 

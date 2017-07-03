@@ -4,8 +4,8 @@
 #include "sambe.h"
 
 #include <printf.h>
-
 #include <omp.h>
+#include <stdlib.h>
 
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_matrix.h>

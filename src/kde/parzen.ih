@@ -6,6 +6,7 @@
 #include <printf.h>
 #include <math.h>
 #include <omp.h>
+#include <stdlib.h>
 
 #include "utils/gsl_utils.h"
 

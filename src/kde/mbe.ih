@@ -4,6 +4,7 @@
 #include "mbe.h"
 #include <math.h>
 #include <omp.h>
+#include <stdlib.h>
 
 static double computeBandwidth(double localBandwidth);
 

@@ -43,6 +43,10 @@ void prepareGlobals(gsl_matrix *xis, double globalBandwidth, gsl_vector *localBa
         g_numThreads = omp_get_num_threads();
     }
 
+    if(getenv("DEBUGOUTPUT") != NULL){
+        printf("\t\t\tnum threads: %d\n", g_numThreads);
+    }
+
     g_kernel = selectSymmetricKernel(kernelType);
     g_kernel.prepare(xis->size2, g_numThreads);
 

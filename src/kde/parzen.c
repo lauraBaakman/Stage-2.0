@@ -61,6 +61,9 @@ void prepareGlobals(gsl_matrix *xis, double globalBandwidth, KernelType kernelTy
     { 
         g_numThreads = omp_get_num_threads(); 
     }    
+    if(getenv("DEBUGOUTPUT") != NULL){
+        printf("\t\t\tnum threads: %d\n", g_numThreads);
+    }
 
     size_t dimension = xis->size2;
 
