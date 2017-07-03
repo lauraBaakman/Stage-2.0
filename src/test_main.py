@@ -1,6 +1,8 @@
 import unittest
 import warnings
 
+import kde.kernels.tests.test_shapeAdaptiveEpanechnikov as test_saEpanechnikov
+
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
 
@@ -8,8 +10,13 @@ if __name__ == "__main__":
 
     all_tests = unittest.TestSuite(loader.discover('.'))
 
-    kde_tests = unittest.TestSuite(loader.discover('./kde/tests'))
-    kernel_tests = unittest.TestSuite(loader.discover('./kde/kernels/tests'))
-    util_tests = unittest.TestSuite(loader.discover('./kde/utils/tests'))
+    temp_suite = unittest.TestSuite()
+    temp_suite.addTest(test_saEpanechnikov.TestShapeAdaptiveEpanechnikov(
+        'test_default_implementation_single_pattern_l_eq_1')
+    )
 
-    unittest.TextTestRunner(verbosity=1).run(kde_tests)
+    # kde_tests = unittest.TestSuite(loader.discover('./kde/tests'))
+    # kernel_tests = unittest.TestSuite(loader.discover('./kde/kernels/tests'))
+    # util_tests = unittest.TestSuite(loader.discover('./kde/utils/tests'))
+
+    unittest.TextTestRunner(verbosity=2).run(temp_suite)

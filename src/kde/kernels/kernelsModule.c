@@ -1,8 +1,7 @@
 #include "kernelsModule.h"
 
 
-
-PyObject *multi_pattern_symmetric(PyObject *args, KernelType kernelType) {
+PyObject *multi_pattern_symmetric(PyObject *args, KernelType kernelType) {    
     /* Parse input data */
     PyObject* inPatterns = NULL;
     PyObject* outDensities = NULL;
@@ -49,7 +48,9 @@ PyObject *single_pattern_symmetric(PyObject *args, KernelType kernelType) {
 
     if (!PyArg_ParseTuple(args, "O", &inPattern)) return NULL;
 
-    gsl_vector_view pattern = pyObjectToGSLVectorView(inPattern, NPY_ARRAY_IN_ARRAY);
+    gsl_matrix_view patternMatrix = pyObjectToGSLMatrixView(inPattern, NPY_ARRAY_IN_ARRAY);
+
+    gsl_vector_view pattern = gsl_matrix_row(&patternMatrix.matrix, 0);
 
     /* Do computations */
     double density;
@@ -74,7 +75,9 @@ PyObject *single_pattern_shape_adaptive(PyObject *args, KernelType kernelType){
 
     if (!PyArg_ParseTuple(args, "OdO", &inPattern, &localBandwidth, &inGlobalBandwidthMatrix)) return NULL;
 
-    gsl_vector_view pattern = pyObjectToGSLVectorView(inPattern, NPY_ARRAY_IN_ARRAY);
+    gsl_matrix_view patternMatrix = pyObjectToGSLMatrixView(inPattern, NPY_ARRAY_IN_ARRAY);
+    gsl_vector_view pattern = gsl_matrix_row(&patternMatrix.matrix, 0);
+
     gsl_matrix_view globalBandwidthMatrix = pyObjectToGSLMatrixView(inGlobalBandwidthMatrix, NPY_ARRAY_IN_ARRAY);
 
     ShapeAdaptiveKernel kernel = selectShapeAdaptiveKernel(kernelType);
@@ -257,7 +260,7 @@ gsl_vector_view pyObjectToGSLVectorView(PyObject *pythonObject, int requirements
     }
     double* data = (double *)PyArray_DATA(arrayObject);
 
-    size_t length = (size_t) PyArray_DIM(arrayObject, 1);
+    size_t length = (size_t) PyArray_DIM(arrayObject, 0);
 
     Py_XDECREF(arrayObject);
     return gsl_vector_view_array(data, length);
