@@ -67,7 +67,6 @@ class ParzenEstimatorImpAbstractTest(object):
         expected = np.array([3 / 384.0, 15 / 1536.0])
         np.testing.assert_array_almost_equal(actual, expected)
 
-    @skip('# Somehow densities has the wrong dimension in the C code')
     def test_estimate_epanechnikov(self):
         xi_s = Grid.cover(
             points=np.array([[0, 0], [3, 3]]),
