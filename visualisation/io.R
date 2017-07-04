@@ -6,6 +6,11 @@ outputFilePath <- function(inputFilePath, description){
   file.path(imagesOutputPath, outputFile);
 }
 
+overviewFilePath <- function(path){
+  outputFile = paste('overview' ,'.csv', sep='');
+  file.path(imagesOutputPath, outputFile);
+}
+
 parseStringWithInts <- function(string){
   as.numeric(
     unlist(

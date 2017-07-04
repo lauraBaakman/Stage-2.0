@@ -1,6 +1,6 @@
 # Define paths
 dataInputPath = "/Users/laura/Repositories/stage-2.0/data/simulated";
-dataOutputPath = "/Users/laura/Desktop";
+dataOutputPath = "/Users/laura/Repositories/stage-2.0/results/simulated";
 imagesOutputPath = "/Users/laura/Desktop";
 
 # Settings for the plots
@@ -12,7 +12,7 @@ colours = list(
   purple  = rgb(96, 63, 150, max = 255)
 )
 font.size = 10;
-font.family ="Garamond";
+font.family ="CM Roman";
 
 tex.textwidth = 14.92038; #cm
 

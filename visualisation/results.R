@@ -8,7 +8,8 @@ source("./io.R");
 # Load libraries
 library(ggplot2);
 library(extrafont);
-library(gridExtra)
+library(stringr);
+library(gridExtra);
 
 computeMSE <- function(data){
   error <- data$trueDensity - data$computedDensity;
@@ -35,10 +36,9 @@ plotResultOfMultipleDensityDataSet <-function(data, outputFile, distribution, li
       panel.border = element_rect(colour = "black", fill=NA),
       panel.grid.major = element_blank(),
       panel.grid.minor = element_blank(),
-      panel.border = element_blank(),
       panel.background = element_blank()
     );
-  plot <- plot + 	geom_point(aes(x=trueDensity, y=computedDensity), size=0.7, colour=cols);
+  plot <- plot + 	geom_point(aes(x=trueDensity, y=computedDensity), size=0.7, colour=cols, shape=21, stroke=0.2);
   plot <- plot + 	geom_line(aes(x=trueDensity, y=trueDensity));
   
   plot <- plot + 	xlab('true density') +
@@ -48,7 +48,7 @@ plotResultOfMultipleDensityDataSet <-function(data, outputFile, distribution, li
   
   plot <- plot + 	xlim(limits[[1]], limits[[2]]) +
     ylim(limits[[1]], limits[[2]]);
-  print(plot)
+  #print(plot)
   ggsave(
     outputFile,
     plot,
@@ -71,14 +71,16 @@ plotResult <- function(data, outputFile, distribution, limits){
 }
 
 findResultsAssociatedWithDataSet <- function(file, results){
-  idx = sapply(
-    results,
-    function(x)
-      grepl(
-        sub("[A-Z-]*", "\\1", basename(x)),
-        basename(file)
-      ),
-    USE.NAMES=FALSE);
+  isResultAssociatedWithDataSetFile <- function(resultsFile){
+    paste(
+      regmatches(
+        basename(resultsFile), 
+        regexpr("([A-Za-z]+)_([0-9]+)_([0-9]+)", basename(resultsFile))
+      ), '.txt', sep=''
+    ) == basename(file); 
+  }  
+  
+  idx = sapply(results, isResultAssociatedWithDataSetFile, USE.NAMES = FALSE)
   
   list(
     associated=results[idx],
@@ -114,8 +116,29 @@ findPlotLimits <- function(data){
   c(minimum = minimum, maximum = maximum);
 }
 
+extractEstimatorSensitivityDataset <- function(file_name){
+  matches = str_match(file_name, 'results_([[:alpha:]]+_[[:digit:]])_([[:digit:]]+)_([[:alpha:]]+)_([[:alpha:]]+)')
+  dataset = matches[2];  
+  size = matches[3];
+  estimator = matches[4];
+  sensitivity = matches[5];
+  
+  data.frame(estimator=estimator, sensitivity=sensitivity, dataset=dataset, size=size, stringsAsFactors=TRUE)
+}
+
+updateResultTable <- function(df, dataset, outputfilename){
+  
+  newRow = extractEstimatorSensitivityDataset(basename(outputfilename));
+  newRow['mse'] = computeMSE(dataset);
+  
+  df <- rbind(df, newRow);
+  df;
+}
+
 mainResults <- function(){
   filePairs = getFiles();
+  
+  overview <- data.frame(estimator=character(), sensitivity=character(), dataset=character(), mse=double(), size=integer(), stringsAsFactors=TRUE)
   
   for (filePair in filePairs){
     list[dataPoints , trueDensities, distribution] = readDataSet(filePair$dataFile)
@@ -126,8 +149,14 @@ mainResults <- function(){
     # Read the results
     for(resultPath in filePair$associatedResults){
       computedDensities = readResults(resultPath);
+      
+      printf('Processing: %s\n', basename(resultPath));
+      
       outputFiles[[idx]] = outputFilePath(resultPath, "results_");
       data[[idx]] = data.frame(points=dataPoints, trueDensities=trueDensities, computedDensities=computedDensities);
+      
+      overview <- updateResultTable(overview, data[[idx]], outputFiles[[idx]]);
+      
       idx <- idx + 1;
     }
     
@@ -139,7 +168,12 @@ mainResults <- function(){
     }
     
   }
+  
+  write.csv(file=overviewFilePath(resultPath), x=overview);
+  print(overview)
+  
+  
 }
 
-mainResults();
+mainResults()
 
