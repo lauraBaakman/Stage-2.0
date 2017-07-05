@@ -12,11 +12,13 @@ from kde.sambe import \
     _ShapeAdaptiveMBE_Python
 import kde.utils._utils as _utils
 
+_num_threads = 2
+
 
 class TestShapeAdaptiveMBE(TestCase):
 
     def setUp(self):
-        _utils.set_num_threads(2)
+        _utils.set_num_threads(_num_threads)
 
     def tearDown(self):
         _utils.reset_num_threads()
@@ -101,6 +103,7 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
 
     def setUp(self):
         super(ShapeAdaptiveMBEImpAbstractTest, self).setUp()
+        _utils.set_num_threads(_num_threads)
         self._estimator_class = None
 
     def tearDown(self):
@@ -132,7 +135,7 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
     def setUp(self):
         super(Test_ShapeAdaptiveMBE_Python, self).setUp()
         self._estimator_class = _ShapeAdaptiveMBE_Python
-        _utils.set_num_threads(2)
+        _utils.set_num_threads(_num_threads)
 
     def tearDown(self):
         _utils.reset_num_threads()
@@ -199,38 +202,36 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
         expected = np.array([0.143018801263046, 0.143018801263046])
         np.testing.assert_array_almost_equal(actual, expected)
 
+    def test_xis_is_not_xs(self):
+        xi_s = xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+        x_s = np.array([
+            [0.5, 0.3],
+            [0.2, 0.7],
+        ])
+        local_bandwidths = np.array([0.84089642,
+                                     1.18920712,
+                                     1.18920712,
+                                     0.84089642])
+        general_bandwidth = 0.721347520444482
+        kernel = ShapeAdaptiveGaussian
+        estimator = self._estimator_class(
+            xi_s=xi_s, x_s=x_s, dimension=2,
+            kernel=kernel,
+            local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
+        )
+        actual = estimator.estimate()
+        expected = np.array([0.1271447313485623, 0.1507791646676249])
+        np.testing.assert_array_almost_equal(actual, expected)
+
 
 class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
     def setUp(self):
         super(Test_ShapeAdaptiveMBE_C, self).setUp()
         self._estimator_class = _ShapeAdaptiveMBE_C
-        _utils.set_num_threads(2)
+        _utils.set_num_threads(_num_threads)
 
     def tearDown(self):
         _utils.reset_num_threads()
-
-    def test_warning(self):
-        try:
-            xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-            x_s = np.array([[0, 0], [1, 1]])
-            local_bandwidths = np.array([0.84089642,
-                                         1.18920712,
-                                         1.18920712,
-                                         0.84089642])
-            general_bandwidth = 0.721347520444482
-            kernel = ShapeAdaptiveGaussian
-            estimator = self._estimator_class(
-                xi_s=xi_s, x_s=x_s, dimension=2,
-                kernel=kernel,
-                local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
-            )
-            estimator.estimate()
-        except ValueError:
-            pass
-        except Exception as e:
-            self.fail('Unexpected exception raised: {}'.format(e))
-        else:
-            self.fail('ExpectedException not raised')
 
     """
         Different test than the Python implementation, since the C implementation uses a KD tree,
@@ -255,4 +256,25 @@ class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
                              0.077446155260620,
                              0.077446155260620,
                              0.143018801263046])
+        np.testing.assert_array_almost_equal(actual, expected)
+
+    def test_xis_is_not_xs(self):
+        xi_s = xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+        x_s = np.array([
+            [0.5, 0.3],
+            [0.2, 0.7],
+        ])
+        local_bandwidths = np.array([0.84089642,
+                                     1.18920712,
+                                     1.18920712,
+                                     0.84089642])
+        general_bandwidth = 0.721347520444482
+        kernel = ShapeAdaptiveGaussian
+        estimator = self._estimator_class(
+            xi_s=xi_s, x_s=x_s, dimension=2,
+            kernel=kernel,
+            local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
+        )
+        actual = estimator.estimate()
+        expected = np.array([0.19859744879119276, 0.15077916466762492])
         np.testing.assert_array_almost_equal(actual, expected)

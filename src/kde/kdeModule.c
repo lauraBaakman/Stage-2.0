@@ -66,6 +66,7 @@ static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
 
     /* Parse Arguments */
     PyObject* inXs = NULL;
+    PyObject* inXis = NULL;
     PyObject* inLocalBandwidths = NULL;
     PyObject* outDensities = NULL;
     KernelType kernelType;
@@ -73,8 +74,9 @@ static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
     double globalBandwidth;
 
 
-    if (!PyArg_ParseTuple(args, "OiidOO",
+    if (!PyArg_ParseTuple(args, "OOiidOO",
                           &inXs,
+                          &inXis,
                           &kernelType,
                           &k,
                           &globalBandwidth,
@@ -82,11 +84,12 @@ static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
                           &outDensities)) return NULL;
 
     gsl_matrix_view xs = pyObjectToGSLMatrixView(inXs, NPY_ARRAY_IN_ARRAY);
+    gsl_matrix_view xis = pyObjectToGSLMatrixView(inXis, NPY_ARRAY_IN_ARRAY);
     gsl_vector_view localBandwidths = pyObjectToGSLVectorView(inLocalBandwidths, NPY_ARRAY_IN_ARRAY);
     gsl_vector_view densities = pyObjectToGSLVectorView(outDensities, NPY_ARRAY_OUT_ARRAY);
 
     /* Do computations */
-    sambe(&xs.matrix, &localBandwidths.vector, globalBandwidth,
+    sambe(&xs.matrix, &xis.matrix, &localBandwidths.vector, globalBandwidth,
           kernelType, k,
           &densities.vector);
 

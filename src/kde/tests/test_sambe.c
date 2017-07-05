@@ -43,7 +43,9 @@ void testSAMBESingleThreaded(CuTest *tc){
     gsl_vector_set(localBandwidths, 2, 1.18920742746);
     gsl_vector_set(localBandwidths, 3, 0.840896194314);
 
-    sambe(xs,
+    gsl_matrix* xis = xs;
+
+    sambe(xs, xis,
     	localBandwidths, globalBandwidth,
     	kernelType, k,
     	actual);
@@ -89,7 +91,9 @@ void testSAMBEMultiThreaded(CuTest *tc){
     gsl_vector_set(localBandwidths, 2, 1.18920742746);
     gsl_vector_set(localBandwidths, 3, 0.840896194314);
 
-    sambe(xs,
+    gsl_matrix* xis = xs;
+
+    sambe(xs, xis,
     	localBandwidths, globalBandwidth,
     	kernelType, k,
     	actual);

@@ -3,6 +3,9 @@
 gsl_matrix* g_xs;
 size_t g_numXs;
 
+gsl_matrix* g_xis;
+size_t g_numXis;
+
 gsl_vector* g_localBandwidths;
 double g_globalBandwidthFactor;
 gsl_matrix** g_globalBandwidthMatrices;
@@ -17,11 +20,12 @@ gsl_matrix** g_nearestNeighbourMatrices;
 static int g_numThreads;
 
 void sambe(gsl_matrix *xs,
+           gsl_matrix *xis,
            gsl_vector *localBandwidths, double globalBandwidth,
            KernelType kernelType, int k,
            gsl_vector *densities){
 
-    prepareGlobals(xs, localBandwidths, globalBandwidth, kernelType, k);    
+    prepareGlobals(xs, xis, localBandwidths, globalBandwidth, kernelType, k);    
 
     #pragma omp parallel shared(g_numXs, xs, densities)
     {
@@ -53,8 +57,8 @@ double singlePattern(gsl_vector *x, int pid) {
 
     g_kernel.computeConstants(globalBandwidthMatrix, pid);
 
-    for(size_t i = 0; i < g_numXs; i++){
-        xi = gsl_matrix_row(g_xs, i);
+    for(size_t i = 0; i < g_numXis; i++){
+        xi = gsl_matrix_row(g_xis, i);
 
         //x - xi
         movedPattern = gsl_subtract(x, &xi.vector, movedPattern);
@@ -65,7 +69,7 @@ double singlePattern(gsl_vector *x, int pid) {
         density += kernelResult;
     }
 
-    density /= g_numXs;
+    density /= g_numXis;
 
     return density;
 }
@@ -104,7 +108,7 @@ void freeGlobals() {
     nn_free();
 }
 
-void prepareGlobals(gsl_matrix *xs,
+void prepareGlobals(gsl_matrix *xs, gsl_matrix *xis,
                     gsl_vector *localBandwidths, double globalBandwidth,
                     KernelType kernelType, int k) {
     g_numThreads = 1;
@@ -119,16 +123,17 @@ void prepareGlobals(gsl_matrix *xs,
     g_kernel = selectShapeAdaptiveKernel(kernelType);
 
     g_xs = xs;
+    g_numXs = xs->size1;
+
+    g_xis = xis;
+    g_numXis = xis->size1;
 
     g_localBandwidths = localBandwidths;
     g_globalBandwidthFactor = globalBandwidth;
     g_k = (size_t) k;
 
-    g_numXs = xs->size1;
-
+    nn_prepare(xis);
+    
     size_t dimension = g_xs->size2;
-
-    nn_prepare(xs);
-
     allocateGlobals(dimension, g_numXs, g_k);
 }

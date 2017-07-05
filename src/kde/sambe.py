@@ -57,10 +57,9 @@ class _ShapeAdaptiveMBE(EstimatorImplementation):
 class _ShapeAdaptiveMBE_C(_ShapeAdaptiveMBE):
 
     def estimate(self):
-        if not np.all(self._x_s == self._xi_s):
-            raise ValueError("This estimator only accepts x_s == xi_s.")
         densities = np.empty(self.num_x_s, dtype=float)
         _kde.shape_adaptive_mbe(self._x_s,
+                                self._xi_s,
                                 self._kernel_class.to_C_enum(),
                                 self._k, self._general_bandwidth,
                                 self._local_bandwidths,

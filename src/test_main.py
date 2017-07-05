@@ -1,7 +1,7 @@
 import unittest
 import warnings
 
-import kde.kernels.tests.test_shapeAdaptiveEpanechnikov as test_saEpanechnikov
+import kde.tests.test_sambe as test_sambe
 
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")
@@ -11,8 +11,11 @@ if __name__ == "__main__":
     all_tests = unittest.TestSuite(loader.discover('.'))
 
     temp_suite = unittest.TestSuite()
-    temp_suite.addTest(test_saEpanechnikov.TestShapeAdaptiveEpanechnikov(
-        'test_default_implementation_single_pattern_l_eq_1')
+    temp_suite.addTest(test_sambe.Test_ShapeAdaptiveMBE_Python(
+        'test_xis_is_not_xs')
+    )
+    temp_suite.addTest(test_sambe.Test_ShapeAdaptiveMBE_C(
+        'test_xis_is_not_xs')
     )
 
     # kde_tests = unittest.TestSuite(loader.discover('./kde/tests'))
