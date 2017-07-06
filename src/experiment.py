@@ -155,25 +155,33 @@ if __name__ == '__main__':
     )
     parser.add_argument('-i', '--input_directory',
                         action=InputDirectoryAction,
-                        default=_data_set_path)
+                        default=_data_set_path,
+                        help='The folder from which to read the data set files.')
+    parser.add_argument('--datasets', default=list(), nargs='+',
+                        help='A list of files with datasets.')
     parser.add_argument('-o', '--output_directory',
                         action=OutputDirectoryAction,
-                        default=_results_path)
+                        default=_results_path,
+                        help='The folder to write the result files to.')
     parser.add_argument('--verify-files', dest='verify_files',
-                        action='store_true')
+                        action='store_true',
+                        help='For each dataset request confirmation before using it.')
     parser.add_argument('--no-verify-files', dest='verify_files',
-                        action='store_false')
+                        action='store_false',
+                        help='Do not request confirmation, use all dataset in the input directory.')
     parser.set_defaults(verify_files=_ask_for_confirmation)
     args = parser.parse_args()
 
     data_set_path = args.input_directory
     _results_path = args.output_directory
     _ask_for_confirmation = args.verify_files
+    data_set_files = args.datasets
 
-    data_set_files = get_data_set_files(data_set_path)
+    if not data_set_files:
+        data_set_files = get_data_set_files(data_set_path)
 
     for data_set_file in data_set_files:
         with open(data_set_file, 'r') as in_file:
             print("Data set: {}".format(data_set_file))
-            data_set = inputoutput.DataSet.from_file(in_file=data_set_file)
-            handle_dataset(data_set)
+            # data_set = inputoutput.DataSet.from_file(in_file=data_set_file)
+            # handle_dataset(data_set)
