@@ -183,5 +183,5 @@ if __name__ == '__main__':
     for data_set_file in data_set_files:
         with open(data_set_file, 'r') as in_file:
             print("Data set: {}".format(data_set_file))
-            # data_set = inputoutput.DataSet.from_file(in_file=data_set_file)
-            # handle_dataset(data_set)
+            data_set = inputoutput.DataSet.from_file(in_file=data_set_file)
+            handle_dataset(data_set)
