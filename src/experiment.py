@@ -8,7 +8,8 @@ from kde.sambe import SAMBEstimator
 from kde.mbe import MBEstimator
 from kde.parzen import ParzenEstimator
 from kde.kernels.epanechnikov import Epanechnikov
-import inputoutput
+import inputoutput as io
+import inputoutput.utils as ioUtils
 from argparseActions import InputDirectoryAction, OutputDirectoryAction
 
 if platform.system() == 'Darwin':
@@ -21,7 +22,7 @@ else:
     print('No default paths supported for this system, use -i and -o')
 
 sensitivities = {
-    # 'silverman': lambda d: 0.5,
+    'silverman': lambda d: 0.5,
     'breiman': lambda d: 1.0 / d
 }
 
@@ -33,66 +34,14 @@ estimators = {
 _ask_for_confirmation = False
 
 
-def partial_path(path):
-    return Path(path.components()[-3:])
-
-
-def get_data_set_files(input_path):
-    files = list(input_path.walk(filter=lambda x: x.ext == '.txt'))
-    if _ask_for_confirmation:
-        files = confirm_files(files)
-    show_files_to_user(files)
-    return files
-
-
-def confirm_files(potential_files):
-    def add_data_set(data_set):
-        files.append(data_set)
-
-    def skip_data_set(*args, **kwargs):
-        pass
-
-    responses = {
-        'y': add_data_set,
-        'n': skip_data_set
-    }
-
-    files = list()
-
-    for data_set in potential_files:
-        response = raw_input(
-            'Include the data set in the file ..{}? [y/N] '.format(
-                partial_path(data_set))
-        ).lower()
-        responses.get(response, skip_data_set)(data_set)
-    print('\n')
-    return files
-
-
-def show_files_to_user(files):
-    if not files:
-        print("No files selected")
-    print("Running the experiment on:\n{data_sets}\n".
-          format(
-                 data_sets='\n'.join([
-                                     "\t{}".format(partial_path(file))
-                                     for file
-                                     in files])
-                 )
-          )
-
-
 def handle_dataset(data_set):
-    # Compute Pilot Densities
-    print("\tEstimator: Parzen")
-    general_bandwidth = automaticWindowWidthMethods.ferdosi(data_set.patterns)
-    pilot_densities = ParzenEstimator(
-        dimension=data_set.dimension,
-        bandwidth=general_bandwidth,
-        kernel_class=Epanechnikov
-    ).estimate(xi_s=data_set.patterns, x_s=data_set.patterns)
-    result = inputoutput.Results(pilot_densities, data_set)
-    write(result, data_set_file, estimator_name='parzen')
+    general_bandwidth, pilot_densities = estimate_pilot_densities(xi_s=data_set.patterns, x_s=data_set.patterns)
+    write(
+        result=io.Results(pilot_densities, data_set),
+        out_path=ioUtils.build_result_path(
+            _results_path, data_set_file, 'parzen',
+        )
+    )
 
     for estimator_name, Estimator in estimators.items():
         print("\tEstimator: {}".format(estimator_name))
@@ -104,7 +53,7 @@ def handle_dataset(data_set):
                 method_name=sensitivity_name)
             )
 
-            result = run(
+            result = run_single_configuration(
                 data_set=data_set,
                 estimator=Estimator(
                              dimension=data_set.dimension,
@@ -113,40 +62,37 @@ def handle_dataset(data_set):
                 pilot_densities=pilot_densities,
                 general_bandwidth=general_bandwidth
             )
-            write(result, data_set_file, estimator_name, sensitivity_name)
+            write(
+                result=result,
+                out_path=ioUtils.build_result_path(
+                    _results_path, data_set_file, estimator_name, sensitivity_name
+                )
+            )
 
 
-def run(data_set, estimator, pilot_densities, general_bandwidth):
+def estimate_pilot_densities(x_s, xi_s):
+    print("\tEstimator: Parzen")
+    general_bandwidth = automaticWindowWidthMethods.ferdosi(xi_s)
+    _, dimension = x_s.shape
+    pilot_densities = ParzenEstimator(
+        dimension=dimension,
+        bandwidth=general_bandwidth,
+        kernel_class=Epanechnikov
+    ).estimate(xi_s=x_s, x_s=xi_s)
+    return general_bandwidth, pilot_densities
+
+
+def run_single_configuration(data_set, estimator, pilot_densities, general_bandwidth):
     densities = estimator.estimate(
         x_s=data_set.patterns, xi_s=data_set.patterns,
         pilot_densities=pilot_densities, general_bandwidth=general_bandwidth
     )
-    return inputoutput.Results(densities, data_set)
+    return io.Results(densities, data_set)
 
 
-def write(result, data_set_file, estimator_name, sensitivity_name=None):
-            out_path = build_output_path(data_set_file,
-                                         estimator_name,
-                                         sensitivity_name)
-            with open(out_path, 'wb') as out_file:
-                result.to_file(out_file)
-
-
-def build_output_path(data_set_file, estimator, sensitivity):
-    data_set_estimator_part = '{data_set}_{estimator}'.format(
-        data_set=Path(data_set_file).stem,
-        estimator=estimator,
-    )
-    if sensitivity:
-        out_file_name = '{data_set_estimator}_{sensitivity}.txt'.format(
-            data_set_estimator=data_set_estimator_part,
-            sensitivity=sensitivity
-        )
-    else:
-        out_file_name = '{data_set_estimator}.txt'.format(
-            data_set_estimator=data_set_estimator_part
-        )
-    return _results_path.child(out_file_name)
+def write(result, out_path):
+    with open(out_path, 'wb') as out_file:
+        result.to_file(out_file)
 
 
 if __name__ == '__main__':
@@ -178,10 +124,10 @@ if __name__ == '__main__':
     data_set_files = args.datasets
 
     if not data_set_files:
-        data_set_files = get_data_set_files(data_set_path)
+        data_set_files = ioUtils.get_data_set_files(data_set_path)
 
     for data_set_file in data_set_files:
         with open(data_set_file, 'r') as in_file:
             print("Data set: {}".format(data_set_file))
-            data_set = inputoutput.DataSet.from_file(in_file=data_set_file)
+            data_set = io.DataSet.from_file(in_file=data_set_file)
             handle_dataset(data_set)
