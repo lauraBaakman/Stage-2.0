@@ -30,8 +30,8 @@ class Baakman2(SimulatedDataSet):
         }
         self._components['uniform random noise'] = {
                 'component': components.UniformRandomNoise(
-                    minimum_value=0,
-                    maximum_value=100
+                    minimum_value=-15,
+                    maximum_value=150
                 ),
                 'num elements': 20000,
         }
