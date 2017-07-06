@@ -6,8 +6,8 @@ import datasets.simulated.components as components
 
 class Baakman5(SimulatedDataSet):
 
-    def __init__(self):
-        super(Baakman5, self).__init__()
+    def __init__(self, scale=1.0):
+        super(Baakman5, self).__init__(scale)
 
     def _init_components(self):
         self._components['trivariate gaussian 1'] = {
@@ -17,12 +17,12 @@ class Baakman5(SimulatedDataSet):
                         [9, 3, 1])
                     )
                 ),
-                'num elements': 40000,
+                'num elements': self._compute_num_elements(40000),
             }
         self._components['uniform random noise'] = {
                 'component': components.UniformRandomNoise(
                     minimum_value=0,
                     maximum_value=100
                 ),
-                'num elements': 20000,
+                'num elements': self._compute_num_elements(20000),
         }

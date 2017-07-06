@@ -8,8 +8,9 @@ from inputoutput.dataset import DataSet
 
 class SimulatedDataSet(DataSet):
 
-    def __init__(self):
+    def __init__(self, scale=1.0):
         np.random.seed(0)
+        self._scale = scale
         self._components = OrderedDict()
         self._init_components()
         patterns = self._compute_patterns(self._components)
@@ -18,6 +19,13 @@ class SimulatedDataSet(DataSet):
             patterns=patterns,
             densities=densities
         )
+
+    def _compute_num_elements(self, base_number):
+        return int(round(self._scale * base_number))
+
+    @property
+    def number_of_patterns(self):
+        return sum(self.components_lengths)
 
     @property
     def components_lengths(self):

@@ -1,6 +1,5 @@
-import argparse
-import os
 import platform
+import argparse
 
 from unipath import Path
 
@@ -10,6 +9,7 @@ from kde.mbe import MBEstimator
 from kde.parzen import ParzenEstimator
 from kde.kernels.epanechnikov import Epanechnikov
 import inputoutput
+from argparseActions import InputDirectoryAction, OutputDirectoryAction
 
 if platform.system() == 'Darwin':
     _data_set_path = Path('/Users/laura/Repositories/stage/data/simulated')
@@ -149,40 +149,10 @@ def build_output_path(data_set_file, estimator, sensitivity):
     return _results_path.child(out_file_name)
 
 
-class InputDirectoryAction(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
-        prospective_dir = Path(values).absolute()
-        if not os.path.isdir(prospective_dir):
-            raise argparse.ArgumentTypeError(
-                "{0} is not a valid path".format(prospective_dir)
-            )
-        if os.access(prospective_dir, os.R_OK):
-            setattr(namespace, self.dest, prospective_dir)
-        else:
-            raise argparse.ArgumentTypeError(
-                "{0} is not a readable dir".format(prospective_dir)
-            )
-
-
-class OutputDirectoryAction(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
-        prospective_dir = Path(values)
-        prospective_dir = prospective_dir.expand()
-        prospective_dir = prospective_dir.absolute()
-        prospective_dir.mkdir(parents=True)
-        if not os.path.isdir(prospective_dir):
-            raise argparse.ArgumentTypeError(
-                "{0} is not a valid path".format(prospective_dir)
-            )
-        if os.access(prospective_dir, os.R_OK):
-            setattr(namespace, self.dest, prospective_dir)
-        else:
-            raise argparse.ArgumentTypeError(
-                "{0} is not a readable dir".format(prospective_dir)
-            )
-
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
     parser.add_argument('-i', '--input_directory',
                         action=InputDirectoryAction,
                         default=_data_set_path)

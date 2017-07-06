@@ -6,8 +6,8 @@ import datasets.simulated.components as components
 
 class Baakman2(SimulatedDataSet):
 
-    def __init__(self):
-        super(Baakman2, self).__init__()
+    def __init__(self, scale=1.0):
+        super(Baakman2, self).__init__(scale)
 
     def _init_components(self):
         self._components['trivariate gaussian 1'] = {
@@ -17,7 +17,7 @@ class Baakman2(SimulatedDataSet):
                         np.array([25, np.sqrt(5), np.sqrt(5)])
                     )
                 ),
-                'num elements': 20000,
+                'num elements': self._compute_num_elements(20000),
             }
         self._components['trivariate gaussian 2'] = {
                 'component': components.MultivariateGaussian(
@@ -26,12 +26,12 @@ class Baakman2(SimulatedDataSet):
                         np.array([np.sqrt(20), np.sqrt(20), 400])
                     )
                 ),
-                'num elements': 20000,
+                'num elements': self._compute_num_elements(20000),
         }
         self._components['uniform random noise'] = {
                 'component': components.UniformRandomNoise(
                     minimum_value=-15,
                     maximum_value=150
                 ),
-                'num elements': 20000,
+                'num elements': self._compute_num_elements(20000),
         }

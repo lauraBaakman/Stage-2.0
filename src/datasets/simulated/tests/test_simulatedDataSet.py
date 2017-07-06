@@ -1,5 +1,4 @@
 from unittest import TestCase
-from collections import OrderedDict
 import io
 
 import numpy as np
@@ -8,40 +7,66 @@ from datasets.simulated.simulateddataset import SimulatedDataSet
 import datasets.simulated.components as components
 
 
-component_a = {
-    'component': components.UniformRandomNoise(
-        minimum_value=0,maximum_value=20, dimension=3),
-    'num elements': 3,
-}
-component_b = {
-    'component': components.UniformRandomNoise(
-        minimum_value=10, maximum_value=50, dimension=3),
-    'num elements': 2,
-}
-
-
 class SimulatedDataSetForTests(SimulatedDataSet):
 
-    def __init__(self):
-        super(SimulatedDataSetForTests, self).__init__()
+    def __init__(self, scale=1.0):
+        super(SimulatedDataSetForTests, self).__init__(scale)
 
     def _init_components(self):
-        self._components['a'] = component_a
-        self._components['b'] = component_b
+        self._components['a'] = {
+            'component': components.UniformRandomNoise(
+                minimum_value=0, maximum_value=20, dimension=3),
+            'num elements': self._compute_num_elements(3),
+        }
+        self._components['b'] = {
+            'component': components.UniformRandomNoise(
+                minimum_value=10, maximum_value=50, dimension=3),
+            'num elements': self._compute_num_elements(2),
+        }
 
 
 class TestSimulatedDataSet(TestCase):
 
     def setUp(self):
         super(TestSimulatedDataSet, self).setUp()
-        self._components = OrderedDict()
-        self._components['a'] = component_a
-        self._components['b'] = component_b
+
+    def test_scale_neutral(self):
+        scale = 1.0
+        set = SimulatedDataSetForTests(scale=scale)
+        actual = set.number_of_patterns
+        expected = 5
+        self.assertEqual(actual, expected)
+
+    def test_scale_smaller_than_one(self):
+        scale = 0.5
+        set = SimulatedDataSetForTests(scale)
+        actual = set.number_of_patterns
+        expected = 3
+        self.assertEqual(actual, expected)
+
+    def test_scale_greater_than_one(self):
+        scale = 2
+        set = SimulatedDataSetForTests(scale)
+        actual = set.number_of_patterns
+        expected = 10
+        self.assertEqual(actual, expected)
 
     def test_components_lengths(self):
         set = SimulatedDataSetForTests()
         actual = set.components_lengths
         expected = [3, 2]
+        self.assertEqual(actual, expected)
+
+    def test_components_lengths_with_scale(self):
+        set = SimulatedDataSetForTests(scale=0.5)
+        actual = set.components_lengths
+        expected = [2, 1]
+        self.assertEqual(actual, expected)
+
+    def test_number_of_patterns(self):
+        set = SimulatedDataSetForTests()
+        actual = set.number_of_patterns
+        expected = 5
         self.assertEqual(actual, expected)
 
     # noinspection PyTypeChecker
@@ -113,8 +138,6 @@ class TestSimulatedDataSet(TestCase):
 
     def test_densities_to_file(self):
         data_set = SimulatedDataSetForTests()
-
-
         expected_output = ("7.031250000000002179e-05\n"
                            "6.250000000000001485e-05\n"
                            "6.250000000000001485e-05\n"

@@ -6,8 +6,8 @@ import datasets.simulated.components as components
 
 class Baakman3(SimulatedDataSet):
 
-    def __init__(self):
-        super(Baakman3, self).__init__()
+    def __init__(self, scale=1.0):
+        super(Baakman3, self).__init__(scale)
 
     def _init_components(self):
         self._components['trivariate gaussian 1'] = {
@@ -17,7 +17,7 @@ class Baakman3(SimulatedDataSet):
                         np.array([4, np.sqrt(2), np.sqrt(2)])
                     )
                 ),
-                'num elements': 20000,
+                'num elements': self._compute_num_elements(20000),
             }
         self._components['trivariate gaussian 2'] = {
                 'component': components.MultivariateGaussian(
@@ -26,7 +26,7 @@ class Baakman3(SimulatedDataSet):
                         np.array([np.sqrt(10), np.sqrt(10), 100])
                     )
                 ),
-                'num elements': 20000,
+                'num elements': self._compute_num_elements(20000),
         }
         self._components['trivariate gaussian 3'] = {
                 'component': components.MultivariateGaussian(
@@ -35,7 +35,7 @@ class Baakman3(SimulatedDataSet):
                         np.array([1, 1, 1])
                     )
                 ),
-                'num elements': 20000,
+                'num elements': self._compute_num_elements(20000),
         }
         self._components['trivariate gaussian 4'] = {
                 'component': components.MultivariateGaussian(
@@ -44,12 +44,12 @@ class Baakman3(SimulatedDataSet):
                         np.array([25, np.sqrt(5), np.sqrt(5)])
                     )
                 ),
-                'num elements': 20000,
+                'num elements': self._compute_num_elements(20000),
         }
         self._components['uniform random noise'] = {
                 'component': components.UniformRandomNoise(
                     minimum_value=0,
                     maximum_value=100
                 ),
-                'num elements': 40000,
+                'num elements': self._compute_num_elements(40000),
         }
