@@ -1,5 +1,6 @@
 from __future__ import division
 
+import os
 import math
 
 import kde._kde as _kde
@@ -20,6 +21,8 @@ class ParzenEstimator(object):
 
         if x_s is None:
             x_s = xi_s
+        if os.environ.get('DEBUGOUTPUT'):
+            print('\t\t\tEstimating {} densities'.format(x_s.shape[0]))
         estimator = self._estimator_implementation(
             xi_s=xi_s, x_s=x_s,
             dimension=self._dimension,

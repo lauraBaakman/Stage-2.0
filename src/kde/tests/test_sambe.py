@@ -79,6 +79,8 @@ class TestShapeAdaptiveMBE(TestCase):
     def test_estimate_C_C(self):
         xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
         x_s = xi_s
+        pilot_densities = np.array([1.33209861,  0.6660493,  0.6660493,  1.33209861])
+        general_bandwidth = 0.72134752044448169
         pilot_kernel = TestKernel
         final_kernel = ShapeAdaptiveGaussian
         number_of_grid_points = 2
@@ -91,7 +93,34 @@ class TestShapeAdaptiveMBE(TestCase):
             sensitivity=sensitivity,
             pilot_window_width_method=kde.utils.automaticWindowWidthMethods.ferdosi
         )
-        actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
+        actual = estimator.estimate(
+            xi_s=xi_s, x_s=x_s,
+            pilot_densities=pilot_densities, general_bandwidth=general_bandwidth
+        )
+        expected = np.array([0.186693239491116,
+                             0.077446155260620,
+                             0.077446155260620,
+                             0.143018801263046])
+        np.testing.assert_array_almost_equal(actual, expected)
+
+    def test_estimate_C_C_dont_pass_pilot_densities(self):
+        xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+        x_s = xi_s
+        pilot_kernel = TestKernel
+        final_kernel = ShapeAdaptiveGaussian
+        number_of_grid_points = 2
+        sensitivity = 0.5
+        estimator = SAMBEstimator(
+            pilot_kernel_class=pilot_kernel, pilot_estimator_implementation=_ParzenEstimator_C,
+            kernel_class=final_kernel, final_estimator_implementation=_ShapeAdaptiveMBE_C,
+            dimension=2,
+            number_of_grid_points=number_of_grid_points, kernel_radius_fraction=0.2772588722239781,
+            sensitivity=sensitivity,
+            pilot_window_width_method=kde.utils.automaticWindowWidthMethods.ferdosi
+        )
+        actual = estimator.estimate(
+            xi_s=xi_s, x_s=x_s
+        )
         expected = np.array([0.186693239491116,
                              0.077446155260620,
                              0.077446155260620,

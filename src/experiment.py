@@ -4,13 +4,16 @@ import platform
 
 from unipath import Path
 
+import kde.utils.automaticWindowWidthMethods as automaticWindowWidthMethods
 from kde.sambe import SAMBEstimator
 from kde.mbe import MBEstimator
+from kde.parzen import ParzenEstimator
+from kde.kernels.epanechnikov import Epanechnikov
 import inputoutput
 
 if platform.system() == 'Darwin':
-    _data_set_path = Path('/Users/laura/Repositories/stage-2.0/data/simulated')
-    _results_path = Path('/Users/laura/Repositories/stage-2.0/results/simulated')
+    _data_set_path = Path('/Users/laura/Repositories/stage/data/simulated')
+    _results_path = Path('/Users/laura/Repositories/stage/results/simulated')
 elif platform.system() == 'Linux':
     _data_set_path = Path('/home/laura/Stage-2.0/data/simulated')
     _results_path = Path('/home/laura/Stage-2.0/results/simulated')
@@ -80,6 +83,17 @@ def show_files_to_user(files):
 
 
 def handle_dataset(data_set):
+    # Compute Pilot Densities
+    print("\tEstimator: Parzen")
+    general_bandwidth = automaticWindowWidthMethods.ferdosi(data_set.patterns)
+    pilot_densities = ParzenEstimator(
+        dimension=data_set.dimension,
+        bandwidth=general_bandwidth,
+        kernel_class=Epanechnikov
+    ).estimate(xi_s=data_set.patterns, x_s=data_set.patterns)
+    result = inputoutput.Results(pilot_densities, data_set)
+    write(result, data_set_file, estimator_name='parzen')
+
     for estimator_name, Estimator in estimators.items():
         print("\tEstimator: {}".format(estimator_name))
 
@@ -90,30 +104,48 @@ def handle_dataset(data_set):
                 method_name=sensitivity_name)
             )
 
-            result = run(data_set,
-                         Estimator(
+            result = run(
+                data_set=data_set,
+                estimator=Estimator(
                              dimension=data_set.dimension,
-                             sensitivity=sensitivity))
+                             sensitivity=sensitivity
+                        ),
+                pilot_densities=pilot_densities,
+                general_bandwidth=general_bandwidth
+            )
+            write(result, data_set_file, estimator_name, sensitivity_name)
 
-            out_path = build_output_path(
-                                         data_set_file,
+
+def run(data_set, estimator, pilot_densities, general_bandwidth):
+    densities = estimator.estimate(
+        x_s=data_set.patterns, xi_s=data_set.patterns,
+        pilot_densities=pilot_densities, general_bandwidth=general_bandwidth
+    )
+    return inputoutput.Results(densities, data_set)
+
+
+def write(result, data_set_file, estimator_name, sensitivity_name=None):
+            out_path = build_output_path(data_set_file,
                                          estimator_name,
                                          sensitivity_name)
             with open(out_path, 'wb') as out_file:
                 result.to_file(out_file)
 
 
-def run(data_set, estimator):
-    densities = estimator.estimate(data_set.patterns, data_set.patterns)
-    return inputoutput.Results(densities, data_set)
-
-
 def build_output_path(data_set_file, estimator, sensitivity):
-    out_file_name = '{data_set}_{estimator}_{sensitivity}.txt'.format(
+    data_set_estimator_part = '{data_set}_{estimator}'.format(
         data_set=Path(data_set_file).stem,
         estimator=estimator,
-        sensitivity=sensitivity
     )
+    if sensitivity:
+        out_file_name = '{data_set_estimator}_{sensitivity}.txt'.format(
+            data_set_estimator=data_set_estimator_part,
+            sensitivity=sensitivity
+        )
+    else:
+        out_file_name = '{data_set_estimator}.txt'.format(
+            data_set_estimator=data_set_estimator_part
+        )
     return _results_path.child(out_file_name)
 
 

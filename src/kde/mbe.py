@@ -47,7 +47,7 @@ class MBEstimator(object):
         self._pilot_estimator_implementation = pilot_estimator_implementation or _ParzenEstimator_C
         self._final_estimator_implementation = final_estimator_implementation or _MBEEstimator_C
 
-    def estimate(self, xi_s, x_s=None):
+    def estimate(self, xi_s, x_s=None, pilot_densities=None, general_bandwidth=None):
         """
         Estimate the density of the points xi_s, use the points x_s to determine the density.
         :param xi_s: (array like) The data points to estimate the density for.
@@ -58,12 +58,14 @@ class MBEstimator(object):
             x_s = xi_s
 
         # Compute general window width
-        general_window_width = self._general_window_width_method(xi_s)
+        if general_bandwidth is None:
+            general_bandwidth = self._general_window_width_method(xi_s)
 
         # Compute pilot densities
-        if os.environ.get('DEBUGOUTPUT'):
-            print('\t\t\tComputing {} pilot densities'.format(xi_s.shape[0]))
-        pilot_densities = self._estimate_pilot_densities(general_window_width, xi_s=xi_s)
+        if pilot_densities is None:
+            if os.environ.get('DEBUGOUTPUT'):
+                print('\t\t\tComputing {} pilot densities'.format(xi_s.shape[0]))
+            pilot_densities = self._estimate_pilot_densities(general_bandwidth, xi_s=xi_s)
 
         # Compute local bandwidths
         if os.environ.get('DEBUGOUTPUT'):
@@ -77,7 +79,7 @@ class MBEstimator(object):
                                                          dimension=self._dimension,
                                                          kernel=self._kernel,
                                                          local_bandwidths=local_bandwidths,
-                                                         general_bandwidth=general_window_width)
+                                                         general_bandwidth=general_bandwidth)
         densities = estimator.estimate()
         return densities
 
