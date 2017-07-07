@@ -1,4 +1,5 @@
 from __future__ import division
+import warnings
 
 import os
 
@@ -111,8 +112,24 @@ class MBEstimator(object):
         return pilot_densities
 
     def _compute_local_bandwidths(self, pilot_densities):
-        geometric_mean = stats.gmean(pilot_densities)
-        return np.power((pilot_densities / geometric_mean), - self._sensitivity)
+        def computation(pilot_densities, sensitivity):
+            geometric_mean = stats.gmean(pilot_densities)
+            return np.power((pilot_densities / geometric_mean), - sensitivity)
+
+        local_bandwidths = None
+        with np.errstate(divide='raise'):
+            try:
+                local_bandwidths = computation(pilot_densities, self._sensitivity)
+            except:
+                local_bandwidths = np.ones(pilot_densities.shape)
+                idx_of_valid_densities = (pilot_densities != 0)
+                local_bandwidths[idx_of_valid_densities] = computation(
+                    pilot_densities[idx_of_valid_densities], self._sensitivity
+                )
+                warnings.warn('''Setting some local bandwidths to 1.0 as some of the pilot densities are '''
+                              '''0.0. Note that this influences the other local bandwidths.''')
+            finally:
+                return local_bandwidths
 
 
 class _MBEEstimator(EstimatorImplementation):

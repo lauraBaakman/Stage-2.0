@@ -89,11 +89,19 @@ class TestModifiedBreimanEstimator(TestCase):
     def test__estimate_pilot_densities_C(self):
         self.estimate_pilot_densities_test_helper(_ParzenEstimator_C)
 
-    def test__compute_local_bandwidths(self):
+    def test__compute_local_bandwidths_no_non_zero_densities(self):
         estimator = MBEstimator(dimension=2, sensitivity=0.5)
         densities = np.array([1, 2, 3, 4, 5, 6])
         expected = np.array([1.730258699016973, 1.223477659281915, 0.998965325645141,
                              0.865129349508487, 0.773795213932460, 0.706375155933907])
+        actual = estimator._compute_local_bandwidths(densities)
+        np.testing.assert_array_almost_equal(expected, actual)
+
+    def test__compute_local_bandwidths_with_non_zero_densities(self):
+        estimator = MBEstimator(dimension=2, sensitivity=0.5)
+        densities = np.array([1, 0, 3, 4, 5, 0])
+        expected = np.array([1.66828, 1.0, 0.963182,
+                             0.83414, 0.746077, 1.0])
         actual = estimator._compute_local_bandwidths(densities)
         np.testing.assert_array_almost_equal(expected, actual)
 
