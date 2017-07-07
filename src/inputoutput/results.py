@@ -1,11 +1,11 @@
 import numpy as np
 import warnings
 
+
 class Results:
     def __init__(self, results_array, data_set=None):
         self._results_array = results_array
-        if data_set:
-            _ResultsValidator(data_set=data_set, results_array=results_array).validate()
+        _ResultsValidator(data_set=data_set, results_array=results_array).validate()
 
     @property
     def num_results(self):
@@ -34,7 +34,8 @@ class _ResultsValidator(object):
         self._results_array = results_array
 
     def validate(self):
-        self._one_result_per_pattern()
+        if self._data_set:
+            self._one_result_per_pattern()
         self._results_is_1D_array()
         self._results_are_densities()
 
@@ -44,15 +45,14 @@ class _ResultsValidator(object):
         if not num_results == num_patterns:
             raise InvalidResultsException(
                 '''The number of results (should be equal to the number of patterns. The data set has {} patterns, '''
-                '''and there are {} results.'''
-                    .format(num_patterns, num_results)
+                '''and there are {} results.'''.format(num_patterns, num_results)
             )
 
     def _results_is_1D_array(self):
         if self._results_array.ndim is not 1:
             raise InvalidResultsException(
-                '''1D arrays are expected as results, the current results array has {} dimensions.'''
-                    .format(self._results_array.ndim)
+                '''1D arrays are expected as results, the current results array '''
+                '''has {} dimensions.'''.format(self._results_array.ndim)
             )
 
     def _results_are_densities(self):

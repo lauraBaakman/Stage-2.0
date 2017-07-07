@@ -1,5 +1,4 @@
 from unittest import TestCase
-import warnings
 import io
 
 import numpy as np
@@ -31,7 +30,7 @@ class TestResults(TestCase):
 
     def test_num_results(self):
         results = Results(
-            data_set = self._data_set,
+            data_set=self._data_set,
             results_array=self._results_array
         )
         actual = results.num_results
@@ -40,7 +39,7 @@ class TestResults(TestCase):
 
     def test_to_file(self):
         results = Results(
-            data_set = self._data_set,
+            data_set=self._data_set,
             results_array=self._results_array
         )
         expected_output = ("1.000000000000000\n"
@@ -89,7 +88,7 @@ class Test_ResultsValidator(TestCase):
                 1.0, 2.0, 3.0, 4.0
             ])
             validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
-            actual = validator.validate()
+            validator.validate()
         except InvalidResultsException:
             pass
         except Exception as e:
@@ -111,7 +110,7 @@ class Test_ResultsValidator(TestCase):
                 1.0, 2.0, 3.0, 4.0
             ])
             validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
-            actual = validator._one_result_per_pattern()
+            validator._one_result_per_pattern()
         except InvalidResultsException:
             pass
         except Exception as e:
@@ -125,13 +124,20 @@ class Test_ResultsValidator(TestCase):
                 1.0, 2.0, 3.0, 4.0, 5.0, 6.0
             ])
             validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
-            actual = validator._one_result_per_pattern()
+            validator._one_result_per_pattern()
         except InvalidResultsException:
             pass
         except Exception as e:
             self.fail('Unexpected exception raised: {}'.format(e))
         else:
             self.fail('ExpectedException not raised')
+
+    def test__dont_check_results_per_pattern_if_bool_is_set(self):
+            results_array = np.array([
+                0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6
+            ])
+            validator = _ResultsValidator(data_set=None, results_array=results_array)
+            validator.validate()
 
     def test__results_is_1D_array_1(self):
         results_array = np.array([
@@ -147,7 +153,7 @@ class Test_ResultsValidator(TestCase):
                 [1.0], [2.0], [3.0], [4.0], [5.0], [6.0]
             ])
             validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
-            actual = validator._results_is_1D_array()
+            validator._results_is_1D_array()
         except InvalidResultsException:
             pass
         except Exception as e:

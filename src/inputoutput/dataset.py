@@ -2,7 +2,7 @@ import numpy as np
 
 
 class DataSet(object):
-    def __init__(self, patterns, densities):
+    def __init__(self, patterns, densities=None):
         self._patterns = patterns
         self._densities = densities
         _DataSetValidator(patterns=patterns, densities=densities).validate()
@@ -24,6 +24,10 @@ class DataSet(object):
     @property
     def densities(self):
         return self._densities
+
+    @property
+    def has_densities(self):
+        return self.densities is not None
 
     @classmethod
     def from_file(cls, in_file):
@@ -50,7 +54,29 @@ class DataSet(object):
         return data_set
 
     def to_file(self, out_file):
-        raise NotImplementedError()
+        self._header_to_file(out_file)
+        self._patterns_to_file(out_file)
+        if self.has_densities:
+            self._densities_to_file(out_file)
+
+    def _header_to_file(self, outfile):
+        outfile.write(
+            '{length} {dimension}\n'.format(
+                length=self.num_patterns,
+                dimension=self.dimension
+            ).encode('utf-8')
+        )
+        outfile.write(
+            '{component_lengths}\n'.format(
+                component_lengths=self.num_patterns
+            ).encode('utf-8')
+        )
+
+    def _patterns_to_file(self, outfile):
+        np.savetxt(outfile, self.patterns)
+
+    def _densities_to_file(self, outfile):
+        np.savetxt(outfile, self.densities)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -87,7 +113,10 @@ class _DataSetReader(object):
         return self._abstract_read(num_rows_to_skip=self._header_size)
 
     def _read_densities(self):
-        return self._abstract_read(num_rows_to_skip=self._header_size + self._num_patterns)
+        densities = self._abstract_read(num_rows_to_skip=self._header_size + self._num_patterns)
+        if not densities.size:
+            densities = None
+        return densities
 
     def _abstract_read(self, num_rows_to_skip):
         self.in_file.seek(0)
@@ -104,22 +133,23 @@ class _DataSetValidator(object):
 
     def validate(self):
         self._patterns_is_2D_array()
-        self._densities_is_1D_array()
-        self._num_labels_equals_num_patterns()
-        self._densities_is_probability_densities()
+        if self._densities is not None:
+            self._densities_is_1D_array()
+            self._num_labels_equals_num_patterns()
+            self._densities_is_probability_densities()
 
     def _patterns_is_2D_array(self):
         if self._patterns.ndim is not 2:
             raise InvalidDataSetException(
-                '''2D arrays are expected as input, the input array has {} dimensions.'''
-                    .format(self._patterns.ndim)
+                '''2D arrays are expected as input, the input array has '''
+                '''{} dimensions.'''.format(self._patterns.ndim)
             )
 
     def _densities_is_1D_array(self):
         if self._patterns.ndim is not 2:
             raise InvalidDataSetException(
-                '''1D arrays are expected for the densities, the input array has {} dimensions.'''
-                    .format(self._patterns.ndim)
+                '''1D arrays are expected for the densities, the input array '''
+                '''has {} dimensions.'''.format(self._patterns.ndim)
             )
 
     def _num_labels_equals_num_patterns(self):

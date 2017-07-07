@@ -12,6 +12,16 @@ def build_result_path(results_directory, data_set_file_path, estimator, *args):
     return results_directory.child(out_file_name)
 
 
+def build_xs_path(directory, data_set_file_path, *args):
+    args_string = '_'.join(args)
+    out_file_name = '{data_set}{seperator}{args_string}.txt'.format(
+        data_set=Path(data_set_file_path).stem,
+        seperator='_' if args_string else '',
+        args_string=args_string
+    )
+    return directory.child(out_file_name)
+
+
 def partial_path(path):
     return Path(path.components()[-3:])
 

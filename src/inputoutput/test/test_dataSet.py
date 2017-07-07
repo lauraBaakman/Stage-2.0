@@ -10,6 +10,109 @@ class TestDataSet(TestCase):
     def setUp(self):
         super(TestDataSet, self).setUp()
 
+    def test_has_densities_true(self):
+        data_set = DataSet(
+            patterns=np.array([
+                [52.0, 45.0, 56.0],
+                [60.0, 52.0, 41.0],
+                [37.0, 44.0, 49.0],
+                [54.0, 56.0, 47.0],
+                [51.0, 46.0, 47.0],
+            ]),
+            densities=np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+                1.227518586e-05,
+                7.288289757e-05,
+                0.0001832763582,
+            ])
+        )
+        actual = data_set.has_densities
+        self.assertTrue(actual)
+
+    def test_has_densities_fals(self):
+        data_set = DataSet(
+            patterns=np.array([
+                [52.0, 45.0, 56.0],
+                [60.0, 52.0, 41.0],
+                [37.0, 44.0, 49.0],
+                [54.0, 56.0, 47.0],
+                [51.0, 46.0, 47.0],
+            ])
+        )
+        actual = data_set.has_densities
+        self.assertFalse(actual)
+
+    def test_validate_complete_set(self):
+        DataSet(
+            patterns=np.array([
+                [52.0, 45.0, 56.0],
+                [60.0, 52.0, 41.0],
+                [37.0, 44.0, 49.0],
+                [54.0, 56.0, 47.0],
+                [51.0, 46.0, 47.0],
+            ]),
+            densities=np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+                1.227518586e-05,
+                7.288289757e-05,
+                0.0001832763582,
+            ])
+        )
+
+    def test_validate_set_without_densities(self):
+        DataSet(
+            patterns=np.array([
+                [52.0, 45.0, 56.0],
+                [60.0, 52.0, 41.0],
+                [37.0, 44.0, 49.0],
+                [54.0, 56.0, 47.0],
+                [51.0, 46.0, 47.0],
+            ])
+        )
+
+    def test_to_file_no_densities(self):
+        data_set = DataSet(
+            patterns=np.array([
+                [1.0, 2.0, 3.0],
+                [4.0, 5.0, 6.0],
+                [7.0, 8.0, 9.0],
+                [0.5, 0.2, 0.3],
+                [0.4, 0.5, 0.6],
+            ])
+        )
+        # See: http://stackoverflow.com/a/3945057/1357229
+        actual_file_buffer = BytesIO()
+        data_set.to_file(actual_file_buffer)
+        actual_file_buffer.seek(0)
+        actual_data_set = DataSet.from_file(actual_file_buffer)
+        self.assertEqual(actual_data_set, data_set)
+
+    def test_to_file_with_densities(self):
+        data_set = DataSet(
+            patterns=np.array([
+                [1.0, 2.0, 3.0],
+                [4.0, 5.0, 6.0],
+                [7.0, 8.0, 9.0],
+                [0.5, 0.2, 0.3],
+                [0.4, 0.5, 0.6],
+            ]),
+            densities=np.array([
+                0.000007031250000000002179,
+                0.000006250000000000001485,
+                0.000006250000000000001485,
+                0.0000007812500000000001857,
+                0.0000007812500000000001857
+            ])
+        )
+        # See: http://stackoverflow.com/a/3945057/1357229
+        actual_file_buffer = BytesIO()
+        data_set.to_file(actual_file_buffer)
+        actual_file_buffer.seek(0)
+        actual_data_set = DataSet.from_file(actual_file_buffer)
+        self.assertEqual(actual_data_set, data_set)
+
     def test_num_patterns(self):
         data_set = DataSet(
             patterns=np.array([
@@ -205,7 +308,7 @@ class Test_DataSetReader(TestCase):
                                    """7.288289757e-05\n"""
                                    """0.0001832763582\n""".encode())
 
-    def test_read(self):
+    def test_read_with_densities(self):
         actual = _DataSetReader(self._input_file).read()
         expected = DataSet(
             patterns=np.array([
@@ -221,6 +324,28 @@ class Test_DataSetReader(TestCase):
                 1.227518586e-05,
                 7.288289757e-05,
                 0.0001832763582,
+            ])
+        )
+        self.assertEqual(actual, expected)
+
+    def test_read_no_densities(self):
+        input_file = BytesIO(
+            """5 3\n"""
+            """2 3\n"""
+            """52.0 45.0 56.0\n"""
+            """60.0 52.0 41.0\n"""
+            """37.0 44.1 49.0\n"""
+            """54.0 56.0 47.0\n"""
+            """51.0 46.0 47.0\n""".encode()
+        )
+        actual = _DataSetReader(input_file).read()
+        expected = DataSet(
+            patterns=np.array([
+                [52.0, 45.0, 56.0],
+                [60.0, 52.0, 41.0],
+                [37.0, 44.1, 49.0],
+                [54.0, 56.0, 47.0],
+                [51.0, 46.0, 47.0],
             ])
         )
         self.assertEqual(actual, expected)
@@ -294,7 +419,7 @@ class Test_DataSetValidator(TestCase):
                 0.0001832763582,
             ])
             validator = _DataSetValidator(patterns=patterns, densities=densities)
-            actual = validator.validate()
+            validator.validate()
         except InvalidDataSetException:
             pass
         except Exception as e:
