@@ -180,7 +180,7 @@ if __name__ == '__main__':
              '''a 5 x 5 x 5 grid if 3D data are used.'''
     )
     parser.set_defaults(verify_files=_ask_for_confirmation)
-    parser.set_defaults(verify_files=_use_xs_grid)
+    parser.set_defaults(use_xs_grid=_use_xs_grid)
     args = parser.parse_args()
 
     _data_set_path = args.input_directory
@@ -191,7 +191,7 @@ if __name__ == '__main__':
     data_set_files = args.datasets
 
     if not data_set_files:
-        data_set_files = ioUtils.get_data_set_files(_data_set_path)
+        data_set_files = ioUtils.get_data_set_files(_data_set_path, _ask_for_confirmation)
 
     if _use_xs_grid:
         print('Using a {} x ... x {} grid as xs.\n'.format(_grid_dimension, _grid_dimension))
