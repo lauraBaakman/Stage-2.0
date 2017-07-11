@@ -28,8 +28,8 @@ sensitivities = {
 }
 
 estimators = {
-    'sambe': SAMBEstimator,
-    'mbe': MBEstimator
+    # 'sambe': SAMBEstimator,
+    # 'mbe': MBEstimator
 }
 
 _ask_for_confirmation = False
@@ -84,7 +84,8 @@ def handle_data_set(x_s, xi_s, data_set, data_set_file, *args):
 
 
 def run_parzen(general_bandwidth, data_set, x_s, xi_s, dimension, data_set_file, *args):
-    estimator_name = 'Parzen'
+    estimator_name = 'parzen'
+    print("\tEstimator: {}".format('Parzen'))
     result = run_single_configuration(
         x_s=x_s,
         xi_s=xi_s,
