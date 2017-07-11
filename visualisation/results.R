@@ -7,6 +7,7 @@ source("./io.R");
 
 # Load libraries
 library(ggplot2);
+library(scales);
 library(extrafont);
 library(stringr);
 library(gridExtra);
@@ -21,14 +22,23 @@ isSingleDensityDataSet <- function(trueDensities){
   length(unique(trueDensities)) <= 5;
 }
 
+fancy_scientificLabels <- function(l) {
+  # turn in to character string in scientific notation
+  l <- format(l, scientific = TRUE)
+  # quote the part before the exponent to keep all the digits
+  l <- gsub("^(.*)e", "'\\1'e", l)
+  # turn the 'e+' into plotmath format
+  l <- gsub("e", "%*%10^", l)
+  # return this as an expression
+  parse(text=l)
+}
+
+
 plotResultOfMultipleDensityDataSet <-function(data, outputFile, distribution, limits){
   cols = generateColours(distribution);
   
   plot <- ggplot(data) +
     theme(
-      axis.ticks = element_blank(),
-      axis.text = element_blank(),
-      
       plot.title = element_text(family = font.family, size=font.size),
       
       text=element_text(family=font.family, size=font.size),
@@ -38,24 +48,20 @@ plotResultOfMultipleDensityDataSet <-function(data, outputFile, distribution, li
       panel.grid.minor = element_blank(),
       panel.background = element_blank()
     );
-  plot <- plot + 	geom_point(aes(x=trueDensity, y=computedDensity), size=0.7, colour=cols, shape=21, stroke=0.2);
-  plot <- plot + 	geom_line(aes(x=trueDensity, y=trueDensity));
-  
-  plot <- plot + 	xlab('true density') +
-    ylab('computed density');
+  plot <- plot + geom_point(aes(x=trueDensity, y=computedDensity), size=0.7, colour=cols, shape=21, stroke=0.2);
+  plot <- plot + geom_line(aes(x=trueDensity, y=trueDensity));
+  plot <- plot + 	xlab('true density') + ylab('computed density');
+  plot <- plot + scale_x_continuous(labels = fancy_scientificLabels) + scale_y_continuous(labels = fancy_scientificLabels);
   
   plot <- plot + ggtitle(sprintf("MSE = %.7e", computeMSE(data)));
-  
-  plot <- plot + 	xlim(limits[[1]], limits[[2]]) +
-    ylim(limits[[1]], limits[[2]]);
-  #print(plot)
+  # print(plot)
   ggsave(
     outputFile,
     plot,
     width=(tex.textwidth/2) - 1, height=(tex.textwidth/2) - 1, unit="cm"
   )
-  Sys.setenv(R_GSCMD = "/usr/local/bin/gs");
-  embed_fonts(outputFile);
+  # Sys.setenv(R_GSCMD = "/usr/local/bin/gs");
+  # embed_fonts(outputFile);
 }
 
 plotResultOfSingleDensityDataSet <-function(trueDensities, computedDensities, outputFile, distribution){
@@ -117,7 +123,7 @@ mainResults <- function(){
       
       printf('Processing: %s\n', basename(resultPath));
       
-      outputFiles[[idx]] = outputFilePath(resultPath, "results_");
+      outputFiles[[idx]] = outputFilePath(resultPath, "results_", '.png');
       data[[idx]] = data.frame(points=dataPoints, trueDensities=trueDensities, computedDensities=computedDensities);
       
       overview <- updateResultTable(overview, data[[idx]], outputFiles[[idx]]);
@@ -136,8 +142,6 @@ mainResults <- function(){
   
   write.csv(file=overviewFilePath(resultPath), x=overview);
   print(overview)
-  
-  
 }
 
 mainResults()

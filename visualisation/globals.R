@@ -14,7 +14,8 @@ colours = list(
   yellow  = rgb(255, 255, 157, max=255	)
 )
 font.size = 10;
-font.family ="CM Roman";
+# font.family ="CM Roman";
+font.family ="Times-Roman";
 
 tex.textwidth = 14.92038; #cm
 

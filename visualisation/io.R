@@ -1,8 +1,8 @@
 source('header.r')
 
-outputFilePath <- function(inputFilePath, description){
+outputFilePath <- function(inputFilePath, description, extension='.pdf'){
   inputFile = removeExtension(basename(inputFilePath));
-  outputFile = paste(description, inputFile ,'.pdf', sep='');
+  outputFile = paste(description, inputFile ,extension, sep='');
   file.path(imagesOutputPath, outputFile);
 }
 
