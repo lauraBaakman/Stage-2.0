@@ -6,23 +6,31 @@ import math
 import kde._kde as _kde
 import numpy as np
 
+import kde.utils.automaticWindowWidthMethods as automaticWindowWidthMethods
 from kde.estimatorimplementation import EstimatorImplementation
 from kde.kernels.gaussian import Gaussian
 
 
 class ParzenEstimator(object):
-    def __init__(self, dimension, bandwidth, kernel_class=None, estimator_implementation=None):
+    def __init__(self, dimension, bandwidth=None, kernel_class=None, estimator_implementation=None, *args, **kwargs):
         self._dimension = dimension
         self._bandwidth = bandwidth
         self._kernel = kernel_class() if kernel_class else Gaussian()
         self._estimator_implementation = estimator_implementation or _ParzenEstimator_C
 
-    def estimate(self, xi_s, x_s=None):
+    def estimate(self, xi_s, x_s=None, general_bandwidth=None, *args, **kwargs):
 
         if x_s is None:
             x_s = xi_s
         if os.environ.get('DEBUGOUTPUT'):
             print('\t\t\tEstimating {} densities'.format(x_s.shape[0]))
+
+        if general_bandwidth is None:
+            if self._bandwidth is None:
+                self._bandwidth = automaticWindowWidthMethods.ferdosi(xi_s)
+        else:
+            self._bandwidth = general_bandwidth
+
         estimator = self._estimator_implementation(
             xi_s=xi_s, x_s=x_s,
             dimension=self._dimension,

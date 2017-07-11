@@ -70,41 +70,6 @@ plotResult <- function(data, outputFile, distribution, limits){
   }
 }
 
-findResultsAssociatedWithDataSet <- function(file, results){
-  isResultAssociatedWithDataSetFile <- function(resultsFile){
-    paste(
-      regmatches(
-        basename(resultsFile), 
-        regexpr("([A-Za-z]+)_([0-9]+)_([0-9]+)", basename(resultsFile))
-      ), '.txt', sep=''
-    ) == basename(file); 
-  }  
-  
-  idx = sapply(results, isResultAssociatedWithDataSetFile, USE.NAMES = FALSE)
-  
-  list(
-    associated=results[idx],
-    results=results[!idx]
-  );
-}
-
-getFiles <- function(){
-  dataSetsPaths = getDataSetPaths();
-  resultsPaths = getOutputPaths();
-  filePairs = list();	i = 1;
-  for (file in dataSetsPaths) {
-    if(length(resultsPaths) == 0){
-      break;
-    }
-    list[associated, resultsPaths] = findResultsAssociatedWithDataSet(file, resultsPaths);
-    if(length(associated) != 0){
-      filePairs[[i]] = c(dataFile=file, associatedResults=list(associated));
-      i = i + 1;
-    }
-  }
-  filePairs;
-}
-
 findPlotLimits <- function(data){
   minimum = Inf;
   maximum = -Inf;

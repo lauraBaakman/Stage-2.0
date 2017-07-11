@@ -43,12 +43,13 @@ def handle_data_set(x_s, xi_s, data_set, data_set_file, *args):
             xi_s=xi_s,
             x_s=x_s
         )
-        write(
-            result=io.Results(pilot_densities, data_set),
-            out_path=ioUtils.build_result_path(
-                _results_path, data_set_file, 'parzen', *args
+        if not _use_xs_grid:
+            write(
+                result=io.Results(pilot_densities, data_set),
+                out_path=ioUtils.build_result_path(
+                    _results_path, data_set_file, 'parzen', *args
+                )
             )
-        )
 
         for estimator_name, Estimator in estimators.items():
             print("\tEstimator: {}".format(estimator_name))
@@ -78,9 +79,32 @@ def handle_data_set(x_s, xi_s, data_set, data_set_file, *args):
                     )
                 )
 
+        if _use_xs_grid:
+            run_parzen(general_bandwidth, data_set, x_s, xi_s, dimension, data_set_file, *args)
+
+
+def run_parzen(general_bandwidth, data_set, x_s, xi_s, dimension, data_set_file, *args):
+    estimator_name = 'Parzen'
+    result = run_single_configuration(
+        x_s=x_s,
+        xi_s=xi_s,
+        estimator=ParzenEstimator(
+            dimension=dimension
+        ),
+        pilot_densities=None,
+        general_bandwidth=general_bandwidth,
+        data_set=data_set
+    )
+    write(
+        result=result,
+        out_path=ioUtils.build_result_path(
+            _results_path, data_set_file, estimator_name, *args
+        )
+    )
+
 
 def estimate_pilot_densities(x_s, xi_s):
-    print("\tEstimator: Parzen")
+    print("\tEstimating Pilot Densities")
     general_bandwidth = automaticWindowWidthMethods.ferdosi(xi_s)
     _, dimension = x_s.shape
     pilot_densities = ParzenEstimator(

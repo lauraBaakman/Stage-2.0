@@ -1,9 +1,10 @@
 from __future__ import division
 
-from unittest import TestCase, skip
+from unittest import TestCase
 
 import numpy as np
 
+import kde.utils.automaticWindowWidthMethods as automaticWindowWidthMethods
 from kde.kernels.gaussian import Gaussian
 from kde.kernels.testKernel import TestKernel
 from kde.kernels.epanechnikov import Epanechnikov
@@ -28,6 +29,24 @@ class TestParzenEstimator(TestCase):
                                     bandwidth=4, kernel_class=Gaussian,
                                     estimator_implementation=_ParzenEstimator_Python)
         actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
+        expected = np.array([0.0096947375, 0.0095360625])
+        np.testing.assert_array_almost_equal(actual, expected)
+
+    def test_estimate_python_dont_pass_bandwidth(self):
+        xi_s = np.array([[-1, -1], [0, 0], [1 / 2.0, 1 / 2.0]])
+        x_s = np.array([[0, 0], [1 / 4.0, 1 / 2.0]])
+        estimator = ParzenEstimator(dimension=2, kernel_class=Gaussian,
+                                    estimator_implementation=_ParzenEstimator_Python)
+        actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
+        expected = np.array([0.15133033, 0.14270123])
+        np.testing.assert_array_almost_equal(actual, expected)
+
+    def test_estimate_python_pass_bandwidth_with_estimate(self):
+        xi_s = np.array([[-1, -1], [0, 0], [1 / 2.0, 1 / 2.0]])
+        x_s = np.array([[0, 0], [1 / 4.0, 1 / 2.0]])
+        estimator = ParzenEstimator(dimension=2, kernel_class=Gaussian,
+                                    estimator_implementation=_ParzenEstimator_Python)
+        actual = estimator.estimate(xi_s=xi_s, x_s=x_s, general_bandwidth=4)
         expected = np.array([0.0096947375, 0.0095360625])
         np.testing.assert_array_almost_equal(actual, expected)
 
