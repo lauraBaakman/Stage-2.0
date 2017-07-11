@@ -122,6 +122,9 @@ extractGridResultFiles<-function(data_set_results){
 }
 
 getFiles <- function(){
+  printf('Reading dataset files from %s\n', dataInputPath);
+  printf('Reading result files from %s\n', dataOutputPath);
+  
   dataSetsPaths = getDataSetPaths();
   resultsPaths = getOutputPaths();
   filePairs = list();	i = 1;
