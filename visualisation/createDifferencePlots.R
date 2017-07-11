@@ -94,9 +94,13 @@ createPlot<-function(positions, result_1, result_2, title, file_path){
   publishDifferencePlotLocally(plot, title, file_path);
 }
 
-results = getFiles();
 
-for (result in results){
-  createPlots(result$grid_files[1], result$grid_results)  
-  createPlots(result$dataFile, result$associatedResults)  
+
+createDifferencePlotsMain<-function(){
+  results = getFiles();
+  
+  for (result in results){
+    createPlots(result$grid_files[1], result$grid_results)  
+    createPlots(result$dataFile, result$associatedResults)  
+  }  
 }
