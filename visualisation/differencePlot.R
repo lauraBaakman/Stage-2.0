@@ -10,7 +10,7 @@ library(scatterplot3d)
 # https://github.com/bhaskarvk/colormap
 library(colormap)
 
-createDifferencePlot<-function(data, values_1, values_2, plot_title){
+createDifferencePlot3D<-function(data, values_1, values_2, plot_title='', alpha=0.2){
   data$differences = computeSquaredError(values_1, values_2);
   data$normalizedDifferences = scaleToUnitRange(data$differences);
   
@@ -26,7 +26,7 @@ createDifferencePlot<-function(data, values_1, values_2, plot_title){
     x = data$x, y = data$y, z = data$z,
     xlab='x', ylab='y', zlab='z',
     pch=glyph,
-    color=colors,
+    color=adjustcolor(colors, alpha.f = alpha),
     grid=FALSE,
     lty.hide=4,
     cex.lab=1.0,
@@ -35,7 +35,7 @@ createDifferencePlot<-function(data, values_1, values_2, plot_title){
     cex.symbols = sizes,
     main=plot_title
   )
-  par(mar = margins)
+  par(mar=margins)
   par(xpd=TRUE)
   legend(plot$xyz.convert(105, 100, 100), 
          pch=glyph,
@@ -81,3 +81,8 @@ scaleToUnitRange<-function(values){
   newValues = (values - oldMin) / oldRange;
   return(newValues);
 }
+
+data = readDataSet('/Users/laura/Desktop/small/results/baakman_1_90_grid_3.txt')$data;
+values_1 = readResults('/Users/laura/Desktop/small/results/baakman_1_90_mbe_breiman_grid_3.txt')$computedDensity;
+values_2 = readResults('/Users/laura/Desktop/small/results/baakman_1_90_parzen_grid_3.txt')$computedDensity;
+createDifferencePlot3D(data, values_1, values_2)

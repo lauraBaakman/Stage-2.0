@@ -74,37 +74,45 @@ createOutputFilePath<-function(path, file_name){
 createPlots<-function(data_file, result_files){
   positions = readDataSet(data_file)$data;
   
-  printf('Processing grid file: %s\n', data_file);
+  printf('Processing data file: %s\n', data_file);
   
-  for (result_file_1 in result_files){
+  for (idx_1 in 1:length(result_files)){
+    result_file_1 = result_files[idx_1];
     results_1 = readResults(result_file_1);
     
-    for (result_file_2 in result_files){
-      if (result_file_1 != result_file_2){
-        results_2 = readResults(result_file_2);
-        title = createTitle(data_file, result_file_1, result_file_2);
-        file_path = createOutputFilePath(imagesOutputPath, createOutputFileName(result_file_1, result_file_2));
-        createPlot(positions, results_1$computedDensity, results_2$computedDensity, title, file_path)
-      }
+    if( (idx_1 + 1) <= length(result_files)){
+      for(idx_2 in seq(idx_1 + 1,length(result_files))){
+        result_file_2 = result_files[idx_2];
+        printf('\tComparing %s with %s\n', basename(result_file_1), basename(result_file_2));
+        if (result_file_1 != result_file_2){
+          results_2 = readResults(result_file_2);
+          title = createTitle(data_file, result_file_1, result_file_2);
+          file_path = createOutputFilePath(imagesOutputPath, createOutputFileName(result_file_1, result_file_2));
+          createPlot(positions, results_1$computedDensity, results_2$computedDensity, title, file_path)
+        }
+      }      
     }
   }
 }
 
 createPlot<-function(positions, result_1, result_2, title, file_path){
   png(file_path);
-  plot = createDifferencePlot(positions, result_1, result_2, title);
+  plot = createDifferencePlot3D(positions, result_1, result_2, title);
   dev.off();
 }
 
-createDifferencePlotsMain<-function(){
+mainCreateDifferencePlots3D<-function(){
   results = getFiles();
   
   for (result in results){
     if(!is.null(result$grid_files[1])){
         createPlots(result$grid_files[1], result$grid_results)    
     }
-    if(!is.null(result$dataFile)){
+    if(!is.null(result$dataFile) && (length(result$associatedResults) != 0)){
       createPlots(result$dataFile, result$associatedResults)    
     }
   }  
 }
+
+file.remove('/Users/laura/Desktop/difference_baakman_1_mbe_breiman_vs_parzen_grid_3.png')
+mainCreateDifferencePlots3D();
