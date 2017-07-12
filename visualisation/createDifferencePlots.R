@@ -91,19 +91,10 @@ createPlots<-function(data_file, result_files){
 }
 
 createPlot<-function(positions, result_1, result_2, title, file_path){
-  # data = readDataSet('/Users/laura/Desktop/grid.txt')$data;
-  # values_1 = readResults('/Users/laura/Desktop/values1.txt')$computedDensity;
-  # values_2 = readResults('/Users/laura/Desktop/values2.txt')$computedDensity;
-  # plot_title = 'test plot';
-  # 
-  # png('/Users/laura/Desktop/temp.png');
-  # plot = createDifferencePlot(data, values_1, values_2, plot_title);
-  # dev.off();
   png(file_path);
   plot = createDifferencePlot(positions, result_1, result_2, title);
   dev.off();
 }
-
 
 createDifferencePlotsMain<-function(){
   results = getFiles();
@@ -117,5 +108,3 @@ createDifferencePlotsMain<-function(){
     }
   }  
 }
-
-createDifferencePlotsMain()
