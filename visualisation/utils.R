@@ -1,3 +1,5 @@
+library(stringr)
+
 generateColours <- function(numberOfPatternsPerSubSet){
   patternColours = list(); 
   for (idx in 1:length(numberOfPatternsPerSubSet)) {

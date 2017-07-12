@@ -81,15 +81,3 @@ scaleToUnitRange<-function(values){
   newValues = (values - oldMin) / oldRange;
   return(newValues);
 }
-
-publishDifferencePlotLocally<-function(plot, file_name, outfilepath){
-  # api_create(plot, filename=file_name, sharing='public')
-  # plotly_IMAGE(plot, format = "png", out_file = outfilepath)
-}
-
-data = readDataSet('/Users/laura/Desktop/grid.txt')$data;
-values_1 = readResults('/Users/laura/Desktop/values1.txt')$computedDensity;
-values_2 = readResults('/Users/laura/Desktop/values2.txt')$computedDensity;
-plot_title = 'test plot';
-
-createDifferencePlot(data, values_1, values_2, plot_title)

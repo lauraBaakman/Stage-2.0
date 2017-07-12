@@ -1,6 +1,6 @@
 # Define paths
 dataInputPath = "/Users/laura/Repositories/stage/data/simulated/large";
-dataOutputPath = "/Users/laura/Repositories/stage/results/simulated/large/noGrid";
+dataOutputPath = "/Users/laura/Repositories/stage/results/simulated/large/grid";
 imagesOutputPath = "/Users/laura/Desktop";
 
 # Settings for the plots
@@ -18,6 +18,7 @@ font.size = 10;
 font.family ="Times-Roman";
 
 tex.textwidth = 14.92038; #cm
+tex.textheight = 22.70108; #cm
 
 glyph.size.min = 0.7
 glyph.size.max = 3.0

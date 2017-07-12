@@ -67,13 +67,14 @@ createOutputFileName<-function(file_values_1, file_values_2, extension='png'){
   sprintf('difference_%s_%s_vs_%s%s%s.%s', data_set, estimator_1, estimator_2, if(!is.na(values_1_meta$grid)) '_' else '', grid, extension)
 }
 
-
 createOutputFilePath<-function(path, file_name){
   sprintf('%s/%s', path, file_name)
 }
 
 createPlots<-function(data_file, result_files){
-  positions = readDataSet(data_file)$data
+  positions = readDataSet(data_file)$data;
+  
+  printf('Processing grid file: %s\n', data_file);
   
   for (result_file_1 in result_files){
     results_1 = readResults(result_file_1);
@@ -83,24 +84,38 @@ createPlots<-function(data_file, result_files){
         results_2 = readResults(result_file_2);
         title = createTitle(data_file, result_file_1, result_file_2);
         file_path = createOutputFilePath(imagesOutputPath, createOutputFileName(result_file_1, result_file_2));
-        createPlot(positions, results_1, results_2, title, file_path)
+        createPlot(positions, results_1$computedDensity, results_2$computedDensity, title, file_path)
       }
     }
   }
 }
 
 createPlot<-function(positions, result_1, result_2, title, file_path){
+  # data = readDataSet('/Users/laura/Desktop/grid.txt')$data;
+  # values_1 = readResults('/Users/laura/Desktop/values1.txt')$computedDensity;
+  # values_2 = readResults('/Users/laura/Desktop/values2.txt')$computedDensity;
+  # plot_title = 'test plot';
+  # 
+  # png('/Users/laura/Desktop/temp.png');
+  # plot = createDifferencePlot(data, values_1, values_2, plot_title);
+  # dev.off();
+  png(file_path);
   plot = createDifferencePlot(positions, result_1, result_2, title);
-  publishDifferencePlotLocally(plot, title, file_path);
+  dev.off();
 }
-
 
 
 createDifferencePlotsMain<-function(){
   results = getFiles();
   
   for (result in results){
-    createPlots(result$grid_files[1], result$grid_results)  
-    createPlots(result$dataFile, result$associatedResults)  
+    if(!is.null(result$grid_files[1])){
+        createPlots(result$grid_files[1], result$grid_results)    
+    }
+    if(!is.null(result$dataFile)){
+      createPlots(result$dataFile, result$associatedResults)    
+    }
   }  
 }
+
+createDifferencePlotsMain()
