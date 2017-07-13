@@ -8,12 +8,56 @@ class Results:
         _ResultsValidator(data_set=data_set, results_array=results_array).validate()
 
     @property
+    def values(self):
+        return self._results_array
+
+    @property
     def num_results(self):
         (num_results,) = self._results_array.shape
         return num_results
 
     def to_file(self, out_file):
         _ResultsWriter(results=self._results_array, out_file=out_file).write()
+
+    @classmethod
+    def from_file(cls, in_file):
+        try:
+            results = _ResultsReader(in_file).read()
+        except AttributeError:
+            with open(in_file, mode='rb') as input_file_handle:
+                results = _ResultsReader(input_file_handle).read()
+        return results
+
+    def __str__(self):
+        return str(self.__class__) + ": " + str(self.__dict__)
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return (
+                np.array_equiv(self._results_array, other._results_array)
+            )
+        return NotImplemented
+
+    def __ne__(self, other):
+        if isinstance(other, self.__class__):
+            return not self.__eq__(other)
+        return NotImplemented
+
+
+class _ResultsReader(object):
+    def __init__(self, in_file):
+        self.in_file = in_file
+
+    def read(self):
+        densities = self._read_densities()
+        return Results(results_array=densities)
+
+    def _read_densities(self):
+        self.in_file.seek(0)
+        return np.genfromtxt(
+            self.in_file,
+            skip_header=0, invalid_raise=True
+        )
 
 
 class _ResultsWriter(object):

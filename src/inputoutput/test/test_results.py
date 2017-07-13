@@ -54,6 +54,57 @@ class TestResults(TestCase):
 
         self.assertEqual(actual_output, expected_output)
 
+    def test_from_file(self):
+        input_file = io.BytesIO(
+            """7.539699219e-05\n"""
+            """1.240164051e-05\n"""
+            """1.227518586e-05\n"""
+            """7.288289757e-05\n"""
+            """0.0001832763582\n""".encode())
+
+        actual = Results.from_file(input_file)
+        expected = Results(
+            data_set=None,
+            results_array=np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+                1.227518586e-05,
+                7.288289757e-05,
+                0.0001832763582,
+            ])
+        )
+        self.assertEqual(actual, expected)
+
+    def test__eq_eqal(self):
+        one = Results(
+            np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+            ])
+        )
+        two = Results(
+            np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+            ])
+        )
+        self.assertTrue(one == two)
+
+    def test__eq_not_equal(self):
+        one = Results(
+            np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+            ])
+        )
+        two = Results(
+            np.array([
+                7.639699219e-05,
+                1.240164051e-05,
+            ])
+        )
+        self.assertFalse(one == two)
+
 
 class Test_ResultsValidator(TestCase):
     def setUp(self):
@@ -164,6 +215,18 @@ class Test_ResultsValidator(TestCase):
     def test__results_are_densities_0(self):
         results_array = np.array([
             0.0, 0.2, 0.33, 0.444, 0.55, 1.0
+        ])
+        validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
+        actual = validator._results_is_1D_array()
+        self.assertIsNone(actual)
+
+    def test__results_are_densities_1(self):
+        results_array = np.array([
+            7.539699219e-05,
+            1.240164051e-05,
+            1.227518586e-05,
+            7.288289757e-05,
+            0.0001832763582
         ])
         validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
         actual = validator._results_is_1D_array()

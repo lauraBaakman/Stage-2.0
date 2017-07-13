@@ -30,7 +30,7 @@ class TestDataSet(TestCase):
         actual = data_set.has_densities
         self.assertTrue(actual)
 
-    def test_has_densities_fals(self):
+    def test_has_densities_false(self):
         data_set = DataSet(
             patterns=np.array([
                 [52.0, 45.0, 56.0],
@@ -219,7 +219,6 @@ class TestDataSet(TestCase):
                 0.0001832763582,
             ])
         )
-
         self.assertEqual(actual, expected)
 
     def test__eq_both_eqal(self):
