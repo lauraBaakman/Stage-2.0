@@ -28,8 +28,8 @@ sensitivities = {
 }
 
 estimators = {
-    # 'sambe': SAMBEstimator,
-    # 'mbe': MBEstimator
+    'sambe': SAMBEstimator,
+    'mbe': MBEstimator
 }
 
 _ask_for_confirmation = False
