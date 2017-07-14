@@ -1,3 +1,5 @@
+import warnings
+
 import numpy as np
 
 
@@ -49,8 +51,8 @@ class DataSet(object):
         try:
             data_set = _DataSetReader(in_file).read()
         except AttributeError:
-            input_file_handle = open(in_file, mode='rb')
-            data_set = _DataSetReader(input_file_handle).read()
+            with open(in_file, mode='rb') as input_file_handle:
+                data_set = _DataSetReader(input_file_handle).read()
         return data_set
 
     def to_file(self, out_file):
@@ -113,9 +115,12 @@ class _DataSetReader(object):
         return self._abstract_read(num_rows_to_skip=self._header_size)
 
     def _read_densities(self):
-        densities = self._abstract_read(num_rows_to_skip=self._header_size + self._num_patterns)
-        if not densities.size:
-            densities = None
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            densities = self._abstract_read(num_rows_to_skip=self._header_size + self._num_patterns)
+            # Catch the warnings about empty files, since they are to be expected if the dataset file has no densities
+            if w and issubclass(w[0].category, UserWarning):
+                densities = None
         return densities
 
     def _abstract_read(self, num_rows_to_skip):

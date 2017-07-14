@@ -5,6 +5,7 @@ from unipath import Path
 from inputoutput.utils import build_result_path, build_xs_path
 
 
+
 class TestBuildResultPath(TestCase):
 
     def setUp(self):

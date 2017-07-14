@@ -1,6 +1,10 @@
 from io import BytesIO
 from unittest import TestCase
+import shutil
+import tempfile
+import warnings
 
+from unipath import Path
 import numpy as np
 
 from inputoutput.dataset import DataSet, InvalidDataSetException, _DataSetValidator, _DataSetReader
@@ -293,7 +297,7 @@ class TestDataSet(TestCase):
 
 class Test_DataSetReader(TestCase):
     def setUp(self):
-        super(Test_DataSetReader, self).setUpClass()
+        super(Test_DataSetReader, self).setUp()
         self._input_file = BytesIO("""5 3\n"""
                                    """2 3\n"""
                                    """52.0 45.0 56.0\n"""
@@ -306,6 +310,11 @@ class Test_DataSetReader(TestCase):
                                    """1.227518586e-05\n"""
                                    """7.288289757e-05\n"""
                                    """0.0001832763582\n""".encode())
+        self.test_dir = Path(tempfile.mkdtemp())
+
+    def tearDown(self):
+        super(Test_DataSetReader, self).tearDown()
+        shutil.rmtree(self.test_dir)
 
     def test_read_with_densities(self):
         actual = _DataSetReader(self._input_file).read()
@@ -347,6 +356,28 @@ class Test_DataSetReader(TestCase):
                 [51.0, 46.0, 47.0],
             ])
         )
+        self.assertEqual(actual, expected)
+
+    def test_read_no_densities_with_file(self):
+        expected = DataSet(
+            patterns=np.array([
+                [52.0, 45.0, 56.0],
+                [60.0, 52.0, 41.0],
+                [37.0, 44.1, 49.0],
+                [54.0, 56.0, 47.0],
+                [51.0, 46.0, 47.0],
+            ])
+        )
+        out_path = self.test_dir.child('temp.txt')
+
+        with open(out_path, 'w') as out_handle:
+            expected.to_file(out_handle)
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            actual = DataSet.from_file(out_path)
+            if len(w):
+                self.fail('Some warning was triggered')
         self.assertEqual(actual, expected)
 
     def test__read_pattern_count(self):

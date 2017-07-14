@@ -26,7 +26,7 @@ class TestResults(TestCase):
                     0.0001832763582,
                 ])
             )
-        self._results_array = np.array([1.0, 2.0, 3.0, 4.0, 5.1234567891011121314], dtype=np.float64)
+        self._results_array = np.array([0.1, 0.2, 0.3, 0.4, 0.51234567891011121314], dtype=np.float64)
 
     def test_num_results(self):
         results = Results(
@@ -42,16 +42,15 @@ class TestResults(TestCase):
             data_set=self._data_set,
             results_array=self._results_array
         )
-        expected_output = ("1.000000000000000\n"
-                           "2.000000000000000\n"
-                           "3.000000000000000\n"
-                           "4.000000000000000\n"
-                           "5.123456789101112\n").encode()
+        expected_output = ("0.100000000000000\n"
+                           "0.200000000000000\n"
+                           "0.300000000000000\n"
+                           "0.400000000000000\n"
+                           "0.512345678910111\n").encode()
         actual_file_buffer = io.BytesIO()
         results.to_file(actual_file_buffer)
         actual_file_buffer.seek(0)
         actual_output = actual_file_buffer.read()
-
         self.assertEqual(actual_output, expected_output)
 
     def test_from_file(self):
@@ -127,7 +126,7 @@ class Test_ResultsValidator(TestCase):
 
     def test_validate_1(self):
         results_array = np.array([
-            1.0, 2.0, 3.0, 4.0, 5.1234567891011121314
+            0.1, 0.2, 0.3, 0.4, 0.51234567891011121314
         ])
         validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
         actual = validator.validate()

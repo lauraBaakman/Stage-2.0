@@ -1,5 +1,7 @@
 from unipath import Path
 
+import files as filenames
+
 
 def build_result_path(results_directory, data_set_file_path, estimator, *args):
     args_string = '_'.join(args)
@@ -26,11 +28,21 @@ def partial_path(path):
     return Path(path.components()[-3:])
 
 
-def get_data_set_files(input_path, ask_for_confirmation=False):
-    files = list(input_path.walk(filter=lambda x: x.ext == '.txt'))
+def get_data_set_files(input_path, ask_for_confirmation=False, show_files=True):
+    files = list(input_path.walk(filter=lambda x: filenames.is_xs_file(x)))
     if ask_for_confirmation:
         files = _confirm_files(files)
-    _show_files_to_user(files)
+    if show_files:
+        _show_files_to_user(files)
+    return files
+
+
+def get_result_files(input_path, ask_for_confirmation=False, show_files=True):
+    files = list(input_path.walk(filter=lambda x: filenames.is_results_file(x)))
+    if ask_for_confirmation:
+        files = _confirm_files(files)
+    if show_files:
+        _show_files_to_user(files)
     return files
 
 
