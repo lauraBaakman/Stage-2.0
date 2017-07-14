@@ -16,7 +16,7 @@ _default_xs_path = Path('../data/simulated/small')
 _default_densities_path = Path('../results/simulated/small')
 _default_output_path = Path('.')
 
-_output_path = None
+args = None
 
 
 def get_parser():
@@ -40,6 +40,10 @@ def get_parser():
                         action='store_true',
                         default=False,
                         help="increase output verbosity")
+    parser.add_argument('-r', '--replace-existing',
+                        action='store_true',
+                        default=False,
+                        help="Overwrite existing files in the output directory.")
     return parser
 
 
@@ -64,26 +68,34 @@ def find_associated_result_files(xs_files, densities_files):
 
 def process_files(files):
     for file in files:
-        logging.info(
-            'Processing {xs_file}, with result files:\n{result_files}'.format(
-                xs_file=ioUtils.partial_path(file['file']),
-                result_files='\n'.join([
-                    '\t{}'.format(ioUtils.partial_path(result_file['file']))
-                    for result_file
-                    in file['associated results']]
+        try:
+            process_data_set_with_results(file)
+        except Exception as e:
+            logging.error(
+                'An error occurred while processing the file {path}:\n {error}'.format(
+                    path=file['file'],
+                    error=e.message
                 )
             )
-        )
-        process_data_set_with_results(file)
 
 
 def process_data_set_with_results(dataset_file):
+
+    def should_be_created(path):
+        if not path.exists():
+            return True
+        if args.replace_existing:
+            logging.info('Replacing the file {}.'.format(path))
+            return True
+        else:
+            logging.info('Skipping the generation of the file {}.'.format(path))
+            return False
+
     def add_column_to_end(matrix, column):
         (_, last_idx) = matrix.shape
         return np.insert(matrix, last_idx, column, axis=1)
 
-    def data_to_file(data, header, dataset_file):
-        out_path = determine_out_path(dataset_file)
+    def data_to_file(data, header, out_path):
         np.savetxt(
             fname=out_path,
             X=data,
@@ -105,7 +117,7 @@ def process_data_set_with_results(dataset_file):
                     dataset_name=meta_data['semantic name'],
                 )
 
-        return _output_path.child(build_out_file(meta_data))
+        return args.output_directory.child(build_out_file(meta_data))
 
     def update_header(header, column_header):
         header = '{old_header}, {column_header}'.format(
@@ -147,6 +159,21 @@ def process_data_set_with_results(dataset_file):
             data = add_column_to_end(data, differences)
         return header, data
 
+    out_path = determine_out_path(dataset_file)
+    if not should_be_created(out_path):
+        return
+
+    logging.info(
+        'Processing {xs_file}, with result files:{result_files}'.format(
+            xs_file=ioUtils.partial_path(dataset_file['file']),
+            result_files='\n' + '\n'.join([
+                '\t{}'.format(ioUtils.partial_path(result_file['file']))
+                for result_file
+                in dataset_file['associated results']]
+            )
+        )
+    )
+
     header, data = read_data_set_file(dataset_file['file'])
     header, data, estimated_densities = add_estimated_densities(data_meta_data=dataset_file, header=header, data=data)
     header, data = add_square_errors(
@@ -155,7 +182,7 @@ def process_data_set_with_results(dataset_file):
         estimated_densities=estimated_densities
     )
 
-    data_to_file(header=header, data=data, dataset_file=dataset_file)
+    data_to_file(header=header, data=data, out_path=out_path)
 
 
 def estimator_description(meta_data):
@@ -184,11 +211,10 @@ if __name__ == '__main__':
     parser = get_parser()
     args = parser.parse_args()
 
-    if args.verbose:
-        logging.basicConfig(level=logging.INFO)
-        logging.info('Running in verbose mode')
-
-    _output_path = args.output_directory
+    logging.basicConfig(level=logging.INFO if args.verbose else logging.ERROR)
+    logging.info('Running in verbose mode')
+    logging.info('Reading xs files from: {}'.format(args.xs_directory))
+    logging.info('Reading density files from: {}'.format(args.densities_directory))
 
     files = find_associated_result_files(
         xs_files=collect_meta_data(ioUtils.get_data_set_files(args.xs_directory, show_files=False)),
