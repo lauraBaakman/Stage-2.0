@@ -164,7 +164,18 @@ def process_data_set_with_results(dataset_file):
         for result in results:
             densities = ioResults.Results.from_file(result['file']).values
             estimated_densities[result['file']] = densities
-            data = add_column_to_end(data, densities)
+            try:
+                data = add_column_to_end(data, densities)
+            except Exception as e:
+                logging.error(
+                    'An error occurred while processing the results file {path}:\n {error}\nTraceBack:'.format(
+                        path=result['file'],
+                        error=e.message,
+                    )
+                )
+                _, _, trace = sys.exc_info()
+                traceback.print_tb(trace)
+                raise e
             header = update_header(header, estimator_description(result))
         return header, data, estimated_densities
 
