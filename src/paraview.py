@@ -141,7 +141,7 @@ def process_data_set_with_results(dataset_file):
         return args.output_directory.child(build_out_file(meta_data['semantic name'], *arguments))
 
     def update_header(header, column_header):
-        header = '{old_header}, {column_header}'.format(
+        header = '{old_header},{column_header}'.format(
             old_header=header,
             column_header=column_header
         )
