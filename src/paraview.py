@@ -213,8 +213,7 @@ def subsample(data, meta_data):
         return data[np.random.sample(num_data_points) < probability, :]
 
     def grid_subsample(data, offset):
-        logging.error('The grid subsample implementation needs to be fixed.')
-        return data
+        return ioUtils.sub_sample_grid(data, offset)
 
     if not args.sub_sample:
         return data
