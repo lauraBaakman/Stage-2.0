@@ -202,12 +202,15 @@ def process_data_set_with_results(dataset_file):
 
 def subsample(data, meta_data):
     def monte_carlo_subsample(data, probability):
-        print('Monte carlo')
-        return data
+        num_data_points, _ = data.shape
+        return data[np.random.sample(num_data_points) < probability, :]
 
     def grid_subsample(data, offset):
         logging.error('The grid subsample implementation needs to be fixed.')
-        return data[::offset + 1]
+        return data
+
+    if not args.sub_sample:
+        return data
 
     if 'grid size' in meta_data:
         return grid_subsample(data, args.sub_sampling_space)
