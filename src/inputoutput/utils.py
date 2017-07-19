@@ -84,13 +84,12 @@ def _show_files_to_user(files):
           )
 
 
-def sub_sample_grid(data, space):
+def sub_sample_grid(data, space, dimension=3):
     def subsample_along_axis(data, space, axis):
         unique = np.unique(data[:, axis])
         values_that_stay = unique[::space + 1]
         return data[np.in1d(data[:, axis], values_that_stay)]
 
-    _, dimension = data.shape
     for axis in range(dimension):
         data = subsample_along_axis(data, space, axis=axis)
 
