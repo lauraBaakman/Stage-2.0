@@ -124,18 +124,21 @@ def process_data_set_with_results(dataset_file):
         logging.info('Writing to {}'.format(out_path))
 
     def determine_out_path(meta_data):
-        def build_out_file(meta_data):
-            if 'grid size' in meta_data.keys():
-                return '{dataset_name}_grid_{grid_size}_paraview.csv'.format(
-                    dataset_name=meta_data['semantic name'],
-                    grid_size=meta_data['grid size']
-                )
-            else:
-                return '{dataset_name}_paraview.csv'.format(
-                    dataset_name=meta_data['semantic name'],
-                )
+        def build_out_file(semantic_name, *args):
+            args_string = '_'.join(args)
+            return '{data_set}{seperator}{args_string}_paraview.csv'.format(
+                data_set=semantic_name,
+                seperator='_' if args_string else '',
+                args_string=args_string
+            )
 
-        return args.output_directory.child(build_out_file(meta_data))
+        arguments = list()
+        if 'grid size' in meta_data.keys():
+            arguments.append('grid')
+            arguments.append(str(meta_data['grid size']))
+        if args.sub_sample:
+            arguments.append('subsampled')
+        return args.output_directory.child(build_out_file(meta_data['semantic name'], *arguments))
 
     def update_header(header, column_header):
         header = '{old_header}, {column_header}'.format(
