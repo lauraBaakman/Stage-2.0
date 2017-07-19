@@ -15,6 +15,8 @@ import inputoutput.results as ioResults
 _default_xs_path = Path('../data/simulated/small')
 _default_densities_path = Path('../results/simulated/small')
 _default_output_path = Path('.')
+_default_subsample_probability = 0.01
+_default_subsample_space = 31
 
 args = None
 
@@ -44,6 +46,18 @@ def get_parser():
                         action='store_true',
                         default=False,
                         help="Overwrite existing files in the output directory.")
+    parser.add_argument('-s', '--sub-sample',
+                        action='store_true',
+                        default=False,
+                        help="""If set to true the data is subsampled the data, the method depends on the """
+                             """kind of data.""")
+    parser.add_argument('--sub-sampling-probability',
+                        type=float, default=_default_subsample_probability,
+                        help="The subsampling probability if monte carlo subsampling is used.")
+    parser.add_argument('--sub-sampling-space',
+                        type=int, default=_default_subsample_space,
+                        help="""The number of elements to skip between two subsequent elements that are """
+                             """included in the sub sampled version of the data set.""")
     return parser
 
 
@@ -181,8 +195,24 @@ def process_data_set_with_results(dataset_file):
         header=header, data=data,
         estimated_densities=estimated_densities
     )
+    data = subsample(data, dataset_file)
 
     data_to_file(header=header, data=data, out_path=out_path)
+
+
+def subsample(data, meta_data):
+    def monte_carlo_subsample(data, probability):
+        print('Monte carlo')
+        return data
+
+    def grid_subsample(data, offset):
+        logging.error('The grid subsample implementation needs to be fixed.')
+        return data[::offset + 1]
+
+    if 'grid size' in meta_data:
+        return grid_subsample(data, args.sub_sampling_space)
+    else:
+        return monte_carlo_subsample(data, args.sub_sampling_probability)
 
 
 def estimator_description(meta_data):
