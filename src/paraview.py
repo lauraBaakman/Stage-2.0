@@ -4,6 +4,8 @@ import logging
 
 from unipath import Path
 import numpy as np
+import sys
+import traceback
 
 from argparseActions import InputDirectoryAction, OutputDirectoryAction
 import inputoutput.utils as ioUtils
@@ -86,11 +88,13 @@ def process_files(files):
             process_data_set_with_results(file)
         except Exception as e:
             logging.error(
-                'An error occurred while processing the file {path}:\n {error}'.format(
+                'An error occurred while processing the file {path}:\n {error}\nTraceBack:'.format(
                     path=file['file'],
-                    error=e.message
+                    error=e.message,
                 )
             )
+            _, _, trace = sys.exc_info()
+            traceback.print_tb(trace)
 
 
 def process_data_set_with_results(dataset_file):
