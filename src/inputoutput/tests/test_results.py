@@ -275,7 +275,7 @@ class Test_ResultsValidator(TestCase):
             0.0, 0.2, 0.33, 0.444, 0.55, 1.0
         ])
         validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
-        actual = validator._results_is_1D_array()
+        actual = validator._results_are_densities()
         self.assertIsNone(actual)
 
     def test__results_are_densities_1(self):
@@ -287,5 +287,5 @@ class Test_ResultsValidator(TestCase):
             0.0001832763582
         ])
         validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
-        actual = validator._results_is_1D_array()
+        actual = validator._results_are_densities()
         self.assertIsNone(actual)
