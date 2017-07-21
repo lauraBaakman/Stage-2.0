@@ -4,7 +4,6 @@ from unittest import TestCase
 
 import numpy as np
 
-import kde.utils.automaticWindowWidthMethods as automaticWindowWidthMethods
 from kde.kernels.gaussian import Gaussian
 from kde.kernels.testKernel import TestKernel
 from kde.kernels.epanechnikov import Epanechnikov
