@@ -28,6 +28,33 @@ class TestResults(TestCase):
             )
         self._results_array = np.array([0.1, 0.2, 0.3, 0.4, 0.51234567891011121314], dtype=np.float64)
 
+    def test_constructor_without_results_array(self):
+        expected_size = 4
+        results = Results(expected_size=expected_size)
+        actual = results.densities
+        expected = np.empty(expected_size)
+        self.assertEqual(actual.shape, expected.shape)
+        self.assertEqual(actual.flags, expected.flags)
+        self.assertEqual(actual.dtype, expected.dtype)
+
+    def test_constructor_with_results_array(self):
+        results = Results(
+            results_array=self._results_array
+        )
+        actual = results.densities
+        expected = self._results_array
+        np.testing.assert_array_almost_equal(actual, expected)
+
+    def test_constructor_without_results_array_without_expected_size(self):
+        try:
+            Results()
+        except TypeError:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
     def test_num_results(self):
         results = Results(
             data_set=self._data_set,

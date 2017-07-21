@@ -3,9 +3,14 @@ import warnings
 
 
 class Results:
-    def __init__(self, results_array, data_set=None):
-        self._results_array = results_array
-        _ResultsValidator(data_set=data_set, results_array=results_array).validate()
+    def __init__(self, results_array=None, data_set=None, expected_size=None):
+        if (expected_size is None) and (results_array is None):
+            raise TypeError("expected_size or results_array need to be provided.'")
+        if results_array is not None:
+            self._results_array = results_array
+            _ResultsValidator(data_set=data_set, results_array=results_array).validate()
+        if expected_size:
+            self._results_array = np.empty(expected_size)
 
     @property
     def values(self):
@@ -117,15 +122,3 @@ class InvalidResultsException(Exception):
         self.actual = actual
         self.expected = expected
         super(InvalidResultsException, self).__init__(message, *args)
-
-
-if __name__ == '__main__':
-    output_file = '/Users/laura/Desktop/temp.txt'
-    results = Results(results_array=np.array([1.0, 2.0, 3.0, 4.0]))
-
-    # Option 1
-    # with open(output_file) as out_file_object:
-    #     results.to_file(output_file)
-
-    # Option 2
-    results.to_file(output_file)
