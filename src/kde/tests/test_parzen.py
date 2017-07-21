@@ -11,7 +11,7 @@ from kde.parzen import _ParzenEstimator_C, _ParzenEstimator_Python, ParzenEstima
 import kde.utils._utils as _utils
 from kde.utils.grid import Grid
 
-number_of_threads = 1
+number_of_threads = 2
 
 
 class TestParzenEstimator(TestCase):
