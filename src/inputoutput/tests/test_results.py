@@ -133,6 +133,14 @@ class TestResults(TestCase):
                 self.fail('Some warning was triggered')
         self.assertEqual(actual, expected)
 
+    def test_is_incremental_true(self):
+        results = Results(expected_size=3)
+        self.assertTrue(results.is_incremental)
+
+    def test_is_incremental_false(self):
+        results = Results(results_array=self._results_array)
+        self.assertFalse(results.is_incremental)
+
     def test_add_result_only_density(self):
         actual = Results(expected_size=3)
         actual.add_result(density=0.5)

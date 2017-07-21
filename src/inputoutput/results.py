@@ -9,8 +9,11 @@ class Results:
         if results_array is not None:
             self._results_array = results_array
             _ResultsValidator(data_set=data_set, results_array=results_array).validate()
+            self._incremental_result_adding_is_allowed = False
         if expected_size:
             self._results_array = np.empty(expected_size)
+            self._incremental_result_adding_is_allowed = True
+            self._idx = 0
 
     @property
     def values(self):
@@ -24,6 +27,18 @@ class Results:
     def num_results(self):
         (num_results,) = self._results_array.shape
         return num_results
+
+    @property
+    def is_incremental(self):
+        return self._incremental_result_adding_is_allowed
+
+    def add_result(self, density, **kwargs):
+        if not self.is_incremental:
+            raise TypeError(
+                'Adding results one by one is not allowed for this instance of the results object.'
+            )
+        self._results_array[self._idx] = density
+        self._idx += 1
 
     def to_file(self, out_file):
         _ResultsWriter(results=self._results_array, out_file=out_file).write()
