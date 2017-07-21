@@ -103,7 +103,7 @@ class MBEstimator(object):
             dimension=self._dimension,
             bandwidth=general_bandwidth, kernel_class=self._pilot_kernel_class,
             estimator_implementation=self._pilot_estimator_implementation)
-        grid_densities = pilot_estimator.estimate(xi_s=xi_s, x_s=grid_points)
+        grid_densities = pilot_estimator.estimate(xi_s=xi_s, x_s=grid_points).densities
 
         # Interpolation: note it is not bilinear interpolation, but uses a triangulation
         # pilot_densities = interpolate.griddata(grid_points, grid_densities, xi_s, method='linear')
