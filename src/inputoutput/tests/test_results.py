@@ -32,6 +32,7 @@ class TestResults(TestCase):
             )
         self._results_array = np.array([0.1, 0.2, 0.3, 0.4, 0.51234567891011121314], dtype=np.float64)
         self.test_dir = Path(tempfile.mkdtemp())
+        warnings.simplefilter("always")
 
     def tearDown(self):
         super(TestResults, self).tearDown()
@@ -223,6 +224,7 @@ class Test_ResultsValidator(TestCase):
                 0.0001832763582,
             ])
         )
+        warnings.simplefilter("always")
 
     def test_validate_1(self):
         results_array = np.array([
@@ -341,10 +343,10 @@ class Test_ResultsValidator(TestCase):
             1.240164051e+05,
             1.227518586e-05,
             7.288289757e-05,
-            0.0001832763582
+            5.0001832763582
         ])
-        validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
         with warnings.catch_warnings(record=True) as w:
+            validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
             validator._results_are_densities()
             if not len(w):
                 self.fail('The warning was not triggered')
