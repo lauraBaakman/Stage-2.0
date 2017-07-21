@@ -153,7 +153,7 @@ class _MBEEstimator_Python(_MBEEstimator):
         for idx, x in enumerate(self._x_s):
             densities[idx] = self._estimate_pattern(x)
         densities = (1 / self.num_xi_s) * densities
-        return Results(results_array=densities)
+        return Results(densities=densities)
 
     def _estimate_pattern(self, x):
         factors = np.power(self._local_bandwidths * self._general_bandwidth, - self._dimension)
@@ -180,4 +180,4 @@ class _MBEEstimator_C(_MBEEstimator):
                               self._general_bandwidth, self._local_bandwidths,
                               self._kernel.to_C_enum(),
                               densities)
-        return Results(results_array=densities)
+        return Results(densities=densities)

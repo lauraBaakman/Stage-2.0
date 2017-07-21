@@ -30,7 +30,7 @@ class TestResults(TestCase):
                     0.0001832763582,
                 ])
             )
-        self._results_array = np.array([0.1, 0.2, 0.3, 0.4, 0.51234567891011121314], dtype=np.float64)
+        self._densities = np.array([0.1, 0.2, 0.3, 0.4, 0.51234567891011121314], dtype=np.float64)
         self.test_dir = Path(tempfile.mkdtemp())
         warnings.simplefilter("always")
 
@@ -38,7 +38,7 @@ class TestResults(TestCase):
         super(TestResults, self).tearDown()
         shutil.rmtree(self.test_dir)
 
-    def test_constructor_without_results_array(self):
+    def test_constructor_without_densities(self):
         expected_size = 4
         results = Results(expected_size=expected_size)
         actual = results.densities
@@ -47,15 +47,15 @@ class TestResults(TestCase):
         self.assertEqual(actual.flags, expected.flags)
         self.assertEqual(actual.dtype, expected.dtype)
 
-    def test_constructor_with_results_array(self):
+    def test_constructor_with_densities(self):
         results = Results(
-            results_array=self._results_array
+            densities=self._densities
         )
         actual = results.densities
-        expected = self._results_array
+        expected = self._densities
         np.testing.assert_array_almost_equal(actual, expected)
 
-    def test_constructor_without_results_array_without_expected_size(self):
+    def test_constructor_without_densities_without_expected_size(self):
         try:
             Results()
         except TypeError:
@@ -68,7 +68,7 @@ class TestResults(TestCase):
     def test_num_results(self):
         results = Results(
             data_set=self._data_set,
-            results_array=self._results_array
+            densities=self._densities
         )
         actual = results.num_results
         expected = 5
@@ -77,7 +77,7 @@ class TestResults(TestCase):
     def test_to_file(self):
         results = Results(
             data_set=self._data_set,
-            results_array=self._results_array
+            densities=self._densities
         )
         expected_output = ("0.100000000000000\n"
                            "0.200000000000000\n"
@@ -101,7 +101,7 @@ class TestResults(TestCase):
         actual = Results.from_file(input_file)
         expected = Results(
             data_set=None,
-            results_array=np.array([
+            densities=np.array([
                 7.539699219e-05,
                 1.240164051e-05,
                 1.227518586e-05,
@@ -114,7 +114,7 @@ class TestResults(TestCase):
     def test_from_file_to_file_with_temp_file(self):
         expected = Results(
             data_set=None,
-            results_array=np.array([
+            densities=np.array([
                 7.539699219e-05,
                 1.240164051e-05,
                 1.227518586e-05,
@@ -139,7 +139,7 @@ class TestResults(TestCase):
         self.assertTrue(results.is_incremental)
 
     def test_is_incremental_false(self):
-        results = Results(results_array=self._results_array)
+        results = Results(densities=self._densities)
         self.assertFalse(results.is_incremental)
 
     def test_add_result_only_density(self):
@@ -149,7 +149,7 @@ class TestResults(TestCase):
         actual.add_result(density=0.2)
 
         expected = Results(
-            results_array=np.array([0.5, 0.3, 0.2])
+            densities=np.array([0.5, 0.3, 0.2])
         )
         self.assertEqual(actual, expected)
 
@@ -164,13 +164,13 @@ class TestResults(TestCase):
             else:
                 self.fail('Expected warning not thrown')
             expected = Results(
-                results_array=np.array([0.5, 3.0, 0.2])
+                densities=np.array([0.5, 3.0, 0.2])
             )
             self.assertEqual(actual, expected)
 
-    def test_add_results_to_result_initialize_with_results_array(self):
+    def test_add_results_to_result_initialize_with_densities(self):
         try:
-            results = Results(results_array=self._results_array)
+            results = Results(densities=self._densities)
             results.add_result(0.5)
         except TypeError:
             pass
@@ -231,19 +231,19 @@ class Test_ResultsValidator(TestCase):
         warnings.simplefilter("always")
 
     def test_validate_1(self):
-        results_array = np.array([
+        densities = np.array([
             0.1, 0.2, 0.3, 0.4, 0.51234567891011121314
         ])
-        validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
+        validator = _ResultsValidator(data_set=self._data_set, densities=densities)
         actual = validator.validate()
         self.assertIsNone(actual)
 
     def test_validate_2(self):
         try:
-            results_array = np.array([
+            densities = np.array([
                 1.0, 2.0, 3.0, 4.0
             ])
-            validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
+            validator = _ResultsValidator(data_set=self._data_set, densities=densities)
             validator.validate()
         except InvalidResultsException:
             pass
@@ -253,19 +253,19 @@ class Test_ResultsValidator(TestCase):
             self.fail('ExpectedException not raised')
 
     def test__one_result_per_pattern_1(self):
-        results_array = np.array([
+        densities = np.array([
             1.0, 2.0, 3.0, 4.0, 5.1234567891011121314
         ])
-        validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
+        validator = _ResultsValidator(data_set=self._data_set, densities=densities)
         actual = validator._one_result_per_pattern()
         self.assertIsNone(actual)
 
     def test__one_result_per_pattern_2(self):
         try:
-            results_array = np.array([
+            densities = np.array([
                 1.0, 2.0, 3.0, 4.0
             ])
-            validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
+            validator = _ResultsValidator(data_set=self._data_set, densities=densities)
             validator._one_result_per_pattern()
         except InvalidResultsException:
             pass
@@ -276,10 +276,10 @@ class Test_ResultsValidator(TestCase):
 
     def test__one_result_per_pattern_3(self):
         try:
-            results_array = np.array([
+            densities = np.array([
                 1.0, 2.0, 3.0, 4.0, 5.0, 6.0
             ])
-            validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
+            validator = _ResultsValidator(data_set=self._data_set, densities=densities)
             validator._one_result_per_pattern()
         except InvalidResultsException:
             pass
@@ -289,26 +289,26 @@ class Test_ResultsValidator(TestCase):
             self.fail('ExpectedException not raised')
 
     def test__dont_check_results_per_pattern_if_bool_is_set(self):
-            results_array = np.array([
+            densities = np.array([
                 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6
             ])
-            validator = _ResultsValidator(data_set=None, results_array=results_array)
+            validator = _ResultsValidator(data_set=None, densities=densities)
             validator.validate()
 
     def test__results_is_1D_array_1(self):
-        results_array = np.array([
+        densities = np.array([
             1.0, 2.0, 3.0, 4.0, 5.0, 6.0
         ])
-        validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
+        validator = _ResultsValidator(data_set=self._data_set, densities=densities)
         actual = validator._results_is_1D_array()
         self.assertIsNone(actual)
 
     def test__results_is_1D_array_2(self):
         try:
-            results_array = np.array([
+            densities = np.array([
                 [1.0], [2.0], [3.0], [4.0], [5.0], [6.0]
             ])
-            validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
+            validator = _ResultsValidator(data_set=self._data_set, densities=densities)
             validator._results_is_1D_array()
         except InvalidResultsException:
             pass
@@ -318,31 +318,31 @@ class Test_ResultsValidator(TestCase):
             self.fail('ExpectedException not raised')
 
     def test__results_are_densities_with_edge_cases(self):
-        results_array = np.array([
+        densities = np.array([
             0.0, 0.2, 0.33, 0.444, 0.55, 1.0
         ])
-        validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
+        validator = _ResultsValidator(data_set=self._data_set, densities=densities)
         with warnings.catch_warnings(record=True) as w:
             validator._results_are_densities()
             if len(w):
                 self.fail('The warning was triggered')
 
     def test__results_are_densities_with_only_valid_densities(self):
-        results_array = np.array([
+        densities = np.array([
             7.539699219e-05,
             1.240164051e-05,
             1.227518586e-05,
             7.288289757e-05,
             0.0001832763582
         ])
-        validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
+        validator = _ResultsValidator(data_set=self._data_set, densities=densities)
         with warnings.catch_warnings(record=True) as w:
             validator._results_are_densities()
             if len(w):
                 self.fail('The warning was triggered')
 
     def test__results_are_densities_with_invalid_densities(self):
-        results_array = np.array([
+        densities = np.array([
             7.539699219e-05,
             1.240164051e+05,
             1.227518586e-05,
@@ -350,7 +350,7 @@ class Test_ResultsValidator(TestCase):
             5.0001832763582
         ])
         with warnings.catch_warnings(record=True) as w:
-            validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
+            validator = _ResultsValidator(data_set=self._data_set, densities=densities)
             validator._results_are_densities()
             if not len(w):
                 self.fail('The warning was not triggered')

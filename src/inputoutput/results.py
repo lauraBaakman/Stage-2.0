@@ -3,29 +3,29 @@ import warnings
 
 
 class Results:
-    def __init__(self, results_array=None, data_set=None, expected_size=None):
-        if (expected_size is None) and (results_array is None):
-            raise TypeError("expected_size or results_array need to be provided.'")
-        if results_array is not None:
-            self._results_array = results_array
-            _ResultsValidator(data_set=data_set, results_array=results_array).validate()
+    def __init__(self, densities=None, data_set=None, expected_size=None):
+        if (expected_size is None) and (densities is None):
+            raise TypeError("expected_size or densities need to be provided.'")
+        if densities is not None:
+            self._densities = densities
+            _ResultsValidator(data_set=data_set, densities=densities).validate()
             self._incremental_result_adding_is_allowed = False
         if expected_size:
-            self._results_array = np.empty(expected_size)
+            self._densities = np.empty(expected_size)
             self._incremental_result_adding_is_allowed = True
             self._idx = 0
 
     @property
     def values(self):
-        return self._results_array
+        return self._densities
 
     @property
     def densities(self):
-        return self._results_array
+        return self._densities
 
     @property
     def num_results(self):
-        (num_results,) = self._results_array.shape
+        (num_results,) = self._densities.shape
         return num_results
 
     @property
@@ -46,10 +46,10 @@ class Results:
         except InvalidResultsException:
             warnings.warn('Adding the invalid density {} to the results.'.format(density))
         finally:
-            self._results_array[self._idx] = density
+            self._densities[self._idx] = density
 
     def to_file(self, out_file):
-        _ResultsWriter(results=self._results_array, out_file=out_file).write()
+        _ResultsWriter(results=self._densities, out_file=out_file).write()
 
     @classmethod
     def from_file(cls, in_file):
@@ -66,7 +66,7 @@ class Results:
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return (
-                np.array_equiv(self._results_array, other._results_array)
+                np.array_equiv(self._densities, other._densities)
             )
         return NotImplemented
 
@@ -82,7 +82,7 @@ class _ResultsReader(object):
 
     def read(self):
         densities = self._read_densities()
-        return Results(results_array=densities)
+        return Results(densities=densities)
 
     def _read_densities(self):
         self.in_file.seek(0)
@@ -105,9 +105,9 @@ class _ResultsWriter(object):
 
 
 class _ResultsValidator(object):
-    def __init__(self, data_set, results_array):
+    def __init__(self, data_set, densities):
         self._data_set = data_set
-        self._results_array = results_array
+        self._densities = densities
 
     def validate(self):
         if self._data_set:
@@ -117,7 +117,7 @@ class _ResultsValidator(object):
 
     def _one_result_per_pattern(self):
         num_patterns = self._data_set.num_patterns
-        (num_results,) = self._results_array.shape
+        (num_results,) = self._densities.shape
         if not num_results == num_patterns:
             raise InvalidResultsException(
                 '''The number of results (should be equal to the number of patterns. The data set has {} patterns, '''
@@ -125,17 +125,17 @@ class _ResultsValidator(object):
             )
 
     def _results_is_1D_array(self):
-        if self._results_array.ndim is not 1:
+        if self._densities.ndim is not 1:
             raise InvalidResultsException(
                 '''1D arrays are expected as results, the current results array '''
-                '''has {} dimensions.'''.format(self._results_array.ndim)
+                '''has {} dimensions.'''.format(self._densities.ndim)
             )
 
     def _results_are_densities(self):
         def all_are_probability_densities(array):
             return np.all(array >= 0.0) and np.all(array <= 1.0)
 
-        if not all_are_probability_densities(self._results_array):
+        if not all_are_probability_densities(self._densities):
             warnings.warn("Not all values in the results are in the range [0, 1].")
 
     @staticmethod

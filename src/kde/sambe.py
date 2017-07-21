@@ -65,7 +65,7 @@ class _ShapeAdaptiveMBE_C(_ShapeAdaptiveMBE):
                                 self._k, self._general_bandwidth,
                                 self._local_bandwidths,
                                 densities)
-        results = Results(results_array=densities)
+        results = Results(densities=densities)
         return results
 
 
