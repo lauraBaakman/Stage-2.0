@@ -76,7 +76,8 @@ class TestSubSampleGrid(TestCase):
            [2.,  0.], [2.,  2.], [2.,  4.],
            [4.,  0.], [4.,  2.], [4.,  4.]
         ])
-        actual = sub_sample_grid(grid, space=1)
+        dimension = 2
+        actual = sub_sample_grid(grid, space=1, dimension=dimension)
         np.testing.assert_array_equal(actual, expected)
 
     def test_sub_sample_rectangular_grid(self):
@@ -95,7 +96,8 @@ class TestSubSampleGrid(TestCase):
             [0.,  4.], [2.,  4.], [4.,  4.],
             [0.,  6.], [2.,  6.], [4.,  6.]
         ])
-        actual = sub_sample_grid(grid, space=1)
+        dimension = 2
+        actual = sub_sample_grid(grid, space=1, dimension=dimension)
         np.testing.assert_array_equal(actual, expected)
 
     def test_sub_sample_squared_grid_subspace_neq_1(self):
@@ -113,7 +115,8 @@ class TestSubSampleGrid(TestCase):
             [0.,  3.], [3.,  3.], [6.,  3.],
             [0.,  6.], [3.,  6.], [6.,  6.]
         ])
-        actual = sub_sample_grid(grid, space=2)
+        dimension = 2
+        actual = sub_sample_grid(grid, space=2, dimension=dimension)
         np.testing.assert_array_equal(actual, expected)
 
     def test_sub_sample_3d(self):
