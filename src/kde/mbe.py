@@ -4,7 +4,6 @@ import warnings
 import os
 
 import numpy as np
-import scipy.interpolate as interpolate
 import scipy.stats.mstats as stats
 
 import kde._kde as _kde
