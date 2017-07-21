@@ -1,6 +1,7 @@
 from unittest import TestCase
 
 import numpy as np
+import warnings
 
 import kde
 from kde.kernels.gaussian import Gaussian
@@ -13,6 +14,7 @@ import kde.utils._utils as _utils
 class TestModifiedBreimanEstimator(TestCase):
     def setUp(self):
         _utils.set_num_threads(2)
+        warnings.simplefilter("always")
 
     def tearDown(self):
         _utils.reset_num_threads()
@@ -102,7 +104,8 @@ class TestModifiedBreimanEstimator(TestCase):
         densities = np.array([1, 0, 3, 4, 5, 0])
         expected = np.array([1.66828, 1.0, 0.963182,
                              0.83414, 0.746077, 1.0])
-        actual = estimator._compute_local_bandwidths(densities)
+        with warnings.catch_warnings(record=True):
+            actual = estimator._compute_local_bandwidths(densities)
         np.testing.assert_array_almost_equal(expected, actual)
 
 
