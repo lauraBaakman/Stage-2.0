@@ -154,8 +154,8 @@ class TestResults(TestCase):
         self.assertEqual(actual, expected)
 
     def test_add_result_only_density_invalid_density(self):
+        actual = Results(expected_size=3)
         with warnings.catch_warnings(record=True) as w:
-            actual = Results(expected_size=3)
             actual.add_result(density=0.5)
             actual.add_result(density=3.0)
             actual.add_result(density=0.2)
@@ -163,6 +163,10 @@ class TestResults(TestCase):
                 pass
             else:
                 self.fail('Expected warning not thrown')
+        expected = Results(
+            results_array=np.array([0.5, 3.0, 0.2])
+        )
+        self.assertEqual(actual, expected)
 
     def test_add_results_to_result_initialize_with_results_array(self):
         try:
