@@ -12,6 +12,10 @@ class Results:
         return self._results_array
 
     @property
+    def densities(self):
+        return self._results_array
+
+    @property
     def num_results(self):
         (num_results,) = self._results_array.shape
         return num_results
