@@ -3,18 +3,50 @@ import warnings
 
 
 class Results:
-    def __init__(self, results_array, data_set=None):
-        self._results_array = results_array
-        _ResultsValidator(data_set=data_set, results_array=results_array).validate()
+    def __init__(self, results_array=None, data_set=None, expected_size=None):
+        if (expected_size is None) and (results_array is None):
+            raise TypeError("expected_size or results_array need to be provided.'")
+        if results_array is not None:
+            self._results_array = results_array
+            _ResultsValidator(data_set=data_set, results_array=results_array).validate()
+            self._incremental_result_adding_is_allowed = False
+        if expected_size:
+            self._results_array = np.empty(expected_size)
+            self._incremental_result_adding_is_allowed = True
+            self._idx = 0
 
     @property
     def values(self):
         return self._results_array
 
     @property
+    def densities(self):
+        return self._results_array
+
+    @property
     def num_results(self):
         (num_results,) = self._results_array.shape
         return num_results
+
+    @property
+    def is_incremental(self):
+        return self._incremental_result_adding_is_allowed
+
+    def add_result(self, density, **kwargs):
+        if not self.is_incremental:
+            raise TypeError(
+                'Adding results one by one is not allowed for this instance of the results object.'
+            )
+        self._add_density(density)
+        self._idx += 1
+
+    def _add_density(self, density):
+        try:
+            _ResultsValidator.validate_density(density)
+        except InvalidResultsException:
+            warnings.warn('Adding the invalid density {} to the results.'.format(density))
+        finally:
+            self._results_array[self._idx] = density
 
     def to_file(self, out_file):
         _ResultsWriter(results=self._results_array, out_file=out_file).write()
@@ -106,6 +138,18 @@ class _ResultsValidator(object):
         if not all_are_probability_densities(self._results_array):
             warnings.warn("Not all values in the results are in the range [0, 1].")
 
+    @staticmethod
+    def validate_density(value):
+        def is_density(value):
+            return value >= 0.0 and value <= 1.0
+
+        if not is_density(value):
+            raise InvalidResultsException(
+                message='{} is not a valid density'.format(value),
+                actual=value,
+                expected='Some value in the range [0 ,1].'
+            )
+
 
 class InvalidResultsException(Exception):
     def __init__(self, message, actual=None, expected=None, *args):
@@ -113,15 +157,3 @@ class InvalidResultsException(Exception):
         self.actual = actual
         self.expected = expected
         super(InvalidResultsException, self).__init__(message, *args)
-
-
-if __name__ == '__main__':
-    output_file = '/Users/laura/Desktop/temp.txt'
-    results = Results(results_array=np.array([1.0, 2.0, 3.0, 4.0]))
-
-    # Option 1
-    # with open(output_file) as out_file_object:
-    #     results.to_file(output_file)
-
-    # Option 2
-    results.to_file(output_file)

@@ -1,6 +1,7 @@
 from unittest import TestCase
 
 import numpy as np
+import warnings
 
 import kde
 from kde.kernels.shapeadaptivegaussian import ShapeAdaptiveGaussian
@@ -19,6 +20,7 @@ class TestShapeAdaptiveMBE(TestCase):
 
     def setUp(self):
         _utils.set_num_threads(_num_threads)
+        warnings.simplefilter("always")
 
     def tearDown(self):
         _utils.reset_num_threads()
@@ -39,41 +41,45 @@ class TestShapeAdaptiveMBE(TestCase):
             sensitivity=sensitivity,
             pilot_window_width_method=kde.utils.automaticWindowWidthMethods.ferdosi
         )
-        actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
-        expected = np.array([0.143018801263046,
+        result = estimator.estimate(xi_s=xi_s, x_s=x_s)
+        actual_densities = result.densities
+        expected_densities = np.array([0.143018801263046,
                              0.077446155260620,
                              0.077446155260620,
                              0.143018801263046])
-        np.testing.assert_array_almost_equal(actual, expected)
+        np.testing.assert_array_almost_equal(actual_densities, expected_densities)
 
     def test_estimate_python_python(self):
-        self.estimate_test_helper(_ParzenEstimator_Python, _ShapeAdaptiveMBE_Python)
+        with warnings.catch_warnings(record=True):
+            self.estimate_test_helper(_ParzenEstimator_Python, _ShapeAdaptiveMBE_Python)
 
     # Different result due to the KD tree which gives an approximation
     def test_estimate_python_C(self):
-        xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-        x_s = xi_s
-        pilot_kernel = TestKernel
-        final_kernel = ShapeAdaptiveGaussian
-        number_of_grid_points = 2
-        sensitivity = 0.5
-        estimator = SAMBEstimator(
-            pilot_kernel_class=pilot_kernel, pilot_estimator_implementation=_ParzenEstimator_Python,
-            kernel_class=final_kernel, final_estimator_implementation=_ShapeAdaptiveMBE_C,
-            dimension=2,
-            number_of_grid_points=number_of_grid_points, kernel_radius_fraction=0.2772588722239781,
-            sensitivity=sensitivity,
-            pilot_window_width_method=kde.utils.automaticWindowWidthMethods.ferdosi
-        )
-        actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
-        expected = np.array([0.186693239491116,
-                             0.077446155260620,
-                             0.077446155260620,
-                             0.143018801263046])
-        np.testing.assert_array_almost_equal(actual, expected)
+        with warnings.catch_warnings(record=True):
+            xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+            x_s = xi_s
+            pilot_kernel = TestKernel
+            final_kernel = ShapeAdaptiveGaussian
+            number_of_grid_points = 2
+            sensitivity = 0.5
+            estimator = SAMBEstimator(
+                pilot_kernel_class=pilot_kernel, pilot_estimator_implementation=_ParzenEstimator_Python,
+                kernel_class=final_kernel, final_estimator_implementation=_ShapeAdaptiveMBE_C,
+                dimension=2,
+                number_of_grid_points=number_of_grid_points, kernel_radius_fraction=0.2772588722239781,
+                sensitivity=sensitivity,
+                pilot_window_width_method=kde.utils.automaticWindowWidthMethods.ferdosi
+            )
+            actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
+            expected_densities = np.array([0.186693239491116,
+                                 0.077446155260620,
+                                 0.077446155260620,
+                                 0.143018801263046])
+            np.testing.assert_array_almost_equal(actual.densities, expected_densities)
 
     def test_estimate_C_python(self):
-        self.estimate_test_helper(_ParzenEstimator_C, _ShapeAdaptiveMBE_Python)
+        with warnings.catch_warnings(record=True):
+            self.estimate_test_helper(_ParzenEstimator_C, _ShapeAdaptiveMBE_Python)
 
     # Different result due to the KD tree which gives an approximation
     def test_estimate_C_C(self):
@@ -97,35 +103,40 @@ class TestShapeAdaptiveMBE(TestCase):
             xi_s=xi_s, x_s=x_s,
             pilot_densities=pilot_densities, general_bandwidth=general_bandwidth
         )
-        expected = np.array([0.186693239491116,
-                             0.077446155260620,
-                             0.077446155260620,
-                             0.143018801263046])
-        np.testing.assert_array_almost_equal(actual, expected)
+        expected_densities = np.array([
+            0.186693239491116,
+            0.077446155260620,
+            0.077446155260620,
+            0.143018801263046
+        ])
+        np.testing.assert_array_almost_equal(actual.densities, expected_densities)
 
     def test_estimate_C_C_dont_pass_pilot_densities(self):
-        xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-        x_s = xi_s
-        pilot_kernel = TestKernel
-        final_kernel = ShapeAdaptiveGaussian
-        number_of_grid_points = 2
-        sensitivity = 0.5
-        estimator = SAMBEstimator(
-            pilot_kernel_class=pilot_kernel, pilot_estimator_implementation=_ParzenEstimator_C,
-            kernel_class=final_kernel, final_estimator_implementation=_ShapeAdaptiveMBE_C,
-            dimension=2,
-            number_of_grid_points=number_of_grid_points, kernel_radius_fraction=0.2772588722239781,
-            sensitivity=sensitivity,
-            pilot_window_width_method=kde.utils.automaticWindowWidthMethods.ferdosi
-        )
-        actual = estimator.estimate(
-            xi_s=xi_s, x_s=x_s
-        )
-        expected = np.array([0.186693239491116,
-                             0.077446155260620,
-                             0.077446155260620,
-                             0.143018801263046])
-        np.testing.assert_array_almost_equal(actual, expected)
+        with warnings.catch_warnings(record=True):
+            xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+            x_s = xi_s
+            pilot_kernel = TestKernel
+            final_kernel = ShapeAdaptiveGaussian
+            number_of_grid_points = 2
+            sensitivity = 0.5
+            estimator = SAMBEstimator(
+                pilot_kernel_class=pilot_kernel, pilot_estimator_implementation=_ParzenEstimator_C,
+                kernel_class=final_kernel, final_estimator_implementation=_ShapeAdaptiveMBE_C,
+                dimension=2,
+                number_of_grid_points=number_of_grid_points, kernel_radius_fraction=0.2772588722239781,
+                sensitivity=sensitivity,
+                pilot_window_width_method=kde.utils.automaticWindowWidthMethods.ferdosi
+            )
+            actual = estimator.estimate(
+                xi_s=xi_s, x_s=x_s
+            )
+            expected_densities = np.array([
+                0.186693239491116,
+                0.077446155260620,
+                0.077446155260620,
+                0.143018801263046
+            ])
+            np.testing.assert_array_almost_equal(actual.densities, expected_densities)
 
 
 class ShapeAdaptiveMBEImpAbstractTest(object):
@@ -153,11 +164,12 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
         actual = estimator.estimate()
-        expected = np.array([0.143018801263046,
-                             0.077446155260620,
-                             0.077446155260620,
-                             0.143018801263046])
-        np.testing.assert_array_almost_equal(actual, expected)
+        expected_densities = np.array([
+            0.143018801263046,
+            0.077446155260620,
+            0.077446155260620,
+            0.143018801263046])
+        np.testing.assert_array_almost_equal(actual.densities, expected_densities)
 
 
 class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
@@ -228,8 +240,8 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
         actual = estimator.estimate()
-        expected = np.array([0.143018801263046, 0.143018801263046])
-        np.testing.assert_array_almost_equal(actual, expected)
+        expected_densities = np.array([0.143018801263046, 0.143018801263046])
+        np.testing.assert_array_almost_equal(actual.densities, expected_densities)
 
     def test_xis_is_not_xs(self):
         xi_s = xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
@@ -249,8 +261,8 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
         actual = estimator.estimate()
-        expected = np.array([0.1271447313485623, 0.1507791646676249])
-        np.testing.assert_array_almost_equal(actual, expected)
+        expected_densities = np.array([0.1271447313485623, 0.1507791646676249])
+        np.testing.assert_array_almost_equal(actual.densities, expected_densities)
 
 
 class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
@@ -281,11 +293,12 @@ class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
         actual = estimator.estimate()
-        expected = np.array([0.186693239491116,
-                             0.077446155260620,
-                             0.077446155260620,
-                             0.143018801263046])
-        np.testing.assert_array_almost_equal(actual, expected)
+        expected_densities = np.array([
+            0.186693239491116,
+            0.077446155260620,
+            0.077446155260620,
+            0.143018801263046])
+        np.testing.assert_array_almost_equal(actual.densities, expected_densities)
 
     def test_xis_is_not_xs(self):
         xi_s = xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
@@ -305,5 +318,5 @@ class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
         actual = estimator.estimate()
-        expected = np.array([0.19859744879119276, 0.15077916466762492])
-        np.testing.assert_array_almost_equal(actual, expected)
+        expected_densites = np.array([0.19859744879119276, 0.15077916466762492])
+        np.testing.assert_array_almost_equal(actual.densities, expected_densites)

@@ -6,6 +6,7 @@ import math
 import kde._kde as _kde
 import numpy as np
 
+from inputoutput.results import Results
 import kde.utils.automaticWindowWidthMethods as automaticWindowWidthMethods
 from kde.estimatorimplementation import EstimatorImplementation
 from kde.kernels.gaussian import Gaussian
@@ -63,11 +64,12 @@ class _ParzenEstimator_Python(_ParzenEstimator):
     def estimate(self):
         self._kernel.center = np.zeros(self._dimension)
         self._kernel.shape = np.identity(self._dimension)
-        densities = np.empty(self.num_x_s)
         factor = 1 / (self.num_xi_s * math.pow(self._general_bandwidth, self._dimension))
+        results = Results(expected_size=self.num_x_s)
         for idx, x in enumerate(self._x_s):
-            densities[idx] = self._estimate_pattern(x, factor)
-        return densities
+            density = self._estimate_pattern(x, factor)
+            results.add_result(density=density)
+        return results
 
     def _estimate_pattern(self, pattern, factor):
         terms = self._kernel.evaluate((pattern - self._xi_s) / self._general_bandwidth)
@@ -86,4 +88,5 @@ class _ParzenEstimator_C(_ParzenEstimator):
     def estimate(self):
         densities = np.empty(self.num_x_s, dtype=float)
         _kde.parzen(self._x_s, self._xi_s, self._general_bandwidth, self._kernel.to_C_enum(), densities)
-        return densities
+        result = Results(results_array=densities)
+        return result

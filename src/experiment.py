@@ -108,20 +108,20 @@ def estimate_pilot_densities(x_s, xi_s):
     print("\tEstimating Pilot Densities")
     general_bandwidth = automaticWindowWidthMethods.ferdosi(xi_s)
     _, dimension = x_s.shape
-    pilot_densities = ParzenEstimator(
+    results = ParzenEstimator(
         dimension=dimension,
         bandwidth=general_bandwidth,
         kernel_class=Epanechnikov
     ).estimate(xi_s=x_s, x_s=xi_s)
-    return general_bandwidth, pilot_densities
+    return general_bandwidth, results.densities
 
 
 def run_single_configuration(x_s, xi_s, estimator, pilot_densities, general_bandwidth, data_set):
-    densities = estimator.estimate(
+    results = estimator.estimate(
         x_s=x_s, xi_s=xi_s,
         pilot_densities=pilot_densities, general_bandwidth=general_bandwidth
     )
-    return io.Results(densities, data_set)
+    return results
 
 
 def write(result, out_path):
