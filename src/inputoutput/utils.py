@@ -1,6 +1,7 @@
 from unipath import Path
 
 import files as filenames
+import numpy as np
 
 
 def build_result_path(results_directory, data_set_file_path, estimator, *args):
@@ -81,3 +82,15 @@ def _show_files_to_user(files):
                                      in files])
                  )
           )
+
+
+def sub_sample_grid(data, space, dimension=3):
+    def subsample_along_axis(data, space, axis):
+        unique = np.unique(data[:, axis])
+        values_that_stay = unique[::space + 1]
+        return data[np.in1d(data[:, axis], values_that_stay)]
+
+    for axis in range(dimension):
+        data = subsample_along_axis(data, space, axis=axis)
+
+    return data

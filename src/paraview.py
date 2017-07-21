@@ -4,6 +4,8 @@ import logging
 
 from unipath import Path
 import numpy as np
+import sys
+import traceback
 
 from argparseActions import InputDirectoryAction, OutputDirectoryAction
 import inputoutput.utils as ioUtils
@@ -15,9 +17,10 @@ import inputoutput.results as ioResults
 _default_xs_path = Path('../data/simulated/small')
 _default_densities_path = Path('../results/simulated/small')
 _default_output_path = Path('.')
+_default_subsample_probability = 0.01
+_default_subsample_space = 31
 
 args = None
-_output_path = None
 
 
 def get_parser():
@@ -45,6 +48,18 @@ def get_parser():
                         action='store_true',
                         default=False,
                         help="Overwrite existing files in the output directory.")
+    parser.add_argument('-s', '--sub-sample',
+                        action='store_true',
+                        default=False,
+                        help="""If set to true the data is subsampled the data, the method depends on the """
+                             """kind of data.""")
+    parser.add_argument('--sub-sampling-probability',
+                        type=float, default=_default_subsample_probability,
+                        help="The subsampling probability if monte carlo subsampling is used.")
+    parser.add_argument('--sub-sampling-space',
+                        type=int, default=_default_subsample_space,
+                        help="""The number of elements to skip between two subsequent elements that are """
+                             """included in the sub sampled version of the data set.""")
     return parser
 
 
@@ -73,11 +88,13 @@ def process_files(files):
             process_data_set_with_results(file)
         except Exception as e:
             logging.error(
-                'An error occurred while processing the file {path}:\n {error}'.format(
+                'An error occurred while processing the file {path}:\n {error}\nTraceBack:'.format(
                     path=file['file'],
-                    error=e.message
+                    error=e.message,
                 )
             )
+            _, _, trace = sys.exc_info()
+            traceback.print_tb(trace)
 
 
 def process_data_set_with_results(dataset_file):
@@ -96,8 +113,7 @@ def process_data_set_with_results(dataset_file):
         (_, last_idx) = matrix.shape
         return np.insert(matrix, last_idx, column, axis=1)
 
-    def data_to_file(data, header, dataset_file):
-        out_path = determine_out_path(dataset_file)
+    def data_to_file(data, header, out_path):
         np.savetxt(
             fname=out_path,
             X=data,
@@ -108,21 +124,24 @@ def process_data_set_with_results(dataset_file):
         logging.info('Writing to {}'.format(out_path))
 
     def determine_out_path(meta_data):
-        def build_out_file(meta_data):
-            if 'grid size' in meta_data.keys():
-                return '{dataset_name}_grid_{grid_size}_paraview.csv'.format(
-                    dataset_name=meta_data['semantic name'],
-                    grid_size=meta_data['grid size']
-                )
-            else:
-                return '{dataset_name}_paraview.csv'.format(
-                    dataset_name=meta_data['semantic name'],
-                )
+        def build_out_file(semantic_name, *args):
+            args_string = '_'.join(args)
+            return '{data_set}{seperator}{args_string}_paraview.csv'.format(
+                data_set=semantic_name,
+                seperator='_' if args_string else '',
+                args_string=args_string
+            )
 
-        return _output_path.child(build_out_file(meta_data))
+        arguments = list()
+        if 'grid size' in meta_data.keys():
+            arguments.append('grid')
+            arguments.append(str(meta_data['grid size']))
+        if args.sub_sample:
+            arguments.append('subsampled')
+        return args.output_directory.child(build_out_file(meta_data['semantic name'], *arguments))
 
     def update_header(header, column_header):
-        header = '{old_header}, {column_header}'.format(
+        header = '{old_header},{column_header}'.format(
             old_header=header,
             column_header=column_header
         )
@@ -145,7 +164,18 @@ def process_data_set_with_results(dataset_file):
         for result in results:
             densities = ioResults.Results.from_file(result['file']).values
             estimated_densities[result['file']] = densities
-            data = add_column_to_end(data, densities)
+            try:
+                data = add_column_to_end(data, densities)
+            except Exception as e:
+                logging.error(
+                    'An error occurred while processing the results file {path}:\n {error}\nTraceBack:'.format(
+                        path=result['file'],
+                        error=e.message,
+                    )
+                )
+                _, _, trace = sys.exc_info()
+                traceback.print_tb(trace)
+                raise e
             header = update_header(header, estimator_description(result))
         return header, data, estimated_densities
 
@@ -183,8 +213,26 @@ def process_data_set_with_results(dataset_file):
         header=header, data=data,
         estimated_densities=estimated_densities
     )
+    data = subsample(data, dataset_file)
 
-    data_to_file(header=header, data=data, dataset_file=dataset_file)
+    data_to_file(header=header, data=data, out_path=out_path)
+
+
+def subsample(data, meta_data):
+    def monte_carlo_subsample(data, probability):
+        num_data_points, _ = data.shape
+        return data[np.random.sample(num_data_points) < probability, :]
+
+    def grid_subsample(data, offset):
+        return ioUtils.sub_sample_grid(data, offset)
+
+    if not args.sub_sample:
+        return data
+
+    if 'grid size' in meta_data:
+        return grid_subsample(data, args.sub_sampling_space)
+    else:
+        return monte_carlo_subsample(data, args.sub_sampling_probability)
 
 
 def estimator_description(meta_data):
@@ -214,12 +262,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO if args.verbose else logging.ERROR)
-
     logging.info('Running in verbose mode')
     logging.info('Reading xs files from: {}'.format(args.xs_directory))
     logging.info('Reading density files from: {}'.format(args.densities_directory))
-
-    _output_path = args.output_directory
 
     files = find_associated_result_files(
         xs_files=collect_meta_data(ioUtils.get_data_set_files(args.xs_directory, show_files=False)),
