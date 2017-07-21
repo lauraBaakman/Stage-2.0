@@ -33,9 +33,10 @@ class TestModifiedBreimanEstimator(TestCase):
             sensitivity=sensitivity,
             pilot_window_width_method=kde.utils.automaticWindowWidthMethods.ferdosi
         )
-        actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
-        expected = np.array([0.7708904])
-        np.testing.assert_array_almost_equal(actual, expected)
+        result = estimator.estimate(xi_s=xi_s, x_s=x_s)
+        expected_densities = np.array([0.7708904])
+        actual_densities = result.densities
+        np.testing.assert_array_almost_equal(actual_densities, expected_densities)
 
     def test_estimate_python_python(self):
         self.estimate_test_helper(_ParzenEstimator_Python, _MBEEstimator_Python)
@@ -66,12 +67,13 @@ class TestModifiedBreimanEstimator(TestCase):
                 sensitivity=sensitivity,
                 pilot_window_width_method=kde.utils.automaticWindowWidthMethods.ferdosi
             )
-            actual = estimator.estimate(
+            result = estimator.estimate(
                 xi_s=xi_s, x_s=x_s,
                 pilot_densities=pilot_densities, general_bandwidth=general_bandwidth
             )
-            expected = np.array([0.7708904])
-            np.testing.assert_array_almost_equal(actual, expected)
+            actual_densities = result.densities
+            expected_densities = np.array([0.7708904])
+            np.testing.assert_array_almost_equal(actual_densities, expected_densities)
 
     def estimate_pilot_densities_test_helper(self, _parzen_implementation):
         xi_s = np.array([
@@ -126,9 +128,10 @@ class ModifiedBreimanEstimatorImpAbstractTest(object):
             kernel=kernel,
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
-        actual = estimator.estimate()
-        expected = np.array([0.00264898, 0.0024237, 0.00253281])
-        np.testing.assert_array_almost_equal(actual, expected)
+        result = estimator.estimate()
+        actual_densities = result.densities
+        expected_densities = np.array([0.00264898, 0.0024237, 0.00253281])
+        np.testing.assert_array_almost_equal(actual_densities, expected_densities)
 
 
 class Test_MBEEstimator_Python(ModifiedBreimanEstimatorImpAbstractTest, TestCase):

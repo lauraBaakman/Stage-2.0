@@ -6,6 +6,7 @@ import os
 import numpy as np
 import scipy.stats.mstats as stats
 
+from inputoutput.results import Results
 import kde._kde as _kde
 import kde.utils.automaticWindowWidthMethods as automaticWindowWidthMethods
 from kde.estimatorimplementation import EstimatorImplementation
@@ -151,7 +152,8 @@ class _MBEEstimator_Python(_MBEEstimator):
         densities = np.empty(self.num_x_s)
         for idx, x in enumerate(self._x_s):
             densities[idx] = self._estimate_pattern(x)
-        return (1 / self.num_xi_s) * densities
+        densities = (1 / self.num_xi_s) * densities
+        return Results(results_array=densities)
 
     def _estimate_pattern(self, x):
         factors = np.power(self._local_bandwidths * self._general_bandwidth, - self._dimension)
@@ -178,4 +180,4 @@ class _MBEEstimator_C(_MBEEstimator):
                               self._general_bandwidth, self._local_bandwidths,
                               self._kernel.to_C_enum(),
                               densities)
-        return densities
+        return Results(results_array=densities)
