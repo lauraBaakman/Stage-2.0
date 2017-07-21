@@ -133,6 +133,30 @@ class TestResults(TestCase):
                 self.fail('Some warning was triggered')
         self.assertEqual(actual, expected)
 
+    def test_add_result_only_density(self):
+        actual = Results(expected_size=3)
+        actual.add_result(density=0.5)
+        actual.add_result(density=0.3)
+        actual.add_result(density=0.2)
+
+        expected = Results(
+            results_array=np.array([0.5, 0.3, 0.3])
+        )
+        self.assertEqual(actual, expected)
+
+    def test_add_result_only_density_invalid_density(self):
+        try:
+            actual = Results(expected_size=3)
+            actual.add_result(density=0.5)
+            actual.add_result(density=3.0)
+            actual.add_result(density=0.2)
+        except InvalidResultsException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
     def test__eq_eqal(self):
         one = Results(
             np.array([
