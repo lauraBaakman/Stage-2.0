@@ -1,7 +1,11 @@
 from unittest import TestCase
 import io
+import shutil
+import tempfile
+import warnings
 
 import numpy as np
+from unipath import Path
 
 from inputoutput import DataSet
 from inputoutput.results import _ResultsValidator, Results, InvalidResultsException
@@ -27,6 +31,11 @@ class TestResults(TestCase):
                 ])
             )
         self._results_array = np.array([0.1, 0.2, 0.3, 0.4, 0.51234567891011121314], dtype=np.float64)
+        self.test_dir = Path(tempfile.mkdtemp())
+
+    def tearDown(self):
+        super(TestResults, self).tearDown()
+        shutil.rmtree(self.test_dir)
 
     def test_constructor_without_results_array(self):
         expected_size = 4
@@ -99,6 +108,29 @@ class TestResults(TestCase):
                 0.0001832763582,
             ])
         )
+        self.assertEqual(actual, expected)
+
+    def test_from_file_to_file_with_nan(self):
+        expected = Results(
+            data_set=None,
+            results_array=np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+                1.227518586e-05,
+                np.NAN,
+                0.0001832763582,
+            ])
+        )
+        out_path = self.test_dir.child('temp.txt')
+
+        with open(out_path, 'w') as out_handle:
+            expected.to_file(out_handle)
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            actual = Results.from_file(out_path)
+            if len(w):
+                self.fail('Some warning was triggered')
         self.assertEqual(actual, expected)
 
     def test__eq_eqal(self):
