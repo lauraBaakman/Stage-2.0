@@ -294,15 +294,17 @@ class Test_ResultsValidator(TestCase):
         else:
             self.fail('ExpectedException not raised')
 
-    def test__results_are_densities_0(self):
+    def test__results_are_densities_with_edge_cases(self):
         results_array = np.array([
             0.0, 0.2, 0.33, 0.444, 0.55, 1.0
         ])
         validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
-        actual = validator._results_are_densities()
-        self.assertIsNone(actual)
+        with warnings.catch_warnings(record=True) as w:
+            validator._results_are_densities()
+            if len(w):
+                self.fail('The warning was triggered')
 
-    def test__results_are_densities_1(self):
+    def test__results_are_densities_with_only_valid_densities(self):
         results_array = np.array([
             7.539699219e-05,
             1.240164051e-05,
@@ -311,5 +313,44 @@ class Test_ResultsValidator(TestCase):
             0.0001832763582
         ])
         validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
-        actual = validator._results_are_densities()
-        self.assertIsNone(actual)
+        with warnings.catch_warnings(record=True) as w:
+            validator._results_are_densities()
+            if len(w):
+                self.fail('The warning was triggered')
+
+    def test__results_are_densities_with_invalid_densities(self):
+        results_array = np.array([
+            7.539699219e-05,
+            1.240164051e+05,
+            1.227518586e-05,
+            7.288289757e-05,
+            0.0001832763582
+        ])
+        validator = _ResultsValidator(data_set=self._data_set, results_array=results_array)
+        with warnings.catch_warnings(record=True) as w:
+            validator._results_are_densities()
+            if not len(w):
+                self.fail('The warning was not triggered')
+
+    def test_validate_density_with_valid_density(self):
+        density = 0.5
+        _ResultsValidator.validate_density(density)
+
+    def test_validate_density_with_edge_case_lower_bound(self):
+        density = 0.0
+        _ResultsValidator.validate_density(density)
+
+    def test_validate_density_with_edge_case_upper_bound(self):
+        density = 1.0
+        _ResultsValidator.validate_density(density)
+
+    def test_validate_density_with_invalid_density(self):
+        try:
+            density = 1.5
+            _ResultsValidator.validate_density(density)
+        except InvalidResultsException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')

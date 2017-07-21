@@ -115,6 +115,18 @@ class _ResultsValidator(object):
         if not all_are_probability_densities(self._results_array):
             warnings.warn("Not all values in the results are in the range [0, 1].")
 
+    @staticmethod
+    def validate_density(value):
+        def is_density(value):
+            return value >= 0.0 and value <= 1.0
+
+        if not is_density(value):
+            raise InvalidResultsException(
+                message='{} is not a valid density'.format(value),
+                actual=value,
+                expected='Some value in the range [0 ,1].'
+            )
+
 
 class InvalidResultsException(Exception):
     def __init__(self, message, actual=None, expected=None, *args):
