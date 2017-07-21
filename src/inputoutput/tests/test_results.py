@@ -110,14 +110,14 @@ class TestResults(TestCase):
         )
         self.assertEqual(actual, expected)
 
-    def test_from_file_to_file_with_nan(self):
+    def test_from_file_to_file_with_temp_file(self):
         expected = Results(
             data_set=None,
             results_array=np.array([
                 7.539699219e-05,
                 1.240164051e-05,
                 1.227518586e-05,
-                np.NAN,
+                7.288289757e-05,
                 0.0001832763582,
             ])
         )
