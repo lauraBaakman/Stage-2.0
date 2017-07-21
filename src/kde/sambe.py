@@ -2,6 +2,7 @@ from __future__ import division
 
 import numpy as np
 
+from inputoutput.results import Results
 from kde.mbe import MBEstimator
 import kde.utils.automaticWindowWidthMethods as automaticWindowWidthMethods
 from kde.estimatorimplementation import EstimatorImplementation
@@ -64,16 +65,18 @@ class _ShapeAdaptiveMBE_C(_ShapeAdaptiveMBE):
                                 self._k, self._general_bandwidth,
                                 self._local_bandwidths,
                                 densities)
-        return densities
+        results = Results(results_array=densities)
+        return results
 
 
 class _ShapeAdaptiveMBE_Python(_ShapeAdaptiveMBE):
 
     def estimate(self):
-        densities = np.empty(self.num_x_s)
+        results = Results(expected_size=self.num_x_s)
         for idx, x in enumerate(self._x_s):
-            densities[idx] = self._estimate_pattern(x)
-        return densities
+            density = self._estimate_pattern(x)
+            results.add_result(density=density)
+        return results
 
     def _estimate_pattern(self, pattern, kernel_shape=None):
         kernel_shape = kernel_shape if kernel_shape is not None else self._determine_kernel_shape(pattern)

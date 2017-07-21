@@ -41,12 +41,13 @@ class TestShapeAdaptiveMBE(TestCase):
             sensitivity=sensitivity,
             pilot_window_width_method=kde.utils.automaticWindowWidthMethods.ferdosi
         )
-        actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
-        expected = np.array([0.143018801263046,
+        result = estimator.estimate(xi_s=xi_s, x_s=x_s)
+        actual_densities = result.densities
+        expected_densities = np.array([0.143018801263046,
                              0.077446155260620,
                              0.077446155260620,
                              0.143018801263046])
-        np.testing.assert_array_almost_equal(actual, expected)
+        np.testing.assert_array_almost_equal(actual_densities, expected_densities)
 
     def test_estimate_python_python(self):
         with warnings.catch_warnings(record=True):
@@ -70,11 +71,11 @@ class TestShapeAdaptiveMBE(TestCase):
                 pilot_window_width_method=kde.utils.automaticWindowWidthMethods.ferdosi
             )
             actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
-            expected = np.array([0.186693239491116,
+            expected_densities = np.array([0.186693239491116,
                                  0.077446155260620,
                                  0.077446155260620,
                                  0.143018801263046])
-            np.testing.assert_array_almost_equal(actual, expected)
+            np.testing.assert_array_almost_equal(actual.densities, expected_densities)
 
     def test_estimate_C_python(self):
         with warnings.catch_warnings(record=True):
@@ -102,11 +103,13 @@ class TestShapeAdaptiveMBE(TestCase):
             xi_s=xi_s, x_s=x_s,
             pilot_densities=pilot_densities, general_bandwidth=general_bandwidth
         )
-        expected = np.array([0.186693239491116,
-                             0.077446155260620,
-                             0.077446155260620,
-                             0.143018801263046])
-        np.testing.assert_array_almost_equal(actual, expected)
+        expected_densities = np.array([
+            0.186693239491116,
+            0.077446155260620,
+            0.077446155260620,
+            0.143018801263046
+        ])
+        np.testing.assert_array_almost_equal(actual.densities, expected_densities)
 
     def test_estimate_C_C_dont_pass_pilot_densities(self):
         with warnings.catch_warnings(record=True):
@@ -127,11 +130,13 @@ class TestShapeAdaptiveMBE(TestCase):
             actual = estimator.estimate(
                 xi_s=xi_s, x_s=x_s
             )
-            expected = np.array([0.186693239491116,
-                                 0.077446155260620,
-                                 0.077446155260620,
-                                 0.143018801263046])
-            np.testing.assert_array_almost_equal(actual, expected)
+            expected_densities = np.array([
+                0.186693239491116,
+                0.077446155260620,
+                0.077446155260620,
+                0.143018801263046
+            ])
+            np.testing.assert_array_almost_equal(actual.densities, expected_densities)
 
 
 class ShapeAdaptiveMBEImpAbstractTest(object):
@@ -159,11 +164,12 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
         actual = estimator.estimate()
-        expected = np.array([0.143018801263046,
-                             0.077446155260620,
-                             0.077446155260620,
-                             0.143018801263046])
-        np.testing.assert_array_almost_equal(actual, expected)
+        expected_densities = np.array([
+            0.143018801263046,
+            0.077446155260620,
+            0.077446155260620,
+            0.143018801263046])
+        np.testing.assert_array_almost_equal(actual.densities, expected_densities)
 
 
 class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
@@ -234,8 +240,8 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
         actual = estimator.estimate()
-        expected = np.array([0.143018801263046, 0.143018801263046])
-        np.testing.assert_array_almost_equal(actual, expected)
+        expected_densities = np.array([0.143018801263046, 0.143018801263046])
+        np.testing.assert_array_almost_equal(actual.densities, expected_densities)
 
     def test_xis_is_not_xs(self):
         xi_s = xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
@@ -255,8 +261,8 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
         actual = estimator.estimate()
-        expected = np.array([0.1271447313485623, 0.1507791646676249])
-        np.testing.assert_array_almost_equal(actual, expected)
+        expected_densities = np.array([0.1271447313485623, 0.1507791646676249])
+        np.testing.assert_array_almost_equal(actual.densities, expected_densities)
 
 
 class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
@@ -287,11 +293,12 @@ class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
         actual = estimator.estimate()
-        expected = np.array([0.186693239491116,
-                             0.077446155260620,
-                             0.077446155260620,
-                             0.143018801263046])
-        np.testing.assert_array_almost_equal(actual, expected)
+        expected_densities = np.array([
+            0.186693239491116,
+            0.077446155260620,
+            0.077446155260620,
+            0.143018801263046])
+        np.testing.assert_array_almost_equal(actual.densities, expected_densities)
 
     def test_xis_is_not_xs(self):
         xi_s = xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
@@ -311,5 +318,5 @@ class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
         actual = estimator.estimate()
-        expected = np.array([0.19859744879119276, 0.15077916466762492])
-        np.testing.assert_array_almost_equal(actual, expected)
+        expected_densites = np.array([0.19859744879119276, 0.15077916466762492])
+        np.testing.assert_array_almost_equal(actual.densities, expected_densites)
