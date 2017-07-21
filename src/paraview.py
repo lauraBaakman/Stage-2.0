@@ -17,6 +17,7 @@ _default_densities_path = Path('../results/simulated/small')
 _default_output_path = Path('.')
 
 args = None
+_output_path = None
 
 
 def get_parser():
@@ -95,7 +96,8 @@ def process_data_set_with_results(dataset_file):
         (_, last_idx) = matrix.shape
         return np.insert(matrix, last_idx, column, axis=1)
 
-    def data_to_file(data, header, out_path):
+    def data_to_file(data, header, dataset_file):
+        out_path = determine_out_path(dataset_file)
         np.savetxt(
             fname=out_path,
             X=data,
@@ -117,7 +119,7 @@ def process_data_set_with_results(dataset_file):
                     dataset_name=meta_data['semantic name'],
                 )
 
-        return args.output_directory.child(build_out_file(meta_data))
+        return _output_path.child(build_out_file(meta_data))
 
     def update_header(header, column_header):
         header = '{old_header}, {column_header}'.format(
@@ -182,7 +184,7 @@ def process_data_set_with_results(dataset_file):
         estimated_densities=estimated_densities
     )
 
-    data_to_file(header=header, data=data, out_path=out_path)
+    data_to_file(header=header, data=data, dataset_file=dataset_file)
 
 
 def estimator_description(meta_data):
@@ -212,9 +214,12 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO if args.verbose else logging.ERROR)
+
     logging.info('Running in verbose mode')
     logging.info('Reading xs files from: {}'.format(args.xs_directory))
     logging.info('Reading density files from: {}'.format(args.densities_directory))
+
+    _output_path = args.output_directory
 
     files = find_associated_result_files(
         xs_files=collect_meta_data(ioUtils.get_data_set_files(args.xs_directory, show_files=False)),
