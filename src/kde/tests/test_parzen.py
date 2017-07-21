@@ -133,7 +133,7 @@ class Test_ParzenEstimator_Python(ParzenEstimatorImpAbstractTest, TestCase):
             kernel=TestKernel(), general_bandwidth=4)
         actual = estimator._estimate_pattern(
             pattern=pattern, factor=factor
-        ).densities
+        )
         expected = 15 / 1536.0
         self.assertAlmostEqual(actual, expected)
 
