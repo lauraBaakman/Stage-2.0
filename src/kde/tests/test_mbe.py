@@ -50,27 +50,28 @@ class TestModifiedBreimanEstimator(TestCase):
         self.estimate_test_helper(_ParzenEstimator_C, _MBEEstimator_C)
 
     def test_estimate_C_C_pass_pilot_densities_and_general_bandwidth(self):
-        xi_s = np.array([[0, 0], [1, 1]])
-        x_s = np.array([[0, 0]])
-        pilot_densities = np.array([0.7708904,  0.7708904])
-        general_bandwidth = 0.86561702453337819
-        pilot_kernel = TestKernel
-        final_kerel = TestKernel
-        number_of_grid_points = 2
-        sensitivity = 0.5
-        estimator = MBEstimator(
-            pilot_kernel_class=pilot_kernel, pilot_estimator_implementation=_ParzenEstimator_C,
-            kernel_class=final_kerel, final_estimator_implementation=_MBEEstimator_C,
-            dimension=2, number_of_grid_points=number_of_grid_points,
-            sensitivity=sensitivity,
-            pilot_window_width_method=kde.utils.automaticWindowWidthMethods.ferdosi
-        )
-        actual = estimator.estimate(
-            xi_s=xi_s, x_s=x_s,
-            pilot_densities=pilot_densities, general_bandwidth=general_bandwidth
-        )
-        expected = np.array([0.7708904])
-        np.testing.assert_array_almost_equal(actual, expected)
+        with warnings.catch_warnings(record=True):
+            xi_s = np.array([[0, 0], [1, 1]])
+            x_s = np.array([[0, 0]])
+            pilot_densities = np.array([0.7708904,  0.7708904])
+            general_bandwidth = 0.86561702453337819
+            pilot_kernel = TestKernel
+            final_kerel = TestKernel
+            number_of_grid_points = 2
+            sensitivity = 0.5
+            estimator = MBEstimator(
+                pilot_kernel_class=pilot_kernel, pilot_estimator_implementation=_ParzenEstimator_C,
+                kernel_class=final_kerel, final_estimator_implementation=_MBEEstimator_C,
+                dimension=2, number_of_grid_points=number_of_grid_points,
+                sensitivity=sensitivity,
+                pilot_window_width_method=kde.utils.automaticWindowWidthMethods.ferdosi
+            )
+            actual = estimator.estimate(
+                xi_s=xi_s, x_s=x_s,
+                pilot_densities=pilot_densities, general_bandwidth=general_bandwidth
+            )
+            expected = np.array([0.7708904])
+            np.testing.assert_array_almost_equal(actual, expected)
 
     def estimate_pilot_densities_test_helper(self, _parzen_implementation):
         xi_s = np.array([
