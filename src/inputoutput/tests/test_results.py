@@ -148,17 +148,26 @@ class TestResults(TestCase):
         actual.add_result(density=0.2)
 
         expected = Results(
-            results_array=np.array([0.5, 0.3, 0.3])
+            results_array=np.array([0.5, 0.3, 0.2])
         )
         self.assertEqual(actual, expected)
 
     def test_add_result_only_density_invalid_density(self):
-        try:
+        with warnings.catch_warnings(record=True) as w:
             actual = Results(expected_size=3)
             actual.add_result(density=0.5)
             actual.add_result(density=3.0)
             actual.add_result(density=0.2)
-        except InvalidResultsException:
+            if w and issubclass(w[0].category, UserWarning):
+                pass
+            else:
+                self.fail('Expected warning not thrown')
+
+    def test_add_results_to_result_initialize_with_results_array(self):
+        try:
+            results = Results(results_array=self._results_array)
+            results.add_result(0.5)
+        except TypeError:
             pass
         except Exception as e:
             self.fail('Unexpected exception raised: {}'.format(e))

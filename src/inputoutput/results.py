@@ -37,8 +37,15 @@ class Results:
             raise TypeError(
                 'Adding results one by one is not allowed for this instance of the results object.'
             )
-        self._results_array[self._idx] = density
+        self._add_density(density)
         self._idx += 1
+
+    def _add_density(self, density):
+        try:
+            _ResultsValidator.validate_density(density)
+            self._results_array[self._idx] = density
+        except InvalidResultsException:
+            warnings.warn('Adding the invalid density {} to the results.'.format(density))
 
     def to_file(self, out_file):
         _ResultsWriter(results=self._results_array, out_file=out_file).write()
