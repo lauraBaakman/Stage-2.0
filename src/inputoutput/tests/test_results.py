@@ -163,10 +163,10 @@ class TestResults(TestCase):
                 pass
             else:
                 self.fail('Expected warning not thrown')
-        expected = Results(
-            results_array=np.array([0.5, 3.0, 0.2])
-        )
-        self.assertEqual(actual, expected)
+            expected = Results(
+                results_array=np.array([0.5, 3.0, 0.2])
+            )
+            self.assertEqual(actual, expected)
 
     def test_add_results_to_result_initialize_with_results_array(self):
         try:
