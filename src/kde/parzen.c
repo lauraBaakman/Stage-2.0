@@ -13,7 +13,7 @@ static gsl_vector** g_scaledPatterns;
 
 void parzen(gsl_matrix *xs, gsl_matrix *xis,
             double windowWidth, KernelType kernelType,
-            gsl_vector* densities) {
+            gsl_vector* densities, gsl_vector* numUsedPatterns) {
 
     prepareGlobals(xis, windowWidth, kernelType);
 
@@ -29,6 +29,8 @@ void parzen(gsl_matrix *xs, gsl_matrix *xis,
         {
             x = gsl_matrix_row(xs, j);
             density = singlePattern(&x.vector, &usedPatternCount, pid);
+
+            gsl_vector_set(numUsedPatterns, j, usedPatternCount);
             gsl_vector_set(densities, j, density);
         }
     }

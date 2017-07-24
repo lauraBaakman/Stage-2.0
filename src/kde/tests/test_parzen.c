@@ -35,6 +35,7 @@ void testParzenSingleThreaded(CuTest *tc){
     KernelType kernelType = STANDARD_GAUSSIAN;
 
     gsl_vector* actual = gsl_vector_alloc(numXs);
+    gsl_vector* actualNumUsedPatterns = gsl_vector_alloc(numXs);
 
     gsl_vector* expected = gsl_vector_alloc(numXs);
     gsl_vector_set(expected, 0, 0.009694888542698);
@@ -44,7 +45,8 @@ void testParzenSingleThreaded(CuTest *tc){
     gsl_vector_set(expected, 4, 0.009603126595478);
     gsl_vector_set(expected, 5, 0.009602675165108);
 
-    parzen(xs, xis, globalBandwidth, kernelType, actual);
+    parzen(xs, xis, globalBandwidth, kernelType, 
+        actual, actualNumUsedPatterns);
 
     CuAssertVectorEquals(tc, expected, actual, delta);
 
@@ -79,6 +81,7 @@ void testParzenMultiThreaded(CuTest *tc){
     KernelType kernelType = STANDARD_GAUSSIAN;
 
     gsl_vector* actual = gsl_vector_alloc(numXs);
+    gsl_vector* actualNumUsedPatterns = gsl_vector_alloc(numXs);
 
     gsl_vector* expected = gsl_vector_alloc(numXs);
     gsl_vector_set(expected, 0, 0.009694888542698);
@@ -88,7 +91,8 @@ void testParzenMultiThreaded(CuTest *tc){
     gsl_vector_set(expected, 4, 0.009603126595478);
     gsl_vector_set(expected, 5, 0.009602675165108);
 
-    parzen(xs, xis, globalBandwidth, kernelType, actual);
+    parzen(xs, xis, globalBandwidth, kernelType, 
+        actual, actualNumUsedPatterns);
 
     CuAssertVectorEquals(tc, expected, actual, delta);
 

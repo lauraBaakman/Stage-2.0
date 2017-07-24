@@ -20,7 +20,11 @@ static PyObject * kdeParzen(PyObject *self, PyObject *args){
     gsl_matrix_view xis = pyObjectToGSLMatrixView(inDataPoints, NPY_ARRAY_IN_ARRAY);
     gsl_vector_view densities = pyObjectToGSLVectorView(outDensities, NPY_ARRAY_OUT_ARRAY);
 
-    parzen(&xs.matrix, &xis.matrix, inWindowWidth, kernelType, &densities.vector);
+    gsl_vector* numUsedPatterns = gsl_vector_alloc(densities.vector.size);
+
+    parzen(&xs.matrix, &xis.matrix, inWindowWidth, kernelType, 
+      &densities.vector, numUsedPatterns
+    );
 
     /* Create return object */
     Py_INCREF(Py_None);
