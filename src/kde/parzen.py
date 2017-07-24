@@ -67,14 +67,18 @@ class _ParzenEstimator_Python(_ParzenEstimator):
         factor = 1 / (self.num_xi_s * math.pow(self._general_bandwidth, self._dimension))
         results = Results(expected_size=self.num_x_s)
         for idx, x in enumerate(self._x_s):
-            density = self._estimate_pattern(x, factor)
-            results.add_result(density=density)
+            density, num_used_patterns = self._estimate_pattern(x, factor)
+            results.add_result(
+                density=density,
+                num_used_patterns=num_used_patterns
+            )
         return results
 
     def _estimate_pattern(self, pattern, factor):
         terms = self._kernel.evaluate((pattern - self._xi_s) / self._general_bandwidth)
         density = factor * terms.sum()
-        return density
+        num_used_patterns = 0
+        return density, num_used_patterns
 
 
 class _ParzenEstimator_C(_ParzenEstimator):
