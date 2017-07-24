@@ -94,6 +94,10 @@ class _ParzenEstimator_C(_ParzenEstimator):
 
     def estimate(self):
         densities = np.empty(self.num_x_s, dtype=float)
-        _kde.parzen(self._x_s, self._xi_s, self._general_bandwidth, self._kernel.to_C_enum(), densities)
-        result = Results(densities=densities)
+        num_used_patterns = np.empty(self.num_x_s, dtype=float)
+        _kde.parzen(
+            self._x_s, self._xi_s, self._general_bandwidth, self._kernel.to_C_enum(),
+            densities, num_used_patterns
+        )
+        result = Results(densities=densities, num_used_patterns=num_used_patterns)
         return result

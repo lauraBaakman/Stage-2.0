@@ -30,7 +30,7 @@ void parzen(gsl_matrix *xs, gsl_matrix *xis,
             x = gsl_matrix_row(xs, j);
             density = singlePattern(&x.vector, &usedPatternCount, pid);
 
-            gsl_vector_set(numUsedPatterns, j, usedPatternCount);
+            gsl_vector_set(numUsedPatterns, j, (double) usedPatternCount);
             gsl_vector_set(densities, j, density);
         }
     }
@@ -60,7 +60,6 @@ double singlePattern(gsl_vector *x, int* usedPatternCount, int pid){
         (*usedPatternCount) += (term > 0.0);
     }
     density *= g_parzenFactor;
-
     return density;
 }
 

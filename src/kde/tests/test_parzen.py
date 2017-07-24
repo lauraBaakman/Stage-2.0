@@ -1,6 +1,6 @@
 from __future__ import division
 
-from unittest import TestCase, skip
+from unittest import TestCase
 
 import numpy as np
 
@@ -64,7 +64,6 @@ class TestParzenEstimator(TestCase):
             expected_num_patterns_used_for_density
         )
 
-    @skip('Not yet implemented')
     def test_estimate_C(self):
         xi_s = np.array([[-1, -1], [0, 0], [1 / 2.0, 1 / 2.0]])
         x_s = np.array([[0, 0], [1 / 4.0, 1 / 2.0]])
@@ -73,7 +72,7 @@ class TestParzenEstimator(TestCase):
                                     estimator_implementation=_ParzenEstimator_C)
         actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
         expected_densities = np.array([0.0096947375, 0.0095360625])
-        expected_num_patterns_used_for_density = np.array([4, 4])
+        expected_num_patterns_used_for_density = np.array([3, 3])
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
         np.testing.assert_array_almost_equal(
             actual.num_patterns_used_for_density_estimation,
@@ -176,7 +175,6 @@ class Test_ParzenEstimator_Python(ParzenEstimatorImpAbstractTest, TestCase):
         self.assertAlmostEqual(actual, expected)
 
 
-@skip('Not yet implemeneted')
 class Test_ParzenEstimator_C(ParzenEstimatorImpAbstractTest, TestCase):
     def setUp(self):
         super(Test_ParzenEstimator_C, self).setUp()

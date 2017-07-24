@@ -5,25 +5,26 @@ static PyObject * kdeParzen(PyObject *self, PyObject *args){
     PyObject* inPatterns = NULL;
     PyObject* inDataPoints = NULL;
     PyObject* outDensities = NULL;
+    PyObject* outNumUsedPatterns = NULL;
 
     double inWindowWidth;
     KernelType kernelType;
 
-    if (!PyArg_ParseTuple(args, "OOdiO",
+    if (!PyArg_ParseTuple(args, "OOdiOO",
                           &inPatterns,
                           &inDataPoints,
                           &inWindowWidth,
                           &kernelType,
-                          &outDensities)) return NULL;
+                          &outDensities,
+                          &outNumUsedPatterns)) return NULL;
 
     gsl_matrix_view xs = pyObjectToGSLMatrixView(inPatterns, NPY_ARRAY_IN_ARRAY);
     gsl_matrix_view xis = pyObjectToGSLMatrixView(inDataPoints, NPY_ARRAY_IN_ARRAY);
     gsl_vector_view densities = pyObjectToGSLVectorView(outDensities, NPY_ARRAY_OUT_ARRAY);
-
-    gsl_vector* numUsedPatterns = gsl_vector_alloc(densities.vector.size);
+    gsl_vector_view numUsedPatterns = pyObjectToGSLVectorView(outNumUsedPatterns, NPY_ARRAY_OUT_ARRAY);
 
     parzen(&xs.matrix, &xis.matrix, inWindowWidth, kernelType, 
-      &densities.vector, numUsedPatterns
+      &densities.vector, &numUsedPatterns.vector
     );
 
     /* Create return object */
