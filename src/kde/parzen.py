@@ -75,10 +75,12 @@ class _ParzenEstimator_Python(_ParzenEstimator):
         return results
 
     def _estimate_pattern(self, pattern, factor):
+        def count_non_zeros(array):
+            return np.sum(~np.isclose(array, 0.0))
+
         terms = self._kernel.evaluate((pattern - self._xi_s) / self._general_bandwidth)
-        import ipdb; ipdb.set_trace()  # breakpoint 4b722a14 //
         density = factor * terms.sum()
-        num_used_patterns = 0
+        num_used_patterns = count_non_zeros(terms)
         return density, num_used_patterns
 
 
