@@ -22,22 +22,26 @@ void parzen(gsl_matrix *xs, gsl_matrix *xis,
         int pid = omp_get_thread_num();
         gsl_vector_view x;
         double density;
+        int usedPatternCount = 0;
 
         #pragma omp for
         for(size_t j = 0; j < xs->size1; j++)
         {
             x = gsl_matrix_row(xs, j);
-            density = singlePattern(&x.vector, pid);
+            density = singlePattern(&x.vector, &usedPatternCount, pid);
             gsl_vector_set(densities, j, density);
         }
     }
     freeGlobals();
 }
 
-double singlePattern(gsl_vector *x, int pid){
+double singlePattern(gsl_vector *x, int* usedPatternCount, int pid){
     gsl_vector* scaledPattern = g_scaledPatterns[pid];
 
+    *usedPatternCount = 0;
+
     double density = 0;
+    double term;
 
     gsl_vector_view xi;
 
@@ -48,7 +52,10 @@ double singlePattern(gsl_vector *x, int pid){
         gsl_subtract(x, &xi.vector, scaledPattern);
         gsl_vector_scale(scaledPattern, g_globalBandwidthFactor);
 
-        density += g_kernel.density(scaledPattern, 0);
+        term = g_kernel.density(scaledPattern, 0);
+        density += term;
+
+        (*usedPatternCount) += (term > 0.0);
     }
     density *= g_parzenFactor;
 

@@ -10,7 +10,7 @@
 
 #include "utils/gsl_utils.h"
 
-double singlePattern(gsl_vector *x, int pid);
+double singlePattern(gsl_vector *x, int* usedPatternCount, int pid);
 
 double computeParzenFactor(double globalBandwidth, gsl_matrix* xs);
 double computeGlobalBandwidthFactor(double globalBandwidth);
