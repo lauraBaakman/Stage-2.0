@@ -59,13 +59,14 @@ class _ShapeAdaptiveMBE_C(_ShapeAdaptiveMBE):
 
     def estimate(self):
         densities = np.empty(self.num_x_s, dtype=float)
+        num_used_patterns = np.empty(self.num_x_s, dtype=float)
         _kde.shape_adaptive_mbe(self._x_s,
                                 self._xi_s,
                                 self._kernel_class.to_C_enum(),
                                 self._k, self._general_bandwidth,
                                 self._local_bandwidths,
-                                densities)
-        results = Results(densities=densities)
+                                densities, num_used_patterns)
+        results = Results(densities=densities, num_used_patterns=num_used_patterns)
         return results
 
 
@@ -74,21 +75,26 @@ class _ShapeAdaptiveMBE_Python(_ShapeAdaptiveMBE):
     def estimate(self):
         results = Results(expected_size=self.num_x_s)
         for idx, x in enumerate(self._x_s):
-            density = self._estimate_pattern(x)
-            results.add_result(density=density)
+            density, num_used_patterns = self._estimate_pattern(x)
+            results.add_result(density=density, num_used_patterns=num_used_patterns)
         return results
 
     def _estimate_pattern(self, pattern, kernel_shape=None):
+        def count_non_zeros(array):
+            return np.sum(~np.isclose(array, 0.0))
+
         kernel_shape = kernel_shape if kernel_shape is not None else self._determine_kernel_shape(pattern)
 
         # Define the kernel
         kernel = self._kernel_class(kernel_shape)
 
         # Density estimation
-        density = sum(map(kernel.evaluate, pattern - self._xi_s, self._local_bandwidths))
+        terms = map(kernel.evaluate, pattern - self._xi_s, self._local_bandwidths)
 
-        density *= (1 / self.num_xi_s)
-        return density
+        density = (1 / self.num_xi_s) * sum(terms)
+        num_used_patterns = count_non_zeros(terms)
+
+        return density, num_used_patterns
 
     def _determine_kernel_shape(self, pattern):
         # Find the K nearest neighbours

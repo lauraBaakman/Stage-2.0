@@ -10,6 +10,6 @@ void sambe(gsl_matrix *xs,
 		   gsl_matrix *xis,
            gsl_vector *localBandwidths, double globalBandwidth,
            KernelType kernel, int k,
-           gsl_vector *outDensities);
+           gsl_vector *outDensities, gsl_vector* numUsedPatterns);
 
 #endif //SAMBE_H

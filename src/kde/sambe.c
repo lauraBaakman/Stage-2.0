@@ -23,7 +23,7 @@ void sambe(gsl_matrix *xs,
            gsl_matrix *xis,
            gsl_vector *localBandwidths, double globalBandwidth,
            KernelType kernelType, int k,
-           gsl_vector *densities){
+           gsl_vector *densities, gsl_vector *numUsedPatterns){
 
     prepareGlobals(xs, xis, localBandwidths, globalBandwidth, kernelType, k);    
 
@@ -31,24 +31,28 @@ void sambe(gsl_matrix *xs,
     {
         int pid = omp_get_thread_num();
         double density;
+        int usedPatternCount = 0;
         gsl_vector_view x;
 
         #pragma omp for
         for(size_t i = 0; i < g_numXs; i++){
             x = gsl_matrix_row(xs, i);
 
-            density = singlePattern(&x.vector, pid);
+            density = singlePattern(&x.vector, &usedPatternCount, pid);
 
             gsl_vector_set(densities, i, density);
+            gsl_vector_set(numUsedPatterns, i, (double) usedPatternCount);
         }        
     }
 
     freeGlobals();
 }
 
-double singlePattern(gsl_vector *x, int pid) {
+double singlePattern(gsl_vector *x, int* usedPatternCount, int pid) {
     gsl_matrix* globalBandwidthMatrix = g_globalBandwidthMatrices[pid];
     gsl_vector* movedPattern = g_movedPatterns[pid];
+
+    *usedPatternCount = 0;
 
     double localBandwidth, density = 0.0;
 
@@ -65,6 +69,8 @@ double singlePattern(gsl_vector *x, int pid) {
         localBandwidth = gsl_vector_get(g_localBandwidths, i);
 
         double kernelResult = g_kernel.density(movedPattern, localBandwidth, pid);
+
+        (*usedPatternCount) += (kernelResult > 0.0);
 
         density += kernelResult;
     }

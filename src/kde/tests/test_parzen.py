@@ -28,8 +28,10 @@ class TestParzenEstimator(TestCase):
                                     bandwidth=4, kernel_class=Gaussian,
                                     estimator_implementation=_ParzenEstimator_Python)
         actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
+
         expected_densities = np.array([0.0096947375, 0.0095360625])
         expected_num_patterns_used_for_density = np.array([3, 3])
+
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
         np.testing.assert_array_almost_equal(
             actual.num_patterns_used_for_density_estimation,

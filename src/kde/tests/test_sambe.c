@@ -29,7 +29,8 @@ void testSAMBESingleThreaded(CuTest *tc){
 
     KernelType kernelType = SHAPE_ADAPTIVE_GAUSSIAN;
 
-    gsl_vector* actual = gsl_vector_alloc(numXs);
+    gsl_vector* actual_densities = gsl_vector_alloc(numXs);
+    gsl_vector* actual_pattern_count = gsl_vector_alloc(numXs);
 
     gsl_vector* expected = gsl_vector_alloc(numXs);
     gsl_vector_set(expected, 0, 0.186693239491116);
@@ -48,13 +49,14 @@ void testSAMBESingleThreaded(CuTest *tc){
     sambe(xs, xis,
     	localBandwidths, globalBandwidth,
     	kernelType, k,
-    	actual);
+    	actual_densities, actual_pattern_count);
 
-    CuAssertVectorEquals(tc, expected, actual, delta);
+    CuAssertVectorEquals(tc, expected, actual_densities, delta);
 
     reset_omp();
 
-    gsl_vector_free(actual);
+    gsl_vector_free(actual_densities);
+    gsl_vector_free(actual_pattern_count);
     gsl_vector_free(expected);
     gsl_matrix_free(xs);
     gsl_vector_free(localBandwidths);
@@ -77,7 +79,8 @@ void testSAMBEMultiThreaded(CuTest *tc){
 
     KernelType kernelType = SHAPE_ADAPTIVE_GAUSSIAN;
 
-    gsl_vector* actual = gsl_vector_alloc(numXs);
+    gsl_vector* actual_densities = gsl_vector_alloc(numXs);
+    gsl_vector* actual_pattern_count = gsl_vector_alloc(numXs);
 
     gsl_vector* expected = gsl_vector_alloc(numXs);
     gsl_vector_set(expected, 0, 0.186693239491116);
@@ -96,13 +99,14 @@ void testSAMBEMultiThreaded(CuTest *tc){
     sambe(xs, xis,
     	localBandwidths, globalBandwidth,
     	kernelType, k,
-    	actual);
+    	actual_densities, actual_pattern_count);
 
-    CuAssertVectorEquals(tc, expected, actual, delta);
+    CuAssertVectorEquals(tc, expected, actual_densities, delta);
 
     reset_omp();
 
-    gsl_vector_free(actual);
+    gsl_vector_free(actual_densities);
+    gsl_vector_free(actual_pattern_count);
     gsl_vector_free(expected);
     gsl_matrix_free(xs);
     gsl_vector_free(localBandwidths);
