@@ -182,7 +182,8 @@ class TestResults(TestCase):
             else:
                 self.fail('Expected warning not thrown')
             expected = Results(
-                densities=np.array([0.5, 3.0, 0.2])
+                densities=np.array([0.5, 3.0, 0.2]),
+                num_used_patterns=np.array([np.nan, np.nan, np.nan])
             )
             self.assertEqual(actual, expected)
 
