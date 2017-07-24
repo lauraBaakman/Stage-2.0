@@ -29,7 +29,12 @@ class TestParzenEstimator(TestCase):
                                     estimator_implementation=_ParzenEstimator_Python)
         actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
         expected_densities = np.array([0.0096947375, 0.0095360625])
+        expected_num_patterns_used_for_density = np.array([4, 4])
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
+        np.testing.assert_array_almost_equal(
+            actual.num_patterns_used_for_density_estimation,
+            expected_num_patterns_used_for_density
+        )
 
     def test_estimate_python_dont_pass_bandwidth(self):
         xi_s = np.array([[-1, -1], [0, 0], [1 / 2.0, 1 / 2.0]])
@@ -38,7 +43,12 @@ class TestParzenEstimator(TestCase):
                                     estimator_implementation=_ParzenEstimator_Python)
         actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
         expected_densities = np.array([0.15133033, 0.14270123])
+        expected_num_patterns_used_for_density = np.array([4, 4])
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
+        np.testing.assert_array_almost_equal(
+            actual.num_patterns_used_for_density_estimation,
+            expected_num_patterns_used_for_density
+        )
 
     def test_estimate_python_pass_bandwidth_with_estimate(self):
         xi_s = np.array([[-1, -1], [0, 0], [1 / 2.0, 1 / 2.0]])
@@ -47,7 +57,12 @@ class TestParzenEstimator(TestCase):
                                     estimator_implementation=_ParzenEstimator_Python)
         actual = estimator.estimate(xi_s=xi_s, x_s=x_s, general_bandwidth=4)
         expected_densities = np.array([0.0096947375, 0.0095360625])
+        expected_num_patterns_used_for_density = np.array([4, 4])
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
+        np.testing.assert_array_almost_equal(
+            actual.num_patterns_used_for_density_estimation,
+            expected_num_patterns_used_for_density
+        )
 
     def test_estimate_C(self):
         xi_s = np.array([[-1, -1], [0, 0], [1 / 2.0, 1 / 2.0]])
@@ -57,7 +72,12 @@ class TestParzenEstimator(TestCase):
                                     estimator_implementation=_ParzenEstimator_C)
         actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
         expected_densities = np.array([0.0096947375, 0.0095360625])
+        expected_num_patterns_used_for_density = np.array([4, 4])
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
+        np.testing.assert_array_almost_equal(
+            actual.num_patterns_used_for_density_estimation,
+            expected_num_patterns_used_for_density
+        )
 
 
 class ParzenEstimatorImpAbstractTest(object):
@@ -73,7 +93,12 @@ class ParzenEstimatorImpAbstractTest(object):
             kernel=Gaussian(), general_bandwidth=4)
         actual = estimator.estimate()
         expected_densities = np.array([0.0096947375, 0.0095360625])
+        expected_num_patterns_used_for_density = np.array([4, 4])
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
+        np.testing.assert_array_almost_equal(
+            actual.num_patterns_used_for_density_estimation,
+            expected_num_patterns_used_for_density
+        )
 
     def test_estimate_test_kernel(self):
         xi_s = np.array([[-1, -1], [0, 0], [1 / 2.0, 1 / 2.0]])
@@ -83,7 +108,12 @@ class ParzenEstimatorImpAbstractTest(object):
             kernel=TestKernel(), general_bandwidth=4)
         actual = estimator.estimate()
         expected_densities = np.array([3 / 384.0, 15 / 1536.0])
+        expected_num_patterns_used_for_density = np.array([4, 4])
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
+        np.testing.assert_array_almost_equal(
+            actual.num_patterns_used_for_density_estimation,
+            expected_num_patterns_used_for_density
+        )
 
     def test_estimate_epanechnikov(self):
         xi_s = Grid.cover(
@@ -96,7 +126,8 @@ class ParzenEstimatorImpAbstractTest(object):
             [0.7, 2.8],
             [0.1, 2.3],
             [2.7, 1.6],
-            [1.3, 0.9]
+            [1.3, 0.9],
+            [7.5, 0.7]
         ])
         estimator = self._estimator_class(
             xi_s=xi_s, x_s=x_s, dimension=2,
@@ -108,9 +139,15 @@ class ParzenEstimatorImpAbstractTest(object):
             0.00747729817,
             0.007450440773,
             0.007564833389,
-            0.00766927882
+            0.00766927882,
+            0.0026290407161992458
         ])
+        expected_num_patterns_used_for_density = np.array([16, 16, 16, 16, 16, 16, 8])
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
+        np.testing.assert_array_almost_equal(
+            actual.num_patterns_used_for_density_estimation,
+            expected_num_patterns_used_for_density
+        )
 
 
 class Test_ParzenEstimator_Python(ParzenEstimatorImpAbstractTest, TestCase):
