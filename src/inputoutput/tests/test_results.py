@@ -227,6 +227,17 @@ class TestResults(TestCase):
         self.assertEqual(actual.num_patterns_used_for_density_estimation.dtype,
                          expected.num_patterns_used_for_density_estimation.dtype)
 
+    def test_result_fault_key(self):
+        try:
+            actual = Results(expected_size=1)
+            actual.add_result(density=0.5, wrong_key_name=2)
+        except KeyError:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
     def test__eq_eqal(self):
         one = Results(
             np.array([

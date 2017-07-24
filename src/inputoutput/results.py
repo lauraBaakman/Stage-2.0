@@ -50,6 +50,11 @@ class Results:
             kwargs.pop('num_used_patterns', np.NAN)
         )
 
+        if len(kwargs.keys()) is not 0:
+            raise KeyError(
+                "The keys {} passed to 'add results' are not supported and thus ignored.".format(kwargs.keys())
+            )
+
         self._idx += 1
 
     def _add_density(self, density):
