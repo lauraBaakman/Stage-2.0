@@ -3,15 +3,19 @@ import warnings
 
 
 class Results:
-    def __init__(self, densities=None, data_set=None, expected_size=None):
+    def __init__(self, densities=None, data_set=None, expected_size=None, num_used_patterns=None):
         if (expected_size is None) and (densities is None):
             raise TypeError("expected_size or densities need to be provided.'")
         if densities is not None:
             self._densities = densities
+            self._num_used_patterns = num_used_patterns
+
             _ResultsValidator(data_set=data_set, densities=densities).validate()
             self._incremental_result_adding_is_allowed = False
         if expected_size:
             self._densities = np.empty(expected_size)
+            self._num_used_patterns = np.empty(expected_size)
+
             self._incremental_result_adding_is_allowed = True
             self._idx = 0
 
@@ -22,6 +26,10 @@ class Results:
     @property
     def densities(self):
         return self._densities
+
+    @property
+    def num_patterns_used_for_density_estimation(self):
+        return self._num_used_patterns
 
     @property
     def num_results(self):
@@ -38,6 +46,10 @@ class Results:
                 'Adding results one by one is not allowed for this instance of the results object.'
             )
         self._add_density(density)
+        self._add_num_used_patterns(
+            kwargs.pop('num_used_patterns', np.NAN)
+        )
+
         self._idx += 1
 
     def _add_density(self, density):
@@ -47,6 +59,9 @@ class Results:
             warnings.warn('Adding the invalid density {} to the results.'.format(density))
         finally:
             self._densities[self._idx] = density
+
+    def _add_num_used_patterns(self, num_used_patterns):
+        self._num_used_patterns[self._idx] = num_used_patterns
 
     def to_file(self, out_file):
         _ResultsWriter(results=self._densities, out_file=out_file).write()
@@ -64,9 +79,24 @@ class Results:
         return str(self.__class__) + ": " + str(self.__dict__)
 
     def __eq__(self, other):
+        def eq_num_used_patterns(me, other):
+            if (me is None) ^ (other is None):
+                return False
+            if (me is None) and (other is None):
+                return True
+
+            me_nans = np.isnan(me)
+            other_nans = np.isnan(other)
+
+            if np.any(me_nans != other_nans):
+                return False
+
+            return np.array_equiv(me[~me_nans], other[~other_nans])
+
         if isinstance(other, self.__class__):
             return (
-                np.array_equiv(self._densities, other._densities)
+                np.array_equiv(self._densities, other._densities) and
+                eq_num_used_patterns(self._num_used_patterns, other._num_used_patterns)
             )
         return NotImplemented
 
@@ -74,6 +104,9 @@ class Results:
         if isinstance(other, self.__class__):
             return not self.__eq__(other)
         return NotImplemented
+
+    def __repr__(self):
+        return "%s(%r)" % (self.__class__, self.__dict__)
 
 
 class _ResultsReader(object):

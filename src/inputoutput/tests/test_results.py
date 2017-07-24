@@ -74,6 +74,23 @@ class TestResults(TestCase):
         expected = 5
         self.assertEqual(actual, expected)
 
+    def test_num_patterns_used_for_density_estimation(self):
+        array = np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+            ])
+        results = Results(
+            densities=np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+            ]),
+            num_used_patterns=array
+        )
+        np.testing.assert_array_almost_equal(
+            results.num_patterns_used_for_density_estimation,
+            array
+        )
+
     def test_to_file(self):
         results = Results(
             data_set=self._data_set,
@@ -149,7 +166,8 @@ class TestResults(TestCase):
         actual.add_result(density=0.2)
 
         expected = Results(
-            densities=np.array([0.5, 0.3, 0.2])
+            densities=np.array([0.5, 0.3, 0.2]),
+            num_used_patterns=np.array([np.nan, np.nan, np.nan], dtype=np.float)
         )
         self.assertEqual(actual, expected)
 
@@ -179,6 +197,35 @@ class TestResults(TestCase):
         else:
             self.fail('ExpectedException not raised')
 
+    def test_add_result_density_and_count_1(self):
+        actual = Results(expected_size=3)
+        actual.add_result(density=0.5, num_used_patterns=2)
+        actual.add_result(density=0.3, num_used_patterns=4)
+        actual.add_result(density=0.2, num_used_patterns=3)
+
+        expected = Results(
+            densities=np.array([0.5, 0.3, 0.2]),
+            # needs to be float, so that we can use nan for the unknown values
+            num_used_patterns=np.array([2, 4, 3], dtype=np.float)
+        )
+        self.assertEqual(actual, expected)
+        self.assertEqual(actual.num_patterns_used_for_density_estimation.dtype,
+                         expected.num_patterns_used_for_density_estimation.dtype)
+
+    def test_add_result_density_and_count_2(self):
+        actual = Results(expected_size=3)
+        actual.add_result(density=0.5, num_used_patterns=2)
+        actual.add_result(density=0.3)
+        actual.add_result(density=0.2, num_used_patterns=3)
+
+        expected = Results(
+            densities=np.array([0.5, 0.3, 0.2]),
+            num_used_patterns=np.array([2, np.nan, 3], dtype=np.float)
+        )
+        self.assertEqual(actual, expected)
+        self.assertEqual(actual.num_patterns_used_for_density_estimation.dtype,
+                         expected.num_patterns_used_for_density_estimation.dtype)
+
     def test__eq_eqal(self):
         one = Results(
             np.array([
@@ -194,6 +241,23 @@ class TestResults(TestCase):
         )
         self.assertTrue(one == two)
 
+    def test__eq_equal_with_count(self):
+        one = Results(
+            densities=np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+            ]),
+            num_used_patterns=np.array([2, 3])
+        )
+        two = Results(
+            np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+            ]),
+            num_used_patterns=np.array([2, 3])
+        )
+        self.assertTrue(one == two)
+
     def test__eq_not_equal(self):
         one = Results(
             np.array([
@@ -206,6 +270,89 @@ class TestResults(TestCase):
                 7.639699219e-05,
                 1.240164051e-05,
             ])
+        )
+        self.assertFalse(one == two)
+
+    def test__eq_with_nan(self):
+        one = Results(
+            densities=np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+            ]),
+            num_used_patterns=np.array([2, np.nan])
+        )
+        two = Results(
+            np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+            ]),
+            num_used_patterns=np.array([2, np.nan])
+        )
+        self.assertTrue(one == two)
+
+    def test__eq_with_nan_2(self):
+        one = Results(
+            densities=np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+            ]),
+            num_used_patterns=np.array([np.nan, 2])
+        )
+        two = Results(
+            np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+            ]),
+            num_used_patterns=np.array([2, np.nan])
+        )
+        self.assertFalse(one == two)
+
+    def test__eq_with_none(self):
+        one = Results(
+            densities=np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+            ])
+        )
+        two = Results(
+            np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+            ]),
+            num_used_patterns=np.array([2, 3])
+        )
+        self.assertFalse(one == two)
+
+    def test__eq_not_equal_with_count(self):
+        one = Results(
+            densities=np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+            ]),
+            num_used_patterns=np.array([2, 3])
+        )
+        two = Results(
+            np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+            ]),
+            num_used_patterns=np.array([4, 7])
+        )
+        self.assertFalse(one == two)
+
+    def test__eq_with_differing_properties(self):
+        one = Results(
+            densities=np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+            ])
+        )
+        two = Results(
+            np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+            ]),
+            num_used_patterns=np.array([4, 7])
         )
         self.assertFalse(one == two)
 
