@@ -13,7 +13,8 @@ static int g_numThreads;
 
 void mbe(gsl_matrix *xs, gsl_matrix *xis,
          double globalBandwidth, gsl_vector *localBandwidths,
-         KernelType kernelType, gsl_vector *densities) {
+         KernelType kernelType, 
+         gsl_vector *densities, gsl_vector* numUsedPatterns) {
 
     prepareGlobals(xis, globalBandwidth, localBandwidths, kernelType);
 
@@ -21,14 +22,16 @@ void mbe(gsl_matrix *xs, gsl_matrix *xis,
     {
         double density;
         int pid = omp_get_thread_num();
+        int usedPatternCount = 0;
         gsl_vector_view x;
 
         #pragma omp for
         for(size_t j = 0; j < xs->size1; j++)
         {
             x = gsl_matrix_row(xs, j);
-            density = estimateSinglePattern(&x.vector, pid);
+            density = estimateSinglePattern(&x.vector, &usedPatternCount, pid);
             gsl_vector_set(densities, j, density);
+            gsl_vector_set(numUsedPatterns, j, (double) usedPatternCount);
         }
     }
 
@@ -62,11 +65,13 @@ void allocateGlobals(size_t dataDimension){
     g_scaledPatterns = gsl_vectors_alloc(dataDimension, g_numThreads);
 }
 
-double estimateSinglePattern(gsl_vector *x, int pid) {
+double estimateSinglePattern(gsl_vector *x, int* usedPatternCount, int pid) {
     gsl_vector_view xi;
 
+    *usedPatternCount = 0;
+
     double density = 0;
-    double factor, bandwidth;
+    double factor, bandwidth, term;
 
     gsl_vector* scaledPattern = g_scaledPatterns[pid];
 
@@ -78,7 +83,10 @@ double estimateSinglePattern(gsl_vector *x, int pid) {
 
         scale(x, &xi.vector, scaledPattern, bandwidth);
 
-        density += (factor * g_kernel.density(scaledPattern, pid));
+        term = (factor * g_kernel.density(scaledPattern, pid));
+        density += term;
+
+        (*usedPatternCount) += (term > 0.0);
     }
     density /= (double) g_xis->size1;
 

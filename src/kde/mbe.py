@@ -150,12 +150,16 @@ class _MBEEstimator_Python(_MBEEstimator):
 
     def estimate(self):
         densities = np.empty(self.num_x_s)
+        num_used_patterns = np.empty(self.num_x_s)
         for idx, x in enumerate(self._x_s):
-            densities[idx] = self._estimate_pattern(x)
+            densities[idx], num_used_patterns[idx] = self._estimate_pattern(x)
         densities = (1 / self.num_xi_s) * densities
-        return Results(densities=densities)
+        return Results(densities=densities, num_used_patterns=num_used_patterns)
 
     def _estimate_pattern(self, x):
+        def count_non_zeros(array):
+            return np.sum(~np.isclose(array, 0.0))
+
         factors = np.power(self._local_bandwidths * self._general_bandwidth, - self._dimension)
         terms = self._kernel.evaluate(
             np.divide(
@@ -163,8 +167,11 @@ class _MBEEstimator_Python(_MBEEstimator):
                 self._general_bandwidth * self._local_bandwidths).transpose()
         )
         terms *= factors
+
         density = terms.sum()
-        return density
+        num_used_patterns = count_non_zeros(terms)
+
+        return density, num_used_patterns
 
 
 class _MBEEstimator_C(_MBEEstimator):
@@ -176,8 +183,9 @@ class _MBEEstimator_C(_MBEEstimator):
 
     def estimate(self):
         densities = np.empty(self.num_x_s, dtype=float)
+        num_used_patterns = np.empty(self.num_x_s, dtype=float)
         _kde.modified_breiman(self._x_s, self._xi_s,
                               self._general_bandwidth, self._local_bandwidths,
                               self._kernel.to_C_enum(),
-                              densities)
-        return Results(densities=densities)
+                              densities, num_used_patterns)
+        return Results(densities=densities, num_used_patterns=num_used_patterns)

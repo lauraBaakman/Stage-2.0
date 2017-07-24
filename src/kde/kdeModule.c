@@ -38,28 +38,31 @@ static PyObject *kde_modified_breiman(PyObject *self, PyObject *args){
     PyObject* inDataPoints = NULL;
     PyObject* inLocalBandwidths = NULL;
     PyObject* outDensities = NULL;
+    PyObject* outNumUsedPatterns = NULL;
 
 
     double globalBandwidth;
     KernelType inKernelType;
 
-    if (!PyArg_ParseTuple(args, "OOdOiO",
+    if (!PyArg_ParseTuple(args, "OOdOiOO",
                           &inPatterns,
                           &inDataPoints,
                           &globalBandwidth,
                           &inLocalBandwidths,
                           &inKernelType,
-                          &outDensities)) return NULL;
+                          &outDensities,
+                          &outNumUsedPatterns)) return NULL;
 
     gsl_matrix_view xs = pyObjectToGSLMatrixView(inPatterns, NPY_ARRAY_IN_ARRAY);
     gsl_matrix_view xis = pyObjectToGSLMatrixView(inDataPoints, NPY_ARRAY_IN_ARRAY);
     gsl_vector_view localBandwidths = pyObjectToGSLVectorView(inLocalBandwidths, NPY_ARRAY_IN_ARRAY);
     gsl_vector_view densities = pyObjectToGSLVectorView(outDensities, NPY_ARRAY_OUT_ARRAY);
+    gsl_vector_view numUsedPatterns = pyObjectToGSLVectorView(outNumUsedPatterns, NPY_ARRAY_OUT_ARRAY);
 
     mbe(&xs.matrix, &xis.matrix,
         globalBandwidth, &localBandwidths.vector,
         inKernelType,
-        &densities.vector);
+        &densities.vector, &numUsedPatterns.vector);
 
     /* Create return object */
     Py_INCREF(Py_None);

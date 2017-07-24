@@ -34,7 +34,8 @@ void testMBESingleThreaded(CuTest *tc){
 
     KernelType kernelType = STANDARD_GAUSSIAN;
 
-    gsl_vector* actual = gsl_vector_alloc(numXs);
+    gsl_vector* actual_densities = gsl_vector_alloc(numXs);
+    gsl_vector* actual_num_patterns = gsl_vector_alloc(numXs);
 
     gsl_vector* expected = gsl_vector_alloc(numXs);
 	gsl_vector_set(expected, 0, 0.002648978899632);
@@ -51,13 +52,14 @@ void testMBESingleThreaded(CuTest *tc){
 
     mbe(xs, xis, 
     	globalBandwidth, localBandwidths, 
-    	kernelType, actual);
+    	kernelType, actual_densities, actual_num_patterns);
 
-    CuAssertVectorEquals(tc, expected, actual, delta);
+    CuAssertVectorEquals(tc, expected, actual_densities, delta);
 
     reset_omp();
 
-    gsl_vector_free(actual);
+    gsl_vector_free(actual_densities);
+    gsl_vector_free(actual_num_patterns);
     gsl_vector_free(expected);
     gsl_matrix_free(xs);
     gsl_matrix_free(xis);
@@ -87,7 +89,8 @@ void testMBEMultiThreaded(CuTest *tc){
 
     KernelType kernelType = STANDARD_GAUSSIAN;
 
-    gsl_vector* actual = gsl_vector_alloc(numXs);
+    gsl_vector* actual_densities = gsl_vector_alloc(numXs);
+    gsl_vector* actual_num_patterns = gsl_vector_alloc(numXs);
 
     gsl_vector* expected = gsl_vector_alloc(numXs);
 	gsl_vector_set(expected, 0, 0.002648978899632);
@@ -103,14 +106,15 @@ void testMBEMultiThreaded(CuTest *tc){
     gsl_vector_set(localBandwidths, 2, 50);
 
     mbe(xs, xis, 
-    	globalBandwidth, localBandwidths, 
-    	kernelType, actual);
+        globalBandwidth, localBandwidths, 
+        kernelType, actual_densities, actual_num_patterns);
 
-    CuAssertVectorEquals(tc, expected, actual, delta);
+    CuAssertVectorEquals(tc, expected, actual_densities, delta);
 
     reset_omp();
 
-    gsl_vector_free(actual);
+    gsl_vector_free(actual_densities);
+    gsl_vector_free(actual_num_patterns);
     gsl_vector_free(expected);
     gsl_matrix_free(xs);
     gsl_matrix_free(xis);

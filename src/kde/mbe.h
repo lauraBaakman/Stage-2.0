@@ -9,6 +9,6 @@
 void mbe(gsl_matrix* xs, gsl_matrix *xis,
          double globalBandwidth, gsl_vector *localBandwidths,
          KernelType kernelType,
-         gsl_vector *densities);
+         gsl_vector *outDensities, gsl_vector *outNumUsedPatterns);
 
 #endif //KERNELS_MODIFEID_BREIMAN_H

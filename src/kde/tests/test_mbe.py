@@ -33,10 +33,16 @@ class TestModifiedBreimanEstimator(TestCase):
             sensitivity=sensitivity,
             pilot_window_width_method=kde.utils.automaticWindowWidthMethods.ferdosi
         )
-        result = estimator.estimate(xi_s=xi_s, x_s=x_s)
+        actual = estimator.estimate(xi_s=xi_s, x_s=x_s)
+
         expected_densities = np.array([0.7708904])
-        actual_densities = result.densities
-        np.testing.assert_array_almost_equal(actual_densities, expected_densities)
+        expected_num_patterns_used_for_density = np.array([1])
+
+        np.testing.assert_array_almost_equal(actual.densities, expected_densities)
+        np.testing.assert_array_almost_equal(
+            actual.num_patterns_used_for_density_estimation,
+            expected_num_patterns_used_for_density
+        )
 
     def test_estimate_python_python(self):
         self.estimate_test_helper(_ParzenEstimator_Python, _MBEEstimator_Python)
@@ -67,13 +73,19 @@ class TestModifiedBreimanEstimator(TestCase):
                 sensitivity=sensitivity,
                 pilot_window_width_method=kde.utils.automaticWindowWidthMethods.ferdosi
             )
-            result = estimator.estimate(
+            actual = estimator.estimate(
                 xi_s=xi_s, x_s=x_s,
                 pilot_densities=pilot_densities, general_bandwidth=general_bandwidth
             )
-            actual_densities = result.densities
+
             expected_densities = np.array([0.7708904])
-            np.testing.assert_array_almost_equal(actual_densities, expected_densities)
+            expected_num_patterns_used_for_density = np.array([1])
+
+            np.testing.assert_array_almost_equal(actual.densities, expected_densities)
+            np.testing.assert_array_almost_equal(
+                actual.num_patterns_used_for_density_estimation,
+                expected_num_patterns_used_for_density
+            )
 
     def estimate_pilot_densities_test_helper(self, _parzen_implementation):
         xi_s = np.array([
@@ -128,10 +140,16 @@ class ModifiedBreimanEstimatorImpAbstractTest(object):
             kernel=kernel,
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
-        result = estimator.estimate()
-        actual_densities = result.densities
+        actual = estimator.estimate()
+
         expected_densities = np.array([0.00264898, 0.0024237, 0.00253281])
-        np.testing.assert_array_almost_equal(actual_densities, expected_densities)
+        expected_num_patterns_used_for_density = np.array([3, 3, 3])
+
+        np.testing.assert_array_almost_equal(actual.densities, expected_densities)
+        np.testing.assert_array_almost_equal(
+            actual.num_patterns_used_for_density_estimation,
+            expected_num_patterns_used_for_density
+        )
 
 
 class Test_MBEEstimator_Python(ModifiedBreimanEstimatorImpAbstractTest, TestCase):
@@ -155,9 +173,13 @@ class Test_MBEEstimator_Python(ModifiedBreimanEstimatorImpAbstractTest, TestCase
             kernel=kernel,
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
-        actual = estimator._estimate_pattern(pattern)
-        expected = 0.00264898 * 3
-        self.assertAlmostEqual(actual, expected)
+        actual_density, actual_num_used_patterns = estimator._estimate_pattern(pattern)
+
+        expected_density = 0.00264898 * 3
+        expected_num_used_patterns = 3
+
+        self.assertAlmostEqual(actual_density, expected_density)
+        self.assertEqual(actual_num_used_patterns, expected_num_used_patterns)
 
 
 class Test_MBEEstimator_C(ModifiedBreimanEstimatorImpAbstractTest, TestCase):
