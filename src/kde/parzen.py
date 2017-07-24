@@ -76,6 +76,7 @@ class _ParzenEstimator_Python(_ParzenEstimator):
 
     def _estimate_pattern(self, pattern, factor):
         terms = self._kernel.evaluate((pattern - self._xi_s) / self._general_bandwidth)
+        import ipdb; ipdb.set_trace()  # breakpoint 4b722a14 //
         density = factor * terms.sum()
         num_used_patterns = 0
         return density, num_used_patterns
