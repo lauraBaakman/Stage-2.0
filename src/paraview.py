@@ -190,11 +190,11 @@ def process_data_set_with_results(dataset_file):
                 raise e
         return header, data, estimated_densities
 
-    def add_square_errors(data_meta_data, header, data, estimated_densities):
+    def add_errors(data_meta_data, header, data, estimated_densities):
         results = dataset_file['associated results']
         pairs = itertools.combinations(results, 2)
         for (a_meta, b_meta) in pairs:
-            differences, column_header = add_square_error(
+            differences, column_header = add_error(
                 a_meta=a_meta, a_values=estimated_densities[a_meta['file']],
                 b_meta=b_meta, b_values=estimated_densities[b_meta['file']]
             )
@@ -221,7 +221,7 @@ def process_data_set_with_results(dataset_file):
     header, data, estimated_densities = add_configuration_specific_data(
         data_meta_data=dataset_file, header=header, data=data
     )
-    header, data = add_square_errors(
+    header, data = add_errors(
         data_meta_data=dataset_file,
         header=header, data=data,
         estimated_densities=estimated_densities
@@ -255,19 +255,19 @@ def estimator_description(meta_data):
     )
 
 
-def add_square_error(a_meta, a_values, b_meta, b_values):
-    def square_error(a_values, b_values):
-        return np.power(a_values - b_values, 2)
+def add_error(a_meta, a_values, b_meta, b_values):
+    def compute_error(a_values, b_values):
+        return a_values - b_values
 
     def determine_column_header(a_meta, b_meta):
-        return 'squared[{a} - {b}]'.format(
+        return '{a} - {b}'.format(
             a=estimator_description(a_meta),
             b=estimator_description(b_meta)
         )
 
-    square_error = square_error(a_values, b_values)
+    error = compute_error(a_values, b_values)
     column_header = determine_column_header(a_meta, b_meta)
-    return square_error, column_header
+    return error, column_header
 
 
 if __name__ == '__main__':
