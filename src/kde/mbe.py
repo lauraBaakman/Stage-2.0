@@ -122,7 +122,7 @@ class MBEstimator(object):
                 local_bandwidths = computation(pilot_densities, self._sensitivity)
             except:
                 local_bandwidths = np.ones(pilot_densities.shape)
-                idx_of_valid_densities = (pilot_densities != 0)
+                idx_of_valid_densities = np.nonzero(pilot_densities)
                 local_bandwidths[idx_of_valid_densities] = computation(
                     pilot_densities[idx_of_valid_densities], self._sensitivity
                 )
