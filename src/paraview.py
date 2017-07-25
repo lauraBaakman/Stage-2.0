@@ -158,25 +158,36 @@ def process_data_set_with_results(dataset_file):
 
         return header, data
 
-    def add_estimated_densities(data_meta_data, header, data):
-        results = dataset_file['associated results']
+    def add_configuration_specific_data(data_meta_data, header, data):
+        results_meta_data = dataset_file['associated results']
         estimated_densities = dict()
-        for result in results:
-            densities = ioResults.Results.from_file(result['file']).values
-            estimated_densities[result['file']] = densities
+        for result_meta_data in results_meta_data:
+            result = ioResults.Results.from_file(result_meta_data['file'])
+
+            densities = result.densities
+            estimated_densities[result_meta_data['file']] = densities
+
             try:
+                estimator = estimator_description(result_meta_data)
+
                 data = add_column_to_end(data, densities)
+                header = update_header(header, estimator)
+
+                data = add_column_to_end(data, result.num_used_patterns)
+                header = update_header(
+                    header,
+                    'num used patterns ({estimator})'.format(estimator=estimator)
+                )
             except Exception as e:
                 logging.error(
                     'An error occurred while processing the results file {path}:\n {error}\nTraceBack:'.format(
-                        path=result['file'],
+                        path=result_meta_data['file'],
                         error=e.message,
                     )
                 )
                 _, _, trace = sys.exc_info()
                 traceback.print_tb(trace)
                 raise e
-            header = update_header(header, estimator_description(result))
         return header, data, estimated_densities
 
     def add_square_errors(data_meta_data, header, data, estimated_densities):
@@ -207,7 +218,9 @@ def process_data_set_with_results(dataset_file):
     )
 
     header, data = read_data_set_file(dataset_file['file'])
-    header, data, estimated_densities = add_estimated_densities(data_meta_data=dataset_file, header=header, data=data)
+    header, data, estimated_densities = add_configuration_specific_data(
+        data_meta_data=dataset_file, header=header, data=data
+    )
     header, data = add_square_errors(
         data_meta_data=dataset_file,
         header=header, data=data,
