@@ -28,13 +28,17 @@ class Results:
         return self._densities
 
     @property
-    def num_patterns_used_for_density_estimation(self):
+    def num_used_patterns(self):
         return self._num_used_patterns
 
     @property
     def num_results(self):
         (num_results,) = self._densities.shape
         return num_results
+
+    @property
+    def has_num_used_patterns(self):
+        return self._num_used_patterns is not None
 
     @property
     def is_incremental(self):
@@ -69,7 +73,7 @@ class Results:
         self._num_used_patterns[self._idx] = num_used_patterns
 
     def to_file(self, out_file):
-        _ResultsWriter(results=self._densities, out_file=out_file).write()
+        _ResultsWriter(results=self, out_file=out_file).write()
 
     @classmethod
     def from_file(cls, in_file):
@@ -119,27 +123,63 @@ class _ResultsReader(object):
         self.in_file = in_file
 
     def read(self):
-        densities = self._read_densities()
-        return Results(densities=densities)
-
-    def _read_densities(self):
-        self.in_file.seek(0)
-        return np.genfromtxt(
-            self.in_file,
-            skip_header=0, invalid_raise=True
+        densities, num_used_patterns = self._read_data()
+        return Results(
+            densities=densities,
+            num_used_patterns=num_used_patterns
         )
+
+    def _read_data(self):
+        self.in_file.seek(0)
+        try:
+            data = np.genfromtxt(
+                self.in_file,
+                names=['densities', 'num_used_patterns']
+            )
+            num_used_patterns = data['num_used_patterns']
+        except ValueError:
+            self.in_file.seek(0)
+            data = np.genfromtxt(self.in_file, names=['densities'])
+            num_used_patterns = None
+        finally:
+            densities = data['densities']
+        return densities, num_used_patterns
 
 
 class _ResultsWriter(object):
+    _densities_fmt = '%0.15f'
+    _num_used_patterns_fmt = '%.0f'
+
     def __init__(self, results, out_file):
         self._out_file = out_file
         self._results = results
 
-    def write(self):
-        self._write_densities()
+    @property
+    def _values_as_matrix(self):
+        def _add_densities(self):
+            densities = self._results.densities
+            format_string = self._densities_fmt
+            return densities, format_string
 
-    def _write_densities(self):
-        np.savetxt(self._out_file, self._results, fmt='%.15f')
+        def _add_num_used_patterns(self, data, format_string):
+            if self._results.has_num_used_patterns:
+                data = np.vstack((data, self._results.num_used_patterns)).transpose()
+                format_string = '{old} {new_column}'.format(
+                    old=format_string,
+                    new_column=self._num_used_patterns_fmt
+                )
+            return data, format_string
+
+        data, format_string = _add_densities(self)
+        data, format_string = _add_num_used_patterns(self, data, format_string)
+        return data, format_string
+
+    def write(self):
+        data, format_string = self._values_as_matrix
+        self._write_data(data, format_string)
+
+    def _write_data(self, data, format_string):
+        np.savetxt(self._out_file, data, fmt=format_string)
 
 
 class _ResultsValidator(object):

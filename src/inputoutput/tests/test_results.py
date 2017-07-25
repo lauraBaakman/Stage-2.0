@@ -74,7 +74,48 @@ class TestResults(TestCase):
         expected = 5
         self.assertEqual(actual, expected)
 
-    def test_num_patterns_used_for_density_estimation(self):
+    def test_has_num_used_patterns_true(self):
+        results = Results(
+            data_set=None,
+            densities=np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+                1.227518586e-05,
+                7.288289757e-05,
+                0.0001832763582,
+            ]),
+            num_used_patterns=np.array([1, 2, 3, 4, 5])
+        )
+        self.assertTrue(results.has_num_used_patterns)
+
+    def test_has_num_used_patterns_true_only_nans(self):
+        results = Results(
+            data_set=None,
+            densities=np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+                1.227518586e-05,
+                7.288289757e-05,
+                0.0001832763582,
+            ]),
+            num_used_patterns=np.array([np.nan, np.nan, np.nan, np.nan, np.nan])
+        )
+        self.assertTrue(results.has_num_used_patterns)
+
+    def test_has_num_used_patterns_false(self):
+        results = Results(
+            data_set=None,
+            densities=np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+                1.227518586e-05,
+                7.288289757e-05,
+                0.0001832763582,
+            ])
+        )
+        self.assertFalse(results.has_num_used_patterns)
+
+    def test_num_used_patterns(self):
         array = np.array([
                 7.539699219e-05,
                 1.240164051e-05,
@@ -87,7 +128,7 @@ class TestResults(TestCase):
             num_used_patterns=array
         )
         np.testing.assert_array_almost_equal(
-            results.num_patterns_used_for_density_estimation,
+            results.num_used_patterns,
             array
         )
 
@@ -151,6 +192,30 @@ class TestResults(TestCase):
                 self.fail('Some warning was triggered')
         self.assertEqual(actual, expected)
 
+    def test_from_file_to_file_with_num_used_patterns(self):
+        expected = Results(
+            data_set=None,
+            densities=np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+                1.227518586e-05,
+                7.288289757e-05,
+                0.0001832763582,
+            ]),
+            num_used_patterns=np.array([1, 2, 3, np.nan, 5])
+        )
+        out_path = self.test_dir.child('temp.txt')
+
+        with open(out_path, 'w') as out_handle:
+            expected.to_file(out_handle)
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            actual = Results.from_file(out_path)
+            if len(w):
+                self.fail('Some warning was triggered: {}'.format(w[0].message))
+        self.assertEqual(actual, expected)
+
     def test_is_incremental_true(self):
         results = Results(expected_size=3)
         self.assertTrue(results.is_incremental)
@@ -210,8 +275,8 @@ class TestResults(TestCase):
             num_used_patterns=np.array([2, 4, 3], dtype=np.float)
         )
         self.assertEqual(actual, expected)
-        self.assertEqual(actual.num_patterns_used_for_density_estimation.dtype,
-                         expected.num_patterns_used_for_density_estimation.dtype)
+        self.assertEqual(actual.num_used_patterns.dtype,
+                         expected.num_used_patterns.dtype)
 
     def test_add_result_density_and_count_2(self):
         actual = Results(expected_size=3)
@@ -224,8 +289,8 @@ class TestResults(TestCase):
             num_used_patterns=np.array([2, np.nan, 3], dtype=np.float)
         )
         self.assertEqual(actual, expected)
-        self.assertEqual(actual.num_patterns_used_for_density_estimation.dtype,
-                         expected.num_patterns_used_for_density_estimation.dtype)
+        self.assertEqual(actual.num_used_patterns.dtype,
+                         expected.num_used_patterns.dtype)
 
     def test_result_fault_key(self):
         try:

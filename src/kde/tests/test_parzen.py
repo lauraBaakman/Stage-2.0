@@ -34,7 +34,7 @@ class TestParzenEstimator(TestCase):
 
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
         np.testing.assert_array_almost_equal(
-            actual.num_patterns_used_for_density_estimation,
+            actual.num_used_patterns,
             expected_num_patterns_used_for_density
         )
 
@@ -48,7 +48,7 @@ class TestParzenEstimator(TestCase):
         expected_num_patterns_used_for_density = np.array([3, 3])
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
         np.testing.assert_array_almost_equal(
-            actual.num_patterns_used_for_density_estimation,
+            actual.num_used_patterns,
             expected_num_patterns_used_for_density
         )
 
@@ -62,7 +62,7 @@ class TestParzenEstimator(TestCase):
         expected_num_patterns_used_for_density = np.array([3, 3])
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
         np.testing.assert_array_almost_equal(
-            actual.num_patterns_used_for_density_estimation,
+            actual.num_used_patterns,
             expected_num_patterns_used_for_density
         )
 
@@ -77,7 +77,7 @@ class TestParzenEstimator(TestCase):
         expected_num_patterns_used_for_density = np.array([3, 3])
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
         np.testing.assert_array_almost_equal(
-            actual.num_patterns_used_for_density_estimation,
+            actual.num_used_patterns,
             expected_num_patterns_used_for_density
         )
 
@@ -98,7 +98,7 @@ class ParzenEstimatorImpAbstractTest(object):
         expected_num_patterns_used_for_density = np.array([3, 3])
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
         np.testing.assert_array_almost_equal(
-            actual.num_patterns_used_for_density_estimation,
+            actual.num_used_patterns,
             expected_num_patterns_used_for_density
         )
 
@@ -113,7 +113,7 @@ class ParzenEstimatorImpAbstractTest(object):
         expected_num_patterns_used_for_density = np.array([2, 3])
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
         np.testing.assert_array_almost_equal(
-            actual.num_patterns_used_for_density_estimation,
+            actual.num_used_patterns,
             expected_num_patterns_used_for_density
         )
 
@@ -147,7 +147,7 @@ class ParzenEstimatorImpAbstractTest(object):
         expected_num_patterns_used_for_density = np.array([16, 16, 16, 16, 16, 16, 8])
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
         np.testing.assert_array_almost_equal(
-            actual.num_patterns_used_for_density_estimation,
+            actual.num_used_patterns,
             expected_num_patterns_used_for_density
         )
 

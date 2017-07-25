@@ -40,7 +40,7 @@ class TestModifiedBreimanEstimator(TestCase):
 
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
         np.testing.assert_array_almost_equal(
-            actual.num_patterns_used_for_density_estimation,
+            actual.num_used_patterns,
             expected_num_patterns_used_for_density
         )
 
@@ -83,7 +83,7 @@ class TestModifiedBreimanEstimator(TestCase):
 
             np.testing.assert_array_almost_equal(actual.densities, expected_densities)
             np.testing.assert_array_almost_equal(
-                actual.num_patterns_used_for_density_estimation,
+                actual.num_used_patterns,
                 expected_num_patterns_used_for_density
             )
 
@@ -147,7 +147,7 @@ class ModifiedBreimanEstimatorImpAbstractTest(object):
 
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
         np.testing.assert_array_almost_equal(
-            actual.num_patterns_used_for_density_estimation,
+            actual.num_used_patterns,
             expected_num_patterns_used_for_density
         )
 

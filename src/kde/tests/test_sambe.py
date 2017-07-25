@@ -53,7 +53,7 @@ class TestShapeAdaptiveMBE(TestCase):
 
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
         np.testing.assert_array_almost_equal(
-            actual.num_patterns_used_for_density_estimation,
+            actual.num_used_patterns,
             expected_num_patterns_used_for_density
         )
 
@@ -90,7 +90,7 @@ class TestShapeAdaptiveMBE(TestCase):
 
             np.testing.assert_array_almost_equal(actual.densities, expected_densities)
             np.testing.assert_array_almost_equal(
-                actual.num_patterns_used_for_density_estimation,
+                actual.num_used_patterns,
                 expected_num_patterns_used_for_density
             )
 
@@ -130,7 +130,7 @@ class TestShapeAdaptiveMBE(TestCase):
 
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
         np.testing.assert_array_almost_equal(
-            actual.num_patterns_used_for_density_estimation,
+            actual.num_used_patterns,
             expected_num_patterns_used_for_density
         )
 
@@ -197,7 +197,7 @@ class ShapeAdaptiveMBEImpAbstractTest(object):
 
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
         np.testing.assert_array_almost_equal(
-            actual.num_patterns_used_for_density_estimation,
+            actual.num_used_patterns,
             expected_num_patterns_used_for_density
         )
 
@@ -277,7 +277,7 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
 
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
         np.testing.assert_array_almost_equal(
-            actual.num_patterns_used_for_density_estimation,
+            actual.num_used_patterns,
             expected_num_patterns_used_for_density
         )
 
@@ -305,7 +305,7 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
 
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
         np.testing.assert_array_almost_equal(
-            actual.num_patterns_used_for_density_estimation,
+            actual.num_used_patterns,
             expected_num_patterns_used_for_density
         )
 
@@ -347,7 +347,7 @@ class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
 
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
         np.testing.assert_array_almost_equal(
-            actual.num_patterns_used_for_density_estimation,
+            actual.num_used_patterns,
             expected_num_patterns_used_for_density
         )
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
@@ -374,7 +374,7 @@ class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
         expected_num_patterns_used_for_density = np.array([4, 4])
 
         np.testing.assert_array_almost_equal(
-            actual.num_patterns_used_for_density_estimation,
+            actual.num_used_patterns,
             expected_num_patterns_used_for_density
         )
         np.testing.assert_array_almost_equal(actual.densities, expected_densites)
