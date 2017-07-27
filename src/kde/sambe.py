@@ -79,11 +79,11 @@ class _ShapeAdaptiveMBE_Python(_ShapeAdaptiveMBE):
             results.add_result(density=density, num_used_patterns=num_used_patterns)
         return results
 
-    def _estimate_pattern(self, pattern, kernel_shape=None):
+    def _estimate_pattern(self, pattern):
         def count_non_zeros(array):
             return np.sum(~np.isclose(array, 0.0))
 
-        kernel_shape = kernel_shape if kernel_shape is not None else self._determine_kernel_shape(pattern)
+        kernel_shape = self._determine_kernel_shape(pattern)
 
         # Define the kernel
         kernel = self._kernel_class(kernel_shape)
