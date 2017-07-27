@@ -89,7 +89,9 @@ class _ShapeAdaptiveMBE_Python(_ShapeAdaptiveMBE):
         kernel = self._kernel_class(kernel_shape)
 
         # Density estimation
-        terms = map(kernel.evaluate, pattern - self._xi_s, self._local_bandwidths)
+        terms = np.empty(self.num_xi_s)
+        for idx, xi, local_bandwidth in zip(range(self.num_xi_s), self._xi_s, self._local_bandwidths):
+            terms[idx] = kernel.evaluate(pattern - xi, local_bandwidth)
 
         density = (1 / self.num_xi_s) * sum(terms)
         num_used_patterns = count_non_zeros(terms)
