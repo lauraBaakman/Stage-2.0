@@ -27,7 +27,11 @@ class TestShapeAdaptiveMBE(TestCase):
 
     def estimate_test_helper(self, pilot_implementation, final_implementation):
         xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-        x_s = xi_s
+        x_s = np.array([
+            [0, 0],
+            [1, 1],
+            [2, 2]
+        ])
         pilot_kernel = TestKernel
         final_kernel = ShapeAdaptiveGaussian
         number_of_grid_points = 2
@@ -45,11 +49,10 @@ class TestShapeAdaptiveMBE(TestCase):
 
         expected_densities = np.array([
             0.143018801263046,
-            0.077446155260620,
-            0.077446155260620,
-            0.143018801263046
+            0.143018801263046,
+            4.113886918805412e-05
         ])
-        expected_num_patterns_used_for_density = np.array([4, 4, 4, 4])
+        expected_num_patterns_used_for_density = np.array([4, 4, 3])
 
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
         np.testing.assert_array_almost_equal(
@@ -65,7 +68,13 @@ class TestShapeAdaptiveMBE(TestCase):
     def test_estimate_python_C(self):
         with warnings.catch_warnings(record=True):
             xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-            x_s = xi_s
+            x_s = np.array([
+                [0, 0],
+                [0, 1],
+                [1, 0],
+                [1, 1],
+                [2, 2]
+            ])
             pilot_kernel = TestKernel
             final_kernel = ShapeAdaptiveGaussian
             number_of_grid_points = 2
@@ -84,9 +93,10 @@ class TestShapeAdaptiveMBE(TestCase):
                 0.186693239491116,
                 0.077446155260620,
                 0.077446155260620,
-                0.143018801263046
+                0.143018801263046,
+                4.113887729591553e-05
             ])
-            expected_num_patterns_used_for_density = np.array([4, 4, 4, 4])
+            expected_num_patterns_used_for_density = np.array([4, 4, 4, 4, 4])
 
             np.testing.assert_array_almost_equal(actual.densities, expected_densities)
             np.testing.assert_array_almost_equal(
@@ -101,7 +111,13 @@ class TestShapeAdaptiveMBE(TestCase):
     # Different result due to the KD tree which gives an approximation
     def test_estimate_C_C(self):
         xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-        x_s = xi_s
+        x_s = np.array([
+            [0, 0],
+            [0, 1],
+            [1, 0],
+            [1, 1],
+            [2, 2]
+        ])
         pilot_densities = np.array([1.33209861,  0.6660493,  0.6660493,  1.33209861])
         general_bandwidth = 0.72134752044448169
         pilot_kernel = TestKernel
@@ -124,9 +140,10 @@ class TestShapeAdaptiveMBE(TestCase):
             0.186693239491116,
             0.077446155260620,
             0.077446155260620,
-            0.143018801263046
+            0.143018801263046,
+            4.113887729591553e-05
         ])
-        expected_num_patterns_used_for_density = np.array([4, 4, 4, 4])
+        expected_num_patterns_used_for_density = np.array([4, 4, 4, 4, 4])
 
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
         np.testing.assert_array_almost_equal(
@@ -137,7 +154,13 @@ class TestShapeAdaptiveMBE(TestCase):
     def test_estimate_C_C_dont_pass_pilot_densities(self):
         with warnings.catch_warnings(record=True):
             xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-            x_s = xi_s
+            x_s = np.array([
+                [0, 0],
+                [0, 1],
+                [1, 0],
+                [1, 1],
+                [2, 2]
+            ])
             pilot_kernel = TestKernel
             final_kernel = ShapeAdaptiveGaussian
             number_of_grid_points = 2
@@ -157,7 +180,8 @@ class TestShapeAdaptiveMBE(TestCase):
                 0.186693239491116,
                 0.077446155260620,
                 0.077446155260620,
-                0.143018801263046
+                0.143018801263046,
+                4.113887729591553e-05
             ])
             np.testing.assert_array_almost_equal(actual.densities, expected_densities)
 
@@ -256,41 +280,23 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
 
     def test_estimate_gaussian_2(self):
         # xs != xis
-        xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-        x_s = np.array([[0, 0], [1, 1]])
-        local_bandwidths = np.array([0.84089642,
-                                     1.18920712,
-                                     1.18920712,
-                                     0.84089642])
-        general_bandwidth = 0.721347520444482
-        kernel = ShapeAdaptiveGaussian
-        estimator = self._estimator_class(
-            xi_s=xi_s, x_s=x_s, dimension=2,
-            kernel=kernel,
-            local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
-        )
-
-        actual = estimator.estimate()
-
-        expected_densities = np.array([0.143018801263046, 0.143018801263046])
-        expected_num_patterns_used_for_density = np.array([4, 4])
-
-        np.testing.assert_array_almost_equal(actual.densities, expected_densities)
-        np.testing.assert_array_almost_equal(
-            actual.num_used_patterns,
-            expected_num_patterns_used_for_density
-        )
-
-    def test_xis_is_not_xs(self):
-        xi_s = xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-        x_s = np.array([
-            [0.5, 0.3],
-            [0.2, 0.7],
+        xi_s = np.array([
+            [0, 0],
+            [0, 1],
+            [1, 0],
+            [1, 1]
         ])
-        local_bandwidths = np.array([0.84089642,
-                                     1.18920712,
-                                     1.18920712,
-                                     0.84089642])
+        x_s = np.array([
+            [0, 0],
+            [1, 1],
+            [2, 2]
+        ])
+        local_bandwidths = np.array([
+            0.84089642,
+            1.18920712,
+            1.18920712,
+            0.84089642,
+        ])
         general_bandwidth = 0.721347520444482
         kernel = ShapeAdaptiveGaussian
         estimator = self._estimator_class(
@@ -298,10 +304,19 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
             kernel=kernel,
             local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
         )
+
         actual = estimator.estimate()
 
-        expected_densities = np.array([0.1271447313485623, 0.1507791646676249])
-        expected_num_patterns_used_for_density = np.array([4, 4])
+        expected_densities = np.array([
+            0.143018801263046,
+            0.143018801263046,
+            4.113886918805412e-05
+        ])
+        expected_num_patterns_used_for_density = np.array([
+            4,
+            4,
+            3
+        ])
 
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
         np.testing.assert_array_almost_equal(
@@ -324,8 +339,19 @@ class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
         which gives an approximation.
     """
     def test_estimate_gaussian(self):
-        xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-        x_s = xi_s
+        xi_s = np.array([
+            [0, 0],
+            [0, 1],
+            [1, 0],
+            [1, 1]
+        ])
+        x_s = np.array([
+            [0, 0],
+            [0, 1],
+            [1, 0],
+            [1, 1],
+            [2, 2]
+        ])
         local_bandwidths = np.array([0.84089642,
                                      1.18920712,
                                      1.18920712,
@@ -342,39 +368,14 @@ class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
             0.186693239491116,
             0.077446155260620,
             0.077446155260620,
-            0.143018801263046])
-        expected_num_patterns_used_for_density = np.array([4, 4, 4, 4])
-
-        np.testing.assert_array_almost_equal(actual.densities, expected_densities)
-        np.testing.assert_array_almost_equal(
-            actual.num_used_patterns,
-            expected_num_patterns_used_for_density
-        )
-        np.testing.assert_array_almost_equal(actual.densities, expected_densities)
-
-    def test_xis_is_not_xs(self):
-        xi_s = xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-        x_s = np.array([
-            [0.5, 0.3],
-            [0.2, 0.7],
+            0.143018801263046,
+            4.113887729591553e-05
         ])
-        local_bandwidths = np.array([0.84089642,
-                                     1.18920712,
-                                     1.18920712,
-                                     0.84089642])
-        general_bandwidth = 0.721347520444482
-        kernel = ShapeAdaptiveGaussian
-        estimator = self._estimator_class(
-            xi_s=xi_s, x_s=x_s, dimension=2,
-            kernel=kernel,
-            local_bandwidths=local_bandwidths, general_bandwidth=general_bandwidth
-        )
-        actual = estimator.estimate()
-        expected_densites = np.array([0.19859744879119276, 0.15077916466762492])
-        expected_num_patterns_used_for_density = np.array([4, 4])
+        expected_num_patterns_used_for_density = np.array([4, 4, 4, 4, 4])
 
+        np.testing.assert_array_almost_equal(actual.densities, expected_densities)
         np.testing.assert_array_almost_equal(
             actual.num_used_patterns,
             expected_num_patterns_used_for_density
         )
-        np.testing.assert_array_almost_equal(actual.densities, expected_densites)
+        np.testing.assert_array_almost_equal(actual.densities, expected_densities)
