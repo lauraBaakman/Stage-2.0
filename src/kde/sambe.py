@@ -83,14 +83,11 @@ class _ShapeAdaptiveMBE_Python(_ShapeAdaptiveMBE):
         def count_non_zeros(array):
             return np.sum(~np.isclose(array, 0.0))
 
-        kernel_shape = self._determine_kernel_shape(pattern)
-
-        # Define the kernel
-        kernel = self._kernel_class(kernel_shape)
-
         # Density estimation
         terms = np.empty(self.num_xi_s)
         for idx, xi, local_bandwidth in zip(range(self.num_xi_s), self._xi_s, self._local_bandwidths):
+            kernel_shape = self._determine_kernel_shape(pattern)
+            kernel = self._kernel_class(kernel_shape)
             terms[idx] = kernel.evaluate(pattern - xi, local_bandwidth)
 
         density = (1 / self.num_xi_s) * sum(terms)
