@@ -41,11 +41,11 @@ void testSAMBESingleThreaded(CuTest *tc){
     gsl_vector* actual_pattern_count = gsl_vector_alloc(numXs);
 
     gsl_vector* expected = gsl_vector_alloc(numXs);
-    gsl_vector_set(expected, 0, 0.186693239491116);
-    gsl_vector_set(expected, 1, 0.077446155260620);
-    gsl_vector_set(expected, 2, 0.077446155260620);
-    gsl_vector_set(expected, 3, 0.143018801263046);
-    gsl_vector_set(expected, 4, 4.113887729591553e-05);    
+    gsl_vector_set(expected, 0, 0.143018801266957);
+    gsl_vector_set(expected, 1, 0.077446155261498);
+    gsl_vector_set(expected, 2, 0.077446155261498);
+    gsl_vector_set(expected, 3, 0.186693239495190);
+    gsl_vector_set(expected, 4, 0.017000356330535);    
 
     gsl_vector* localBandwidths = gsl_vector_alloc(numXis);
     gsl_vector_set(localBandwidths, 0, 0.840896194314);
@@ -99,11 +99,11 @@ void testSAMBEMultiThreaded(CuTest *tc){
     gsl_vector* actual_pattern_count = gsl_vector_alloc(numXs);
 
     gsl_vector* expected = gsl_vector_alloc(numXs);
-    gsl_vector_set(expected, 0, 0.186693239491116);
-    gsl_vector_set(expected, 1, 0.077446155260620);
-    gsl_vector_set(expected, 2, 0.077446155260620);
-    gsl_vector_set(expected, 3, 0.143018801263046);
-    gsl_vector_set(expected, 4, 4.113887729591553e-05);    
+    gsl_vector_set(expected, 0, 0.143018801266957);
+    gsl_vector_set(expected, 1, 0.077446155261498);
+    gsl_vector_set(expected, 2, 0.077446155261498);
+    gsl_vector_set(expected, 3, 0.186693239495190);
+    gsl_vector_set(expected, 4, 0.017000356330535);    
 
     gsl_vector* localBandwidths = gsl_vector_alloc(numXis);
     gsl_vector_set(localBandwidths, 0, 0.840896194314);

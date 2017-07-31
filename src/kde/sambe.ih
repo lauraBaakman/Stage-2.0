@@ -20,7 +20,11 @@ extern gsl_matrix* g_globalBandwidthMatrix;
 
 static void computeKernelTerms(gsl_vector* numUsedPatterns);
 
-static void computeKernelTermxForX(gsl_vector *x, int* usedPatternCount, gsl_vector* terms, int pid);
+static void computeKernelTermxForXi(
+	gsl_vector *x, double localBandwidth, 
+	gsl_vector* terms, 
+	int pid
+);
 
 static void determineGlobalKernelShape(gsl_vector* x, int pid);
 
@@ -31,5 +35,9 @@ static void prepareGlobals(gsl_matrix *xs, gsl_matrix *xis,
 static void allocateGlobals(size_t dataDimension, size_t num_xi_s, size_t num_x_s, size_t k);
 
 static void freeGlobals();
+
+static void countNumUsedPatterns(gsl_matrix* kernelTerms, gsl_vector* numUsedPatterns);
+
+static int countValuesGreaterThanZero(gsl_vector* vector);
 
 #endif //SAMBE_IH

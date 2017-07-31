@@ -33,52 +33,49 @@ void sambe(gsl_matrix *xs,
 
     gsl_matrix_compute_row_means(g_kernelTerms, densities);
 
+    countNumUsedPatterns(g_kernelTerms, numUsedPatterns);
+
     freeGlobals();
 }
 
 void computeKernelTerms(gsl_vector* numUsedPatterns){
-    #pragma omp parallel shared(g_numXs, g_xs, g_xis)
+     #pragma omp parallel shared(g_numXs, g_xs, g_xis)
     {
         int pid = omp_get_thread_num();
-        int usedPatternCount = 0;
-        gsl_vector_view x;
+        gsl_vector_view xi;
+        double localBandwidth;
 
         #pragma omp for
-        for(size_t i = 0; i < g_numXs; i++){
-            x = gsl_matrix_row(g_xs, i);
+        for(size_t i = 0; i < g_numXis; i++){
+            xi = gsl_matrix_row(g_xis, i);
+            localBandwidth = gsl_vector_get(g_localBandwidths, i);
+            gsl_vector_view terms = gsl_matrix_column(g_kernelTerms, i);
 
-            gsl_vector_view terms = gsl_matrix_row(g_kernelTerms, i);
-            computeKernelTermxForX(&x.vector, &usedPatternCount, &terms.vector, pid);
-
-            gsl_vector_set(numUsedPatterns, i, (double) usedPatternCount);
+            computeKernelTermxForXi(&xi.vector, localBandwidth, &terms.vector, pid);
         }        
-    }
+    }   
 }
 
-void computeKernelTermxForX(gsl_vector *x, int* usedPatternCount, gsl_vector* terms, int pid) {
+void computeKernelTermxForXi(
+    gsl_vector *xi, double localBandwidth,
+    gsl_vector* terms, int pid) 
+{
     gsl_matrix* globalBandwidthMatrix = g_globalBandwidthMatrices[pid];
     gsl_vector* movedPattern = g_movedPatterns[pid];
 
-    *usedPatternCount = 0;
+    gsl_vector_view x;
 
-    double localBandwidth;
-
-    gsl_vector_view xi;
-
-    for(size_t i = 0; i < g_numXis; i++){
-        determineGlobalKernelShape(x, pid);
+    for(size_t i = 0; i < g_numXs; i++){
+        determineGlobalKernelShape(xi, pid);
         g_kernel.computeConstants(globalBandwidthMatrix, pid);
 
-        xi = gsl_matrix_row(g_xis, i);
+        x = gsl_matrix_row(g_xs, i);
 
         //x - xi
-        movedPattern = gsl_subtract(x, &xi.vector, movedPattern);
-        localBandwidth = gsl_vector_get(g_localBandwidths, i);
+        movedPattern = gsl_subtract(&x.vector, xi, movedPattern);
 
         double kernelResult = g_kernel.density(movedPattern, localBandwidth, pid);
         gsl_vector_set(terms, i, kernelResult);
-
-        (*usedPatternCount) += (kernelResult > 0.0);
     }
 }
 
@@ -97,6 +94,27 @@ void determineGlobalKernelShape(gsl_vector* x, int pid) {
 
     /* Scale the shape matrix */
     gsl_matrix_scale(globalBandwidthMatrix, scalingFactor);
+}
+
+void countNumUsedPatterns(gsl_matrix* kernelTerms, gsl_vector* numUsedPatterns){
+    int usedPatternCount = 0;
+    gsl_vector_view row;
+
+    for(size_t i = 0; i < kernelTerms->size1; i++){
+        row = gsl_matrix_row(kernelTerms, i);
+        usedPatternCount = countValuesGreaterThanZero(&row.vector);
+        gsl_vector_set(numUsedPatterns, i, usedPatternCount);
+    }
+}
+
+int countValuesGreaterThanZero(gsl_vector* vector){
+    int count = 0;
+    double term;
+    for(size_t i = 0; i < vector->size; i++){
+        term = gsl_vector_get(vector, i);
+        count += (term > 0.0);
+    }
+    return count;
 }
 
 void allocateGlobals(size_t dataDimension, size_t num_xi_s, size_t num_x_s, size_t k) {

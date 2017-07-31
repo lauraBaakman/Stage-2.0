@@ -33,7 +33,7 @@ estimateDensity = @(x, Hs, lambdas) 1/4 * (...
 
 densityx1 = estimateDensity(x1, bandwidthmatrices, localBandwidths)
 densityx2 = estimateDensity(x2, bandwidthmatrices, localBandwidths)
-densityx3 = estimateDensity(x3, bandwidthmatrices, localBandwidths)
+% densityx3 = estimateDensity(x3, bandwidthmatrices, localBandwidths)
 densityx4 = estimateDensity(x4, bandwidthmatrices, localBandwidths)
 densityx5 = estimateDensity(x5, bandwidthmatrices, localBandwidths)
 
