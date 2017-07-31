@@ -55,6 +55,28 @@ gsl_vector *gsl_subtract(gsl_vector *termA, gsl_vector *termB, gsl_vector *resul
     return result;
 }
 
+void gsl_matrix_compute_row_means(gsl_matrix* data, gsl_vector* means){
+    gsl_vector_view row;
+    double mean;
+
+    for(size_t i = 0; i < data->size1; i++){
+        row = gsl_matrix_row(data, i);
+        mean = gsl_stats_mean(row.vector.data, row.vector.stride, row.vector.size);
+        gsl_vector_set(means, i, mean);
+    }
+}
+
+void gsl_matrix_compute_col_means(gsl_matrix* data, gsl_vector* means){
+    gsl_vector_view col;
+    double mean;
+
+    for(size_t i = 0; i < data->size2; i++){
+        col = gsl_matrix_column(data, i);
+        mean = gsl_stats_mean(col.vector.data, col.vector.stride, col.vector.size);
+        gsl_vector_set(means, i, mean);
+    }
+}
+
 gsl_matrix** gsl_matrices_alloc(size_t size1, size_t size2, int numMatrices){
     gsl_matrix** matrices = (gsl_matrix**) malloc(numMatrices * sizeof(gsl_matrix*));
     for(int i = 0; i < numMatrices; i++)   {

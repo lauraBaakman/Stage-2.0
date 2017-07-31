@@ -4,6 +4,7 @@
 #include <gsl/gsl_matrix.h>
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_permutation.h>
+#include <gsl/gsl_statistics.h>
 
 gsl_matrix* gsl_matrix_view_copy_to_gsl_matrix(gsl_matrix_view origin);
 
@@ -14,6 +15,9 @@ int gsl_vector_print(FILE *f, const gsl_vector *vector);
 int gsl_permutation_print(FILE *f, const gsl_permutation *permutation);
 
 gsl_vector* gsl_subtract(gsl_vector *termA, gsl_vector *termB, gsl_vector *result);
+
+void gsl_matrix_compute_row_means(gsl_matrix* data, gsl_vector* means);
+void gsl_matrix_compute_col_means(gsl_matrix* data, gsl_vector* means);
 
 gsl_matrix** gsl_matrices_alloc(size_t size1, size_t size2, int numMatrices);
 void gsl_matrices_free(gsl_matrix** matrices, int numMatrices);
