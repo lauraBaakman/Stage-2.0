@@ -39,7 +39,7 @@ void sambe(gsl_matrix *xs,
 }
 
 void computeKernelTerms(gsl_vector* numUsedPatterns){
-     #pragma omp parallel shared(g_numXs, g_xs, g_xis)
+    #pragma omp parallel shared(g_numXs, g_xs, g_xis)
     {
         int pid = omp_get_thread_num();
         gsl_vector_view xi;
@@ -97,13 +97,17 @@ void determineGlobalKernelShape(gsl_vector* x, int pid) {
 }
 
 void countNumUsedPatterns(gsl_matrix* kernelTerms, gsl_vector* numUsedPatterns){
-    int usedPatternCount = 0;
-    gsl_vector_view row;
+    #pragma omp parallel shared(kernelTerms, numUsedPatterns)
+    {
+        int usedPatternCount = 0;
+        gsl_vector_view row;
 
-    for(size_t i = 0; i < kernelTerms->size1; i++){
-        row = gsl_matrix_row(kernelTerms, i);
-        usedPatternCount = countValuesGreaterThanZero(&row.vector);
-        gsl_vector_set(numUsedPatterns, i, usedPatternCount);
+        #pragma omp for
+        for(size_t i = 0; i < kernelTerms->size1; i++){
+            row = gsl_matrix_row(kernelTerms, i);
+            usedPatternCount = countValuesGreaterThanZero(&row.vector);
+            gsl_vector_set(numUsedPatterns, i, usedPatternCount);
+        }
     }
 }
 
