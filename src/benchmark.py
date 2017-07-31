@@ -2,22 +2,22 @@ import timeit
 
 import numpy as np
 
-import kde.kernels.shapeadaptivegaussian as sa_gaussian
+from kde.sambe import SAMBEstimator
 
 
 def test_1():
     dimension = 3
-    num_patterns = 60000
-    local_bandwidth = np.random.rand(num_patterns)
-    patterns = np.random.rand(num_patterns, dimension)
-
-    H = np.array([[2, -1, 0],
-                  [-1, 2, -1],
-                  [0, -1, 2]])
-
-    kernel = sa_gaussian.ShapeAdaptiveGaussian(H)
-    kernel.evaluate(patterns, local_bandwidth)
-
+    num_patterns = 250
+    x_s = np.random.rand(num_patterns, dimension)
+    xi_s = np.random.rand(num_patterns, dimension)
+    pilot_densities = np.random.rand(num_patterns, dimension)
+    general_bandwidth = 0.7
+    estimator = SAMBEstimator(dimension=dimension)
+    estimator.estimate(
+        x_s=x_s, xi_s=xi_s,
+        pilot_densities=pilot_densities,
+        general_bandwidth=general_bandwidth
+    )
 
 # def test_2():
 #     dimension = 5
@@ -28,12 +28,12 @@ def test_1():
 
 
 if __name__ == '__main__':
-    num_runs = 30
-    print(timeit.timeit(
+    num_runs = 5
+    total_time = timeit.timeit(
         "test_1()",
         setup="from __main__ import test_1",
-        number=30)/num_runs
-    )
+        number=30)
+    print(total_time / num_runs)
     # print(timeit.timeit(
     #     "test_2()",
     #     setup="from __main__ import test_2",
