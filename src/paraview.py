@@ -190,18 +190,6 @@ def process_data_set_with_results(dataset_file):
                 raise e
         return header, data, estimated_densities
 
-    def add_errors(data_meta_data, header, data, estimated_densities):
-        results = dataset_file['associated results']
-        pairs = itertools.combinations(results, 2)
-        for (a_meta, b_meta) in pairs:
-            differences, column_header = add_error(
-                a_meta=a_meta, a_values=estimated_densities[a_meta['file']],
-                b_meta=b_meta, b_values=estimated_densities[b_meta['file']]
-            )
-            header = update_header(header, column_header)
-            data = add_column_to_end(data, differences)
-        return header, data
-
     out_path = determine_out_path(dataset_file)
     if not should_be_created(out_path):
         return
@@ -220,11 +208,6 @@ def process_data_set_with_results(dataset_file):
     header, data = read_data_set_file(dataset_file['file'])
     header, data, estimated_densities = add_configuration_specific_data(
         data_meta_data=dataset_file, header=header, data=data
-    )
-    header, data = add_errors(
-        data_meta_data=dataset_file,
-        header=header, data=data,
-        estimated_densities=estimated_densities
     )
     data = subsample(data, dataset_file)
 
