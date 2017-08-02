@@ -258,7 +258,18 @@ class _XisValidator(object):
         return number_of_xis
 
     def validate(self):
-        pass
+        if self.eigen_vectors is not None:
+            self.validate_number_of_eigen_vectors()
+
+    def validate_number_of_eigen_vectors(self):
+        (eigen_vector_count, _, _) = self.eigen_vectors.shape
+        if not (eigen_vector_count == self.xis_count):
+            raise InvalidResultsException(
+                '{num_xis} and {num_eigen_vectors} is not a valid combination'.format(
+                    num_xis=self.xis_count,
+                    num_eigen_vectors=eigen_vector_count
+                )
+            )
 
 
 class InvalidResultsException(Exception):
