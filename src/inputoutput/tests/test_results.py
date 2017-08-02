@@ -8,7 +8,7 @@ import numpy as np
 from unipath import Path
 
 from inputoutput import DataSet
-from inputoutput.results import _DensitiesValidator, Results, InvalidResultsException
+from inputoutput.results import _DensitiesValidator, _XisValidator, Results, InvalidResultsException
 
 
 class TestResults(TestCase):
@@ -601,3 +601,205 @@ class Test_DensitiesValidator(TestCase):
             self.fail('Unexpected exception raised: {}'.format(e))
         else:
             self.fail('ExpectedException not raised')
+
+
+class Test__XisValidator(TestCase):
+    def test_no_eigen_values(self):
+        xis = np.random.rand(10, 3)
+        eigen_values = None
+        eigen_vectors = np.random.rand(10, 3, 3)
+
+        actual = _XisValidator(
+            xis=xis,
+            eigen_values=eigen_values,
+            eigen_vectors=eigen_vectors
+        ).validate()
+        self.assertIsNone(actual)
+
+    def test_no_eigen_vectors(self):
+        xis = np.random.rand(10, 3)
+        eigen_values = np.random.rand(10, 3)
+        eigen_vectors = None
+
+        actual = _XisValidator(
+            xis=xis,
+            eigen_values=eigen_values,
+            eigen_vectors=eigen_vectors
+        ).validate()
+        self.assertIsNone(actual)
+
+    def test_no_eigen_properties(self):
+        xis = np.random.rand(10, 3)
+        eigen_values = None
+        eigen_vectors = None
+
+        actual = _XisValidator(
+            xis=xis,
+            eigen_values=eigen_values,
+            eigen_vectors=eigen_vectors
+        ).validate()
+        self.assertIsNone(actual)
+
+    def test_wrong_number_of_eigen_values_too_many(self):
+        try:
+            xis = np.random.rand(10, 3)
+            eigen_values = np.random.rand(10, 3)
+            eigen_vectors = np.random.rand(10, 3, 3)
+
+            actual = _XisValidator(
+                xis=xis,
+                eigen_vectors=eigen_vectors,
+                eigen_values=eigen_values,
+            ).validate()
+            self.assertIsNone(actual)
+        except InvalidResultsException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test_wrong_number_of_eigen_values_too_few(self):
+        try:
+            xis = np.random.rand(10, 3)
+            eigen_values = np.random.rand(10, 3)
+            eigen_vectors = np.random.rand(10, 3, 3)
+
+            actual = _XisValidator(
+                xis=xis,
+                eigen_vectors=eigen_vectors,
+                eigen_values=eigen_values,
+            ).validate()
+            self.assertIsNone(actual)
+        except InvalidResultsException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test_wrong_number_of_eigen_vectors_too_many(self):
+        try:
+            xis = np.random.rand(10, 3)
+            eigen_values = np.random.rand(10, 3)
+            eigen_vectors = np.random.rand(10, 3, 3)
+
+            actual = _XisValidator(
+                xis=xis,
+                eigen_vectors=eigen_vectors,
+                eigen_values=eigen_values,
+            ).validate()
+            self.assertIsNone(actual)
+        except InvalidResultsException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test_wrong_number_of_eigen_vectors_too_few(self):
+        try:
+            xis = np.random.rand(10, 3)
+            eigen_values = np.random.rand(10, 3)
+            eigen_vectors = np.random.rand(10, 3, 3)
+
+            actual = _XisValidator(
+                xis=xis,
+                eigen_vectors=eigen_vectors,
+                eigen_values=eigen_values,
+            ).validate()
+            self.assertIsNone(actual)
+        except InvalidResultsException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test_wrong_number_of_eigen_values_for_dimension_too_many(self):
+        try:
+            xis = np.random.rand(10, 3)
+            eigen_values = np.random.rand(10, 3)
+            eigen_vectors = np.random.rand(10, 3, 3)
+
+            actual = _XisValidator(
+                xis=xis,
+                eigen_vectors=eigen_vectors,
+                eigen_values=eigen_values,
+            ).validate()
+            self.assertIsNone(actual)
+        except InvalidResultsException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test_wrong_number_of_eigen_values_for_dimension_too_few(self):
+        try:
+            xis = np.random.rand(10, 3)
+            eigen_values = np.random.rand(10, 3)
+            eigen_vectors = np.random.rand(10, 3, 3)
+
+            actual = _XisValidator(
+                xis=xis,
+                eigen_vectors=eigen_vectors,
+                eigen_values=eigen_values,
+            ).validate()
+            self.assertIsNone(actual)
+        except InvalidResultsException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test_wrong_eigen_vectors_dimension_too_many(self):
+        try:
+            xis = np.random.rand(10, 3)
+            eigen_values = np.random.rand(10, 3)
+            eigen_vectors = np.random.rand(10, 3, 3)
+
+            actual = _XisValidator(
+                xis=xis,
+                eigen_vectors=eigen_vectors,
+                eigen_values=eigen_values,
+            ).validate()
+            self.assertIsNone(actual)
+        except InvalidResultsException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test_wrong_eigen_vectors_dimension_too_few(self):
+        try:
+            xis = np.random.rand(10, 3)
+            eigen_values = np.random.rand(10, 3)
+            eigen_vectors = np.random.rand(10, 3, 3)
+
+            actual = _XisValidator(
+                xis=xis,
+                eigen_vectors=eigen_vectors,
+                eigen_values=eigen_values,
+            ).validate()
+            self.assertIsNone(actual)
+        except InvalidResultsException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test_valid_combination(self):
+        xis = np.random.rand(10, 3)
+        eigen_values = np.random.rand(10, 3)
+        eigen_vectors = np.random.rand(10, 3, 3)
+
+        actual = _XisValidator(
+            xis=xis,
+            eigen_vectors=eigen_vectors,
+            eigen_values=eigen_values,
+        ).validate()
+        self.assertIsNone(actual)

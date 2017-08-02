@@ -229,6 +229,14 @@ class _DensitiesValidator(object):
             )
 
 
+class _XisValidator(object):
+    def __init__(self, xis, eigen_vectors, eigen_values):
+        pass
+
+    def validate(self):
+        pass
+
+
 class InvalidResultsException(Exception):
     def __init__(self, message, actual=None, expected=None, *args):
         self.message = message
