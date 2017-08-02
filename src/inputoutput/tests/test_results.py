@@ -604,6 +604,32 @@ class Test_DensitiesValidator(TestCase):
 
 
 class Test__XisValidator(TestCase):
+    def test_xis_dimension(self):
+        xis = np.random.rand(10, 3)
+        eigen_values = None
+        eigen_vectors = np.random.rand(10, 3, 3)
+
+        actual = _XisValidator(
+            xis=xis,
+            eigen_values=eigen_values,
+            eigen_vectors=eigen_vectors
+        ).xis_dimension
+        expected = 3
+        self.assertEqual(actual, expected)
+
+    def test_xis_count(self):
+        xis = np.random.rand(10, 3)
+        eigen_values = None
+        eigen_vectors = np.random.rand(10, 3, 3)
+
+        actual = _XisValidator(
+            xis=xis,
+            eigen_values=eigen_values,
+            eigen_vectors=eigen_vectors
+        ).xis_count
+        expected = 10
+        self.assertEqual(actual, expected)
+
     def test_no_eigen_values(self):
         xis = np.random.rand(10, 3)
         eigen_values = None

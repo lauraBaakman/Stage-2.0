@@ -44,6 +44,18 @@ class Results:
     def is_incremental(self):
         return self._incremental_result_adding_is_allowed
 
+    @property
+    def xis(self):
+        return self._xis
+
+    @property
+    def eigen_values(self):
+        return self._eigen_values
+
+    @property
+    def eigen_vectors(self):
+        return self._eigen_vectors
+
     def add_result(self, density, **kwargs):
         if not self.is_incremental:
             raise TypeError(
@@ -231,7 +243,19 @@ class _DensitiesValidator(object):
 
 class _XisValidator(object):
     def __init__(self, xis, eigen_vectors, eigen_values):
-        pass
+        self.xis = xis
+        self.eigen_vectors = eigen_vectors
+        self.eigen_values = eigen_values
+
+    @property
+    def xis_dimension(self):
+        (_, dimension) = self.xis.shape
+        return dimension
+
+    @property
+    def xis_count(self):
+        (number_of_xis, _) = self.xis.shape
+        return number_of_xis
 
     def validate(self):
         pass
