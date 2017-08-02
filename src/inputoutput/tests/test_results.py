@@ -8,7 +8,7 @@ import numpy as np
 from unipath import Path
 
 from inputoutput import DataSet
-from inputoutput.results import _ResultsValidator, Results, InvalidResultsException
+from inputoutput.results import _DensitiesValidator, Results, InvalidResultsException
 
 
 class TestResults(TestCase):
@@ -434,7 +434,7 @@ class TestResults(TestCase):
         self.assertFalse(one == two)
 
 
-class Test_ResultsValidator(TestCase):
+class Test_DensitiesValidator(TestCase):
     def setUp(self):
         self._data_set = DataSet(
             patterns=np.array([
@@ -458,7 +458,7 @@ class Test_ResultsValidator(TestCase):
         densities = np.array([
             0.1, 0.2, 0.3, 0.4, 0.51234567891011121314
         ])
-        validator = _ResultsValidator(data_set=self._data_set, densities=densities)
+        validator = _DensitiesValidator(data_set=self._data_set, densities=densities)
         actual = validator.validate()
         self.assertIsNone(actual)
 
@@ -467,7 +467,7 @@ class Test_ResultsValidator(TestCase):
             densities = np.array([
                 1.0, 2.0, 3.0, 4.0
             ])
-            validator = _ResultsValidator(data_set=self._data_set, densities=densities)
+            validator = _DensitiesValidator(data_set=self._data_set, densities=densities)
             validator.validate()
         except InvalidResultsException:
             pass
@@ -480,7 +480,7 @@ class Test_ResultsValidator(TestCase):
         densities = np.array([
             1.0, 2.0, 3.0, 4.0, 5.1234567891011121314
         ])
-        validator = _ResultsValidator(data_set=self._data_set, densities=densities)
+        validator = _DensitiesValidator(data_set=self._data_set, densities=densities)
         actual = validator._one_result_per_pattern()
         self.assertIsNone(actual)
 
@@ -489,7 +489,7 @@ class Test_ResultsValidator(TestCase):
             densities = np.array([
                 1.0, 2.0, 3.0, 4.0
             ])
-            validator = _ResultsValidator(data_set=self._data_set, densities=densities)
+            validator = _DensitiesValidator(data_set=self._data_set, densities=densities)
             validator._one_result_per_pattern()
         except InvalidResultsException:
             pass
@@ -503,7 +503,7 @@ class Test_ResultsValidator(TestCase):
             densities = np.array([
                 1.0, 2.0, 3.0, 4.0, 5.0, 6.0
             ])
-            validator = _ResultsValidator(data_set=self._data_set, densities=densities)
+            validator = _DensitiesValidator(data_set=self._data_set, densities=densities)
             validator._one_result_per_pattern()
         except InvalidResultsException:
             pass
@@ -516,14 +516,14 @@ class Test_ResultsValidator(TestCase):
             densities = np.array([
                 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6
             ])
-            validator = _ResultsValidator(data_set=None, densities=densities)
+            validator = _DensitiesValidator(data_set=None, densities=densities)
             validator.validate()
 
     def test__results_is_1D_array_1(self):
         densities = np.array([
             1.0, 2.0, 3.0, 4.0, 5.0, 6.0
         ])
-        validator = _ResultsValidator(data_set=self._data_set, densities=densities)
+        validator = _DensitiesValidator(data_set=self._data_set, densities=densities)
         actual = validator._results_is_1D_array()
         self.assertIsNone(actual)
 
@@ -532,7 +532,7 @@ class Test_ResultsValidator(TestCase):
             densities = np.array([
                 [1.0], [2.0], [3.0], [4.0], [5.0], [6.0]
             ])
-            validator = _ResultsValidator(data_set=self._data_set, densities=densities)
+            validator = _DensitiesValidator(data_set=self._data_set, densities=densities)
             validator._results_is_1D_array()
         except InvalidResultsException:
             pass
@@ -545,7 +545,7 @@ class Test_ResultsValidator(TestCase):
         densities = np.array([
             0.0, 0.2, 0.33, 0.444, 0.55, 1.0
         ])
-        validator = _ResultsValidator(data_set=self._data_set, densities=densities)
+        validator = _DensitiesValidator(data_set=self._data_set, densities=densities)
         with warnings.catch_warnings(record=True) as w:
             validator._results_are_densities()
             if len(w):
@@ -559,7 +559,7 @@ class Test_ResultsValidator(TestCase):
             7.288289757e-05,
             0.0001832763582
         ])
-        validator = _ResultsValidator(data_set=self._data_set, densities=densities)
+        validator = _DensitiesValidator(data_set=self._data_set, densities=densities)
         with warnings.catch_warnings(record=True) as w:
             validator._results_are_densities()
             if len(w):
@@ -574,27 +574,27 @@ class Test_ResultsValidator(TestCase):
             5.0001832763582
         ])
         with warnings.catch_warnings(record=True) as w:
-            validator = _ResultsValidator(data_set=self._data_set, densities=densities)
+            validator = _DensitiesValidator(data_set=self._data_set, densities=densities)
             validator._results_are_densities()
             if not len(w):
                 self.fail('The warning was not triggered')
 
     def test_validate_density_with_valid_density(self):
         density = 0.5
-        _ResultsValidator.validate_density(density)
+        _DensitiesValidator.validate_density(density)
 
     def test_validate_density_with_edge_case_lower_bound(self):
         density = 0.0
-        _ResultsValidator.validate_density(density)
+        _DensitiesValidator.validate_density(density)
 
     def test_validate_density_with_edge_case_upper_bound(self):
         density = 1.0
-        _ResultsValidator.validate_density(density)
+        _DensitiesValidator.validate_density(density)
 
     def test_validate_density_with_invalid_density(self):
         try:
             density = 1.5
-            _ResultsValidator.validate_density(density)
+            _DensitiesValidator.validate_density(density)
         except InvalidResultsException:
             pass
         except Exception as e:

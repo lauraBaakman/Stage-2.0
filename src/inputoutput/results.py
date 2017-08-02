@@ -10,7 +10,7 @@ class Results:
             self._densities = densities
             self._num_used_patterns = num_used_patterns
 
-            _ResultsValidator(data_set=data_set, densities=densities).validate()
+            _DensitiesValidator(data_set=data_set, densities=densities).validate()
             self._incremental_result_adding_is_allowed = False
         if expected_size:
             self._densities = np.empty(expected_size)
@@ -63,7 +63,7 @@ class Results:
 
     def _add_density(self, density):
         try:
-            _ResultsValidator.validate_density(density)
+            _DensitiesValidator.validate_density(density)
         except InvalidResultsException:
             warnings.warn('Adding the invalid density {} to the results.'.format(density))
         finally:
@@ -182,7 +182,7 @@ class _ResultsWriter(object):
         np.savetxt(self._out_file, data, fmt=format_string)
 
 
-class _ResultsValidator(object):
+class _DensitiesValidator(object):
     def __init__(self, data_set, densities):
         self._data_set = data_set
         self._densities = densities
