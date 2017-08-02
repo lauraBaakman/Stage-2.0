@@ -258,16 +258,48 @@ class _XisValidator(object):
         return number_of_xis
 
     def validate(self):
-        if self.eigen_vectors is not None:
-            self.validate_number_of_eigen_vectors()
+        self._validate_eigen_vectors()
 
-    def validate_number_of_eigen_vectors(self):
+    def _validate_eigen_vectors(self):
+        if self.eigen_vectors is not None:
+            self._validate_eigen_vectors_ndim()
+            self._validate_total_number_of_eigen_vectors()
+            self._validate_number_of_eigen_vectors()
+            self._validate_eigen_vector_dimension()
+
+    def _validate_eigen_vectors_ndim(self):
+        eigen_vector_ndim = self.eigen_vectors.ndim
+        if not (eigen_vector_ndim == 3):
+            raise InvalidResultsException(
+                'The eigenvectors should be stored in a 3D array.'
+            )
+
+    def _validate_total_number_of_eigen_vectors(self):
         (eigen_vector_count, _, _) = self.eigen_vectors.shape
         if not (eigen_vector_count == self.xis_count):
             raise InvalidResultsException(
-                '{num_xis} and {num_eigen_vectors} is not a valid combination'.format(
+                '{num_xis} xis and {num_eigen_vectors} sets of eigen vectors is not a valid combination'.format(
                     num_xis=self.xis_count,
                     num_eigen_vectors=eigen_vector_count
+                )
+            )
+
+    def _validate_number_of_eigen_vectors(self):
+        (_, eigen_vector_count, _) = self.eigen_vectors.shape
+        if not (eigen_vector_count == self.xis_dimension):
+            raise InvalidResultsException(
+                'Xis of dimension {dim} and {num_eigen_vectors} per pattern is not a valid combination'.format(
+                    dim=self.xis_dimension,
+                    num_eigen_vectors=eigen_vector_count
+                )
+            )
+
+    def _validate_eigen_vector_dimension(self):
+        (_, _, eigen_vector_dimension) = self.eigen_vectors.shape
+        if not (eigen_vector_dimension == self.xis_dimension):
+            raise InvalidResultsException(
+                'Xis of dimension {} and eigen vectors of dimension {} is not a valid combination'.format(
+                    self.xis_dimension, eigen_vector_dimension
                 )
             )
 
