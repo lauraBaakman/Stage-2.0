@@ -242,7 +242,7 @@ class _DensitiesValidator(object):
 
 
 class _XisValidator(object):
-    def __init__(self, xis, eigen_vectors, eigen_values):
+    def __init__(self, xis, eigen_vectors=None, eigen_values=None):
         self.xis = xis
         self.eigen_vectors = eigen_vectors
         self.eigen_values = eigen_values
@@ -259,6 +259,7 @@ class _XisValidator(object):
 
     def validate(self):
         self._validate_eigen_vectors()
+        self._validate_eigen_values()
 
     def _validate_eigen_vectors(self):
         if self.eigen_vectors is not None:
@@ -300,6 +301,39 @@ class _XisValidator(object):
             raise InvalidResultsException(
                 'Xis of dimension {} and eigen vectors of dimension {} is not a valid combination'.format(
                     self.xis_dimension, eigen_vector_dimension
+                )
+            )
+
+    def _validate_eigen_values(self):
+        if self.eigen_values is not None:
+            self._validate_eigen_values_ndim()
+            self._validate_total_number_of_eigen_values()
+            self._validate_number_of_eigen_values()
+
+    def _validate_eigen_values_ndim(self):
+        ndim = self.eigen_values.ndim
+        if not (ndim == 2):
+            raise InvalidResultsException(
+                'The eigenvalues should be stored in a 2D array.'
+            )
+
+    def _validate_total_number_of_eigen_values(self):
+        (eigen_value_count, _) = self.eigen_values.shape
+        if not (eigen_value_count == self.xis_count):
+            raise InvalidResultsException(
+                '{num_xis} xis and {num_eigen_vectors} sets of eigen values is not a valid combination'.format(
+                    num_xis=self.xis_count,
+                    num_eigen_vectors=eigen_value_count
+                )
+            )
+
+    def _validate_number_of_eigen_values(self):
+        (_, eigen_value_count) = self.eigen_values.shape
+        if not (eigen_value_count == self.xis_dimension):
+            raise InvalidResultsException(
+                'Xis of dimension {dim} and {num_eigen_values} per pattern is not a valid combination'.format(
+                    dim=self.xis_dimension,
+                    num_eigen_values=eigen_value_count
                 )
             )
 
