@@ -65,6 +65,13 @@ class TestResults(TestCase):
         else:
             self.fail('ExpectedException not raised')
 
+    def test_add_xis(self):
+        actual = Results(densities=self._densities)
+        xis = np.random.rand(100, 3)
+        actual.xis = xis
+
+        np.testing.assert_array_almost_equal(actual.xis, xis)
+
     def test_num_results(self):
         results = Results(
             data_set=self._data_set,
