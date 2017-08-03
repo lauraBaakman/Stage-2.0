@@ -3,7 +3,8 @@ import warnings
 
 
 class Results:
-    def __init__(self, densities=None, data_set=None, expected_size=None, num_used_patterns=None):
+    def __init__(self, densities=None, data_set=None, expected_size=None, num_used_patterns=None,
+                 xis=None, eigen_values=None, eigen_vectors=None):
         if (expected_size is None) and (densities is None):
             raise TypeError("expected_size or densities need to be provided.'")
         if densities is not None:
@@ -12,6 +13,16 @@ class Results:
 
             _DensitiesValidator(data_set=data_set, densities=densities).validate()
             self._incremental_result_adding_is_allowed = False
+
+            self._xis = xis
+            self._eigen_values = eigen_values
+            self._eigen_vectors = eigen_vectors
+
+            _XisValidator(
+                xis=self._xis,
+                eigen_values=self._eigen_values,
+                eigen_vectors=self._eigen_vectors
+            )
         if expected_size:
             self._densities = np.empty(expected_size)
             self._num_used_patterns = np.empty(expected_size)
