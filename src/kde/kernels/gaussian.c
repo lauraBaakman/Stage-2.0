@@ -19,8 +19,8 @@ Kernel shapeAdaptiveGaussianKernel = {
 
 static double g_standardGaussianConstant;
 
-static gsl_matrix** g_sa_globalInverses;
-static double* g_sa_globalScalingFactors;
+static gsl_matrix** g_sa_inverses;
+static double* g_sa_scalingFactors;
 static gsl_matrix** g_sa_LUDecompositionsH;
 static gsl_vector** g_sa_scaledPatterns;
 static gsl_permutation** g_sa_permutations;
@@ -54,8 +54,8 @@ void normal_free() {
 
 double sa_pdf(gsl_vector *pattern, int pid){
     gsl_vector* scaledPattern = g_sa_scaledPatterns[pid];
-    gsl_matrix* globalInverse = g_sa_globalInverses[pid];
-    double globalScalingFactor = g_sa_globalScalingFactors[pid];
+    gsl_matrix* globalInverse = g_sa_inverses[pid];
+    double globalScalingFactor = g_sa_scalingFactors[pid];
 
     gsl_vector_set_zero(scaledPattern);
 
@@ -72,12 +72,12 @@ double sa_pdf(gsl_vector *pattern, int pid){
 void sa_allocate(size_t dimension, int numThreads) {
     g_numThreads = numThreads;
 
-    g_sa_globalInverses = gsl_matrices_alloc(dimension, dimension, numThreads);
+    g_sa_inverses = gsl_matrices_alloc(dimension, dimension, numThreads);
     g_sa_LUDecompositionsH = gsl_matrices_alloc(dimension, dimension, numThreads);
     g_sa_scaledPatterns = gsl_vectors_alloc(dimension, numThreads);
     g_sa_permutations = gsl_permutations_alloc(dimension, numThreads);
 
-    g_sa_globalScalingFactors = (double*) malloc(numThreads * sizeof(double));
+    g_sa_scalingFactors = (double*) malloc(numThreads * sizeof(double));
 
     //Compute the Standard Gaussian Constant
     sa_computeDimensionDependentConstants(dimension);
@@ -91,7 +91,7 @@ void sa_computeDimensionDependentConstants(size_t dimension) {
 void sa_computeConstants(gsl_matrix *globalBandwidthMatrix, int pid) {
     gsl_matrix* LUDecompositionH = g_sa_LUDecompositionsH[pid];
     gsl_permutation* permutation = g_sa_permutations[pid];
-    gsl_matrix* globalInverse = g_sa_globalInverses[pid];    
+    gsl_matrix* globalInverse = g_sa_inverses[pid];    
 
     //Copy the global bandwidth matrix so that we can change it
     gsl_matrix_memcpy(LUDecompositionH, globalBandwidthMatrix);
@@ -105,14 +105,14 @@ void sa_computeConstants(gsl_matrix *globalBandwidthMatrix, int pid) {
 
     //Compute global scaling factor
     double determinant = gsl_linalg_LU_det(LUDecompositionH, signum);
-    g_sa_globalScalingFactors[pid] = 1.0 / determinant;
+    g_sa_scalingFactors[pid] = 1.0 / determinant;
 }
 
 void sa_free() {
     g_standardGaussianConstant = 0.0;
-    gsl_matrices_free(g_sa_globalInverses, g_numThreads);
+    gsl_matrices_free(g_sa_inverses, g_numThreads);
     gsl_matrices_free(g_sa_LUDecompositionsH, g_numThreads);
     gsl_vectors_free(g_sa_scaledPatterns, g_numThreads);
     gsl_permutations_free(g_sa_permutations, g_numThreads);
-    free(g_sa_globalScalingFactors);
+    free(g_sa_scalingFactors);
 }
