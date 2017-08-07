@@ -144,7 +144,7 @@ void testSAGaussianSingle(CuTest *tc){
 	gsl_vector_set(pattern, 2, 0.05);
 
 	gsl_vector* expected = gsl_vector_alloc(numPatterns);
-	gsl_vector_set(expected, 0, 0.121703390601269);
+	gsl_vector_set(expected, 0, 0.015705646827791);
 
 	gsl_vector* actual = gsl_vector_alloc(numPatterns);
 
@@ -152,7 +152,7 @@ void testSAGaussianSingle(CuTest *tc){
 	kernel.allocate(dimension, numThreads);
 	kernel.computeConstants(H, pid);
 
-	double localBandwidth = 0.5;
+	double localBandwidth = 1.0;
 	gsl_vector_set(actual, 0, 
 		kernel.density(pattern, localBandwidth, pid)
 	);
@@ -184,14 +184,14 @@ void testSAGaussianMultipleSingleThreaded(CuTest *tc){
 	gsl_matrix_set(patterns, 2, 0, 0.04); gsl_matrix_set(patterns, 2, 1, 0.05); gsl_matrix_set(patterns, 2, 2, 0.03);	
 
 	gsl_vector* expected = gsl_vector_alloc(numPatterns);
-	gsl_vector_set(expected, 0, 0.121703390601269);
-	gsl_vector_set(expected, 1, 0.045915970935366);
-	gsl_vector_set(expected, 2, 1.656546521485471);
+	gsl_vector_set(expected, 0, 0.015705646827791);
+	gsl_vector_set(expected, 1, 0.015812413849947);
+	gsl_vector_set(expected, 2, 0.015759235403527);
 
 	gsl_vector* localBandwidths = gsl_vector_alloc(numPatterns);
-	gsl_vector_set(localBandwidths, 0, 0.5);
-	gsl_vector_set(localBandwidths, 1, 0.7);
-	gsl_vector_set(localBandwidths, 2, 0.2);	
+	gsl_vector_set(localBandwidths, 0, 1.0);
+	gsl_vector_set(localBandwidths, 1, 1.0);
+	gsl_vector_set(localBandwidths, 2, 1.0);	
 
 	gsl_vector* actual = gsl_vector_alloc(numPatterns);
 
@@ -240,14 +240,14 @@ void testSAGaussianMultipleParallel(CuTest *tc){
 	gsl_matrix_set(patterns, 2, 0, 0.04); gsl_matrix_set(patterns, 2, 1, 0.05); gsl_matrix_set(patterns, 2, 2, 0.03);	
 
 	gsl_vector* expected = gsl_vector_alloc(numPatterns);
-	gsl_vector_set(expected, 0, 0.121703390601269);
-	gsl_vector_set(expected, 1, 0.045915970935366);
-	gsl_vector_set(expected, 2, 1.656546521485471);
+	gsl_vector_set(expected, 0, 0.015705646827791);
+	gsl_vector_set(expected, 1, 0.015812413849947);
+	gsl_vector_set(expected, 2, 0.015759235403527);
 
 	gsl_vector* localBandwidths = gsl_vector_alloc(numPatterns);
-	gsl_vector_set(localBandwidths, 0, 0.5);
-	gsl_vector_set(localBandwidths, 1, 0.7);
-	gsl_vector_set(localBandwidths, 2, 0.2);	
+	gsl_vector_set(localBandwidths, 0, 1.0);
+	gsl_vector_set(localBandwidths, 1, 1.0);
+	gsl_vector_set(localBandwidths, 2, 1.0);	
 
 	gsl_vector* actual = gsl_vector_alloc(numPatterns);
 
