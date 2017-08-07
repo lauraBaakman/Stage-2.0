@@ -26,12 +26,12 @@ class _ShapeAdaptiveGaussian_C(ShapeAdaptiveKernel_C):
     def to_C_enum(self):
         return _as_c_enum
 
-    def _handle_single_pattern(self, x, local_bandwidth):
+    def _handle_single_pattern(self, x):
         data = np.array(x, ndmin=2)
         density = _kernels.sa_gaussian_single_pattern(data, self._global_bandwidth_matrix)
         return density
 
-    def _handle_multiple_patterns(self, xs, local_bandwidths):
+    def _handle_multiple_patterns(self, xs):
         (num_patterns, _) = xs.shape
         densities = np.empty(num_patterns, dtype=float)
         _kernels.sa_gaussian_multi_pattern(xs, self._global_bandwidth_matrix, densities)
@@ -47,6 +47,6 @@ class _ShapeAdaptiveGaussian_Python(ShapeAdaptiveKernel_Python):
     def to_C_enum(self):
         return _as_c_enum
 
-    def _evaluate_pattern(self, pattern, local_bandwidth):
+    def _evaluate_pattern(self, pattern):
         density = self._distribution.pdf(np.matmul(pattern, self._global_bandwidth_matrix_inverse))
         return self._scaling_factor * density

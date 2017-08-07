@@ -117,20 +117,20 @@ class ShapeAdaptiveKernel_C(ShapeAdaptiveKernel):
     def to_C_enum(self):
         pass
 
-    def evaluate(self, xs, local_bandwidths=None):
-        (xs, local_bandwidths) = self._define_and_validate_input(xs, local_bandwidths)
+    def evaluate(self, xs):
+        (xs, local_bandwidths) = self._define_and_validate_input(xs, None)
 
         (num_patterns, _) = xs.shape
 
         if num_patterns == 1:
-            return self._handle_single_pattern(xs, local_bandwidths)
+            return self._handle_single_pattern(xs)
         else:
-            return self._handle_multiple_patterns(xs, local_bandwidths)
+            return self._handle_multiple_patterns(xs)
 
-    def _handle_single_pattern(self, x, local_bandwidth):
+    def _handle_single_pattern(self, x):
         pass
 
-    def _handle_multiple_patterns(self, xs, local_bandwidths):
+    def _handle_multiple_patterns(self, xs):
         pass
 
 
@@ -144,24 +144,24 @@ class ShapeAdaptiveKernel_Python(ShapeAdaptiveKernel):
     def to_C_enum(self):
         pass
 
-    def _evaluate_pattern(self, pattern, local_bandwidth):
+    def _evaluate_pattern(self, pattern):
         pass
 
     def _handle_return(self, densities):
         try:
             densities = np.asscalar(densities)
         except ValueError:
-            pass #We are dealing with a vector, let's return that
+            pass  # We are dealing with a vector, let's return that
         return densities
 
-    def evaluate(self, xs, local_bandwidths=None):
-        (xs, local_bandwidths) = self._define_and_validate_input(xs, local_bandwidths)
+    def evaluate(self, xs):
+        (xs, local_bandwidths) = self._define_and_validate_input(xs, None)
 
         (num_patterns, _) = xs.shape
         densities = np.empty(num_patterns)
 
         for idx, (pattern, local_bandwidth) in enumerate(zip(xs, local_bandwidths)):
-            densities[idx] = self._evaluate_pattern(pattern, local_bandwidth)
+            densities[idx] = self._evaluate_pattern(pattern)
 
         return self._handle_return(densities)
 

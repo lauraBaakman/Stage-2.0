@@ -94,7 +94,7 @@ class _ShapeAdaptiveMBE_Python(_ShapeAdaptiveMBE):
         kernel_shape = self._determine_kernel_shape(xi, local_bandwidth)
         kernel = self._kernel_class(kernel_shape)
         for idx, x in enumerate(self._x_s):
-            terms[idx] = kernel.evaluate(x - xi, local_bandwidth)
+            terms[idx] = kernel.evaluate(x - xi)
         return terms
 
     def _determine_kernel_shape(self, pattern, local_bandwidth):
