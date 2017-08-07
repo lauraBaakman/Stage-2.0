@@ -57,23 +57,14 @@ double sa_pdf(gsl_vector *pattern, double localBandwidth, int pid){
     gsl_matrix* globalInverse = g_sa_globalInverses[pid];
     double globalScalingFactor = g_sa_globalScalingFactors[pid];
 
-
-    size_t dimension = pattern->size;
-
     gsl_vector_set_zero(scaledPattern);
 
     // Multiply the transpose of the global inverse with the pattern
     // Since the bandwidth matrix is always symmetric we don't need to compute the transpose.
     gsl_blas_dsymv(CblasLower, 1.0, globalInverse, pattern, 1.0, scaledPattern);
 
-    //Apply the local inverse
-    gsl_vector_scale(scaledPattern, 1.0 / localBandwidth);
-
-    // Compute local scaling factor
-    double localScalingFactor = computeLocalScalingFactor(globalScalingFactor, localBandwidth, dimension);
-
     //Determine the result of the kernel
-    double density = localScalingFactor * normal_pdf(scaledPattern, 0);
+    double density = globalScalingFactor * normal_pdf(scaledPattern, 0);
 
     return density;
 }
@@ -115,7 +106,6 @@ void sa_computeConstants(gsl_matrix *globalBandwidthMatrix, int pid) {
     //Compute global scaling factor
     double determinant = gsl_linalg_LU_det(LUDecompositionH, signum);
     g_sa_globalScalingFactors[pid] = 1.0 / determinant;
-
 }
 
 void sa_free() {

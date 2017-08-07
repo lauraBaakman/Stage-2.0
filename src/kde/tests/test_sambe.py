@@ -208,30 +208,6 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
     def tearDown(self):
         _utils.reset_num_threads()
 
-    def test__determine_kernel_shape(self):
-        xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
-        x_s = np.array([[0, 0], [1, 1]])
-        pattern = x_s[0]
-        local_bandwidths = np.array([0.840896194313949,
-                                     1.189207427458816,
-                                     1.189207427458816,
-                                     0.840896194313949])
-        h = 0.721347520444482
-        kernel = ShapeAdaptiveGaussian
-
-        estimator = self._estimator_class(
-            xi_s=xi_s, x_s=x_s, dimension=2,
-            kernel=kernel,
-            local_bandwidths=local_bandwidths, general_bandwidth=h
-        )
-
-        actual = estimator._determine_kernel_shape(pattern)
-        expected = np.array([
-            [0.832940370215782, -0.416470185107891],
-            [- 0.416470185107891, 0.832940370215782]
-        ])
-        np.testing.assert_array_almost_equal(actual, expected)
-
     def test_estimate_gaussian(self):
         xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
         x_s = np.array([

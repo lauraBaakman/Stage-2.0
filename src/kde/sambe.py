@@ -91,13 +91,13 @@ class _ShapeAdaptiveMBE_Python(_ShapeAdaptiveMBE):
 
     def _compute_kernel_terms_for_xis(self, xi, local_bandwidth):
         terms = np.empty(self.num_x_s)
+        kernel_shape = self._determine_kernel_shape(xi, local_bandwidth)
+        kernel = self._kernel_class(kernel_shape)
         for idx, x in enumerate(self._x_s):
-            kernel_shape = self._determine_kernel_shape(xi)
-            kernel = self._kernel_class(kernel_shape)
             terms[idx] = kernel.evaluate(x - xi, local_bandwidth)
         return terms
 
-    def _determine_kernel_shape(self, pattern):
+    def _determine_kernel_shape(self, pattern, local_bandwidth):
         # Find the K nearest neighbours
         neighbours = self._knn.find_k_nearest_neighbours(pattern, self._k)
 
@@ -106,6 +106,7 @@ class _ShapeAdaptiveMBE_Python(_ShapeAdaptiveMBE):
 
         # Compute the scaling factor
         scaling_factor = kde.kernels.scaling.scaling_factor(
+            local_bandwidth=local_bandwidth,
             general_bandwidth=self._general_bandwidth,
             covariance_matrix=covariance_matrix
         )
