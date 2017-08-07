@@ -27,11 +27,10 @@ class TestShapeAdaptiveEpanechnikov(TestCase):
                       [0, -1, 2]])
         x = np.array([0.05, 0.05, 0.05])
         expected = 0.013288829111394
-        local_bandwidth = 1.0
         actual = ShapeAdaptiveEpanechnikov(
             H,
             implementation=_ShapeAdaptiveEpanechnikov_Python
-        ).evaluate(x, local_bandwidth)
+        ).evaluate(x)
         self.assertAlmostEqual(actual, expected)
 
 
@@ -47,7 +46,7 @@ class ShapeAdaptiveGaussianImpAbstractTest(object):
                       [-1, 2, -1],
                       [0, -1, 2]])
         x = np.array([0.05, 0.05, 0.05])
-        actual = self._kernel_class(H).evaluate(x, 1.0)
+        actual = self._kernel_class(H).evaluate(x)
         expected = 0.013288829111394
         self.assertAlmostEqual(actual, expected)
 
