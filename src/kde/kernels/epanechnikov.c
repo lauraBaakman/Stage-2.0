@@ -23,10 +23,10 @@ static double sqrtFive = 2.236067977499790; // 1 / sqrt(1 / 5) == sqrt(5)
 static double g_normal_constant;
 
 static gsl_vector** g_sa_scaledPatterns;
-static gsl_matrix** g_sa_globalInverses;
+static gsl_matrix** g_sa_inverses;
 static gsl_matrix** g_sa_LUDecompositionsH;
 static gsl_permutation** g_sa_permutations;
-static double* g_sa_globalScalingFactors;
+static double* g_sa_scalingFactors;
 
 static double g_sa_epanechnikovConstant;
 
@@ -79,8 +79,8 @@ double normal_pdf(gsl_vector *pattern, int pid) {
 
 double sa_pdf(gsl_vector* pattern, int pid){
     gsl_vector* scaled_pattern = g_sa_scaledPatterns[pid];
-    gsl_matrix* globalInverse = g_sa_globalInverses[pid];
-    double globalScalingFactor = g_sa_globalScalingFactors[pid];
+    gsl_matrix* globalInverse = g_sa_inverses[pid];
+    double globalScalingFactor = g_sa_scalingFactors[pid];
 
     gsl_vector_set_zero(scaled_pattern);
 
@@ -97,10 +97,10 @@ void sa_allocate(size_t dimension, int numThreads){
 
     g_numThreads = numThreads;
 
-    g_sa_globalScalingFactors = (double*) malloc(numThreads * sizeof(double));
+    g_sa_scalingFactors = (double*) malloc(numThreads * sizeof(double));
 
     g_sa_scaledPatterns = gsl_vectors_alloc(dimension, g_numThreads);
-    g_sa_globalInverses = gsl_matrices_alloc(dimension, dimension, g_numThreads);
+    g_sa_inverses = gsl_matrices_alloc(dimension, dimension, g_numThreads);
     g_sa_LUDecompositionsH = gsl_matrices_alloc(dimension, dimension, g_numThreads);
     g_sa_permutations = gsl_permutations_alloc(dimension, g_numThreads);
 }
@@ -108,7 +108,7 @@ void sa_allocate(size_t dimension, int numThreads){
 void sa_computeConstants(gsl_matrix *globalBandwidthMatrix, int pid){
     gsl_matrix* LUDecompositionH = g_sa_LUDecompositionsH[pid];
     gsl_permutation* permutation = g_sa_permutations[pid];
-    gsl_matrix* globalInverse = g_sa_globalInverses[pid];
+    gsl_matrix* globalInverse = g_sa_inverses[pid];
 
     //Copy the global bandwidth matrix so that we can change it
     gsl_matrix_memcpy(LUDecompositionH, globalBandwidthMatrix);
@@ -122,7 +122,7 @@ void sa_computeConstants(gsl_matrix *globalBandwidthMatrix, int pid){
 
     //Compute global scaling factor
     double determinant = gsl_linalg_LU_det(LUDecompositionH, signum);
-    g_sa_globalScalingFactors[pid] = 1.0 / determinant;
+    g_sa_scalingFactors[pid] = 1.0 / determinant;
 }
 
 void sa_computeDimensionDependentConstants(size_t dimension){
@@ -130,10 +130,10 @@ void sa_computeDimensionDependentConstants(size_t dimension){
 }
 
 void sa_free(){
-    free(g_sa_globalScalingFactors);
+    free(g_sa_scalingFactors);
 
     gsl_vectors_free(g_sa_scaledPatterns, g_numThreads);
-    gsl_matrices_free(g_sa_globalInverses, g_numThreads);
+    gsl_matrices_free(g_sa_inverses, g_numThreads);
     gsl_matrices_free(g_sa_LUDecompositionsH, g_numThreads);
     gsl_permutations_free(g_sa_permutations, g_numThreads);
 
