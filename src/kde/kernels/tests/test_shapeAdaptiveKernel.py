@@ -4,6 +4,7 @@ import numpy as np
 
 from kde.kernels.kernel import ShapeAdaptiveKernel, KernelException, ShapeAdaptiveKernel_Python, ShapeAdaptive
 
+
 class TestShapeAdaptiveKernel(TestCase):
     def test_dimension(self):
         matrix = np.random.rand(3, 3)
