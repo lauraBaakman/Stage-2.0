@@ -65,9 +65,10 @@ void computeKernelTermxForXi(
 
     gsl_vector_view x;
 
+    determineKernelShape(localBandwidth, xi, pid);
+    g_kernel.computeConstants(globalBandwidthMatrix, pid);
+
     for(size_t i = 0; i < g_numXs; i++){
-        determineKernelShape(localBandwidth, xi, pid);
-        g_kernel.computeConstants(globalBandwidthMatrix, pid);
 
         x = gsl_matrix_row(g_xs, i);
 
