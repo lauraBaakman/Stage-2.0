@@ -11,7 +11,7 @@ typedef double (*SymmetricKernelDensityFunction)(gsl_vector* pattern, int pid);
 
 typedef void (*ShapeAdaptiveKernelAllocFunction)(size_t dimensionality, int numThreads);
 typedef void (*ShapeAdaptiveKernelConstantsFunction)(gsl_matrix* globalBandwidthMatrix, int pid);
-typedef double (*ShapeAdaptiveKernelDensityFunction)(gsl_vector* pattern, double localBandwidth, int pid);
+typedef double (*ShapeAdaptiveKernelDensityFunction)(gsl_vector* pattern, int pid);
 
 typedef struct SymmetricKernel {
     SymmetricKernelDensityFunction density;

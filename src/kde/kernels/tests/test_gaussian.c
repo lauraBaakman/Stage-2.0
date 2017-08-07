@@ -152,9 +152,8 @@ void testSAGaussianSingle(CuTest *tc){
 	kernel.allocate(dimension, numThreads);
 	kernel.computeConstants(H, pid);
 
-	double localBandwidth = 1.0;
 	gsl_vector_set(actual, 0, 
-		kernel.density(pattern, localBandwidth, pid)
+		kernel.density(pattern, pid)
 	);
 
 	CuAssertVectorEquals(tc, expected, actual, delta);
@@ -186,12 +185,7 @@ void testSAGaussianMultipleSingleThreaded(CuTest *tc){
 	gsl_vector* expected = gsl_vector_alloc(numPatterns);
 	gsl_vector_set(expected, 0, 0.015705646827791);
 	gsl_vector_set(expected, 1, 0.015812413849947);
-	gsl_vector_set(expected, 2, 0.015759235403527);
-
-	gsl_vector* localBandwidths = gsl_vector_alloc(numPatterns);
-	gsl_vector_set(localBandwidths, 0, 1.0);
-	gsl_vector_set(localBandwidths, 1, 1.0);
-	gsl_vector_set(localBandwidths, 2, 1.0);	
+	gsl_vector_set(expected, 2, 0.015759235403527);	
 
 	gsl_vector* actual = gsl_vector_alloc(numPatterns);
 
@@ -199,12 +193,11 @@ void testSAGaussianMultipleSingleThreaded(CuTest *tc){
 	kernel.allocate(dimension, numThreads);
 	kernel.computeConstants(H, pid);
 
-	double density, localBandwidth;
+	double density;
 	gsl_vector_view pattern;
 	for(size_t i = 0; i < patterns->size1; i++){
-		localBandwidth = gsl_vector_get(localBandwidths, i);
 		pattern = gsl_matrix_row(patterns, i);
-		density = kernel.density(&pattern.vector, localBandwidth, pid);
+		density = kernel.density(&pattern.vector, pid);
 		gsl_vector_set(actual, i, density);
 	}
 
@@ -212,7 +205,6 @@ void testSAGaussianMultipleSingleThreaded(CuTest *tc){
 
 	gsl_vector_free(actual);
 	gsl_vector_free(expected);
-	gsl_vector_free(localBandwidths);
 	gsl_matrix_free(patterns);
 	gsl_matrix_free(H);
 }
@@ -244,29 +236,23 @@ void testSAGaussianMultipleParallel(CuTest *tc){
 	gsl_vector_set(expected, 1, 0.015812413849947);
 	gsl_vector_set(expected, 2, 0.015759235403527);
 
-	gsl_vector* localBandwidths = gsl_vector_alloc(numPatterns);
-	gsl_vector_set(localBandwidths, 0, 1.0);
-	gsl_vector_set(localBandwidths, 1, 1.0);
-	gsl_vector_set(localBandwidths, 2, 1.0);	
-
 	gsl_vector* actual = gsl_vector_alloc(numPatterns);
 
 	kernel.allocate(dimension, numThreads);
 
-	#pragma omp parallel num_threads(g_numThreads) shared(actual, patterns, kernel, H, numThreads, dimension, localBandwidths) 
+	#pragma omp parallel num_threads(g_numThreads) shared(actual, patterns, kernel, H, numThreads, dimension) 
 	{
 		int pid = omp_get_thread_num();
 
 		kernel.computeConstants(H, pid);
 
-		double density, localBandwidth;
+		double density;
 		gsl_vector_view pattern;
 		
 		#pragma omp parallel
 		for(size_t i = 0; i < patterns->size1; i++){
-			localBandwidth = gsl_vector_get(localBandwidths, i);
 			pattern = gsl_matrix_row(patterns, i);
-			density = kernel.density(&pattern.vector, localBandwidth, pid);
+			density = kernel.density(&pattern.vector, pid);
 			gsl_vector_set(actual, i, density);
 		}
 	}
@@ -275,7 +261,6 @@ void testSAGaussianMultipleParallel(CuTest *tc){
 
 	gsl_vector_free(actual);
 	gsl_vector_free(expected);
-	gsl_vector_free(localBandwidths);
 	gsl_matrix_free(patterns);
 	gsl_matrix_free(H);
 }

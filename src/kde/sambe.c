@@ -74,7 +74,7 @@ void computeKernelTermxForXi(
         //x - xi
         movedPattern = gsl_subtract(&x.vector, xi, movedPattern);
 
-        double kernelResult = g_kernel.density(movedPattern, localBandwidth, pid);
+        double kernelResult = g_kernel.density(movedPattern, pid);
         gsl_vector_set(terms, i, kernelResult);
     }
 }

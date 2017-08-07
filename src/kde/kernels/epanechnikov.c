@@ -77,7 +77,7 @@ double normal_pdf(gsl_vector *pattern, int pid) {
 
 /* Shape Adaptive Kernel */
 
-double sa_pdf(gsl_vector* pattern, double localBandwidth, int pid){
+double sa_pdf(gsl_vector* pattern, int pid){
     gsl_vector* scaled_pattern = g_sa_scaledPatterns[pid];
     gsl_matrix* globalInverse = g_sa_globalInverses[pid];
     double globalScalingFactor = g_sa_globalScalingFactors[pid];

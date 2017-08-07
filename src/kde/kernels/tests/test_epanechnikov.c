@@ -292,7 +292,7 @@ void testShapeAdaptiveEpanechhnikovSingle(CuTest *tc){
 
 	double localBandwidth = 0.5;
 	gsl_vector_set(actual, 0, 
-		kernel.density(pattern, localBandwidth, pid)
+		kernel.density(pattern, pid)
 	);
 
 	CuAssertVectorEquals(tc, expected, actual, delta);
@@ -343,7 +343,7 @@ void testShapeAdaptiveEpanechhnikovMultipleSingleThreaded(CuTest *tc){
 	for(size_t i = 0; i < patterns->size1; i++){
 		localBandwidth = gsl_vector_get(localBandwidths, i);
 		pattern = gsl_matrix_row(patterns, i);
-		density = kernel.density(&pattern.vector, localBandwidth, pid);
+		density = kernel.density(&pattern.vector, pid);
 		gsl_vector_set(actual, i, density);
 	}
 
@@ -405,7 +405,7 @@ void testShapeAdaptiveEpanechhnikovMultipleParallel1(CuTest *tc){
 			localBandwidth = gsl_vector_get(localBandwidths, i);
 			pattern = gsl_matrix_row(patterns, i);
 		
-			density = kernel.density(&pattern.vector, localBandwidth, pid);
+			density = kernel.density(&pattern.vector, pid);
 		
 			gsl_vector_set(actual, i, density);
 		}
@@ -482,7 +482,7 @@ void testShapeAdaptiveEpanechhnikovMultipleParallel2(CuTest *tc){
 			localBandwidth = gsl_vector_get(localBandwidths, i);
 			pattern = gsl_matrix_row(patterns, i);
 		
-			density = kernel.density(&pattern.vector, localBandwidth, pid);
+			density = kernel.density(&pattern.vector, pid);
 		
 			gsl_vector_set(actual, i, density);
 		}
