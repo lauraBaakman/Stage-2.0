@@ -48,7 +48,5 @@ class _ShapeAdaptiveGaussian_Python(ShapeAdaptiveKernel_Python):
         return _as_c_enum
 
     def _evaluate_pattern(self, pattern, local_bandwidth):
-        local_inverse = self._compute_local_inverse(local_bandwidth)
-        local_scaling_factor = self._compute_local_scaling_factor(local_bandwidth)
-        density = self._distribution.pdf(np.matmul(pattern, local_inverse))
-        return local_scaling_factor * density
+        density = self._distribution.pdf(np.matmul(pattern, self._global_bandwidth_matrix_inverse))
+        return self._scaling_factor * density
