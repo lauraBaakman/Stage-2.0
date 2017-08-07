@@ -66,7 +66,7 @@ void computeKernelTermxForXi(
     gsl_vector_view x;
 
     for(size_t i = 0; i < g_numXs; i++){
-        determineGlobalKernelShape(xi, pid);
+        determineKernelShape(localBandwidth, xi, pid);
         g_kernel.computeConstants(globalBandwidthMatrix, pid);
 
         x = gsl_matrix_row(g_xs, i);
@@ -79,7 +79,7 @@ void computeKernelTermxForXi(
     }
 }
 
-void determineGlobalKernelShape(gsl_vector* x, int pid) {
+void determineKernelShape(double localBandwidth, gsl_vector* x, int pid) {
     gsl_matrix* nearestNeighbours = g_nearestNeighbourMatrices[pid];
     gsl_matrix* globalBandwidthMatrix = g_globalBandwidthMatrices[pid];
 
@@ -90,7 +90,7 @@ void determineGlobalKernelShape(gsl_vector* x, int pid) {
     computeCovarianceMatrix(nearestNeighbours, globalBandwidthMatrix);
 
     /* Compute the scaling factor */
-    double scalingFactor = computeScalingFactor(g_globalBandwidthFactor, globalBandwidthMatrix);
+    double scalingFactor = computeScalingFactor(localBandwidth, g_globalBandwidthFactor, globalBandwidthMatrix);
 
     /* Scale the shape matrix */
     gsl_matrix_scale(globalBandwidthMatrix, scalingFactor);

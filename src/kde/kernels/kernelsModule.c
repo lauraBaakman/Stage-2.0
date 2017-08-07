@@ -199,15 +199,15 @@ static PyObject * testKernel_multi_pattern(PyObject *self, PyObject *args){
 static char kernels_scalingFactor_docstring[] = "Compute the scaling factor for the asymmetric kernel.";
 static PyObject* scaling_factor(PyObject* self, PyObject *args){
     /* Read input */
-    double generalBandwidth;
+    double localBandwidth, generalBandwidth;
     PyObject* inCovarianceMatrix = NULL;
 
-    if (!PyArg_ParseTuple(args, "dO", &generalBandwidth, &inCovarianceMatrix)) return NULL;
+    if (!PyArg_ParseTuple(args, "ddO", &localBandwidth, &generalBandwidth, &inCovarianceMatrix)) return NULL;
 
     gsl_matrix_view covarianceMatrix = pyObjectToGSLMatrixView(inCovarianceMatrix, NPY_ARRAY_IN_ARRAY);
 
     /* Do computations */
-    double scalingFactor = computeScalingFactor(generalBandwidth, &covarianceMatrix.matrix);
+    double scalingFactor = computeScalingFactor(localBandwidth, generalBandwidth, &covarianceMatrix.matrix);
 
     /* Free memory */
 

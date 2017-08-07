@@ -46,18 +46,18 @@ ShapeAdaptiveKernel selectShapeAdaptiveKernel(KernelType type){
     }
 }
 
-double computeScalingFactor(double generalBandwidth, gsl_matrix* covarianceMatrix) {
+double computeScalingFactor(double localBandwidth, double generalBandwidth, gsl_matrix* covarianceMatrix) {
     gsl_vector* eigenvalues = gsl_vector_alloc(covarianceMatrix->size1);
     computeEigenValues(covarianceMatrix, eigenvalues);
     size_t dimension = eigenvalues->size;
 
-    double generalBandWidthTerm = log(generalBandwidth);
+    double bandwidthTerm = log(localBandwidth * generalBandwidth);
     double eigenValuesTerm = 0.0;
     for(size_t i = 0; i < dimension; i++){
         eigenValuesTerm += log(gsl_vector_get(eigenvalues, i));
     }
     gsl_vector_free(eigenvalues);
-    return exp(generalBandWidthTerm - (1.0 / dimension) * eigenValuesTerm);
+    return exp(bandwidthTerm - (1.0 / dimension) * eigenValuesTerm);
 }
 
 double computeLocalScalingFactor(double globalScalingFactor, double localBandwidth, size_t dimension) {
