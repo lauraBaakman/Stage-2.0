@@ -75,4 +75,3 @@ class TestScaling_factor(TestCase):
                                         implementation=scaling._scaling_factor_c)
         expected = 1.0
         self.assertAlmostEqual(actual, expected)
-
