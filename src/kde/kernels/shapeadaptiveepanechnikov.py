@@ -48,9 +48,7 @@ class _ShapeAdaptiveEpanechnikov_Python(ShapeAdaptiveKernel_Python):
         return _as_c_enum
 
     def _evaluate_pattern(self, pattern, local_bandwidth):
-        local_inverse = self._compute_local_inverse(local_bandwidth)
-        local_scaling_factor = self._compute_local_scaling_factor(local_bandwidth)
-        return local_scaling_factor * self._epanechnikov(np.matmul(pattern, local_inverse))
+        return self._scaling_factor * self._epanechnikov(np.matmul(pattern, self._global_bandwidth_matrix_inverse))
 
     def _epanechnikov(self, pattern):
         return _Epanechnikov_Python().evaluate(pattern)

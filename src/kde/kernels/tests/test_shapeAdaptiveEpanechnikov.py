@@ -1,4 +1,4 @@
-from unittest import TestCase, skip
+from unittest import TestCase
 
 import numpy as np
 
@@ -34,68 +34,6 @@ class TestShapeAdaptiveEpanechnikov(TestCase):
         ).evaluate(x, local_bandwidth)
         self.assertAlmostEqual(actual, expected)
 
-    def test_default_implementation_single_pattern_l_neq_1(self):
-        H = np.array([[2, -1, 0],
-                      [-1, 2, -1],
-                      [0, -1, 2]])
-        x = np.array([0.05, 0.05, 0.05])
-        local_bandwidth = 0.5
-        expected = 0.104949387026863
-        actual = ShapeAdaptiveEpanechnikov(H).evaluate(x, local_bandwidth)
-        self.assertAlmostEqual(actual, expected)
-
-    def test_alternative_implementation_single_pattern_l_neq_1(self):
-        H = np.array([[2, -1, 0],
-                      [-1, 2, -1],
-                      [0, -1, 2]])
-        x = np.array([0.05, 0.05, 0.05])
-        expected = 0.104949387026863
-        local_bandwidth = 0.5
-        actual = ShapeAdaptiveEpanechnikov(
-            H,
-            implementation=_ShapeAdaptiveEpanechnikov_Python
-        ).evaluate(x, local_bandwidth)
-        self.assertAlmostEqual(actual, expected)
-
-    def test_default_implementation_multiple_patterns_l_neq_1(self):
-        H = np.array([[2, -1, 0],
-                      [-1, 2, -1],
-                      [0, -1, 2]])
-        x = np.array([
-            [0.05, 0.05, 0.05],
-            [0.02, 0.03, 0.04],
-            [0.04, 0.05, 0.03]
-        ])
-        local_bandwidths = np.array([0.5, 0.7, 0.2])
-        expected = np.array([
-            0.104949387026863,
-            0.038786019064700,
-            1.547770745658397
-        ])
-        actual = ShapeAdaptiveEpanechnikov(H).evaluate(x, local_bandwidths)
-        np.testing.assert_array_almost_equal(actual, expected)
-
-    def test_alternative_implementation_multiple_patterns_l_neq_1(self):
-        H = np.array([[2, -1, 0],
-                      [-1, 2, -1],
-                      [0, -1, 2]])
-        x = np.array([
-            [0.05, 0.05, 0.05],
-            [0.02, 0.03, 0.04],
-            [0.04, 0.05, 0.03]
-        ])
-        local_bandwidths = np.array([0.5, 0.7, 0.2])
-        expected = np.array([
-            0.104949387026863,
-            0.038786019064700,
-            1.547770745658397
-        ])
-        actual = ShapeAdaptiveEpanechnikov(
-            H,
-            implementation=_ShapeAdaptiveEpanechnikov_Python
-        ).evaluate(x, local_bandwidths)
-        np.testing.assert_array_almost_equal(actual, expected)
-
 
 class ShapeAdaptiveGaussianImpAbstractTest(object):
 
@@ -113,16 +51,6 @@ class ShapeAdaptiveGaussianImpAbstractTest(object):
         expected = 0.013288829111394
         self.assertAlmostEqual(actual, expected)
 
-    def test_evalute_single_pattern_l_neq_one(self):
-        H = np.array([[2, -1, 0],
-                      [-1, 2, -1],
-                      [0, -1, 2]])
-        x = np.array([0.05, 0.05, 0.05])
-        local_bandwidth = 0.5
-        actual = self._kernel_class(H).evaluate(x, local_bandwidth)
-        expected = 0.104949387026863
-        self.assertAlmostEqual(actual, expected)
-
     def test_evalute_multiple_patterns_l_eq_one(self):
         H = np.array([[2, -1, 0],
                       [-1, 2, -1],
@@ -138,24 +66,6 @@ class ShapeAdaptiveGaussianImpAbstractTest(object):
             0.013307012420120
         ])
         actual = self._kernel_class(H).evaluate(x)
-        np.testing.assert_array_almost_equal(actual, expected)
-
-    def test_evaluate_multiple_patterns_l_neq_one(self):
-        H = np.array([[2, -1, 0],
-                      [-1, 2, -1],
-                      [0, -1, 2]])
-        local_bandwidths = np.array([0.5, 0.7, 0.2])
-        x = np.array([
-            [0.05, 0.05, 0.05],
-            [0.02, 0.03, 0.04],
-            [0.04, 0.05, 0.03]
-        ])
-        expected = np.array([
-            0.104949387026863,
-            0.038786019064700,
-            1.547770745658397
-        ])
-        actual = self._kernel_class(H).evaluate(x, local_bandwidths=local_bandwidths)
         np.testing.assert_array_almost_equal(actual, expected)
 
 

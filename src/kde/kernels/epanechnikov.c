@@ -78,7 +78,6 @@ double normal_pdf(gsl_vector *pattern, int pid) {
 /* Shape Adaptive Kernel */
 
 double sa_pdf(gsl_vector* pattern, double localBandwidth, int pid){
-    size_t dimension = pattern->size;
     gsl_vector* scaled_pattern = g_sa_scaledPatterns[pid];
     gsl_matrix* globalInverse = g_sa_globalInverses[pid];
     double globalScalingFactor = g_sa_globalScalingFactors[pid];
@@ -89,14 +88,8 @@ double sa_pdf(gsl_vector* pattern, double localBandwidth, int pid){
     // Since the bandwidth matrix is always symmetric we don't need to compute the transpose.
     gsl_blas_dsymv(CblasLower, 1.0, globalInverse, pattern, 1.0, scaled_pattern);
 
-    //Apply the local inverse
-    gsl_vector_scale(scaled_pattern, 1.0 / localBandwidth);
-
-    // Compute local scaling factor
-    double localScalingFactor = computeLocalScalingFactor(globalScalingFactor, localBandwidth, dimension);
-
     //Determine the result of the kernel
-    return localScalingFactor * epanechnikov_kernel(scaled_pattern, g_sa_epanechnikovConstant);
+    return globalScalingFactor * epanechnikov_kernel(scaled_pattern, g_sa_epanechnikovConstant);
 }
 
 void sa_allocate(size_t dimension, int numThreads){

@@ -282,7 +282,7 @@ void testShapeAdaptiveEpanechhnikovSingle(CuTest *tc){
 	gsl_vector_set(pattern, 2, 0.05);
 
 	gsl_vector* expected = gsl_vector_alloc(numPatterns);
-	gsl_vector_set(expected, 0, 0.104949387026863);
+	gsl_vector_set(expected, 0, 0.013288829111394);
 
 	gsl_vector* actual = gsl_vector_alloc(numPatterns);
 
@@ -322,9 +322,9 @@ void testShapeAdaptiveEpanechhnikovMultipleSingleThreaded(CuTest *tc){
 	gsl_matrix_set(patterns, 2, 0, 0.04); gsl_matrix_set(patterns, 2, 1, 0.05); gsl_matrix_set(patterns, 2, 2, 0.03);	
 
 	gsl_vector* expected = gsl_vector_alloc(numPatterns);
-	gsl_vector_set(expected, 0, 0.104949387026863);
-	gsl_vector_set(expected, 1, 0.038786019064700);
-	gsl_vector_set(expected, 2, 1.547770745658397);
+	gsl_vector_set(expected, 0, 0.013288829111394);
+	gsl_vector_set(expected, 1, 0.013324995545631);
+	gsl_vector_set(expected, 2, 0.013307012420120);
 
 	gsl_vector* localBandwidths = gsl_vector_alloc(numPatterns);
 	gsl_vector_set(localBandwidths, 0, 0.5);
@@ -380,9 +380,9 @@ void testShapeAdaptiveEpanechhnikovMultipleParallel1(CuTest *tc){
 	gsl_matrix_set(patterns, 2, 0, 0.04); gsl_matrix_set(patterns, 2, 1, 0.05); gsl_matrix_set(patterns, 2, 2, 0.03);	
 
 	gsl_vector* expected = gsl_vector_alloc(numPatterns);
-	gsl_vector_set(expected, 0, 0.104949387026863);
-	gsl_vector_set(expected, 1, 0.038786019064700);
-	gsl_vector_set(expected, 2, 1.547770745658397);
+	gsl_vector_set(expected, 0, 0.013288829111394);
+	gsl_vector_set(expected, 1, 0.013324995545631);
+	gsl_vector_set(expected, 2, 0.013307012420120);
 
 	gsl_vector* localBandwidths = gsl_vector_alloc(numPatterns);
 	gsl_vector_set(localBandwidths, 0, 0.5);
@@ -444,9 +444,9 @@ void testShapeAdaptiveEpanechhnikovMultipleParallel2(CuTest *tc){
 	gsl_matrix_set(smallPatterns, 2, 0, 0.04); gsl_matrix_set(smallPatterns, 2, 1, 0.05); gsl_matrix_set(smallPatterns, 2, 2, 0.03);	
 
 	gsl_vector* smallExpected = gsl_vector_alloc(numSmallPatterns);
-	gsl_vector_set(smallExpected, 0, 0.104949387026863);
-	gsl_vector_set(smallExpected, 1, 0.038786019064700);
-	gsl_vector_set(smallExpected, 2, 1.547770745658397);
+	gsl_vector_set(smallExpected, 0, 0.013288829111394);
+	gsl_vector_set(smallExpected, 1, 0.013324995545631);
+	gsl_vector_set(smallExpected, 2, 0.013307012420120);
 
 	gsl_vector* smalllocalBandwidths = gsl_vector_alloc(numSmallPatterns);
 	gsl_vector_set(smalllocalBandwidths, 0, 0.5);
