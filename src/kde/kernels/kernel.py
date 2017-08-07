@@ -65,10 +65,9 @@ class ShapeAdaptiveKernel(Kernel):
     def to_C_enum(self):
         raise NotImplementedError()
 
-    def _define_and_validate_input(self, xs_in, local_bandwidths_in):
+    def _define_and_validate_input(self, xs_in):
         xs = self._define_and_validate_patterns(xs_in)
-        local_bandwidths = self._define_and_validate_local_bandwidths(local_bandwidths_in, xs)
-        return xs, local_bandwidths
+        return xs
 
     def _define_and_validate_patterns(self, xs):
         xs = np.array(xs, ndmin=2)
@@ -78,33 +77,6 @@ class ShapeAdaptiveKernel(Kernel):
         if xs_dimension is not self.dimension:
             raise KernelException("Patterns should have dimension {}, not {}.".format(self.dimension, xs_dimension))
         return xs
-
-    def _define_and_validate_local_bandwidths(self, input_local_bandwidths, xs):
-        (num_patterns, _) = xs.shape
-
-        if input_local_bandwidths is None:
-            return self._create_default_local_bandwidths_array(num_patterns)
-        local_bandwidths = np.array(input_local_bandwidths, ndmin=1)
-        self._validate_local_bandwidths(local_bandwidths, num_patterns)
-        return local_bandwidths
-
-    def _create_default_local_bandwidths_array(self, num_patterns):
-        local_bandwidths = np.empty(num_patterns, dtype=np.float64)
-        local_bandwidths.fill(default_local_bandwidth)
-        return local_bandwidths
-
-    def _validate_local_bandwidths(self, local_bandwidths, num_patterns):
-        if not (local_bandwidths.ndim == 1):
-            raise KernelException(
-                "The array with local bandwidths should be 1D, not {}D.".format(local_bandwidths.ndim)
-            )
-        (num_local_bandwidths,) = local_bandwidths.shape
-        if not (num_local_bandwidths == num_patterns):
-            raise KernelException(
-                "The number of local bandwidths ({}) should be equal to the number of patterns ({}).".format(
-                    num_local_bandwidths, num_patterns
-                )
-            )
 
     @property
     def dimension(self):
@@ -118,7 +90,7 @@ class ShapeAdaptiveKernel_C(ShapeAdaptiveKernel):
         pass
 
     def evaluate(self, xs):
-        (xs, local_bandwidths) = self._define_and_validate_input(xs, None)
+        xs = self._define_and_validate_input(xs)
 
         (num_patterns, _) = xs.shape
 
@@ -155,21 +127,15 @@ class ShapeAdaptiveKernel_Python(ShapeAdaptiveKernel):
         return densities
 
     def evaluate(self, xs):
-        (xs, local_bandwidths) = self._define_and_validate_input(xs, None)
+        xs = self._define_and_validate_input(xs)
 
         (num_patterns, _) = xs.shape
         densities = np.empty(num_patterns)
 
-        for idx, (pattern, local_bandwidth) in enumerate(zip(xs, local_bandwidths)):
+        for idx, pattern in enumerate(xs):
             densities[idx] = self._evaluate_pattern(pattern)
 
         return self._handle_return(densities)
-
-    def _compute_local_scaling_factor(self, local_bandwidth):
-        return (1 / np.power(local_bandwidth, self.dimension)) * self._scaling_factor
-
-    def _compute_local_inverse(self, local_bandwidth):
-        return (1.0 / local_bandwidth) * self._global_bandwidth_matrix_inverse
 
 
 class KernelException(Exception):
