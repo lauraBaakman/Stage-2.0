@@ -8,7 +8,7 @@ size_t g_numXis;
 
 gsl_vector* g_localBandwidths;
 double g_globalBandwidthFactor;
-gsl_matrix** g_globalBandwidthMatrices;
+gsl_matrix** g_bandwidthMatrices;
 
 ShapeAdaptiveKernel g_kernel;
 
@@ -60,7 +60,7 @@ void computeKernelTermxForXi(
     gsl_vector *xi, double localBandwidth,
     gsl_vector* terms, int pid) 
 {
-    gsl_matrix* globalBandwidthMatrix = g_globalBandwidthMatrices[pid];
+    gsl_matrix* globalBandwidthMatrix = g_bandwidthMatrices[pid];
     gsl_vector* movedPattern = g_movedPatterns[pid];
 
     gsl_vector_view x;
@@ -82,7 +82,7 @@ void computeKernelTermxForXi(
 
 void determineKernelShape(double localBandwidth, gsl_vector* x, int pid) {
     gsl_matrix* nearestNeighbours = g_nearestNeighbourMatrices[pid];
-    gsl_matrix* globalBandwidthMatrix = g_globalBandwidthMatrices[pid];
+    gsl_matrix* globalBandwidthMatrix = g_bandwidthMatrices[pid];
 
     /* Compute K nearest neighbours */
     computeKNearestNeighbours(x, g_k, nearestNeighbours);
@@ -123,7 +123,7 @@ int countValuesGreaterThanZero(gsl_vector* vector){
 }
 
 void allocateGlobals(size_t dataDimension, size_t num_xi_s, size_t num_x_s, size_t k) {
-    g_globalBandwidthMatrices = gsl_matrices_alloc(dataDimension, dataDimension, g_numThreads);
+    g_bandwidthMatrices = gsl_matrices_alloc(dataDimension, dataDimension, g_numThreads);
     g_nearestNeighbourMatrices = gsl_matrices_alloc(k, dataDimension, g_numThreads);
     g_movedPatterns = gsl_vectors_alloc(dataDimension, g_numThreads);
     g_kernelTerms = gsl_matrix_alloc(num_x_s, num_xi_s);
@@ -132,7 +132,7 @@ void allocateGlobals(size_t dataDimension, size_t num_xi_s, size_t num_x_s, size
 }
 
 void freeGlobals() {
-    gsl_matrices_free(g_globalBandwidthMatrices, g_numThreads);
+    gsl_matrices_free(g_bandwidthMatrices, g_numThreads);
     gsl_matrices_free(g_nearestNeighbourMatrices, g_numThreads);
     gsl_vectors_free(g_movedPatterns, g_numThreads);
     
