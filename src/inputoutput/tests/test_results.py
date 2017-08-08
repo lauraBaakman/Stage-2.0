@@ -122,6 +122,21 @@ class TestResults(TestCase):
         )
         self.assertFalse(results.has_num_used_patterns)
 
+    def test_scaling_factors(self):
+        scaling_factors = np.random.rand(100)
+        results = Results(
+            data_set=None,
+            densities=np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+                1.227518586e-05,
+                7.288289757e-05,
+                0.0001832763582,
+            ]),
+            scaling_factors=scaling_factors
+        )
+        np.testing.assert_array_equal(scaling_factors, results.scaling_factors)
+
     def test_num_used_patterns(self):
         array = np.array([
                 7.539699219e-05,
@@ -673,6 +688,20 @@ class Test__XisValidator(TestCase):
         ).validate()
         self.assertIsNone(actual)
 
+    def test_no_scaling_factors(self):
+        xis = np.random.rand(10, 3)
+        eigen_values = np.random.rand(10, 3)
+        eigen_vectors = np.random.rand(10, 3, 3)
+        scaling_factors = None
+
+        actual = _XisValidator(
+            xis=xis,
+            eigen_values=eigen_values,
+            eigen_vectors=eigen_vectors,
+            scaling_factors=scaling_factors
+        ).validate()
+        self.assertIsNone(actual)
+
     def test_wrong_number_of_eigen_values_too_many(self):
         try:
             xis = np.random.rand(10, 3)
@@ -977,14 +1006,79 @@ class Test__XisValidator(TestCase):
         else:
             self.fail('ExpectedException not raised')
 
+    def test_wrong_number_of_scaling_factors_too_low(self):
+        try:
+            xis = np.random.rand(10, 3)
+            scaling_factors = np.random.rand(5)
+            eigen_values = np.random.rand(10, 3)
+            eigen_vectors = np.random.rand(10, 3, 3)
+
+            actual = _XisValidator(
+                xis=xis,
+                eigen_vectors=eigen_vectors,
+                eigen_values=eigen_values,
+                scaling_factors=scaling_factors,
+            ).validate()
+            self.assertIsNone(actual)
+        except InvalidResultsException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test_wrong_number_of_scaling_factors_too_high(self):
+        try:
+            xis = np.random.rand(10, 3)
+            scaling_factors = np.random.rand(20)
+            eigen_values = np.random.rand(10, 3)
+            eigen_vectors = np.random.rand(10, 3, 3)
+
+            actual = _XisValidator(
+                xis=xis,
+                eigen_vectors=eigen_vectors,
+                eigen_values=eigen_values,
+                scaling_factors=scaling_factors,
+            ).validate()
+            self.assertIsNone(actual)
+        except InvalidResultsException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test_wrong_scaling_factor_dimension_too_high(self):
+        try:
+            xis = np.random.rand(10, 3)
+            scaling_factors = np.random.rand(20, 2)
+            eigen_values = np.random.rand(10, 3)
+            eigen_vectors = np.random.rand(10, 3, 3)
+
+            actual = _XisValidator(
+                xis=xis,
+                eigen_vectors=eigen_vectors,
+                eigen_values=eigen_values,
+                scaling_factors=scaling_factors,
+            ).validate()
+            self.assertIsNone(actual)
+        except InvalidResultsException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
     def test_valid_combination(self):
         xis = np.random.rand(10, 3)
         eigen_values = np.random.rand(10, 3)
         eigen_vectors = np.random.rand(10, 3, 3)
+        scaling_factors = np.random.rand(10)
 
         actual = _XisValidator(
             xis=xis,
             eigen_vectors=eigen_vectors,
             eigen_values=eigen_values,
+            scaling_factors=scaling_factors,
         ).validate()
         self.assertIsNone(actual)

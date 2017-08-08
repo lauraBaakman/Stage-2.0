@@ -11,7 +11,7 @@ void sambe(
 	gsl_vector *localBandwidths, double globalBandwidth,
 	KernelType kernel, int k,
 	gsl_vector *outDensities, gsl_vector* numUsedPatterns,
-	gsl_matrix *outEigenValues, gsl_matrix* outEigenVectors
+	gsl_matrix *outEigenValues, gsl_matrix* outEigenVectors, gsl_vector* outScalingFactors
 );
 
 #endif //SAMBE_H

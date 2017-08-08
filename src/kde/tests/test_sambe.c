@@ -39,8 +39,9 @@ void testSAMBESingleThreaded(CuTest *tc){
 
     gsl_vector* actual_densities = gsl_vector_alloc(numXs);
     gsl_vector* actual_pattern_count = gsl_vector_alloc(numXs);
-    gsl_matrix* actual_eigen_values = gsl_matrix_alloc(4, 2);
-    gsl_matrix* actual_eigen_vectors = gsl_matrix_alloc(4, 4);
+    gsl_matrix* actual_eigen_values = gsl_matrix_alloc(numXis, 2);
+    gsl_matrix* actual_eigen_vectors = gsl_matrix_alloc(numXis, numXis);
+    gsl_vector* actual_scaling_factors = gsl_vector_alloc(numXis);
 
     gsl_vector* expected = gsl_vector_alloc(numXs);
     gsl_vector_set(expected, 0, 0.143018801266957);
@@ -59,7 +60,7 @@ void testSAMBESingleThreaded(CuTest *tc){
     	localBandwidths, globalBandwidth,
     	kernelType, k,
     	actual_densities, actual_pattern_count, 
-        actual_eigen_values, actual_eigen_vectors);
+        actual_eigen_values, actual_eigen_vectors, actual_scaling_factors);
 
     CuAssertVectorEquals(tc, expected, actual_densities, delta);
 
@@ -73,6 +74,7 @@ void testSAMBESingleThreaded(CuTest *tc){
     gsl_vector_free(localBandwidths);
     gsl_matrix_free(actual_eigen_values);
     gsl_matrix_free(actual_eigen_vectors);
+    gsl_vector_free(actual_scaling_factors);
 }
 
 void testSAMBEMultiThreaded(CuTest *tc){
@@ -103,7 +105,8 @@ void testSAMBEMultiThreaded(CuTest *tc){
     gsl_vector* actual_densities = gsl_vector_alloc(numXs);
     gsl_vector* actual_pattern_count = gsl_vector_alloc(numXs);
     gsl_matrix* actual_eigen_values = gsl_matrix_alloc(4, 2);
-    gsl_matrix* actual_eigen_vectors = gsl_matrix_alloc(4, 4);    
+    gsl_matrix* actual_eigen_vectors = gsl_matrix_alloc(4, 4);   
+    gsl_vector* actual_scaling_factors = gsl_vector_alloc(numXis); 
 
     gsl_vector* expected = gsl_vector_alloc(numXs);
     gsl_vector_set(expected, 0, 0.143018801266957);
@@ -122,7 +125,7 @@ void testSAMBEMultiThreaded(CuTest *tc){
         localBandwidths, globalBandwidth,
         kernelType, k,
         actual_densities, actual_pattern_count,
-        actual_eigen_values, actual_eigen_vectors);
+        actual_eigen_values, actual_eigen_vectors, actual_scaling_factors);
 
     CuAssertVectorEquals(tc, expected, actual_densities, delta);
 
@@ -136,7 +139,7 @@ void testSAMBEMultiThreaded(CuTest *tc){
     gsl_vector_free(localBandwidths);
     gsl_matrix_free(actual_eigen_values);
     gsl_matrix_free(actual_eigen_vectors);
-
+    gsl_vector_free(actual_scaling_factors);
 }
 
 CuSuite *SAMBEGetSuite() {

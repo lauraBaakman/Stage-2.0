@@ -80,12 +80,13 @@ static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
     PyObject* outNumUsedPatterns = NULL;
     PyObject* outEigenValues = NULL;
     PyObject* outEigenVectors = NULL;
+    PyObject* outScalingFactors = NULL;
     KernelType kernelType;
     int k;
     double globalBandwidth;
 
 
-    if (!PyArg_ParseTuple(args, "OOiidOOOOO",
+    if (!PyArg_ParseTuple(args, "OOiidOOOOOO",
                           &inXs,
                           &inXis,
                           &kernelType,
@@ -95,7 +96,8 @@ static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
                           &outDensities,
                           &outNumUsedPatterns,
                           &outEigenValues,
-                          &outEigenVectors)) return NULL;
+                          &outEigenVectors,
+                          &outScalingFactors)) return NULL;
 
     gsl_matrix_view xs = pyObjectToGSLMatrixView(inXs, NPY_ARRAY_IN_ARRAY);
     gsl_matrix_view xis = pyObjectToGSLMatrixView(inXis, NPY_ARRAY_IN_ARRAY);
@@ -104,6 +106,9 @@ static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
     gsl_vector_view numUsedPatterns = pyObjectToGSLVectorView(outNumUsedPatterns, NPY_ARRAY_OUT_ARRAY);
     gsl_matrix_view eigenValues = pyObjectToGSLMatrixView(outEigenValues, NPY_ARRAY_OUT_ARRAY);
     gsl_matrix_view eigenVectors = pyObjectToGSLMatrixView(outEigenVectors, NPY_ARRAY_OUT_ARRAY);
+    gsl_vector_view scalingFactors = pyObjectToGSLVectorView(outScalingFactors, NPY_ARRAY_OUT_ARRAY);
+
+    gsl_vector_set(&scalingFactors.vector, 0, 44);
 
     /* Do computations */
     sambe(
@@ -111,7 +116,7 @@ static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
       &localBandwidths.vector, globalBandwidth,
       kernelType, k,
       &densities.vector, &numUsedPatterns.vector,
-      &eigenValues.matrix, &eigenVectors.matrix
+      &eigenValues.matrix, &eigenVectors.matrix, &scalingFactors.vector
     );
 
     /* Create return object */

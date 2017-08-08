@@ -4,7 +4,7 @@ import warnings
 
 class Results:
     def __init__(self, densities=None, data_set=None, expected_size=None, num_used_patterns=None,
-                 xis=None, eigen_values=None, eigen_vectors=None):
+                 xis=None, eigen_values=None, eigen_vectors=None, scaling_factors=None):
         if (expected_size is None) and (densities is None):
             raise TypeError("expected_size or densities need to be provided.'")
         if densities is not None:
@@ -17,12 +17,14 @@ class Results:
             self._xis = xis
             self._eigen_values = eigen_values
             self._eigen_vectors = eigen_vectors
+            self._scaling_factors = scaling_factors
 
             _XisValidator(
                 xis=self._xis,
                 eigen_values=self._eigen_values,
-                eigen_vectors=self._eigen_vectors
-            )
+                eigen_vectors=self._eigen_vectors,
+                scaling_factors=self._scaling_factors
+            ).validate()
         if expected_size:
             self._densities = np.empty(expected_size)
             self._num_used_patterns = np.empty(expected_size)
@@ -72,6 +74,10 @@ class Results:
     @property
     def eigen_vectors(self):
         return self._eigen_vectors
+
+    @property
+    def scaling_factors(self):
+        return self._scaling_factors
 
     def add_result(self, density, **kwargs):
         if not self.is_incremental:
@@ -259,10 +265,11 @@ class _DensitiesValidator(object):
 
 
 class _XisValidator(object):
-    def __init__(self, xis, eigen_vectors=None, eigen_values=None):
+    def __init__(self, xis, eigen_vectors=None, eigen_values=None, scaling_factors=None):
         self.xis = xis
         self.eigen_vectors = eigen_vectors
         self.eigen_values = eigen_values
+        self.scaling_factors = scaling_factors
 
     @property
     def xis_dimension(self):
@@ -274,16 +281,22 @@ class _XisValidator(object):
         (number_of_xis, _) = self.xis.shape
         return number_of_xis
 
+    @property
+    def has_xis(self):
+        return self.xis is not None
+
     def validate(self):
         self._validate_eigen_vectors()
         self._validate_eigen_values()
+        self._validate_scaling_factors()
 
     def _validate_eigen_vectors(self):
         if self.eigen_vectors is not None:
             self._validate_eigen_vectors_ndim()
-            self._validate_total_number_of_eigen_vectors()
-            self._validate_number_of_eigen_vectors()
-            self._validate_eigen_vector_dimension()
+            if self.has_xis:
+                self._validate_total_number_of_eigen_vectors()
+                self._validate_number_of_eigen_vectors()
+                self._validate_eigen_vector_dimension()
 
     def _validate_eigen_vectors_ndim(self):
         eigen_vector_ndim = self.eigen_vectors.ndim
@@ -324,8 +337,9 @@ class _XisValidator(object):
     def _validate_eigen_values(self):
         if self.eigen_values is not None:
             self._validate_eigen_values_ndim()
-            self._validate_total_number_of_eigen_values()
-            self._validate_number_of_eigen_values()
+            if self.has_xis:
+                self._validate_total_number_of_eigen_values()
+                self._validate_number_of_eigen_values()
 
     def _validate_eigen_values_ndim(self):
         ndim = self.eigen_values.ndim
@@ -352,6 +366,29 @@ class _XisValidator(object):
                     dim=self.xis_dimension,
                     num_eigen_values=eigen_value_count
                 )
+            )
+
+    def _validate_scaling_factors(self):
+        if self.scaling_factors is not None:
+            self._validate_scaling_factors_dimension()
+            if self.has_xis:
+                self._validate_total_number_of_scaling_factors()
+
+    def _validate_total_number_of_scaling_factors(self):
+        (scaling_factor_count,) = self.scaling_factors.shape
+        if not (scaling_factor_count == self.xis_count):
+            raise InvalidResultsException(
+                '{num_xis} xis and {num_scaling_factors} scaling factors is not a valid combination'.format(
+                    num_xis=self.xis_count,
+                    num_scaling_factors=scaling_factor_count
+                )
+            )
+
+    def _validate_scaling_factors_dimension(self):
+        ndim = self.scaling_factors.ndim
+        if not (ndim == 1):
+            raise InvalidResultsException(
+                'The scaling factors should be stored in a 1D array.'
             )
 
 

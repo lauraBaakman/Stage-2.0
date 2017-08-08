@@ -340,6 +340,7 @@ class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
             [0.495269309400000, 1.485807928200000],
             [0.350208287700000, 1.050624863100000],
         ])
+        expected_scaling_factors = np.array([2.1012497262, 2.9716158564, 2.9716158564, 2.1012497262])
 
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
         np.testing.assert_array_almost_equal(
@@ -352,6 +353,7 @@ class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
             np.sort(expected_eigen_values, axis=1)
         )
         np.testing.assert_array_almost_equal(actual.eigen_vectors, expected_eigen_vectors)
+        np.testing.assert_array_almost_equal(actual.scaling_factors, expected_scaling_factors)
 
     def test__reshape_eigen_vectors(self):
         eigen_vectors = np.array([
