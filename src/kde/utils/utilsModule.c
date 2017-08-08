@@ -38,9 +38,13 @@ static PyObject * eigenValues(PyObject *self, PyObject *args){
 
     gsl_matrix_view matrix = pyObjectToGSLMatrixView(inMatrix, NPY_ARRAY_IN_ARRAY);
     gsl_vector_view eigenvalues = pyObjectToGSLVector(outEigenValues, NPY_ARRAY_OUT_ARRAY);
+    gsl_matrix* eigenVectors = gsl_matrix_alloc(eigenvalues.vector.size, eigenvalues.vector.size);
 
     /* Do stuff */
-    computeEigenValues(&matrix.matrix, &eigenvalues.vector);
+    computeEigenValues(&matrix.matrix, &eigenvalues.vector, eigenVectors);
+
+    /* Free memory */
+    gsl_matrix_free(eigenVectors);
 
     /* Create return object */
     Py_INCREF(Py_None);

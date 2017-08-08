@@ -60,14 +60,26 @@ class _ShapeAdaptiveMBE_C(_ShapeAdaptiveMBE):
     def estimate(self):
         densities = np.empty(self.num_x_s, dtype=float)
         num_used_patterns = np.empty(self.num_x_s, dtype=float)
-        _kde.shape_adaptive_mbe(self._x_s,
-                                self._xi_s,
-                                self._kernel_class.to_C_enum(),
-                                self._k, self._general_bandwidth,
-                                self._local_bandwidths,
-                                densities, num_used_patterns)
-        results = Results(densities=densities, num_used_patterns=num_used_patterns)
+        eigen_values = np.empty((self.num_xi_s, self.dimension), dtype=float)
+        eigen_vectors = np.empty((self.num_xi_s, self.dimension * self.dimension), dtype=float)
+        _kde.shape_adaptive_mbe(
+            self._x_s, self._xi_s,
+            self._kernel_class.to_C_enum(),
+            self._k, self._general_bandwidth, self._local_bandwidths,
+            densities, num_used_patterns,
+            eigen_values, eigen_vectors
+        )
+        results = Results(
+            densities=densities,
+            num_used_patterns=num_used_patterns,
+            xis=self._xi_s,
+            eigen_values=eigen_values,
+            eigen_vectors=self._reshape_eigen_vectors(eigen_vectors)
+        )
         return results
+
+    def _reshape_eigen_vectors(self, eigen_vectors):
+        return np.reshape(eigen_vectors, (self.num_xi_s, self.dimension, self.dimension))
 
 
 class _ShapeAdaptiveMBE_Python(_ShapeAdaptiveMBE):
@@ -79,7 +91,8 @@ class _ShapeAdaptiveMBE_Python(_ShapeAdaptiveMBE):
         kernel_terms = self._compute_kernel_terms()
         return Results(
             densities=np.mean(kernel_terms, axis=1),
-            num_used_patterns=count_non_zeros(kernel_terms)
+            num_used_patterns=count_non_zeros(kernel_terms),
+            xis=self._xi_s
         )
 
     def _compute_kernel_terms(self):

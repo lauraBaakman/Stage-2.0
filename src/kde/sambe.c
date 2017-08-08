@@ -19,15 +19,25 @@ gsl_matrix** g_nearestNeighbourMatrices;
 
 gsl_matrix* g_kernelTerms;
 
+gsl_matrix* g_eigenValues;
+gsl_matrix* g_eigenVectors;
+
 static int g_numThreads;
 
-void sambe(gsl_matrix *xs,
-           gsl_matrix *xis,
-           gsl_vector *localBandwidths, double globalBandwidth,
-           KernelType kernelType, int k,
-           gsl_vector *densities, gsl_vector *numUsedPatterns){
+void sambe(
+    gsl_matrix *xs, gsl_matrix *xis,
+    gsl_vector *localBandwidths, double globalBandwidth,
+    KernelType kernelType, int k,
+    gsl_vector *densities, gsl_vector *numUsedPatterns,
+    gsl_matrix* eigenValues, gsl_matrix* eigenVectors
+    ){
 
-    prepareGlobals(xs, xis, localBandwidths, globalBandwidth, kernelType, k);    
+    prepareGlobals(
+        xs, xis, 
+        localBandwidths, globalBandwidth, 
+        kernelType, k,
+        eigenValues, eigenVectors
+    );    
 
     computeKernelTerms(numUsedPatterns);
 
@@ -44,28 +54,35 @@ void computeKernelTerms(gsl_vector* numUsedPatterns){
         int pid = omp_get_thread_num();
         gsl_vector_view xi;
         double localBandwidth;
+        gsl_vector_view eigenValues, eigenVectorsRow;
+        gsl_matrix_view eigenVectors;
 
         #pragma omp for
         for(size_t i = 0; i < g_numXis; i++){
+            eigenValues = gsl_matrix_row(g_eigenValues, i);
+            eigenVectorsRow = gsl_matrix_row(g_eigenVectors, i);
+            eigenVectors = gsl_matrix_view_array(eigenVectorsRow.vector.data, eigenValues.vector.size, eigenValues.vector.size);
+
             xi = gsl_matrix_row(g_xis, i);
             localBandwidth = gsl_vector_get(g_localBandwidths, i);
             gsl_vector_view terms = gsl_matrix_column(g_kernelTerms, i);
 
-            computeKernelTermxForXi(&xi.vector, localBandwidth, &terms.vector, pid);
+            computeKernelTermsForXi(&xi.vector, localBandwidth, 
+                &terms.vector, &eigenValues.vector, &eigenVectors.matrix, pid);
         }        
     }   
 }
 
-void computeKernelTermxForXi(
+void computeKernelTermsForXi(
     gsl_vector *xi, double localBandwidth,
-    gsl_vector* terms, int pid) 
-{
+    gsl_vector* terms, gsl_vector* eigenValues, gsl_matrix* eigenVectors, int pid
+) {
     gsl_matrix* globalBandwidthMatrix = g_bandwidthMatrices[pid];
     gsl_vector* movedPattern = g_movedPatterns[pid];
 
     gsl_vector_view x;
 
-    determineKernelShape(localBandwidth, xi, pid);
+    determineKernelShape(localBandwidth, xi, eigenValues, eigenVectors, pid);
     g_kernel.computeConstants(globalBandwidthMatrix, pid);
 
     for(size_t i = 0; i < g_numXs; i++){
@@ -80,7 +97,11 @@ void computeKernelTermxForXi(
     }
 }
 
-void determineKernelShape(double localBandwidth, gsl_vector* x, int pid) {
+void determineKernelShape(
+    double localBandwidth, gsl_vector* x, 
+    gsl_vector* eigenValues, gsl_matrix* eigenVectors,
+    int pid
+) {
     gsl_matrix* nearestNeighbours = g_nearestNeighbourMatrices[pid];
     gsl_matrix* globalBandwidthMatrix = g_bandwidthMatrices[pid];
 
@@ -91,10 +112,15 @@ void determineKernelShape(double localBandwidth, gsl_vector* x, int pid) {
     computeCovarianceMatrix(nearestNeighbours, globalBandwidthMatrix);
 
     /* Compute the scaling factor */
-    double scalingFactor = computeScalingFactor(localBandwidth, g_globalBandwidthFactor, globalBandwidthMatrix);
+    double scalingFactor = computeScalingFactor(
+        localBandwidth, g_globalBandwidthFactor, globalBandwidthMatrix, 
+        eigenValues, eigenVectors);
 
     /* Scale the shape matrix */
     gsl_matrix_scale(globalBandwidthMatrix, scalingFactor);
+
+    /* Scale the eigenvalues the changes to the globalBandwidthMatrix */
+    gsl_vector_scale(eigenValues, scalingFactor);
 }
 
 void countNumUsedPatterns(gsl_matrix* kernelTerms, gsl_vector* numUsedPatterns){
@@ -144,7 +170,8 @@ void freeGlobals() {
 
 void prepareGlobals(gsl_matrix *xs, gsl_matrix *xis,
                     gsl_vector *localBandwidths, double globalBandwidth,
-                    KernelType kernelType, int k) {
+                    KernelType kernelType, int k,
+                    gsl_matrix* eigenValues, gsl_matrix* eigenVectors) {
     g_numThreads = 1;
     #pragma omp parallel 
     {
@@ -155,6 +182,9 @@ void prepareGlobals(gsl_matrix *xs, gsl_matrix *xis,
     }
 
     g_kernel = selectShapeAdaptiveKernel(kernelType);
+
+    g_eigenValues = eigenValues;
+    g_eigenVectors = eigenVectors;
 
     g_xs = xs;
     g_numXs = xs->size1;

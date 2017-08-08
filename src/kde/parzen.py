@@ -72,6 +72,7 @@ class _ParzenEstimator_Python(_ParzenEstimator):
                 density=density,
                 num_used_patterns=num_used_patterns
             )
+        results.xis = self.xis
         return results
 
     def _estimate_pattern(self, pattern, factor):
@@ -99,5 +100,8 @@ class _ParzenEstimator_C(_ParzenEstimator):
             self._x_s, self._xi_s, self._general_bandwidth, self._kernel.to_C_enum(),
             densities, num_used_patterns
         )
-        result = Results(densities=densities, num_used_patterns=num_used_patterns)
+        result = Results(
+            densities=densities, num_used_patterns=num_used_patterns,
+            xis=self.xis
+        )
         return result

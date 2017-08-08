@@ -154,7 +154,7 @@ class _MBEEstimator_Python(_MBEEstimator):
         for idx, x in enumerate(self._x_s):
             densities[idx], num_used_patterns[idx] = self._estimate_pattern(x)
         densities = (1 / self.num_xi_s) * densities
-        return Results(densities=densities, num_used_patterns=num_used_patterns)
+        return Results(densities=densities, num_used_patterns=num_used_patterns, xis=self.xis)
 
     def _estimate_pattern(self, x):
         def count_non_zeros(array):
@@ -188,4 +188,4 @@ class _MBEEstimator_C(_MBEEstimator):
                               self._general_bandwidth, self._local_bandwidths,
                               self._kernel.to_C_enum(),
                               densities, num_used_patterns)
-        return Results(densities=densities, num_used_patterns=num_used_patterns)
+        return Results(densities=densities, num_used_patterns=num_used_patterns, xis=self.xis)

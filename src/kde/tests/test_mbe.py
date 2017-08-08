@@ -37,8 +37,10 @@ class TestModifiedBreimanEstimator(TestCase):
 
         expected_densities = np.array([0.7708904])
         expected_num_patterns_used_for_density = np.array([1])
+        expected_xis = xi_s
 
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
+        np.testing.assert_array_almost_equal(actual.xis, expected_xis)
         np.testing.assert_array_almost_equal(
             actual.num_used_patterns,
             expected_num_patterns_used_for_density
@@ -80,8 +82,10 @@ class TestModifiedBreimanEstimator(TestCase):
 
             expected_densities = np.array([0.7708904])
             expected_num_patterns_used_for_density = np.array([1])
+            expected_xis = xi_s
 
             np.testing.assert_array_almost_equal(actual.densities, expected_densities)
+            np.testing.assert_array_almost_equal(actual.xis, expected_xis)
             np.testing.assert_array_almost_equal(
                 actual.num_used_patterns,
                 expected_num_patterns_used_for_density

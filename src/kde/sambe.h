@@ -6,10 +6,12 @@
 
 #include "kernels/kernels.h"
 
-void sambe(gsl_matrix *xs,
-		   gsl_matrix *xis,
-           gsl_vector *localBandwidths, double globalBandwidth,
-           KernelType kernel, int k,
-           gsl_vector *outDensities, gsl_vector* numUsedPatterns);
+void sambe(
+	gsl_matrix *xs, gsl_matrix *xis,
+	gsl_vector *localBandwidths, double globalBandwidth,
+	KernelType kernel, int k,
+	gsl_vector *outDensities, gsl_vector* numUsedPatterns,
+	gsl_matrix *outEigenValues, gsl_matrix* outEigenVectors
+);
 
 #endif //SAMBE_H

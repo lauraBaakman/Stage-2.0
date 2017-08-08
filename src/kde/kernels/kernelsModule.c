@@ -199,11 +199,18 @@ static PyObject* scaling_factor(PyObject* self, PyObject *args){
     if (!PyArg_ParseTuple(args, "ddO", &localBandwidth, &generalBandwidth, &inCovarianceMatrix)) return NULL;
 
     gsl_matrix_view covarianceMatrix = pyObjectToGSLMatrixView(inCovarianceMatrix, NPY_ARRAY_IN_ARRAY);
+    size_t dimension = covarianceMatrix.matrix.size1;
+    gsl_vector* eigenValues = gsl_vector_alloc(dimension);
+    gsl_matrix* eigenVectors = gsl_matrix_alloc(dimension, dimension);
 
     /* Do computations */
-    double scalingFactor = computeScalingFactor(localBandwidth, generalBandwidth, &covarianceMatrix.matrix);
+    double scalingFactor = computeScalingFactor(
+        localBandwidth, generalBandwidth, &covarianceMatrix.matrix, 
+        eigenValues, eigenVectors);
 
     /* Free memory */
+    gsl_vector_free(eigenValues);
+    gsl_matrix_free(eigenVectors);
 
     /* Create return object */
     PyObject *returnObject = Py_BuildValue("d", scalingFactor);

@@ -30,6 +30,8 @@ class Results:
             self._incremental_result_adding_is_allowed = True
             self._idx = 0
 
+            self._xis = None
+
     @property
     def values(self):
         return self._densities

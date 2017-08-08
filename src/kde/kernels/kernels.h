@@ -48,8 +48,9 @@ Kernel selectKernel(KernelType type);
 SymmetricKernel selectSymmetricKernel(KernelType type);
 ShapeAdaptiveKernel selectShapeAdaptiveKernel(KernelType type);
 
-double computeScalingFactor(double localBandwidth, double generalBandwidth, gsl_matrix* covarianceMatrix);
-
-double computeLocalScalingFactor(double globalScalingFactor, double localBandwidth, size_t dimension);
+double computeScalingFactor(
+    double localBandwidth, double generalBandwidth, gsl_matrix* covarianceMatrix, 
+    gsl_vector* eigenValues, gsl_matrix* eigenVectors
+);
 
 #endif //KERNELS_KERNELS_H

@@ -20,17 +20,22 @@ extern gsl_matrix* g_globalBandwidthMatrix;
 
 static void computeKernelTerms(gsl_vector* numUsedPatterns);
 
-static void computeKernelTermxForXi(
+static void computeKernelTermsForXi(
 	gsl_vector *x, double localBandwidth, 
-	gsl_vector* terms, 
+	gsl_vector* terms, gsl_vector* eigenValues, gsl_matrix* eigenVectors,
 	int pid
 );
 
-static void determineKernelShape(double localBandwidth, gsl_vector* x, int pid);
+static void determineKernelShape(
+	double localBandwidth, gsl_vector* x, 
+	gsl_vector* eigenValues, gsl_matrix *eigenVectors,
+	int pid
+);
 
 static void prepareGlobals(gsl_matrix *xs, gsl_matrix *xis,
                     gsl_vector *localBandwidths, double globalBandwidth,
-                    KernelType kernel, int k);
+                    KernelType kernel, int k,
+                    gsl_matrix* eigenValues, gsl_matrix* eigenVectors);
 
 static void allocateGlobals(size_t dataDimension, size_t num_xi_s, size_t num_x_s, size_t k);
 

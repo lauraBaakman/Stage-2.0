@@ -32,3 +32,7 @@ class EstimatorImplementation(object):
     def dimension(self):
         (_, dimension) = self._xi_s.shape
         return dimension
+
+    @property
+    def xis(self):
+        return self._xi_s
