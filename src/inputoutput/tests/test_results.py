@@ -1,8 +1,9 @@
-from unittest import TestCase
+from unittest import TestCase, expectedFailure
 import io
 import shutil
 import tempfile
 import warnings
+import exceptions
 
 import numpy as np
 from unipath import Path
@@ -170,6 +171,90 @@ class TestResults(TestCase):
         actual_output = actual_file_buffer.read()
         self.assertEqual(actual_output, expected_output)
 
+    def test_eigen_vectors_to_file(self):
+        xis = np.array([
+            [52.0, 45.0, 56.0],
+            [60.0, 52.0, 41.0]])
+        results = Results(
+            data_set=self._data_set,
+            densities=self._densities,
+            xis=xis,
+            eigen_vectors=np.array([
+                [[0, 1, 2],
+                 [3, 4, 5],
+                 [6, 7, 8]],
+                [
+                 [9, 8, 7],
+                 [6, 5, 4],
+                 [3, 2, 1]
+                ]
+            ])
+        )
+        expected_output = (
+            "# xi_x xi_y xi_z "
+            "eigen_vector_1_x eigen_vector_1_y eigen_vector_1_z "
+            "eigen_vector_2_x eigen_vector_2_y eigen_vector_2_z "
+            "eigen_vector_3_x eigen_vector_3_y eigen_vector_3_z\n"
+            "52.000000000000000 45.000000000000000 56.000000000000000 "
+            "0.000000000000000 1.000000000000000 2.000000000000000 "
+            "3.000000000000000 4.000000000000000 5.000000000000000 "
+            "6.000000000000000 7.000000000000000 8.000000000000000\n"
+            "60.000000000000000 52.000000000000000 41.000000000000000 "
+            "9.000000000000000 8.000000000000000 7.000000000000000 "
+            "6.000000000000000 5.000000000000000 4.000000000000000 "
+            "3.000000000000000 2.000000000000000 1.000000000000000\n"
+        ).encode()
+        x_file_buffer = io.BytesIO()
+        xi_file_buffer = io.BytesIO()
+        results.to_file(x_file_buffer, xi_file_buffer)
+        xi_file_buffer.seek(0)
+        actual_output = xi_file_buffer.read()
+        self.assertEqual(actual_output, expected_output)
+
+    def test_raises_warning_if_writting_le_3d_xis_data(self):
+        num_xis = 20
+        num_xs = 5
+        dimension = 2
+        expected = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.round(np.random.rand(num_xs)),
+            xis=np.random.rand(num_xis, dimension),
+            eigen_values=np.random.rand(num_xis, dimension),
+        )
+        x_out_path = self.test_dir.child('x_out.txt')
+        xi_out_path = self.test_dir.child('xi_out.txt')
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            with open(x_out_path, 'wb') as x_handle, open(xi_out_path, 'wb') as xi_handle:
+                expected.to_file(x_handle, xi_handle)
+            if any([warning.category is exceptions.UserWarning for warning in w]):
+                self.assertTrue(True)
+            else:
+                self.fail('Expected warning not thrown.')
+
+    def test_raises_warning_if_writting_ge_3d_xis_data(self):
+        num_xis = 20
+        num_xs = 5
+        dimension = 5
+        expected = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.round(np.random.rand(num_xs)),
+            xis=np.random.rand(num_xis, dimension),
+            eigen_values=np.random.rand(num_xis, dimension),
+        )
+        x_out_path = self.test_dir.child('x_out.txt')
+        xi_out_path = self.test_dir.child('xi_out.txt')
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            with open(x_out_path, 'wb') as x_handle, open(xi_out_path, 'wb') as xi_handle:
+                expected.to_file(x_handle, xi_handle)
+            if any([warning.category is exceptions.UserWarning for warning in w]):
+                self.assertTrue(True)
+            else:
+                self.fail('Expected warning not thrown.')
+
     def test_from_file(self):
         input_file = io.BytesIO(
             """7.539699219e-05\n"""
@@ -210,6 +295,123 @@ class TestResults(TestCase):
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
             actual = Results.from_file(out_path)
+            if len(w):
+                self.fail('Some warning was triggered')
+        self.assertEqual(actual, expected)
+
+    def test_from_file_to_files_with_temp_file_and_xis_file_all_fields(self):
+        num_xis = 20
+        num_xs = 5
+        dimension = 3
+        expected = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.round(np.random.rand(num_xs)),
+            xis=np.random.rand(num_xis, dimension),
+            eigen_values=np.random.rand(num_xis, dimension),
+            eigen_vectors=np.random.rand(num_xis, dimension, dimension),
+            scaling_factors=np.random.rand(num_xis)
+        )
+        x_out_path = self.test_dir.child('x_out.txt')
+        xi_out_path = self.test_dir.child('xi_out.txt')
+
+        with open(x_out_path, 'w') as x_handle, open(xi_out_path, 'w') as xi_handle:
+            expected.to_file(x_handle, xi_handle)
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            actual = Results.from_file(x_out_path, xi_out_path)
+            if len(w):
+                self.fail('Some warning was triggered')
+        self.assertEqual(actual, expected)
+
+    def test_from_file_to_files_with_temp_file_and_xis_file_only_xis(self):
+        num_xis = 20
+        num_xs = 5
+        dimension = 3
+        expected = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.round(np.random.rand(num_xs)),
+            xis=np.random.rand(num_xis, dimension),
+        )
+        x_out_path = self.test_dir.child('x_out.txt')
+        xi_out_path = self.test_dir.child('xi_out.txt')
+
+        with open(x_out_path, 'wb') as x_handle, open(xi_out_path, 'wb') as xi_handle:
+            expected.to_file(x_handle, xi_handle)
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            actual = Results.from_file(x_out_path, xi_out_path)
+            if len(w) and any([warning.category is not exceptions.DeprecationWarning for warning in w]):
+                self.fail('Some warning was triggered')
+        self.assertEqual(actual, expected)
+
+    def test_from_file_to_files_with_temp_file_and_xis_file_only_xis_eigen_values(self):
+        num_xis = 20
+        num_xs = 5
+        dimension = 3
+        expected = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.round(np.random.rand(num_xs)),
+            xis=np.random.rand(num_xis, dimension),
+            eigen_values=np.random.rand(num_xis, dimension),
+        )
+        x_out_path = self.test_dir.child('x_out.txt')
+        xi_out_path = self.test_dir.child('xi_out.txt')
+
+        with open(x_out_path, 'wb') as x_handle, open(xi_out_path, 'wb') as xi_handle:
+            expected.to_file(x_handle, xi_handle)
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            actual = Results.from_file(x_out_path, xi_out_path)
+            if len(w):
+                self.fail('Some warning was triggered')
+        self.assertEqual(actual, expected)
+
+    def test_from_file_to_files_with_temp_file_and_xis_file_scaling_factor_absent(self):
+        num_xis = 4
+        num_xs = 2
+        dimension = 3
+        expected = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.round(np.random.rand(num_xs)),
+            xis=np.random.rand(num_xis, dimension),
+            eigen_values=np.random.rand(num_xis, dimension),
+            eigen_vectors=np.random.rand(num_xis, dimension, dimension),
+        )
+        x_out_path = self.test_dir.child('x_out.txt')
+        xi_out_path = self.test_dir.child('xi_out.txt')
+
+        with open(x_out_path, 'w') as x_handle, open(xi_out_path, 'w') as xi_handle:
+            expected.to_file(x_handle, xi_handle)
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            actual = Results.from_file(x_out_path, xi_out_path)
+            if len(w) and any([warning.category is not exceptions.DeprecationWarning for warning in w]):
+                self.fail('Some warning was triggered')
+        self.assertEqual(actual, expected)
+
+    def test_from_file_to_files_with_temp_file_and_xis_file_no_eigen_properties(self):
+        num_xis = 20
+        num_xs = 5
+        dimension = 3
+        expected = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.round(np.random.rand(num_xs)),
+            xis=np.random.rand(num_xis, dimension),
+            scaling_factors=np.random.rand(num_xis)
+        )
+        x_out_path = self.test_dir.child('x_out.txt')
+        xi_out_path = self.test_dir.child('xi_out.txt')
+
+        with open(x_out_path, 'w') as x_handle, open(xi_out_path, 'w') as xi_handle:
+            expected.to_file(x_handle, xi_handle)
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            actual = Results.from_file(x_out_path, xi_out_path)
             if len(w):
                 self.fail('Some warning was triggered')
         self.assertEqual(actual, expected)
@@ -452,6 +654,238 @@ class TestResults(TestCase):
                 1.240164051e-05,
             ]),
             num_used_patterns=np.array([4, 7])
+        )
+        self.assertFalse(one == two)
+
+    def test_eq_with_all_equal(self):
+        num_xs = 10
+        num_xis = 200
+        dimension = 3
+        one = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.random.rand(num_xs),
+            xis=np.random.rand(num_xis, dimension),
+            eigen_values=np.random.rand(num_xis, dimension),
+            eigen_vectors=np.random.rand(num_xis, dimension, dimension),
+            scaling_factors=np.random.rand(num_xis)
+        )
+        two = Results(
+            densities=one.densities,
+            num_used_patterns=one.num_used_patterns,
+            xis=one.xis,
+            eigen_values=one.eigen_values,
+            eigen_vectors=one.eigen_vectors,
+            scaling_factors=one.scaling_factors
+        )
+        self.assertTrue(one == two)
+
+    def test_eq_with_neq_xis(self):
+        num_xs = 10
+        num_xis = 200
+        dimension = 3
+        one = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.random.rand(num_xs),
+            xis=np.random.rand(num_xis, dimension),
+            eigen_values=np.random.rand(num_xis, dimension),
+            eigen_vectors=np.random.rand(num_xis, dimension, dimension),
+            scaling_factors=np.random.rand(num_xis)
+        )
+        two = Results(
+            densities=one.densities,
+            num_used_patterns=one.num_used_patterns,
+            xis=np.random.rand(num_xis, dimension),
+            eigen_values=one.eigen_values,
+            eigen_vectors=one.eigen_vectors,
+            scaling_factors=one.scaling_factors
+        )
+        self.assertFalse(one == two)
+
+    def test_eq_with_neq_eigen_values(self):
+        num_xs = 10
+        num_xis = 200
+        dimension = 3
+        one = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.random.rand(num_xs),
+            xis=np.random.rand(num_xis, dimension),
+            eigen_values=np.random.rand(num_xis, dimension),
+            eigen_vectors=np.random.rand(num_xis, dimension, dimension),
+            scaling_factors=np.random.rand(num_xis)
+        )
+        two = Results(
+            densities=one.densities,
+            num_used_patterns=one.num_used_patterns,
+            xis=one.xis,
+            eigen_values=np.random.rand(num_xis, dimension),
+            eigen_vectors=one.eigen_vectors,
+            scaling_factors=one.scaling_factors
+        )
+        self.assertFalse(one == two)
+
+    def test_eq_with_neq_eigen_vectors(self):
+        num_xs = 10
+        num_xis = 200
+        dimension = 3
+        one = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.random.rand(num_xs),
+            xis=np.random.rand(num_xis, dimension),
+            eigen_values=np.random.rand(num_xis, dimension),
+            eigen_vectors=np.random.rand(num_xis, dimension, dimension),
+            scaling_factors=np.random.rand(num_xis)
+        )
+        two = Results(
+            densities=one.densities,
+            num_used_patterns=one.num_used_patterns,
+            xis=one.xis,
+            eigen_values=one.eigen_values,
+            eigen_vectors=np.random.rand(num_xis, dimension, dimension),
+            scaling_factors=one.scaling_factors
+        )
+        self.assertFalse(one == two)
+
+    def test_eq_with_neq_scaling_factors(self):
+        num_xs = 10
+        num_xis = 200
+        dimension = 3
+        one = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.random.rand(num_xs),
+            xis=np.random.rand(num_xis, dimension),
+            eigen_values=np.random.rand(num_xis, dimension),
+            eigen_vectors=np.random.rand(num_xis, dimension, dimension),
+            scaling_factors=np.random.rand(num_xis)
+        )
+        two = Results(
+            densities=one.densities,
+            num_used_patterns=one.num_used_patterns,
+            xis=one.xis,
+            eigen_values=one.eigen_values,
+            eigen_vectors=one.eigen_vectors,
+            scaling_factors=np.random.rand(num_xis)
+        )
+        self.assertFalse(one == two)
+
+    def test_eq_with_none_xis(self):
+        num_xs = 10
+        num_xis = 200
+        dimension = 3
+        one = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.random.rand(num_xs),
+            xis=np.random.rand(num_xis, dimension),
+            eigen_values=np.random.rand(num_xis, dimension),
+            eigen_vectors=np.random.rand(num_xis, dimension, dimension),
+            scaling_factors=np.random.rand(num_xis)
+        )
+        two = Results(
+            densities=one.densities,
+            num_used_patterns=one.num_used_patterns,
+            xis=None,
+            eigen_values=one.eigen_values,
+            eigen_vectors=one.eigen_vectors,
+            scaling_factors=one.scaling_factors
+        )
+        self.assertFalse(one == two)
+
+    def test_eq_with_none_eigen_values(self):
+        num_xs = 10
+        num_xis = 200
+        dimension = 3
+        one = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.random.rand(num_xs),
+            xis=np.random.rand(num_xis, dimension),
+            eigen_values=np.random.rand(num_xis, dimension),
+            eigen_vectors=np.random.rand(num_xis, dimension, dimension),
+            scaling_factors=np.random.rand(num_xis)
+        )
+        two = Results(
+            densities=one.densities,
+            num_used_patterns=one.num_used_patterns,
+            xis=one.xis,
+            eigen_values=None,
+            eigen_vectors=one.eigen_vectors,
+            scaling_factors=one.scaling_factors
+        )
+        self.assertFalse(one == two)
+
+    def test_eq_with_none_eigen_vectors(self):
+        num_xs = 10
+        num_xis = 200
+        dimension = 3
+        one = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.random.rand(num_xs),
+            xis=np.random.rand(num_xis, dimension),
+            eigen_values=np.random.rand(num_xis, dimension),
+            eigen_vectors=np.random.rand(num_xis, dimension, dimension),
+            scaling_factors=np.random.rand(num_xis)
+        )
+        two = Results(
+            densities=one.densities,
+            num_used_patterns=one.num_used_patterns,
+            xis=one.xis,
+            eigen_values=one.eigen_values,
+            eigen_vectors=None,
+            scaling_factors=one.scaling_factors
+        )
+        self.assertFalse(one == two)
+
+    def test_eq_with_none_scaling_factors(self):
+        num_xs = 10
+        num_xis = 200
+        dimension = 3
+        one = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.random.rand(num_xs),
+            xis=np.random.rand(num_xis, dimension),
+            eigen_values=np.random.rand(num_xis, dimension),
+            eigen_vectors=np.random.rand(num_xis, dimension, dimension),
+            scaling_factors=np.random.rand(num_xis)
+        )
+        two = Results(
+            densities=one.densities,
+            num_used_patterns=one.num_used_patterns,
+            xis=one.xis,
+            eigen_values=one.eigen_values,
+            eigen_vectors=one.eigen_vectors,
+            scaling_factors=None
+        )
+        self.assertFalse(one == two)
+
+    def test_eq_with_different_shapes(self):
+        num_xs = 10
+        num_xis_1 = 200
+        num_xis_2 = 100
+        dimension = 3
+        one = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.random.rand(num_xs),
+            xis=np.random.rand(num_xis_1, dimension),
+            eigen_values=np.random.rand(num_xis_1, dimension),
+            eigen_vectors=np.random.rand(num_xis_1, dimension, dimension),
+            scaling_factors=np.random.rand(num_xis_1)
+        )
+        two = Results(
+            densities=one.densities,
+            num_used_patterns=one.num_used_patterns,
+            xis=np.random.rand(num_xis_2, dimension),
+            eigen_values=np.random.rand(num_xis_2, dimension),
+            eigen_vectors=np.random.rand(num_xis_2, dimension, dimension),
+            scaling_factors=np.random.rand(num_xis_2)
+        )
+        self.assertFalse(one == two)
+
+    def test_eq_with_different_shape_densities(self):
+        one = Results(
+            densities=np.random.rand(100),
+            num_used_patterns=np.random.rand(100),
+        )
+        two = Results(
+            densities=np.random.rand(200),
+            num_used_patterns=np.random.rand(200),
         )
         self.assertFalse(one == two)
 
