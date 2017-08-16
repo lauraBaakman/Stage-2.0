@@ -239,9 +239,9 @@ class _ResultsReader(object):
         def get_eigen_vectors(data):
             if contains_eigen_vectors(data):
                 eigen_vectors = np.array((
-                    data['eigen_vector_1_x'], data['eigen_vector_1_y'], data['eigen_vector_1_z'],
-                    data['eigen_vector_2_x'], data['eigen_vector_2_y'], data['eigen_vector_2_z'],
-                    data['eigen_vector_3_x'], data['eigen_vector_3_y'], data['eigen_vector_3_z'],
+                    data['eigen_vector_1_x'], data['eigen_vector_2_x'], data['eigen_vector_3_x'],
+                    data['eigen_vector_1_y'], data['eigen_vector_2_y'], data['eigen_vector_3_y'],
+                    data['eigen_vector_1_z'], data['eigen_vector_2_z'], data['eigen_vector_3_z'],
                 )).T
                 (num_xis, ) = data.shape
                 return np.reshape(eigen_vectors, (num_xis, 3, 3))
@@ -320,9 +320,9 @@ class _ResultsWriter(object):
 
         def add_eigen_vectors(eigen_vectors):
             if eigen_vectors is not None:
-                column_headers.extend(['eigen_vector_1_x', 'eigen_vector_1_y', 'eigen_vector_1_z'])
-                column_headers.extend(['eigen_vector_2_x', 'eigen_vector_2_y', 'eigen_vector_2_z'])
-                column_headers.extend(['eigen_vector_3_x', 'eigen_vector_3_y', 'eigen_vector_3_z'])
+                column_headers.extend(['eigen_vector_1_x', 'eigen_vector_2_x', 'eigen_vector_3_x'])
+                column_headers.extend(['eigen_vector_1_y', 'eigen_vector_2_y', 'eigen_vector_3_y'])
+                column_headers.extend(['eigen_vector_1_z', 'eigen_vector_2_z', 'eigen_vector_3_z'])
 
                 (num_xis, num_eigen_vectos, dimension) = eigen_vectors.shape
                 return np.hstack((

@@ -192,9 +192,9 @@ class TestResults(TestCase):
         )
         expected_output = (
             "# xi_x xi_y xi_z "
-            "eigen_vector_1_x eigen_vector_1_y eigen_vector_1_z "
-            "eigen_vector_2_x eigen_vector_2_y eigen_vector_2_z "
-            "eigen_vector_3_x eigen_vector_3_y eigen_vector_3_z\n"
+            "eigen_vector_1_x eigen_vector_2_x eigen_vector_3_x "
+            "eigen_vector_1_y eigen_vector_2_y eigen_vector_3_y "
+            "eigen_vector_1_z eigen_vector_2_z eigen_vector_3_z\n"
             "52.000000000000000 45.000000000000000 56.000000000000000 "
             "0.000000000000000 1.000000000000000 2.000000000000000 "
             "3.000000000000000 4.000000000000000 5.000000000000000 "
