@@ -39,14 +39,18 @@ _grid_dimension = 128
 
 def handle_data_set(x_s, xi_s, data_set, data_set_file, *args):
         _, dimension = xi_s.shape
-        general_bandwidth, pilot_densities = estimate_pilot_densities(
+        general_bandwidth, results = estimate_pilot_densities(
             xi_s=xi_s,
             x_s=x_s
         )
+        pilot_densities = results.densities
         if not _use_xs_grid:
             write(
-                result=io.Results(pilot_densities, data_set),
-                out_path=ioUtils.build_x_result_data_path(
+                result=results,
+                xs_out_path=ioUtils.build_x_result_data_path(
+                    _results_path, data_set_file, 'parzen', *args
+                ),
+                xis_out_path=ioUtils.build_xi_result_data_path(
                     _results_path, data_set_file, 'parzen', *args
                 )
             )
@@ -74,7 +78,10 @@ def handle_data_set(x_s, xi_s, data_set, data_set_file, *args):
                 )
                 write(
                     result=result,
-                    out_path=ioUtils.build_x_result_data_path(
+                    xs_out_path=ioUtils.build_x_result_data_path(
+                        _results_path, data_set_file, estimator_name, sensitivity_name, *args
+                    ),
+                    xis_out_path=ioUtils.build_xi_result_data_path(
                         _results_path, data_set_file, estimator_name, sensitivity_name, *args
                     )
                 )
@@ -98,7 +105,10 @@ def run_parzen(general_bandwidth, data_set, x_s, xi_s, dimension, data_set_file,
     )
     write(
         result=result,
-        out_path=ioUtils.build_x_result_data_path(
+        xs_out_path=ioUtils.build_x_result_data_path(
+            _results_path, data_set_file, estimator_name, *args
+        ),
+        xis_out_path=ioUtils.build_xi_result_data_path(
             _results_path, data_set_file, estimator_name, *args
         )
     )
@@ -113,7 +123,7 @@ def estimate_pilot_densities(x_s, xi_s):
         bandwidth=general_bandwidth,
         kernel_class=Epanechnikov
     ).estimate(xi_s=x_s, x_s=xi_s)
-    return general_bandwidth, results.densities
+    return general_bandwidth, results
 
 
 def run_single_configuration(x_s, xi_s, estimator, pilot_densities, general_bandwidth, data_set):
@@ -124,9 +134,13 @@ def run_single_configuration(x_s, xi_s, estimator, pilot_densities, general_band
     return results
 
 
-def write(result, out_path):
-    with open(out_path, 'wb') as out_file:
-        result.to_file(out_file)
+def write(result, xs_out_path, xis_out_path=None):
+    if xis_out_path is not None:
+        with open(xs_out_path, 'wb') as x_out_file, open(xis_out_path, 'wb') as xi_out_file:
+            result.to_file(x_out_file, xi_out_file)
+    else:
+        with open(xs_out_path, 'wb') as x_out_file:
+            result.to_file(x_out_file)
 
 
 def run_experiment_xs_is_xis(data_set_files):
