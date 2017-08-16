@@ -4,14 +4,26 @@ import files as filenames
 import numpy as np
 
 
-def build_result_path(results_directory, data_set_file_path, estimator, *args):
+def _build_result_file_stem(data_set_file_path, estimator, *args):
     args_string = '_'.join(args)
-    out_file_name = '{data_set}_{estimator}{seperator}{args_string}.txt'.format(
+    stem = '{data_set}_{estimator}{seperator}{args_string}'.format(
         data_set=Path(data_set_file_path).stem,
         estimator=estimator,
         seperator='_' if args_string else '',
         args_string=args_string
     )
+    return stem
+
+
+def build_x_result_data_path(results_directory, data_set_file_path, estimator, *args):
+    stem = _build_result_file_stem(data_set_file_path, estimator, *args)
+    out_file_name = '{stem}.txt'.format(stem=stem)
+    return results_directory.child(out_file_name)
+
+
+def build_xi_result_data_path(results_directory, data_set_file_path, estimator, *args):
+    stem = _build_result_file_stem(data_set_file_path, estimator, *args)
+    out_file_name = '{stem}_xis.txt'.format(stem=stem)
     return results_directory.child(out_file_name)
 
 

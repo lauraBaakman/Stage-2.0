@@ -46,7 +46,7 @@ def handle_data_set(x_s, xi_s, data_set, data_set_file, *args):
         if not _use_xs_grid:
             write(
                 result=io.Results(pilot_densities, data_set),
-                out_path=ioUtils.build_result_path(
+                out_path=ioUtils.build_x_result_data_path(
                     _results_path, data_set_file, 'parzen', *args
                 )
             )
@@ -74,7 +74,7 @@ def handle_data_set(x_s, xi_s, data_set, data_set_file, *args):
                 )
                 write(
                     result=result,
-                    out_path=ioUtils.build_result_path(
+                    out_path=ioUtils.build_x_result_data_path(
                         _results_path, data_set_file, estimator_name, sensitivity_name, *args
                     )
                 )
@@ -98,7 +98,7 @@ def run_parzen(general_bandwidth, data_set, x_s, xi_s, dimension, data_set_file,
     )
     write(
         result=result,
-        out_path=ioUtils.build_result_path(
+        out_path=ioUtils.build_x_result_data_path(
             _results_path, data_set_file, estimator_name, *args
         )
     )
