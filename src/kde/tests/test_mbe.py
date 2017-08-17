@@ -148,12 +148,14 @@ class ModifiedBreimanEstimatorImpAbstractTest(object):
 
         expected_densities = np.array([0.00264898, 0.0024237, 0.00253281])
         expected_num_patterns_used_for_density = np.array([3, 3, 3])
+        expected_local_bandwidths = np.array([10, 20, 50])
 
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
         np.testing.assert_array_almost_equal(
             actual.num_used_patterns,
             expected_num_patterns_used_for_density
         )
+        np.testing.assert_array_almost_equal(actual.local_bandwidths, expected_local_bandwidths)
 
 
 class Test_MBEEstimator_Python(ModifiedBreimanEstimatorImpAbstractTest, TestCase):

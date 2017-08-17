@@ -138,6 +138,21 @@ class TestResults(TestCase):
         )
         np.testing.assert_array_equal(scaling_factors, results.scaling_factors)
 
+    def test_local_bandwidths(self):
+        local_bandwidths = np.random.rand(100)
+        results = Results(
+            data_set=None,
+            densities=np.array([
+                7.539699219e-05,
+                1.240164051e-05,
+                1.227518586e-05,
+                7.288289757e-05,
+                0.0001832763582,
+            ]),
+            local_bandwidths=local_bandwidths
+        )
+        np.testing.assert_array_equal(local_bandwidths, results.local_bandwidths)
+
     def test_num_used_patterns(self):
         array = np.array([
                 7.539699219e-05,
@@ -309,7 +324,8 @@ class TestResults(TestCase):
             xis=np.random.rand(num_xis, dimension),
             eigen_values=np.random.rand(num_xis, dimension),
             eigen_vectors=np.random.rand(num_xis, dimension, dimension),
-            scaling_factors=np.random.rand(num_xis)
+            scaling_factors=np.random.rand(num_xis),
+            local_bandwidths=np.random.rand(num_xis)
         )
         x_out_path = self.test_dir.child('x_out.txt')
         xi_out_path = self.test_dir.child('xi_out.txt')
@@ -438,6 +454,29 @@ class TestResults(TestCase):
             actual = Results.from_file(out_path)
             if len(w):
                 self.fail('Some warning was triggered: {}'.format(w[0].message))
+        self.assertEqual(actual, expected)
+
+    def test_from_file_to_file_with_only_local_bandwidths(self):
+        num_xis = 20
+        num_xs = 5
+        dimension = 3
+        expected = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.round(np.random.rand(num_xs)),
+            xis=np.random.rand(num_xis, dimension),
+            local_bandwidths=np.random.rand(num_xis)
+        )
+        x_out_path = self.test_dir.child('x_out.txt')
+        xi_out_path = self.test_dir.child('xi_out.txt')
+
+        with open(x_out_path, 'w') as x_handle, open(xi_out_path, 'w') as xi_handle:
+            expected.to_file(x_handle, xi_handle)
+
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter("always")
+            actual = Results.from_file(x_out_path, xi_out_path)
+            if len(w):
+                self.fail('Some warning was triggered')
         self.assertEqual(actual, expected)
 
     def test_is_incremental_true(self):
@@ -767,6 +806,24 @@ class TestResults(TestCase):
         )
         self.assertFalse(one == two)
 
+    def test_eq_with_neq_local_bandwidths(self):
+        num_xs = 10
+        num_xis = 200
+        dimension = 3
+        one = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.random.rand(num_xs),
+            xis=np.random.rand(num_xis, dimension),
+            local_bandwidths=np.random.rand(num_xis),
+        )
+        two = Results(
+            densities=one.densities,
+            num_used_patterns=one.num_used_patterns,
+            xis=one.xis,
+            local_bandwidths=np.random.rand(num_xis),
+        )
+        self.assertFalse(one == two)
+
     def test_eq_with_none_xis(self):
         num_xs = 10
         num_xis = 200
@@ -852,6 +909,28 @@ class TestResults(TestCase):
             eigen_values=one.eigen_values,
             eigen_vectors=one.eigen_vectors,
             scaling_factors=None
+        )
+        self.assertFalse(one == two)
+
+    def test_eq_with_non_local_bandwidths(self):
+        num_xs = 10
+        num_xis = 200
+        dimension = 3
+        one = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.random.rand(num_xs),
+            xis=np.random.rand(num_xis, dimension),
+            eigen_values=np.random.rand(num_xis, dimension),
+            eigen_vectors=np.random.rand(num_xis, dimension, dimension),
+            local_bandwidths=np.random.rand(num_xis)
+        )
+        two = Results(
+            densities=one.densities,
+            num_used_patterns=one.num_used_patterns,
+            xis=one.xis,
+            eigen_values=one.eigen_values,
+            eigen_vectors=one.eigen_vectors,
+            local_bandwidths=None
         )
         self.assertFalse(one == two)
 
@@ -1133,6 +1212,22 @@ class Test__XisValidator(TestCase):
             eigen_values=eigen_values,
             eigen_vectors=eigen_vectors,
             scaling_factors=scaling_factors
+        ).validate()
+        self.assertIsNone(actual)
+
+    def test_no_local_bandwidths(self):
+        xis = np.random.rand(10, 3)
+        eigen_values = np.random.rand(10, 3)
+        eigen_vectors = np.random.rand(10, 3, 3)
+        local_bandwidths = None
+        scaling_factors = np.random.rand(10)
+
+        actual = _XisValidator(
+            xis=xis,
+            eigen_values=eigen_values,
+            eigen_vectors=eigen_vectors,
+            scaling_factors=scaling_factors,
+            local_bandwidths=local_bandwidths
         ).validate()
         self.assertIsNone(actual)
 
@@ -1503,16 +1598,81 @@ class Test__XisValidator(TestCase):
         else:
             self.fail('ExpectedException not raised')
 
+    def test_wrong_number_of_local_bandwidths_too_low(self):
+        try:
+            xis = np.random.rand(10, 3)
+            local_bandwidths = np.random.rand(5)
+            eigen_values = np.random.rand(10, 3)
+            eigen_vectors = np.random.rand(10, 3, 3)
+
+            actual = _XisValidator(
+                xis=xis,
+                eigen_vectors=eigen_vectors,
+                eigen_values=eigen_values,
+                local_bandwidths=local_bandwidths,
+            ).validate()
+            self.assertIsNone(actual)
+        except InvalidResultsException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test_wrong_number_of_local_bandwidths_too_high(self):
+        try:
+            xis = np.random.rand(10, 3)
+            local_bandwidths = np.random.rand(20)
+            eigen_values = np.random.rand(10, 3)
+            eigen_vectors = np.random.rand(10, 3, 3)
+
+            actual = _XisValidator(
+                xis=xis,
+                eigen_vectors=eigen_vectors,
+                eigen_values=eigen_values,
+                local_bandwidths=local_bandwidths,
+            ).validate()
+            self.assertIsNone(actual)
+        except InvalidResultsException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
+    def test_wrong_local_bandwidths_dimension_too_high(self):
+        try:
+            xis = np.random.rand(10, 3)
+            local_bandwidths = np.random.rand(20, 2)
+            eigen_values = np.random.rand(10, 3)
+            eigen_vectors = np.random.rand(10, 3, 3)
+
+            actual = _XisValidator(
+                xis=xis,
+                eigen_vectors=eigen_vectors,
+                eigen_values=eigen_values,
+                local_bandwidths=local_bandwidths,
+            ).validate()
+            self.assertIsNone(actual)
+        except InvalidResultsException:
+            pass
+        except Exception as e:
+            self.fail('Unexpected exception raised: {}'.format(e))
+        else:
+            self.fail('ExpectedException not raised')
+
     def test_valid_combination(self):
         xis = np.random.rand(10, 3)
         eigen_values = np.random.rand(10, 3)
         eigen_vectors = np.random.rand(10, 3, 3)
         scaling_factors = np.random.rand(10)
+        local_bandwidths = np.random.rand(10)
 
         actual = _XisValidator(
             xis=xis,
             eigen_vectors=eigen_vectors,
             eigen_values=eigen_values,
             scaling_factors=scaling_factors,
+            local_bandwidths=local_bandwidths
         ).validate()
         self.assertIsNone(actual)

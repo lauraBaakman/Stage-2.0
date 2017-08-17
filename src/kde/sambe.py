@@ -76,7 +76,8 @@ class _ShapeAdaptiveMBE_C(_ShapeAdaptiveMBE):
             xis=self._xi_s,
             eigen_values=eigen_values,
             eigen_vectors=self._reshape_eigen_vectors(eigen_vectors),
-            scaling_factors=scaling_factors
+            scaling_factors=scaling_factors,
+            local_bandwidths=self._local_bandwidths
         )
         return results
 
@@ -94,7 +95,8 @@ class _ShapeAdaptiveMBE_Python(_ShapeAdaptiveMBE):
         return Results(
             densities=np.mean(kernel_terms, axis=1),
             num_used_patterns=count_non_zeros(kernel_terms),
-            xis=self._xi_s
+            xis=self._xi_s,
+            local_bandwidths=self._local_bandwidths
         )
 
     def _compute_kernel_terms(self):

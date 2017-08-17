@@ -244,12 +244,14 @@ class Test_ShapeAdaptiveMBE_Python(ShapeAdaptiveMBEImpAbstractTest, TestCase):
             0.014115079016664
         ])
         expected_num_patterns_used_for_density = np.array([4, 4, 4, 3])
+        expected_local_bandwidths = local_bandwidths
 
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
         np.testing.assert_array_almost_equal(
             actual.num_used_patterns,
             expected_num_patterns_used_for_density
         )
+        np.testing.assert_array_almost_equal(actual.local_bandwidths, expected_local_bandwidths)
 
     def test_compute_kernel_terms(self):
         xi_s = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
@@ -341,6 +343,7 @@ class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
             [0.350208287700000, 1.050624863100000],
         ])
         expected_scaling_factors = np.array([2.1012497262, 2.9716158564, 2.9716158564, 2.1012497262])
+        expected_local_bandwidths = local_bandwidths
 
         np.testing.assert_array_almost_equal(actual.densities, expected_densities)
         np.testing.assert_array_almost_equal(
@@ -354,6 +357,7 @@ class Test_ShapeAdaptiveMBE_C(ShapeAdaptiveMBEImpAbstractTest, TestCase):
         )
         np.testing.assert_array_almost_equal(actual.eigen_vectors, expected_eigen_vectors)
         np.testing.assert_array_almost_equal(actual.scaling_factors, expected_scaling_factors)
+        np.testing.assert_array_almost_equal(actual.local_bandwidths, expected_local_bandwidths)
 
     def test__reshape_eigen_vectors(self):
         eigen_vectors = np.array([

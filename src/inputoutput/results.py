@@ -7,7 +7,7 @@ _delimiter = ' '
 
 class Results:
     def __init__(self, densities=None, data_set=None, expected_size=None, num_used_patterns=None,
-                 xis=None, eigen_values=None, eigen_vectors=None, scaling_factors=None):
+                 xis=None, eigen_values=None, eigen_vectors=None, scaling_factors=None, local_bandwidths=None):
         if (expected_size is None) and (densities is None):
             raise TypeError("expected_size or densities need to be provided.'")
         if densities is not None:
@@ -27,12 +27,14 @@ class Results:
         self._eigen_values = eigen_values
         self._eigen_vectors = eigen_vectors
         self._scaling_factors = scaling_factors
+        self._local_bandwidths = local_bandwidths
 
         _XisValidator(
             xis=self._xis,
             eigen_values=self._eigen_values,
             eigen_vectors=self._eigen_vectors,
-            scaling_factors=self._scaling_factors
+            scaling_factors=self._scaling_factors,
+            local_bandwidths=self._local_bandwidths
         ).validate()
 
     @property
@@ -63,6 +65,10 @@ class Results:
     @property
     def xis(self):
         return self._xis
+
+    @property
+    def local_bandwidths(self):
+        return self._local_bandwidths
 
     @xis.setter
     def xis(self, xis):
@@ -175,7 +181,8 @@ class Results:
                 eq_numpy_array_that_can_be_none(self._xis, other._xis) and
                 eq_numpy_array_that_can_be_none(self._eigen_values, other._eigen_values) and
                 eq_numpy_array_that_can_be_none(self._eigen_vectors, other._eigen_vectors) and
-                eq_numpy_array_that_can_be_none(self._scaling_factors, other._scaling_factors)
+                eq_numpy_array_that_can_be_none(self._scaling_factors, other._scaling_factors) and
+                eq_numpy_array_that_can_be_none(self._local_bandwidths, other._local_bandwidths)
             )
         return NotImplemented
 
@@ -256,6 +263,15 @@ class _ResultsReader(object):
                 return np.array((data['scaling_factor'])).T
             return None
 
+        def contains_local_bandwidths(data):
+            regex = re.compile('local_bandwidth')
+            return contains_regular_expression(data, regex)
+
+        def get_local_bandwidths(data):
+            if contains_local_bandwidths(data):
+                return np.array((data['local_bandwidth'])).T
+            return None
+
         data = np.genfromtxt(
                              self._xi_in_file,
                              delimiter=_delimiter,
@@ -265,7 +281,8 @@ class _ResultsReader(object):
             'xis': np.array((data['xi_x'], data['xi_y'], data['xi_z'])).T,
             'eigen_values': get_eigen_values(data),
             'eigen_vectors': get_eigen_vectors(data),
-            'scaling_factors': get_scaling_factors(data)
+            'scaling_factors': get_scaling_factors(data),
+            'local_bandwidths': get_local_bandwidths(data)
         }
 
 
@@ -331,15 +348,21 @@ class _ResultsWriter(object):
                 )), column_headers
             return matrix, column_headers
 
-        def add_scaling_factors(scaling_factors):
-            if scaling_factors is not None:
-                column_headers.extend(['scaling_factor'])
-                num_xis, = scaling_factors.shape
+        def add_1D_property(data, column_name):
+            if data is not None:
+                column_headers.append(column_name)
+                num_xis, = data.shape
                 return np.hstack((
                     matrix,
-                    np.reshape(scaling_factors, (num_xis, 1))
+                    np.reshape(data, (num_xis, 1))
                 )), column_headers
             return matrix, column_headers
+
+        def add_scaling_factors(scaling_factors):
+            return add_1D_property(scaling_factors, 'scaling_factor')
+
+        def add_local_bandwidths(local_bandwidths):
+            return add_1D_property(local_bandwidths, 'local_bandwidth')
 
         matrix = np.array(
             self._results.xis,
@@ -349,6 +372,7 @@ class _ResultsWriter(object):
         matrix, column_headers = add_eigen_values(self._results.eigen_values)
         matrix, column_header = add_eigen_vectors(self._results.eigen_vectors)
         matrix, column_header = add_scaling_factors(self._results.scaling_factors)
+        matrix, column_header = add_local_bandwidths(self._results.local_bandwidths)
         return matrix, _delimiter.join(column_headers)
 
 
@@ -400,11 +424,12 @@ class _DensitiesValidator(object):
 
 
 class _XisValidator(object):
-    def __init__(self, xis, eigen_vectors=None, eigen_values=None, scaling_factors=None):
+    def __init__(self, xis, eigen_vectors=None, eigen_values=None, scaling_factors=None, local_bandwidths=None):
         self.xis = xis
         self.eigen_vectors = eigen_vectors
         self.eigen_values = eigen_values
         self.scaling_factors = scaling_factors
+        self.local_bandwidths = local_bandwidths
 
     @property
     def xis_dimension(self):
@@ -424,6 +449,7 @@ class _XisValidator(object):
         self._validate_eigen_vectors()
         self._validate_eigen_values()
         self._validate_scaling_factors()
+        self._validate_local_bandwidths()
 
     def _validate_eigen_vectors(self):
         if self.eigen_vectors is not None:
@@ -504,26 +530,32 @@ class _XisValidator(object):
             )
 
     def _validate_scaling_factors(self):
-        if self.scaling_factors is not None:
-            self._validate_scaling_factors_dimension()
-            if self.has_xis:
-                self._validate_total_number_of_scaling_factors()
+        return self._validate_1D_property(self.scaling_factors)
 
-    def _validate_total_number_of_scaling_factors(self):
-        (scaling_factor_count,) = self.scaling_factors.shape
-        if not (scaling_factor_count == self.xis_count):
+    def _validate_local_bandwidths(self):
+        return self._validate_1D_property(self.local_bandwidths)
+
+    def _validate_1D_property(self, array):
+        if array is not None:
+            self._validate_1D_property_dimension(array)
+            if self.has_xis:
+                self._validate_1D_property_count(array)
+
+    def _validate_1D_property_count(self, array):
+        (count,) = array.shape
+        if not (count == self.xis_count):
             raise InvalidResultsException(
-                '{num_xis} xis and {num_scaling_factors} scaling factors is not a valid combination'.format(
+                '{num_xis} xis and {count} of a 1D property is not a valid combination'.format(
                     num_xis=self.xis_count,
-                    num_scaling_factors=scaling_factor_count
+                    count=count
                 )
             )
 
-    def _validate_scaling_factors_dimension(self):
-        ndim = self.scaling_factors.ndim
+    def _validate_1D_property_dimension(self, array):
+        ndim = array.ndim
         if not (ndim == 1):
             raise InvalidResultsException(
-                'The scaling factors should be stored in a 1D array.'
+                '1D properties should be stored in a 1D array.'
             )
 
 
