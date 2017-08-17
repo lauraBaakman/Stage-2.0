@@ -1,5 +1,4 @@
 import argparse
-import itertools
 import logging
 
 from unipath import Path
@@ -15,7 +14,7 @@ import inputoutput.results as ioResults
 
 
 _default_xs_path = Path('../data/simulated/small')
-_default_densities_path = Path('../results/simulated/small')
+_default_densities_path = Path('../results/small/breiman')
 _default_output_path = Path('.')
 _default_subsample_probability = 0.01
 _default_subsample_space = 31
@@ -72,12 +71,17 @@ def collect_meta_data(paths):
     return files
 
 
-def find_associated_result_files(xs_files, densities_files):
+def find_associated_result_files(xs_files, densities_files, xis_files=None):
+    xis_files = xis_files or list()
     skip_keys = ['file']
     for xs_file in xs_files:
         xs_file['associated results'] = filter(
             lambda x: ioFiles.is_associated_result_file(xs_file, x, skip_keys=skip_keys),
             densities_files
+        )
+        xs_file['xis files'] = filter(
+            lambda x: ioFiles.is_associated_xis_file(xs_file, x, skip_keys=skip_keys),
+            xis_files
         )
     return xs_files
 
@@ -133,12 +137,12 @@ def process_data_set_with_results(dataset_file):
             )
 
         arguments = list()
-        if 'grid size' in meta_data.keys():
+        if 'grid_size' in meta_data.keys():
             arguments.append('grid')
-            arguments.append(str(meta_data['grid size']))
+            arguments.append(str(meta_data['grid_size']))
         if args.sub_sample:
             arguments.append('subsampled')
-        return args.output_directory.child(build_out_file(meta_data['semantic name'], *arguments))
+        return args.output_directory.child(build_out_file(meta_data['semantic_name'], *arguments))
 
     def update_header(header, column_header):
         header = '{old_header},{column_header}'.format(
@@ -225,7 +229,7 @@ def subsample(data, meta_data):
     if not args.sub_sample:
         return data
 
-    if 'grid size' in meta_data:
+    if 'grid_size' in meta_data:
         return grid_subsample(data, args.sub_sampling_space)
     else:
         return monte_carlo_subsample(data, args.sub_sampling_probability)
