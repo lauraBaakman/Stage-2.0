@@ -91,6 +91,54 @@ class Results:
         (_, dimension) = self._xis.shape
         return dimension
 
+    @property
+    def xis_data_matrix(self):
+        def add_eigen_values(eigen_values):
+            if eigen_values is not None:
+                column_headers.extend(['eigen_value_1', 'eigen_value_2', 'eigen_value_3'])
+                return np.hstack((matrix, eigen_values)), column_headers
+            return matrix, column_headers
+
+        def add_eigen_vectors(eigen_vectors):
+            if eigen_vectors is not None:
+                column_headers.extend(['eigen_vector_1_x', 'eigen_vector_2_x', 'eigen_vector_3_x'])
+                column_headers.extend(['eigen_vector_1_y', 'eigen_vector_2_y', 'eigen_vector_3_y'])
+                column_headers.extend(['eigen_vector_1_z', 'eigen_vector_2_z', 'eigen_vector_3_z'])
+
+                (num_xis, num_eigen_vectors, dimension) = eigen_vectors.shape
+                return np.hstack((
+                    matrix,
+                    np.reshape(eigen_vectors, (num_xis, num_eigen_vectors * dimension))
+                )), column_headers
+            return matrix, column_headers
+
+        def add_1D_property(data, column_name):
+            if data is not None:
+                column_headers.append(column_name)
+                num_xis, = data.shape
+                return np.hstack((
+                    matrix,
+                    np.reshape(data, (num_xis, 1))
+                )), column_headers
+            return matrix, column_headers
+
+        def add_local_bandwidths(local_bandwidths):
+            return add_1D_property(local_bandwidths, 'local_bandwidth')
+
+        def add_scaling_factors(scaling_factors):
+            return add_1D_property(scaling_factors, 'scaling_factor')
+
+        matrix = np.array(
+            self.xis,
+        )
+        column_headers = ['xi_x', 'xi_y', 'xi_z']
+
+        matrix, column_headers = add_eigen_values(self.eigen_values)
+        matrix, column_headers = add_eigen_vectors(self.eigen_vectors)
+        matrix, column_headers = add_local_bandwidths(self.local_bandwidths)
+        matrix, column_headers = add_scaling_factors(self.scaling_factors)
+        return matrix, column_headers
+
     def add_result(self, density, **kwargs):
         if not self.is_incremental:
             raise TypeError(
@@ -324,56 +372,10 @@ class _ResultsWriter(object):
         return data, format_string
 
     def _write_xi_data(self):
-        data, header = self._xi_values_to_matrix()
+        data, column_headers = self._results.xis_data_matrix
+        header = _delimiter.join(column_headers)
         np.savetxt(self._xi_out_file, data,
                    fmt=self._float_fmt, header=header, delimiter=_delimiter)
-
-    def _xi_values_to_matrix(self):
-        def add_eigen_values(eigen_values):
-            if eigen_values is not None:
-                column_headers.extend(['eigen_value_1', 'eigen_value_2', 'eigen_value_3'])
-                return np.hstack((matrix, eigen_values)), column_headers
-            return matrix, column_headers
-
-        def add_eigen_vectors(eigen_vectors):
-            if eigen_vectors is not None:
-                column_headers.extend(['eigen_vector_1_x', 'eigen_vector_2_x', 'eigen_vector_3_x'])
-                column_headers.extend(['eigen_vector_1_y', 'eigen_vector_2_y', 'eigen_vector_3_y'])
-                column_headers.extend(['eigen_vector_1_z', 'eigen_vector_2_z', 'eigen_vector_3_z'])
-
-                (num_xis, num_eigen_vectos, dimension) = eigen_vectors.shape
-                return np.hstack((
-                    matrix,
-                    np.reshape(eigen_vectors, (num_xis, num_eigen_vectos * dimension))
-                )), column_headers
-            return matrix, column_headers
-
-        def add_1D_property(data, column_name):
-            if data is not None:
-                column_headers.append(column_name)
-                num_xis, = data.shape
-                return np.hstack((
-                    matrix,
-                    np.reshape(data, (num_xis, 1))
-                )), column_headers
-            return matrix, column_headers
-
-        def add_scaling_factors(scaling_factors):
-            return add_1D_property(scaling_factors, 'scaling_factor')
-
-        def add_local_bandwidths(local_bandwidths):
-            return add_1D_property(local_bandwidths, 'local_bandwidth')
-
-        matrix = np.array(
-            self._results.xis,
-        )
-        column_headers = ['xi_x', 'xi_y', 'xi_z']
-
-        matrix, column_headers = add_eigen_values(self._results.eigen_values)
-        matrix, column_header = add_eigen_vectors(self._results.eigen_vectors)
-        matrix, column_header = add_scaling_factors(self._results.scaling_factors)
-        matrix, column_header = add_local_bandwidths(self._results.local_bandwidths)
-        return matrix, _delimiter.join(column_headers)
 
 
 class _DensitiesValidator(object):

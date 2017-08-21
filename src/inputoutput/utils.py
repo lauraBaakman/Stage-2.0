@@ -50,8 +50,17 @@ def get_data_set_files(input_path, ask_for_confirmation=False, show_files=True):
     return files
 
 
-def get_result_files(input_path, ask_for_confirmation=False, show_files=True):
+def get_xs_result_files(input_path, ask_for_confirmation=False, show_files=True):
     files = list(input_path.walk(filter=lambda x: filenames.is_results_file(x)))
+    if ask_for_confirmation:
+        files = _confirm_files(files)
+    if show_files:
+        _show_files_to_user(files)
+    return files
+
+
+def get_xis_result_files(input_path, ask_for_confirmation=False, show_files=True):
+    files = list(input_path.walk(filter=lambda x: filenames.is_xis_file(x)))
     if ask_for_confirmation:
         files = _confirm_files(files)
     if show_files:

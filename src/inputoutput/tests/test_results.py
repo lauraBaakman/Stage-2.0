@@ -968,6 +968,155 @@ class TestResults(TestCase):
         )
         self.assertFalse(one == two)
 
+    def test_xis_data_matrix_only_xis(self):
+        num_xis = 10
+        num_xs = 5
+        dimension = 3
+        xis = np.random.rand(num_xis, dimension)
+        results = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.round(np.random.rand(num_xs)),
+            xis=xis,
+            eigen_values=None,
+            eigen_vectors=None,
+            scaling_factors=None,
+            local_bandwidths=None
+        )
+
+        expected_matrix = xis
+        expected_header = ['xi_x', 'xi_y', 'xi_z']
+
+        actual_matrix, actual_header = results.xis_data_matrix
+
+        np.testing.assert_array_equal(expected_matrix, actual_matrix)
+        self.assertEqual(expected_header, actual_header)
+
+    def test_xis_data_matrix_only_eigen_values(self):
+        num_xis = 10
+        num_xs = 5
+        expected_matrix = np.random.rand(num_xis, 6)
+        results = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.round(np.random.rand(num_xs)),
+            xis=expected_matrix[:, 0:3],
+            eigen_values=expected_matrix[:, 3:6],
+            eigen_vectors=None,
+            scaling_factors=None,
+            local_bandwidths=None
+        )
+
+        expected_header = [
+            'xi_x', 'xi_y', 'xi_z',
+            'eigen_value_1', 'eigen_value_2', 'eigen_value_3'
+        ]
+
+        actual_matrix, actual_header = results.xis_data_matrix
+
+        np.testing.assert_array_equal(expected_matrix, actual_matrix)
+        self.assertEqual(expected_header, actual_header)
+
+    def test_xis_data_matrix_only_eigen_vectors(self):
+        num_xis = 10
+        num_xs = 5
+        expected_matrix = np.random.rand(num_xis, 12)
+        results = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.round(np.random.rand(num_xs)),
+            xis=expected_matrix[:, 0:3],
+            eigen_values=None,
+            eigen_vectors=np.reshape(expected_matrix[:, 3:12], (num_xis, 3, 3)),
+            scaling_factors=None,
+            local_bandwidths=None
+        )
+
+        expected_header = [
+            'xi_x', 'xi_y', 'xi_z',
+            'eigen_vector_1_x', 'eigen_vector_2_x', 'eigen_vector_3_x',
+            'eigen_vector_1_y', 'eigen_vector_2_y', 'eigen_vector_3_y',
+            'eigen_vector_1_z', 'eigen_vector_2_z', 'eigen_vector_3_z'
+        ]
+
+        actual_matrix, actual_header = results.xis_data_matrix
+
+        np.testing.assert_array_equal(expected_matrix, actual_matrix)
+        self.assertEqual(expected_header, actual_header)
+
+    def test_xis_data_matrix_only_local_bandwidths(self):
+        num_xis = 10
+        num_xs = 5
+        expected_matrix = np.random.rand(num_xis, 4)
+        results = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.round(np.random.rand(num_xs)),
+            xis=expected_matrix[:, 0:3],
+            eigen_values=None,
+            eigen_vectors=None,
+            scaling_factors=None,
+            local_bandwidths=expected_matrix[:, 3]
+        )
+
+        expected_header = [
+            'xi_x', 'xi_y', 'xi_z',
+            'local_bandwidth'
+        ]
+
+        actual_matrix, actual_header = results.xis_data_matrix
+
+        np.testing.assert_array_equal(expected_matrix, actual_matrix)
+        self.assertEqual(expected_header, actual_header)
+
+    def test_xis_data_matrix_only_scaling_factors(self):
+        num_xis = 10
+        num_xs = 5
+        expected_matrix = np.random.rand(num_xis, 4)
+        results = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.round(np.random.rand(num_xs)),
+            xis=expected_matrix[:, 0:3],
+            eigen_values=None,
+            eigen_vectors=None,
+            scaling_factors=expected_matrix[:, 3],
+            local_bandwidths=None
+        )
+
+        expected_header = [
+            'xi_x', 'xi_y', 'xi_z',
+            'scaling_factor'
+        ]
+
+        actual_matrix, actual_header = results.xis_data_matrix
+
+        np.testing.assert_array_equal(expected_matrix, actual_matrix)
+        self.assertEqual(expected_header, actual_header)
+
+    def test_xis_data_all_xis_properties(self):
+        num_xis = 10
+        num_xs = 5
+        expected_matrix = np.random.rand(num_xis, 17)
+        results = Results(
+            densities=np.random.rand(num_xs),
+            num_used_patterns=np.round(np.random.rand(num_xs)),
+            xis=expected_matrix[:, 0:3],
+            eigen_values=expected_matrix[:, 3:6],
+            eigen_vectors=np.reshape(expected_matrix[:, 6:15], (num_xis, 3, 3)),
+            local_bandwidths=expected_matrix[:, 15],
+            scaling_factors=expected_matrix[:, 16],
+        )
+
+        expected_header = [
+            'xi_x', 'xi_y', 'xi_z',
+            'eigen_value_1', 'eigen_value_2', 'eigen_value_3',
+            'eigen_vector_1_x', 'eigen_vector_2_x', 'eigen_vector_3_x',
+            'eigen_vector_1_y', 'eigen_vector_2_y', 'eigen_vector_3_y',
+            'eigen_vector_1_z', 'eigen_vector_2_z', 'eigen_vector_3_z',
+            'local_bandwidth', 'scaling_factor'
+        ]
+
+        actual_matrix, actual_header = results.xis_data_matrix
+
+        np.testing.assert_array_equal(expected_matrix, actual_matrix)
+        self.assertEqual(expected_header, actual_header)
+
 
 class Test_DensitiesValidator(TestCase):
     def setUp(self):
