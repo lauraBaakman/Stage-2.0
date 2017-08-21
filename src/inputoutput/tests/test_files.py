@@ -674,3 +674,25 @@ class TestIsAssociatedFile(TestCase):
                 self._xis_meta_4
             )
         )
+
+    def test_is_associated_xis_file_different_keys_but_same_number_of_keys(self):
+        meta_1 = {
+            'semantic_name': u'baakman_1',
+            'grid_size': 64,
+            'estimator': u'mbe',
+            'sensitivity': u'breiman',
+            'size': 60000
+        }
+        meta_2 = {
+            'contains xis data': True,
+            'semantic_name': u'baakman_1',
+            'sensitivity': u'breiman',
+            'estimator': u'mbe',
+            'size': 60000
+        }
+        self.assertFalse(
+            filenames.is_associated_xis_file(
+                meta_1,
+                meta_2
+            )
+        )

@@ -186,7 +186,7 @@ def _is_associated_file(dataset_meta, result_meta, skip_keys):
     dataset_keys = remove_skip_keys(dataset_meta.viewkeys(), skip_keys)
     result_keys = remove_skip_keys(result_meta.viewkeys(), skip_keys)
 
-    if(len(dataset_keys) == len(result_keys)):
+    if dataset_keys.difference(result_keys) is set():
         raise ValueError('The meta information of the data set and the result contain the same keys.')
     if 'grid_size' in dataset_keys ^ result_keys:
         return False

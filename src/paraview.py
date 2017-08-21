@@ -230,7 +230,7 @@ def process_xis_data(dataset_meta):
             )
         return data, header
 
-    out_path = determine_out_path(dataset_meta, 'xis')
+    out_path = determine_out_path(dataset_meta, appendices=['xis'])
     if not should_path_be_created(out_path):
         return
     log_processing(
@@ -288,7 +288,7 @@ def data_to_file(data, header, out_path):
     logging.info('Writing to {}'.format(out_path))
 
 
-def determine_out_path(meta_data, *arguments):
+def determine_out_path(meta_data, appendices=None):
     def build_out_file(semantic_name, *args):
         args_string = '_'.join(args)
         return '{data_set}{seperator}{args_string}_paraview.csv'.format(
@@ -297,12 +297,13 @@ def determine_out_path(meta_data, *arguments):
             args_string=args_string
         )
 
+    appendices = appendices if appendices else list()
     if 'grid_size' in meta_data.keys():
-        arguments.append('grid')
-        arguments.append(str(meta_data['grid_size']))
+        appendices.append('grid')
+        appendices.append(str(meta_data['grid_size']))
     if args.sub_sample:
-        arguments.append('subsampled')
-    return args.output_directory.child(build_out_file(meta_data['semantic_name'], *arguments))
+        appendices.append('subsampled')
+    return args.output_directory.child(build_out_file(meta_data['semantic_name'], *appendices))
 
 
 def subsample(data, meta_data):
@@ -347,8 +348,6 @@ def add_error(a_meta, a_values, b_meta, b_values):
 if __name__ == '__main__':
     parser = get_parser()
     args = parser.parse_args()
-
-    warnings.filterwarnings('error')
 
     coloredlogs.install()
     logging.getLogger().setLevel(logging.INFO if args.verbose else logging.ERROR)
