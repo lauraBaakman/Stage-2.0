@@ -23,8 +23,8 @@ else:
     print('No default paths supported for this system, use -i and -o')
 
 sensitivities = {
-    # 'silverman': lambda d: 0.5,
-    'breiman': lambda d: 1.0 / d
+    'silverman': lambda d: 0.5,
+    # 'breiman': lambda d: 1.0 / d
 }
 
 estimators = {
