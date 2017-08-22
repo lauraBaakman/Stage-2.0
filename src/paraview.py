@@ -1,6 +1,5 @@
 import argparse
 import logging
-import warnings
 
 from unipath import Path
 import numpy as np
