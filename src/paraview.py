@@ -1,6 +1,5 @@
 import argparse
 import logging
-import warnings
 
 from unipath import Path
 import numpy as np
@@ -80,10 +79,12 @@ def find_associated_result_files(xs_files, xs_results_files, xis_results_files=N
             xs_results_files
         )
         for xs_result_file in xs_file['xs result files']:
-            xs_result_file['xis result file'] = filter(
+            associated_xis_files = filter(
                 lambda x: ioFiles.is_associated_xis_file(xs_result_file, x, skip_keys=skip_keys),
                 xis_results_files
-            ).pop()
+            )
+            if associated_xis_files:
+                xs_result_file['xis result file'] = associated_xis_files.pop()
     return xs_files
 
 
@@ -178,11 +179,14 @@ def process_xis_data(dataset_meta):
             return None, None
 
         xs_result_meta = dataset_meta.get('xs result files')[0]
-        xis_result_meta = xs_result_meta.get('xis result file', dict())
+        xi_file_meta = xs_result_meta.get('xis result file', dict()).get('file')
+
+        if not xi_file_meta:
+            return None, None
 
         result = ioResults.Results.from_file(
             x_file=xs_result_meta['file'],
-            xi_file=xis_result_meta['file']
+            xi_file=xi_file_meta
         )
         return (
             result.xis,
@@ -221,6 +225,10 @@ def process_xis_data(dataset_meta):
 
     def collect_all_xis_data(dataset_meta):
         baseline_xis, header = read_baseline_xis(dataset_meta)
+
+        if not baseline_xis:
+            return None, None
+
         data = baseline_xis
         for xs_result_file_meta in dataset_meta['xs result files']:
             data, header = collect_xis_data_from_file(
@@ -236,14 +244,17 @@ def process_xis_data(dataset_meta):
     log_processing(
         file_type_string='xis result files',
         result_files=[
-            xs_result_file['xis result file']
+            xs_result_file.get('xis result file', None)
             for xs_result_file
-            in dataset_meta['xs result files']
+            in dataset_meta.get('xs result files', list())
         ],
         dataset_file=dataset_meta['file']
     )
 
     data, column_names = collect_all_xis_data(dataset_meta)
+
+    if data is None:
+        return
 
     data = subsample(data, dataset_meta)
     header = ', '.join(column_names)
@@ -252,17 +263,25 @@ def process_xis_data(dataset_meta):
 
 
 def log_processing(file_type_string, result_files, dataset_file):
-    logging.info(
-        'Processing {xs_file}, with {file_type}:{result_files}'.format(
-            xs_file=ioUtils.partial_path(dataset_file),
-            result_files='\n' + '\n'.join([
-                '\t{}'.format(ioUtils.partial_path(result_file['file']))
-                for result_file
-                in result_files]
-            ),
-            file_type=file_type_string
-        )
-    )
+    def result_files_are_none():
+        return bool(filter(lambda x: x is None, result_files))
+
+    if result_files_are_none():
+        message = 'No files of type {file_type} to process for {xs_file}'.format(
+                file_type=file_type_string,
+                xs_file=ioUtils.partial_path(dataset_file)
+            )
+    else:
+        message = 'Processing {xs_file}, with {file_type}:{result_files}'.format(
+                xs_file=ioUtils.partial_path(dataset_file),
+                result_files='\n' + '\n'.join([
+                    '\t{}'.format(ioUtils.partial_path(result_file['file']))
+                    for result_file
+                    in result_files]
+                ),
+                file_type=file_type_string
+            )
+    logging.info(message)
 
 
 def should_path_be_created(path):
@@ -316,6 +335,10 @@ def subsample(data, meta_data):
 
     if not args.sub_sample:
         return data
+
+    logging.info('Subsampling the data gathered with the base file {xsfile}.'.format(
+        xsfile=ioUtils.partial_path(meta_data['file'])
+    ))
 
     if 'grid_size' in meta_data:
         return grid_subsample(data, args.sub_sampling_space)
