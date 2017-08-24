@@ -179,11 +179,14 @@ def process_xis_data(dataset_meta):
             return None, None
 
         xs_result_meta = dataset_meta.get('xs result files')[0]
-        xis_result_meta = xs_result_meta.get('xis result file', dict())
+        xi_file_meta = xs_result_meta.get('xis result file', dict()).get('file')
+
+        if not xi_file_meta:
+            return None, None
 
         result = ioResults.Results.from_file(
             x_file=xs_result_meta['file'],
-            xi_file=xis_result_meta['file']
+            xi_file=xi_file_meta
         )
         return (
             result.xis,
@@ -222,6 +225,10 @@ def process_xis_data(dataset_meta):
 
     def collect_all_xis_data(dataset_meta):
         baseline_xis, header = read_baseline_xis(dataset_meta)
+
+        if not baseline_xis:
+            return None, None
+
         data = baseline_xis
         for xs_result_file_meta in dataset_meta['xs result files']:
             data, header = collect_xis_data_from_file(
