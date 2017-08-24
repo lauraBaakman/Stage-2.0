@@ -253,6 +253,8 @@ def process_xis_data(dataset_meta):
 
     data, column_names = collect_all_xis_data(dataset_meta)
 
+    if data is None:
+        return
 
     data = subsample(data, dataset_meta)
     header = ', '.join(column_names)
