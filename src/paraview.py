@@ -237,9 +237,9 @@ def process_xis_data(dataset_meta):
     log_processing(
         file_type_string='xis result files',
         result_files=[
-            xs_result_file['xis result file']
+            xs_result_file.get('xis result file', None)
             for xs_result_file
-            in dataset_meta['xs result files']
+            in dataset_meta.get('xs result files', list())
         ],
         dataset_file=dataset_meta['file']
     )
@@ -257,17 +257,25 @@ def process_xis_data(dataset_meta):
 
 
 def log_processing(file_type_string, result_files, dataset_file):
-    logging.info(
-        'Processing {xs_file}, with {file_type}:{result_files}'.format(
-            xs_file=ioUtils.partial_path(dataset_file),
-            result_files='\n' + '\n'.join([
-                '\t{}'.format(ioUtils.partial_path(result_file['file']))
-                for result_file
-                in result_files]
-            ),
-            file_type=file_type_string
-        )
-    )
+    def result_files_are_none():
+        return bool(filter(lambda x: x is None, result_files))
+
+    if result_files_are_none():
+        message = 'No files of {file_type} to process for {xs_file}'.format(
+                file_type=file_type_string,
+                xs_file=ioUtils.partial_path(dataset_file)
+            )
+    else:
+        message = 'Processing {xs_file}, with {file_type}:{result_files}'.format(
+                xs_file=ioUtils.partial_path(dataset_file),
+                result_files='\n' + '\n'.join([
+                    '\t{}'.format(ioUtils.partial_path(result_file['file']))
+                    for result_file
+                    in result_files]
+                ),
+                file_type=file_type_string
+            )
+    logging.info(message)
 
 
 def should_path_be_created(path):
