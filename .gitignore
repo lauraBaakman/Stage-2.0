@@ -1,4 +1,5 @@
-results/normal/
+results/normal/silverman/*.txt
+results/normal/breiman/*.txt
 results/*.zip
 
 ###OSX###
