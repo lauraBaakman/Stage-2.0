@@ -267,7 +267,7 @@ def log_processing(file_type_string, result_files, dataset_file):
         return bool(filter(lambda x: x is None, result_files))
 
     if result_files_are_none():
-        message = 'No files of {file_type} to process for {xs_file}'.format(
+        message = 'No files of type {file_type} to process for {xs_file}'.format(
                 file_type=file_type_string,
                 xs_file=ioUtils.partial_path(dataset_file)
             )
