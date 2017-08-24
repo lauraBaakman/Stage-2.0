@@ -79,10 +79,12 @@ def find_associated_result_files(xs_files, xs_results_files, xis_results_files=N
             xs_results_files
         )
         for xs_result_file in xs_file['xs result files']:
-            xs_result_file['xis result file'] = filter(
+            associated_xis_files = filter(
                 lambda x: ioFiles.is_associated_xis_file(xs_result_file, x, skip_keys=skip_keys),
                 xis_results_files
-            ).pop()
+            )
+            if associated_xis_files:
+                xs_result_file['xis result file'] = associated_xis_files.pop()
     return xs_files
 
 
