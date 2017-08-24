@@ -244,6 +244,10 @@ def process_xis_data(dataset_meta):
 
     data, column_names = collect_all_xis_data(dataset_meta)
 
+    logging.info('Subsampling the data gathered with the base file {xsfile}.'.format(
+        xsfile=ioUtils.partial_path(dataset_meta['file'])
+    ))
+
     data = subsample(data, dataset_meta)
     header = ', '.join(column_names)
 
