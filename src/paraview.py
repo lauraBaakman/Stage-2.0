@@ -253,9 +253,6 @@ def process_xis_data(dataset_meta):
 
     data, column_names = collect_all_xis_data(dataset_meta)
 
-    logging.info('Subsampling the data gathered with the base file {xsfile}.'.format(
-        xsfile=ioUtils.partial_path(dataset_meta['file'])
-    ))
 
     data = subsample(data, dataset_meta)
     header = ', '.join(column_names)
@@ -336,6 +333,10 @@ def subsample(data, meta_data):
 
     if not args.sub_sample:
         return data
+
+    logging.info('Subsampling the data gathered with the base file {xsfile}.'.format(
+        xsfile=ioUtils.partial_path(meta_data['file'])
+    ))
 
     if 'grid_size' in meta_data:
         return grid_subsample(data, args.sub_sampling_space)
