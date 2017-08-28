@@ -52,7 +52,8 @@ plotResultOfMultipleDensityDataSet <-function(data, outputFile, distribution, li
   plot <- plot + geom_line(aes(x=trueDensity, y=trueDensity));
   plot <- plot + 	xlab('true density') + ylab('computed density');
   plot <- plot + scale_x_continuous(labels = fancy_scientificLabels) + scale_y_continuous(labels = fancy_scientificLabels);
-  
+  plot <- plot + xlim(limits$xMin, limits$xMax);
+  plot <- plot + ylim(limits$yMin, limits$yMax);
   plot <- plot + ggtitle(sprintf("MSE = %.7e", computeMSE(data)));
   # print(plot)
   ggsave(
@@ -84,7 +85,7 @@ findPlotLimits <- function(data){
     minimum = min(minimum, df$trueDensity, df$computedDensity);
     maximum = max(maximum, df$trueDensity, df$computedDensity);
   }
-  c(minimum = minimum, maximum = maximum);
+  c(xMin = minimum, cMax = maximum, yMin = 0.0, yMax=1.0);
 }
 
 extractEstimatorSensitivityDataset <- function(file_name){
