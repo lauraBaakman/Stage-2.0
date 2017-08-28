@@ -14180,7 +14180,7 @@
         <Domain name="bool" id="6511.SelectionVisibility.bool"/>
       </Property>
       <Property name="Visibility" id="6511.Visibility" number_of_elements="1">
-        <Element index="0" value="1"/>
+        <Element index="0" value="0"/>
         <Domain name="bool" id="6511.Visibility.bool"/>
       </Property>
       <Property name="Ambient" id="6511.Ambient" number_of_elements="1">
@@ -15546,7 +15546,7 @@
         <Domain name="bool" id="7041.SelectionVisibility.bool"/>
       </Property>
       <Property name="Visibility" id="7041.Visibility" number_of_elements="1">
-        <Element index="0" value="1"/>
+        <Element index="0" value="0"/>
         <Domain name="bool" id="7041.Visibility.bool"/>
       </Property>
       <Property name="Ambient" id="7041.Ambient" number_of_elements="1">
@@ -16911,7 +16911,7 @@
         <Domain name="bool" id="7547.SelectionVisibility.bool"/>
       </Property>
       <Property name="Visibility" id="7547.Visibility" number_of_elements="1">
-        <Element index="0" value="1"/>
+        <Element index="0" value="0"/>
         <Domain name="bool" id="7547.Visibility.bool"/>
       </Property>
       <Property name="Ambient" id="7547.Ambient" number_of_elements="1">
@@ -17712,7 +17712,7 @@
         <Domain name="bool" id="5407.UseCustomLabels.bool"/>
       </Property>
       <Property name="Visibility" id="5407.Visibility" number_of_elements="1">
-        <Element index="0" value="1"/>
+        <Element index="0" value="0"/>
         <Domain name="bool" id="5407.Visibility.bool"/>
       </Property>
       <Property name="WindowLocation" id="5407.WindowLocation" number_of_elements="1">
