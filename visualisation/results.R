@@ -81,11 +81,13 @@ findPlotLimits <- function(data){
   maximum = -Inf;
   
   for(df in data){
-    minimum = min(minimum, df$trueDensity, df$computedDensity);
-    maximum = max(maximum, df$trueDensity, df$computedDensity);
+    minimum = min(minimum, df$computedDensity);
+    maximum = max(maximum, df$computedDensity);
   }
-  c(xMin = minimum, xMax = maximum, 
-    yMin = 0.0, yMax = 1.0);
+  
+  trueDensities = data[1][[1]]$trueDensity
+  c(xMin = min(trueDensities), xMax = max(trueDensities), 
+    yMin = minimum, yMax = maximum);
 }
 
 extractEstimatorSensitivityDataset <- function(file_name){
