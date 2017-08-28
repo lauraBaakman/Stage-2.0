@@ -73,7 +73,8 @@ readResults <- function(filePath){
     header=FALSE, 
     dec=".", 
     row.names=NULL, 
-    col.names = c('computedDensity')
+    sep = " ",
+    col.names = c('computedDensity', 'numUsedPatterns')
   )	
 }
 

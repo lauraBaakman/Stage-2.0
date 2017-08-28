@@ -70,6 +70,11 @@ isGridFile<-function(path){
   grepl("^(ferdosi|baakman)_[[:digit:]]+_[[:digit:]]+_grid_[[:digit:]]+$", filename)[1];
 }
 
+isXisResultFile<-function(path){
+  filename = pathToFileName(path);  
+  grepl("^.*_xis.*$", filename)[1];
+}
+
 splitGridFileName<-function(path){
   filename = pathToFileName(path);
   match = str_match(filename, "([[:alpha:]]+_[[:digit:]]+)_([[:digit:]]+)_grid_([[:digit:]]+)")
@@ -111,16 +116,16 @@ extractGridFiles<-function(data_set_results){
 }
 
 extractGridResultFiles<-function(data_set_results){
-  grid_files_idx = 1; files_idx = 1;
-  for (path in data_set_results$associatedResults){
-    if (isGridResultsFile(path)){
-      data_set_results$grid_results[[grid_files_idx]] = path;
-      grid_files_idx = grid_files_idx + 1;
-      data_set_results$associatedResults = data_set_results$associatedResults[-files_idx]
-    }
-    files_idx = files_idx + 1;
-  }
-  data_set_results
+  gridResultFilesIdx = sapply(data_set_results$associatedResults, isGridResultsFile, USE.NAMES=FALSE)
+  data_set_results$grid_results = data_set_results$associatedResults[gridResultFilesIdx]
+  data_set_results$associatedResults = data_set_results$associatedResults[!gridResultFilesIdx]
+  
+  data_set_results;
+}
+
+removeXisResultFiles<-function(files){
+  xisFilesIdx = sapply(files, isXisResultFile, USE.NAMES = FALSE)
+  files[!xisFilesIdx]
 }
 
 getFiles <- function(){
@@ -129,6 +134,8 @@ getFiles <- function(){
   
   dataSetsPaths = getDataSetPaths();
   resultsPaths = getOutputPaths();
+  resultsPaths = removeXisResultFiles(resultsPaths);
+  
   filePairs = list();	i = 1;
   for (file in dataSetsPaths) {
     if(length(resultsPaths) == 0){

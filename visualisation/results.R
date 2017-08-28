@@ -119,12 +119,13 @@ mainResults <- function(){
     
     # Read the results
     for(resultPath in filePair$associatedResults){
-      computedDensities = readResults(resultPath);
+      result = readResults(resultPath);
+      result$numUsedPatterns <- NULL
       
       printf('Processing: %s\n', basename(resultPath));
       
       outputFiles[[idx]] = outputFilePath(resultPath, "results_", '.png');
-      data[[idx]] = data.frame(points=dataPoints, trueDensities=trueDensities, computedDensities=computedDensities);
+      data[[idx]] = data.frame(points=dataPoints, trueDensities=trueDensities, computedDensities=result);
       
       overview <- updateResultTable(overview, data[[idx]], outputFiles[[idx]]);
       
