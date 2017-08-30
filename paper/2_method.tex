@@ -9,33 +9,37 @@
 	%Final densities
 	The final density estimate is computed with an Epanechnikov kernel according to:
 	\begin{equation}\label{eq:2:parzenWithBandWidthMatrix}
-		\varEstimatedDensityFunction{\varPattern} = \frac{1}{\varNumPatterns}\sum_{\itXis = 1}^{\varNumPatterns} \frac{1}{\det\left(\varLocalBandwidth{\itXis} \cdot \varBandwidthMatrix\right)}\varKernel{\left(\varLocalBandwidth{\itXis} \cdot \varBandwidthMatrix\right)^{-1}\left(\varPattern - \varPattern[\itXis]\right)}.
+		\varEstimatedDensityFunction{\varPattern} = \frac{1}{\varNumPatterns}\sum_{\itXis = 1}^{\varNumPatterns} \frac{1}{\det\left(\varBandwidthMatrix[\itXis]\right)}\varKernel{\varBandwidthMatrix[\itXis]^{-1}\left(\varPattern - \varPattern[\itXis]\right)}.
 	\end{equation}
-	The shape of the kernel \varKernel{\bullet} is determined by the bandwidth matrix \varBandwidthMatrix. If a fixed width method is used $\varLocalBandwidth{\itXis} = 1$. \Cref{eq:2:parzenWithBandWidthMatrix} reduces to the fixed-width Parzen estimator defined in \cref{eq:1:parzen}, if $\varBandwidthMatrix = \varBandwidth \cdot \identityMatrix{\varDim}$.
+	The shape of the kernel \varKernel{\bullet} is determined by the bandwidth matrix \varBandwidthMatrix[\itXis]. \Cref{eq:2:parzenWithBandWidthMatrix} reduces to the Modified Breiman estimator defined in \cref{eq:1:BML}, if $\varBandwidthMatrix[\itXis] = \varBandwidth \cdot \varLocalBandwidth{\itXis} \cdot \identityMatrix{\varDim}$.
 	
-	For each data point \varPattern of which the density is estimated the bandwidth matrix is determined according to these steps:
+	For each data point \varPattern[\itXis] that is used in the density estimation the bandwidth matrix is determined according to these steps:
 		\begin{enumerate}[labelindent=0ex]
 			\item \label{it:1:bandwidthmatrix:findNeighbours}
-				Find \varNeighborhood{\varPattern}, the \KNNK-nearest neighbors of \varPattern.
+				Find \varNeighborhood{\varPattern[\itXis]}, the \KNNK-nearest neighbors of \varPattern[\itXis].
 			\item \label{it:1:bandwidthmatrix:initialBandwidthMatrix}
-				Compute \varCovarianceMatrix, the unbiased covariance matrix of the local neighborhood \varNeighborhood{\varPattern}.
+				Compute \varCovarianceMatrix, the unbiased covariance matrix of the local neighborhood \varNeighborhood{\varPattern[\itXis]}.
 			\item \label{it:1:bandwidthmatrix:scaleBandwidhtMatrix}
-				Determine \varBandwidthMatrix by scaling \varCovarianceMatrix with
+				Determine \varBandwidthMatrix[\itXis] by scaling \varCovarianceMatrix with
 				\begin{equation}\label{eq:method:scalingFactor}
-					\varScalingFactor = \varBandwidth \left( \displaystyle\prod_{\itDim = 1}^{\varDim} \varEigenValue_\itDim \right)^{-\frac{1}{\varDim}}
+					\varScalingFactor = \varBandwidth \cdot \varLocalBandwidth{\itXis} 
+				 \left( \displaystyle\prod_{\itDim = 1}^{\varDim} \varEigenValue_\itDim \right)^{-\frac{1}{\varDim}}
 				\end{equation}
 				where $\varEigenValue_1,\, \cdots,\, \varEigenValue_\varDim$ are the eigenvalues of \varCovarianceMatrix.  
 		\end{enumerate}	
 	% Discuss step 1
-			% Why do we use KNN instead of fixed-radius
-			Step \ref{it:1:bandwidthmatrix:findNeighbours} determines the local neighborhood of \varPattern with the \KNNK nearest neighbors algorithm (\KNN) with Euclidean distance. We use this approach rather than a fixed-radius neighborhood to ensure that, independent of the sparsity of the data, the kernel shape is always based on a reasonable number of data points. 
+			Step \ref{it:1:bandwidthmatrix:findNeighbours} determines the local neighborhood of \varPattern[\itXis] with \KNNK-nearest neighbors search in a KD-tree \cite{Bentley1975Multidimensional} with Euclidean distance. 
 			% How do we choose K
 			We follow \citeauthor{silverman1986density}'s \cite{silverman1986density} recommendation of choosing $k = \sqrt{\varNumPatterns}$. To ensure that \varCovarianceMatrix is nonsingular we also need $\KNNK > \varDim$, therefore
 			\begin{equation*}
 				\KNNK = \max\left(\left\lfloor \sqrt{\varNumPatterns} \right\rceil,\, \varDim \right) + 1.	
-			\end{equation*}
+			\end{equation*}			
+			% The KD-tree
+			Using a KD-tree for the \KNNK-nearest neighbors search instead of the naive implementation significantly improves the time complexity of finding \varBandwidthMatrix[\itXis], with  as trade-off that \varNeighborhood{\varPattern[\itXis]} is an approximation. Given that \KNNK is rather large the use of an approximation instead of the actual \KNNK-nearest neighbors should not impact the final kernel result strongly. 
+			% Why do we use KNN instead of fixed-radius
+			We use \KNN rather than a fixed-radius neighborhood to ensure that, independent of the sparsity of the data, the kernel shape is always based on a reasonable number of data points. 
 		%  Discuss step 2
 			Step \ref{it:1:bandwidthmatrix:initialBandwidthMatrix} determines the basic shape of the bandwidth covariance matrix. 
 
 		% 	Discuss step 3
-			Step \ref{it:1:bandwidthmatrix:scaleBandwidhtMatrix} ensures that the kernels used in the density estimation of different patterns have the same domain, modulo the local bandwidths. \Cref{eq:method:scalingFactor} scales the bandwidth matrix in such a way that the volume of the ellipsoid defined by the eigenvectors and values of \varBandwidthMatrix is equal to that of the eigenellipsoid of the bandwidth matrix that is implicitly used in \cref{eq:1:parzen}.
+			Step \ref{it:1:bandwidthmatrix:scaleBandwidhtMatrix} ensures that the kernels used in the density estimation of different patterns have a comparable domain. \Cref{eq:method:scalingFactor} scales the bandwidth matrix in such a way that the volume of the ellipsoid defined by the eigenvectors and values of \varBandwidthMatrix[\itXis], module the local bandwidth, is equal to that of the eigenellipsoid of the bandwidth matrix that is implicitly used in \cref{eq:1:BML}.
