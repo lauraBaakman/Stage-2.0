@@ -6,14 +6,14 @@ The simulated datasets are a superset of the sets used by \textcite{ferdosi2011c
 	\centering
 	\beforeFinalVersion{Remove ticks and labels.}
 	\input{3/datasets_subfigs}
-	\caption{Scatter plot representation of the simulated datasets defined in \cref{tab:3:simulated:datasets}. }
+	\caption{Scatter plot representation of the datasets defined in \cref{tab:3:simulated:datasets}. }
 	\label{fig:3:simulated:datasets}
 \end{figure*}
 
 \begin{table*}
 	\centering
 	\input{3/datasets_table}
-	\caption{The simulated datasets used to test the estimators. The column `Number' indicates for each component of the dataset how many data points are sampled from that component. \gaussDist{\varMean}{\varCovarianceMatrix} denotes a Gaussian distribution with mean \varMean and covariance matrix \varCovarianceMatrix. A diagonal matrix with the values $x_1,\, \cdots,\, x_\varDim$ on the diagonal is represented as $\diag([x_1,\,\cdots,\,x_\varDim]])$, a scalar matrix with $x$ on the diagonal is shown as $\diag(x)$. \uniformDist{a}{b} denotes a uniform distribution with its minimum and maximum set to $a$ and $b$, respectively. The colors shown in the second column correspond with the colors used for these components of the data set throughout the paper.} 	
+	\caption{The datasets used to test the estimators. The column `Number' indicates for each component of the dataset how many data points are sampled from that component. \gaussDist{\varMean}{\varCovarianceMatrix} denotes a Gaussian distribution with mean \varMean and covariance matrix \varCovarianceMatrix. A diagonal matrix with the values $x_1,\, \cdots,\, x_\varDim$ on the diagonal is represented as $\diag([x_1,\,\cdots,\,x_\varDim]])$, a scalar matrix with $x$ on the diagonal is shown as $\diag(x)$. \uniformDist{a}{b} denotes a uniform distribution with its minimum and maximum set to $a$ and $b$, respectively. The colors shown in the second column correspond with the colors used for these components of the data set throughout the paper.} 	
 	\label{tab:3:simulated:datasets}
 \end{table*}
 
@@ -21,16 +21,16 @@ The simulated datasets are a superset of the sets used by \textcite{ferdosi2011c
 Dataset \numberstringnum{\ferdosiOneNum} through \numberstringnum{\ferdosiThreeNum}, shown in \crefrange{fig:3:simulated:datasets:ferdosi1}{fig:3:simulated:datasets:ferdosi3}, are taken from \textcite{ferdosi2011comparison}. They consist of a number of spherical Gaussian distributions with random noise added. The means of the Gaussian distribution are chosen in such a way that it is unlikely that the distributions overlap.
 
 %Baakman 1/3
-\Crefrange{fig:3:simulated:datasets:baakman1}{fig:3:simulated:datasets:baakman3} present dataset \numberstringnum{\baakmanOneNum} through \numberstringnum{\baakmanThreeNum}. These datasets are created from \numberstringnum{\ferdosiOneNum} through \numberstringnum{\ferdosiThreeNum} in such a way that the volumes of the eigenellipsoids defined by the covariance matrices of the components of these datasets are equal to volumes of the eigenspheres of the covariance matrix of the component in dataset \numberstringnum{\ferdosiOneNum} through \numberstringnum{\ferdosiThreeNum} that inspired them. Furthermore if $a$ is the eigenvalue of the original covariance matrix, the eigenvalues of the covariance matrix in dataset \numberstringnum{\baakmanOneNum} through \numberstringnum{\baakmanThreeNum} are $a^2$, $\sqrt{a}$ and $\sqrt{a}$. Consequently the minor axes of these datasets have the same length.
+\Crefrange{fig:3:simulated:datasets:baakman1}{fig:3:simulated:datasets:baakman3} present dataset \numberstringnum{\baakmanOneNum} through \numberstringnum{\baakmanThreeNum}. These datasets are created from \numberstringnum{\ferdosiOneNum} through \numberstringnum{\ferdosiThreeNum} in such a way that the volumes of the eigenellipsoids defined by the covariance matrices of the components of these datasets are equal to volumes of the eigenspheres of the covariance matrix of the component in dataset \numberstringnum{\ferdosiOneNum} through \numberstringnum{\ferdosiThreeNum} that inspired them. Furthermore if $a$ is the eigenvalue of the original covariance matrix, the eigenvalues of the covariance matrix in dataset \numberstringnum{\baakmanOneNum} through \numberstringnum{\baakmanThreeNum} are $a^2$, $\sqrt{a}$ and $\sqrt{a}$. Consequently the volumes the eigenspheres of the covariances of the Gaussians in dataset \numberstringnum{\baakmanOneNum} through \numberstringnum{\baakmanThreeNum} are equal to those of dataset \numberstringnum{\ferdosiOneNum} through \numberstringnum{\ferdosiThreeNum}.
 
 % Baakman 4/5
 In dataset \numberstringnum{\baakmanFourNum} and \numberstringnum{\baakmanFiveNum}, illustrated in \crefrange{fig:3:simulated:datasets:baakman3}{fig:3:simulated:datasets:baakman4} the semi axes of the ellipsoids all have a different length. The largest minor axis of the Trivariate Gaussian in dataset \numberstringnum{\baakmanFourNum} is a factor two larger than the smallest minor axis in that dataset. Whereas in dataset \numberstringnum{\baakmanFiveNum} the largest minor axis is exponentially larger than the smallest minor axis. 
 
 %Expectations for the datasets
 % Ferdosi 1/3
-We expect comparable performance from all estimators on dataset \numberstringnum{\ferdosiOneNum} through \numberstringnum{\ferdosiThreeNum}, as other than the randomly sampled noise these sets only contain data sampled from a Gaussian distribution with a diagonal covariance matrix. Which results in an equal spread of the data in all dimensions for the non-noise data. 
+We expect the MBE and shape-adaptive MBE to perform comparable on dataset \numberstringnum{\ferdosiOneNum} through \numberstringnum{\ferdosiThreeNum}, as other than the randomly sampled noise these sets only contain data sampled from a Gaussian distribution with a diagonal covariance matrix. Which results in an equal spread of the data in all dimensions for the non-noise data. 
 % Baakman 1/5
 Given the elongated shape of the non-noise components in \numberstringnum{\baakmanOneNum} through \numberstringnum{\baakmanFiveNum} we expect the shape-adaptive estimator to outperform the MBE. 
 
 %Conclusion
-The increasing complexity of these datasets allows us to investigate the performance of the classifier on simple situations, one cluster of data with some noise, to complex density fields that approximate real world data. The advantage of using simulated data is that the true densities of the data points are known, which allows us to test how well the different methods estimate the densities.
+The increasing complexity of these datasets allows us to investigate the performance of the classifier on simple situations, one cluster of data with some noise, to complex density fields that approximate real world data. 
