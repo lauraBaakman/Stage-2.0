@@ -1,15 +1,13 @@
 %!TEX root = paper.tex
 
 %General Idea
-	We use shape adaptive kernels in combination with the Modified Breiman Estimator introduced by \textcite{wilkinson1995dataplot} 
+	We use shape adaptive kernels in combination with the Modified Breiman Estimator introduced by \textcite{wilkinson1995dataplot},
 	%General bandwidth
-	with the general bandwidths computed according to the method introduced by \textcite{ferdosi2011comparison} for its lower computational complexity.
-	%Pilot Densities
-	The pilot densities are computed on a $20 \times \cdots \times 20$ grid that covers all data points.
+	the general bandwidths are computed according to the method introduced by \textcite{ferdosi2011comparison} for its lower computational complexity. 
 	%Local bandwidths
-	We have empirically determined \todo{hoe hebben we dat vastgesteld} that using \varMBESensitivityParam = \todo{Een of andere waarde} works best in our case. 
+	We have empirically determined that using \varMBESensitivityParam = \rfrac{1}{2} works better than \rfrac{1}{\varDim} in combination with shape-adaptive kernels.
 	%Final densities
-	The final density estimated is estimated with an Epanechnikov kernel according to:
+	The final density estimate is computed with an Epanechnikov kernel according to:
 	\begin{equation}\label{eq:2:parzenWithBandWidthMatrix}
 		\varEstimatedDensityFunction{\varPattern} = \frac{1}{\varNumPatterns}\sum_{\itXis = 1}^{\varNumPatterns} \frac{1}{\det\left(\varLocalBandwidth{\itXis} \cdot \varBandwidthMatrix\right)}\varKernel{\left(\varLocalBandwidth{\itXis} \cdot \varBandwidthMatrix\right)^{-1}\left(\varPattern - \varPattern[\itXis]\right)}.
 	\end{equation}
