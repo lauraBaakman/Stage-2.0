@@ -7,6 +7,11 @@
 	\vspace{2ex}%	
 }
 
+%Iterators
+\newcommand{\itDim}{\ensuremath{l}}
+\newcommand{\itXs}{\ensuremath{j}}
+\newcommand{\itXis}{\ensuremath{i}}
+
 \newcommand{\KNNK}{\ensuremath{k}\xspace}
 \newcommand{\KNN}{\KNNK-NN\xspace}
 
@@ -17,7 +22,14 @@
 }
 
 \newcommand{\varBandwidth}{\ensuremath{\mathit{h}}\xspace}
-\newcommand{\varBandwidthMatrix}{\ensuremath{\mathbf{H}}\xspace}
+% \newcommand{\varBandwidthMatrix}{\ensuremath{\mathbf{H}}\xspace}
+% \varBandwidthMatrix
+\makeatletter
+\def\varBandwidthMatrix{\@ifnextchar[{\@withSubscript}{\@withoutSubscript}}
+\def\@withSubscript[#1]{\ensuremath{\mathbf{H}_{#1}}\xspace}
+\def\@withoutSubscript{\ensuremath{\mathbf{H}}\xspace}
+\makeatother
+
 \newcommand{\varBMLconstant}{\ensuremath{\alpha}\xspace}
 \newcommand{\varWilkinsonConstant}{\ensuremath{\sigma}\xspace}
 \newcommand{\varCovarianceMatrix}{\ensuremath{\Sigma}\xspace}
@@ -32,11 +44,6 @@
 	{\ensuremath{\text{GM}}\xspace}%
 	{\ensuremath{\text{GM}\left(#1\right)}\xspace}%
 }
-
-%Iterators
-\newcommand{\itDim}{\ensuremath{l}}
-\newcommand{\itXs}{\ensuremath{j}}
-\newcommand{\itXis}{\ensuremath{i}}
 
 \makeatletter
 \def\varKernel{\@ifnextchar[{\@with}{\@without}}
@@ -53,7 +60,7 @@
 \makeatother
 
 \newcommand{\varKNNDistance}[2]{\ensuremath{D_{#1, #2}}\xspace}
-\newcommand{\varLocalBandwidth}[1]{\ensuremath{\lambda_{#1}}\xspace}
+\newcommand{\varLocalBandwidth}[1]{\ensuremath{\gamma_{#1}}\xspace}
 \newcommand{\varNeighbourhood}[2]{\ensuremath{C_{#1, #2}}\xspace}
 \newcommand{\varNumPatterns}{\ensuremath{N}\xspace}
 \newcommand{\varPercentile}[2]{\ensuremath{P_{#1}\left( #2 \right)}\xspace}
