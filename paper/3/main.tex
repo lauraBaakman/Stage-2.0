@@ -1,16 +1,9 @@
 %!TEX root = ../paper.tex
-We compare the performance of the shape-adaptive method with that of the Modified Breiman Estimator. \Cref{ss:3:datasets} introduces the datasets used in our experiments. The metrics used to compare the performance of the different estimators are introduced in \cref{ss:3:errorMeasures}.
+We compare the performance of the shape-adaptive method with that of the Modified Breiman Estimator, on simulated datasets with known density fields. This allow us to test how well a method can recover simple density distributions. 
 
-\subsection{Datasets}
-\label{ss:3:datasets}
-	The performance of the estimators is investigated with two groups of datasets: a number of simulated datasets with known density fields and a real world dataset with an unknown density field. The simulated datasets allow us to test how well a method can recover simple density distributions. Whereas the real world dataset makes it possible to compare the performance of the estimators in the context in which they would be applied. 
+To quantify the performance of the estimators we use the Mean Squared Error (MSE):
+\begin{equation*}
+	\varMSE{\varEstimatedDensityFunction{\bullet}} = \frac{1}{\varNumPatterns} \sum_{\itXs = 1}^{\varNumPatterns} {\left(\varEstimatedDensityFunction{\varPattern[\itXs]} - \varDensityFunction{\varPattern[\itXs]} \right)}^2.
+\end{equation*}
 
-	\subsubsection*{Simulated Datasets}
-	\input{3/simulated}				
-
-	\subsubsection*{Real World Datasets}
-	\todo[inline]{Iets over real world data}
-
-\subsection{Error Measures}
-\label{ss:3:errorMeasures}
-\input{3/errorMeasures}
+\input{3/datasets}

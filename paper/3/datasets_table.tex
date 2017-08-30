@@ -27,7 +27,7 @@ Set 			&~					& Component					& {Number} 	& Distribution\\
 \hline
 \baakmanTwo		&\legendDot{blue}	& Trivariate Gaussian 1		& 20000		& $(x, y, z) \sim \gaussDist{[25, 25, 25]}{\diag([25, \sqrt{5}, \sqrt{5}])}$\\
 ~ 				&\legendDot{green}	& Trivariate Gaussian 2		& 20000		& $(x, y, z) \sim \gaussDist{[65, 65, 65]}{\diag([\sqrt{20}, \sqrt{20}, 400])}$\\
-~ 				&\legendDot{red}	& Uniform random background	& 20000		& $(x, y, z) \sim \uniformDist{[0, 0, 0]}{[100, 100, 100]}$\\
+~ 				&\legendDot{red}	& Uniform random background	& 20000		& $(x, y, z) \sim \uniformDist{[0, 0, 0]}{[150, 150, 150]}$\\
 % Baakman 3
 \hline
 \baakmanThree	&\legendDot{blue}	& Trivariate Gaussian 1 	& 20000		& $(x, y, z) \sim \gaussDist{[24, 10, 10]}{\diag([4, \sqrt{2}, \sqrt{2}])}$\\
@@ -43,14 +43,5 @@ Set 			&~					& Component					& {Number} 	& Distribution\\
 \hline
 \baakmanFive	&\legendDot{blue}	& Trivariate Gaussian 		& 40000		& $(x, y, z) \sim \gaussDist{[50, 50, 50]}{\diag([9, 3, 1])}$\\
 ~ 				&\legendDot{green}	& Uniform random background	& 20000		& $(x, y, z) \sim \uniformDist{[0, 0, 0]}{[100, 100, 100]}$\\
-% Ferdosi 4
-\hline
-\ferdosiFour 	&\legendDot{blue}	& Wall-like structure 		& 30000		& $(x, y) \sim \uniformDist{[0, 0]}{[100, 100]}$, $(z) \sim \gaussDist{50}{5}$\\
-~ 				&\legendDot{green}	& Filament-like structure 	& 30000		& $(x, y) \sim \gaussDist{[50, 50]}{\diag(5)}$, $(z) \sim \uniformDist{0}{100}$\\
-% Ferdosi 5
-\hline
-\ferdosiFive 	&\legendDot{blue}	& Wall-like structure 1 	& 20000		& $(x, z) \sim \uniformDist{[0, 0]}{[100, 100]}$, $(y) \sim \gaussDist{10}{5}$\\
-~ 				&\legendDot{green}	& Wall-like structure 2 	& 20000		& $(x, y) \sim \uniformDist{[0, 0]}{[100, 100]}$, $(z) \sim \gaussDist{50}{5}$\\
-~ 				&\legendDot{red}	& Wall-like structure 3		& 20000		& $(x, z) \sim \uniformDist{[0, 0]}{[100, 100]}$, $(y) \sim \gaussDist{50}{5}$\\
 \bottomrule
 \end{tabular}
