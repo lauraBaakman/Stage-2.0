@@ -56,9 +56,20 @@ readTrueDensities <- function(filePath, rows){
   )
 }
 
+buildComponentColumn <- function(distribution){
+  componentColum <- NULL;
+  component = 0;
+  for (numberOfPatterns in distribution){
+    componentColum <- c(componentColum, rep(component, numberOfPatterns))
+    component <- component + 1;
+  }
+  componentColum;
+}
+
 readDataSet <- function(filePath){
   list[rows, cols, numberOfPatternsPerSubSet] <- readHeader(filePath);
   data <- readData(filePath, rows);
+  data$component = buildComponentColumn(numberOfPatternsPerSubSet);
   densities <- readTrueDensities(filePath, rows);
   list(
     data = data, 

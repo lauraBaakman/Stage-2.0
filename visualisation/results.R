@@ -62,6 +62,8 @@ plotResultOfMultipleDensityDataSet <-function(data, outputFile, distribution, li
   )
   # Sys.setenv(R_GSCMD = "/usr/local/bin/gs");
   # embed_fonts(outputFile);
+  
+  plot;
 }
 
 plotResultOfSingleDensityDataSet <-function(trueDensities, computedDensities, outputFile, distribution){
@@ -148,5 +150,5 @@ mainResults <- function(){
   print(overview)
 }
 
-mainResults()
+# mainResults()
 
