@@ -1,6 +1,6 @@
 # Define paths
-dataInputPath = "/Users/laura/Repositories/stage/data/simulated/normal";
-dataOutputPath = "/Users/laura/Repositories/stage/results/normal/silverman";
+dataInputPath = "../data/simulated/normal";
+dataOutputPath = "../results/normal/silverman";
 imagesOutputPath = "/Users/laura/Desktop";
 
 # Settings for the plots
