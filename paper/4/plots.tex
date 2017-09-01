@@ -18,7 +18,7 @@ This section presents a visual representation of the results of the estimators t
 		% Normal Plot
 		Comparing the performance of the two estimators on dataset \numberstringnum{\baakmanOneNum} with \crefrange{fig:4:results:mbe:baakman1}{fig:4:results:sambe:baakman1} we find that the Modified Breiman Estimator outperforms the shape-adaptive variant. The second estimator has some extreme outliers, the most extreme of which are \num{1.071674654143224}, and \num{-0.506829052779317}. 
 		% No Outlier Plot
-		Plotting only the results where the density as estimated by \sambe is in the range $\left(\num[round-precision=1]{-0.07}, \num[round-precision=1]{0.07} \right)$ results in \Cref{fig:results:baakman1:noOutliers}. The mean square errors of this subset are \num{4.7756034e-07} and \num{4.2580667e-06} for \mbe and \sambe, respectively. Observing \cref{fig:results:baakman1::noOUtliers:sambe} we find that using \sambe results in a lot of estimated densities that are smaller than zero and in underestimated densities, especially when compared to \cref{fig:results:baakman1:noOutliers:mbe}.
+		Plotting only the results where the density as estimated by \sambe is in the range $\left(\num{0}, \num[round-precision=1]{0.07} \right)$ results in \Cref{fig:results:baakman1:noOutliers}The mean square errors of this subset are \num{4.6503038e-07} and \num{2.5008207e-06} for \mbe and \sambe, respectively. Observing \cref{fig:results:baakman1::noOUtliers:sambe} we find that using \sambe results in a greater spread of densities, but that the densities within the range $\left(\num[round-precision=1]{0.0}, \num[round-precision=1]{0.07} \right)$ reasonable approximate the true density.
 
 		\begin{figure}
 			\centering
