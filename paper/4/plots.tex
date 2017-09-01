@@ -22,13 +22,13 @@ This section presents a visual representation of the results of the estimators t
 
 		\begin{figure}
 			\centering
-			\begin{subfigure}{0.7\columnwidth}
+			\begin{subfigure}{0.6\columnwidth}
 				\centering
 				\includegraphics[width=\textwidth]{4/img/noOutliers/results_baakman_1_60000_mbe_silverman_no_outliers.png}
 				\caption{\mbe}
 				\label{fig:results:baakman1:noOutliers:mbe}
 			\end{subfigure}
-			\begin{subfigure}{0.7\columnwidth}
+			\begin{subfigure}{0.6\columnwidth}
 				\centering
 				\includegraphics[width=\textwidth]{4/img/noOutliers/results_baakman_1_60000_sambe_silverman_no_outliers.png}
 				\caption{\sambe}
@@ -46,13 +46,13 @@ This section presents a visual representation of the results of the estimators t
 
 		\begin{figure}
 			\centering
-			\begin{subfigure}{0.7\columnwidth}
+			\begin{subfigure}{0.6\columnwidth}
 				\centering
 				\includegraphics[width=\textwidth]{4/img/noOutliers/results_baakman_4_60000_mbe_silverman_no_outliers.png}
 				\caption{\mbe}
 				\label{fig:results:baakman4:noOutliers:mbe}
 			\end{subfigure}
-			\begin{subfigure}{0.7\columnwidth}
+			\begin{subfigure}{0.6\columnwidth}
 				\centering
 				\includegraphics[width=\textwidth]{4/img/noOutliers/results_baakman_4_60000_sambe_silverman_no_outliers.png}
 				\caption{\sambe}
@@ -64,19 +64,19 @@ This section presents a visual representation of the results of the estimators t
 
 	% Baakman 5
 		% Normal Plot
-		\Crefrange{fig:4:results:mbe:baakman5}{fig:4:results:sambe:baakman5} compares the performance of \mbe with \sambe on data set \numberstringnum{\baakmanFiveNum}. We once again observe that the shape adaptive variant results in extreme outliers, and that the non-shape adaptive estimator approximates the known densities pretty well. 
+		\Crefrange{fig:4:results:mbe:baakman5}{fig:4:results:sambe:baakman5} compares the performance of \mbe with \sambe on data set \numberstringnum{\baakmanFiveNum}. We once again observe that the shape adaptive variant results in extreme outliers, and that the non-shape adaptive estimator approximates the known densities pretty well. Whereas the shape-adaptive estimator returns pretty extreme results with densities estimated to be as high as \num{3.827317431934174} and as low as \num{-1.133853887375073}.
 		%OutlierPlot
-		\todo[inline]{Discuss outlier plot}
+		Removing all patterns which have a density that is estimated by \sambe to lie outside the range $\left(\num{0.0}, \num[round-precision=2]{0.3} \right)$ results in \cref{fig:results:baakman5:noOutliers}. Comparing \cref{fig:results:baakman5:noOutliers:mbe} with \cref{fig:results:baakman5:noOUtliers:sambe} leads to the same conclusion as drawn about dataset \baakmanOne and \baakmanFour.
 
 		\begin{figure}
 			\centering
-			\begin{subfigure}{0.7\columnwidth}
+			\begin{subfigure}{0.6\columnwidth}
 				\centering
 				\includegraphics[width=\textwidth]{4/img/noOutliers/results_baakman_5_60000_mbe_silverman_no_outliers.png}
 				\caption{\mbe}
 				\label{fig:results:baakman5:noOutliers:mbe}
 			\end{subfigure}
-			\begin{subfigure}{0.7\columnwidth}
+			\begin{subfigure}{0.6\columnwidth}
 				\centering
 				\includegraphics[width=\textwidth]{4/img/noOutliers/results_baakman_5_60000_sambe_silverman_no_outliers.png}
 				\caption{\sambe}
