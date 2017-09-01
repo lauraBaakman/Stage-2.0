@@ -1,0 +1,10 @@
+%!TEX root = ../paper.tex
+
+The difference in results between the Modified Breiman Estimator and its shape adaptive variant on dataset \ferdosiOne, \baakmanOne, \baakmanFour, \baakmanFive raise several questions. This section attempts to answer them.
+
+% Why are the estimations on Ferdosi 1 by SAMBE so much higher than those by MBE?
+In \cref{fig:4:results:singleSphere} we observed that \sambe overestimates the densities of dataset \ferdosiOne. This could indicate that the kernels are too small, resulting in a too high contribution to the density estimate. Since the Modified Breiman estimator uses the same general and local bandwidth as the shape adaptive version the likely culprit is the shape of the kernel. 
+
+\todo[inline]{Why are some estimated densities smaller than zero with SAMBE on Baakman1, Baakman4, Baakman5?}
+\todo[inline]{Why are some estimated densities greater than one with SAMBE on Baakman1, Baakman4, Baakman5?}
+\todo[inline]{Why are the differences between baakman1, baakman4, baakman5 largest?, why not in ferdosi1?}
