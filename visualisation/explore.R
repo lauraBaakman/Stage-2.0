@@ -60,6 +60,24 @@ generateResultPlot <- function(data, computedDensities, outPath){
   plot <- plotResult(plotData, outPath, distribution, limits);
 }
 
+baakman5 <-function(){
+  data <- readResultSet(
+    data_set_file="../data/simulated/normal/baakman_5_60000.txt", 
+    parzen_file="../results/normal/silverman/baakman_5_60000_parzen.txt", 
+    mbe_file="../results/normal/silverman/baakman_5_60000_mbe_silverman.txt", 
+    sambe_file="../results/normal/silverman/baakman_5_60000_sambe_silverman.txt"
+  )  
+  
+  # Remove too low densities
+  data <- data[data$sambeDensities > 0.0, ];
+  # Remove too high densities
+  data <- data[data$sambeDensities < 0.3, ];               
+  
+  # Generate plots
+  generateResultPlot(data, data$mbeDensities, "~/Desktop/results_baakman_5_60000_mbe_silverman_no_outliers.png")
+  generateResultPlot(data, data$sambeDensities, "~/Desktop/results_baakman_5_60000_sambe_silverman_no_outliers.png")  
+}
+
 baakman4 <-function(){
   data <- readResultSet(
     data_set_file="../data/simulated/normal/baakman_4_60000.txt", 
@@ -100,3 +118,4 @@ baakman1 <- function(){
 # data <- readResultSet(data_set_file, parzen_file, mbe_file, sambe_file)
 # generateResultPlot(data, data$sambeDensities, "~/Desktop/temp.png")
 # formatC(min(data$sambeDensities), digits = 15, format = "f")
+# head(data[order(data$sambeDensities, decreasing = TRUE), ], n=10)
