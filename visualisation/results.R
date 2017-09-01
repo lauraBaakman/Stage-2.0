@@ -46,7 +46,9 @@ plotResultOfMultipleDensityDataSet <-function(data, outputFile, distribution, li
       panel.border = element_rect(colour = "black", fill=NA),
       panel.grid.major = element_blank(),
       panel.grid.minor = element_blank(),
-      panel.background = element_blank()
+      panel.background = element_blank(),
+      
+      plot.margin=unit(c(0,2.5,0,0),"mm")
     );
   plot <- plot + geom_point(aes(x=trueDensity, y=computedDensity), size=0.7, colour=cols, shape=21, stroke=0.2);
   plot <- plot + geom_line(aes(x=trueDensity, y=trueDensity));
