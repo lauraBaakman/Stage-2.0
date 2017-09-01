@@ -34,13 +34,36 @@ This section presents a visual representation of the results of the estimators t
 				\caption{\sambe}
 				\label{fig:results:baakman1::noOUtliers:sambe}
 			\end{subfigure}	
-			\caption{Comparative plots between the true densities of dataset \baakmanOne as estimated by \subref{fig:results:baakman1:noOutliers:mbe} \mbe and \subref{fig:results:baakman1::noOUtliers:sambe} \sambe, with only the points whose density is estimated by \sambe to lie in $\left(\num{-0.07}, \num{0.07} \right)$.}
+			\caption{Comparative plots between the true densities of dataset \baakmanOne as estimated by \subref{fig:results:baakman1:noOutliers:mbe} \mbe and \subref{fig:results:baakman1::noOUtliers:sambe} \sambe, with only the points whose density is estimated by \sambe to lie in $\left(\num{0}, \num[round-precision=1]{0.07} \right)$.}
 			\label{fig:results:baakman1:noOutliers}
 		\end{figure}
 
 	% Baakman 4
+		% Normal Plot
 		The results of data set \numberstringnum{\baakmanFourNum}, shown in \crefrange{fig:4:results:mbe:baakman1}{fig:4:results:sambe:baakman1} are comparable to those of \numberstringnum{\baakmanOneNum}: the original estimator approximates the density pretty well, the shape-adaptive variant has some extreme outliers.
 		\todo[inline]{Extra plaatje met de outliers eruit gehaald, kijken wat het dan geeft.}
+		% No Outlier Plot
+		\todo[inline]{Discuss outlier plots}
+		% minimum original \num{-4.660977565610216}, maximum original \num{0.928287124473193}		
+
+		\begin{figure}
+			\centering
+			\begin{subfigure}{0.7\columnwidth}
+				\centering
+				\includegraphics[width=\textwidth]{4/img/noOutliers/results_baakman_4_60000_mbe_silverman_no_outliers.png}
+				\caption{\mbe}
+				\label{fig:results:baakman4:noOutliers:mbe}
+			\end{subfigure}
+			\begin{subfigure}{0.7\columnwidth}
+				\centering
+				\includegraphics[width=\textwidth]{4/img/noOutliers/results_baakman_4_60000_sambe_silverman_no_outliers.png}
+				\caption{\sambe}
+				\label{fig:results:baakman4:noOUtliers:sambe}
+			\end{subfigure}	
+			\caption{Comparative plots between the true densities of dataset \baakmanFour as estimated by \subref{fig:results:baakman4:noOutliers:mbe} \mbe and \subref{fig:results:baakman4:noOUtliers:sambe} \sambe, with only the points whose density is estimated by \sambe to lie in $\left(\num{-0.15}, \num{0.15} \right)$.}
+			\label{fig:results:baakman4:noOutliers}
+		\end{figure}
+
 
 	% Baakman 5
 		\Crefrange{fig:4:results:mbe:baakman5}{fig:4:results:sambe:baakman5} compares the performance of \mbe with \sambe on data set \numberstringnum{\baakmanFiveNum}. We once again observe that the shape adaptive variant results in extreme outliers, and that the non-shape adaptive estimator approximates the known densities pretty well. 

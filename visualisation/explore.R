@@ -9,10 +9,10 @@ source("./results.R");
 # Load libraries
 
 # FileNames
-data_set_file = "../data/simulated/normal/baakman_1_60000.txt"
-parzen_file = "../results/normal/silverman/baakman_1_60000_parzen.txt"
-mbe_file = "../results/normal/silverman/baakman_1_60000_mbe_silverman.txt"
-sambe_file = "../results/normal/silverman/baakman_1_60000_sambe_silverman.txt"
+data_set_file = "../data/simulated/normal/baakman_4_60000.txt"
+parzen_file = "../results/normal/silverman/baakman_4_60000_parzen.txt"
+mbe_file = "../results/normal/silverman/baakman_4_60000_mbe_silverman.txt"
+sambe_file = "../results/normal/silverman/baakman_4_60000_sambe_silverman.txt"
 
 readResultSet <- function(data_set_file, parzen_file, mbe_file, sambe_file){
   # read dataset file
@@ -60,10 +60,34 @@ generateResultPlot <- function(data, computedDensities, outPath){
   plot <- plotResult(plotData, outPath, distribution, limits);
 }
 
-
-baakman1 <- function(data){
+baakman4 <-function(){
+  data <- readResultSet(
+    data_set_file="../data/simulated/normal/baakman_4_60000.txt", 
+    parzen_file="../results/normal/silverman/baakman_4_60000_parzen.txt", 
+    mbe_file="../results/normal/silverman/baakman_4_60000_mbe_silverman.txt", 
+    sambe_file="../results/normal/silverman/baakman_4_60000_sambe_silverman.txt"
+  )  
+  
   # Remove too low densities
-  data <- data[data$sambeDensities > -0.07, ];
+  data <- data[data$sambeDensities > 0.0, ];
+  # Remove too high densities
+  data <- data[data$sambeDensities < 0.15, ];               
+  
+  # Generate plots
+  generateResultPlot(data, data$mbeDensities, "~/Desktop/results_baakman_4_60000_mbe_silverman_no_outliers.png")
+  generateResultPlot(data, data$sambeDensities, "~/Desktop/results_baakman_4_60000_sambe_silverman_no_outliers.png")  
+}
+
+baakman1 <- function(){
+  data <- readResultSet(
+    data_set_file="../data/simulated/normal/baakman_1_60000.txt", 
+    parzen_file="../results/normal/silverman/baakman_1_60000_parzen.txt", 
+    mbe_file="../results/normal/silverman/baakman_1_60000_mbe_silverman.txt", 
+    sambe_file="../results/normal/silverman/baakman_1_60000_sambe_silverman.txt"
+  )
+  
+  # Remove too low densities
+  data <- data[data$sambeDensities > 0.0, ];
   # Remove too high densities
   data <- data[data$sambeDensities < 0.07, ];               
   
