@@ -39,7 +39,7 @@ plotResultOfMultipleDensityDataSet <-function(data, outputFile, distribution, li
   
   plot <- ggplot(data) +
     theme(
-      plot.title = element_text(family = font.family, size=font.size),
+      plot.title = element_text(family = font.family, size=font.size, hjust = 0.5),
       
       text=element_text(family=font.family, size=font.size),
       
