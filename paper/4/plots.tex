@@ -1,43 +1,63 @@
 %!TEX root = ../paper.tex
 This section presents a visual representation of the results of the estimators that allows us to compare the performance of the two estimators on a single dataset. All plots associated with a single dataset have the same axes. The horizontal axis is used to represent the known densities, this axis has the same range as the known densities. The estimated densities are shown on the vertical axis, the length of these axes is such that they are long enough to represent every estimated density for that dataset, independent of the used estimator. The black line in each plot illustrates the line all points would lie on if a perfect estimator was used, \ie the line $x = x$. The colors of the points in these plot correspond to the colors of the elements of the datasets in \cref{tab:3:simulated:datasets} and \cref{fig:3:simulated:datasets}.
 
-\begin{figure*}
-	\centering
-	\input{4/plots_singleSphere}
-	\caption{Comparative plots for dataset \ferdosiOne, \baakmanOne, \baakmanFour, \baakmanFive.}
-	\label{fig:4:results:singleSphere}
-\end{figure*}
+% Single Sphere Data
+	\begin{figure*}
+		\centering
+		\input{4/plots_singleSphere}
+		\caption{Comparative plots for dataset \ferdosiOne, \baakmanOne, \baakmanFour, \baakmanFive.}
+		\label{fig:4:results:singleSphere}
+	\end{figure*}
 
-% Kijk, plaats voor datasets met een sphere
-\Cref{fig:4:results:singleSphere} presents the results of using the Modified Breiman Estimator and its shape adaptive variant to estimate the densities of the datasets in \cref{tab:3:simulated:datasets} that contain a single Gaussian distribution. 
+	\Cref{fig:4:results:singleSphere} presents the results of using the Modified Breiman Estimator and its shape adaptive variant to estimate the densities of the datasets in \cref{tab:3:simulated:datasets} that contain a single Gaussian distribution. 
 
-% Ferdosi 1
-\Cref{fig:4:results:mbe:ferdosi1} confirms our findings from \cref{s:results:mse}, namely that the Modified Breiman Estimator gives a good approximation of the densities. The estimated densities both over, and undershoot the true density. \Cref{fig:4:results:mbe:ferdosi1}, on the other hand, shows that shape adaptive \mbe consistently overshoots the true density. 
+	% Ferdosi 1
+		\Cref{fig:4:results:mbe:ferdosi1} confirms our findings from \cref{s:results:mse}, namely that the Modified Breiman Estimator gives a good approximation of the densities. The estimated densities both over, and undershoot the true density. \Cref{fig:4:results:mbe:ferdosi1}, on the other hand, shows that shape adaptive \mbe consistently overshoots the true density. 
 
-% Baakman 1
-Comparing the performance of the two estimators on dataset \numberstringnum{\baakmanOneNum} with \crefrange{fig:4:results:mbe:baakman1}{fig:4:results:sambe:baakman1} we find that the Modified Breiman Estimator outperforms the shape-adaptive variant. The second estimator has some extreme outliers, the most extreme of which are 1.0, and -0.5. 
-\todo[inline]{Extra plaatje met de outliers eruit gehaald, kijken wat het dan geeft.}
+	% Baakman 1
+		% Normal Plot
+		Comparing the performance of the two estimators on dataset \numberstringnum{\baakmanOneNum} with \crefrange{fig:4:results:mbe:baakman1}{fig:4:results:sambe:baakman1} we find that the Modified Breiman Estimator outperforms the shape-adaptive variant. The second estimator has some extreme outliers, the most extreme of which are \num{1.071674654143224}, and \num{-0.506829052779317}. 
+		% No Outlier Plot
+		Plotting only the results where the density as estimated by \sambe is in the range $\left(\num{-0.07}, \num{0.07} \right)$ results in \Cref{fig:results:baakman1:noOutliers}. The mean square errors of this subset are \num{4.7756034e-07} and \num{4.2580667e-06} for \mbe and \sambe, respectively. Observing \cref{fig:results:baakman1::noOUtliers:sambe} we find that using \sambe results in a lot of estimated densities that are smaller than zero and in underestimated densities, especially when compared to \cref{fig:results:baakman1:noOutliers:mbe}.
 
-% Baakman 4
-The results of data set \numberstringnum{\baakmanFourNum}, shown in \crefrange{fig:4:results:mbe:baakman1}{fig:4:results:sambe:baakman1} are comparable to those of \numberstringnum{\baakmanOneNum}: the original estimator approximates the density pretty well, the shape-adaptive variant has some extreme outliers.
-\todo[inline]{Extra plaatje met de outliers eruit gehaald, kijken wat het dan geeft.}
+		\begin{figure}
+			\centering
+			\begin{subfigure}{0.47\columnwidth}
+				\centering
+				\includegraphics[width=\textwidth]{4/img/noOutliers/results_baakman_1_60000_mbe_silverman_no_outliers.png}
+				\caption{\mbe}
+				\label{fig:results:baakman1:noOutliers:mbe}
+			\end{subfigure}
+			\begin{subfigure}{0.47\columnwidth}
+				\centering
+				\includegraphics[width=\textwidth]{4/img/noOutliers/results_baakman_1_60000_sambe_silverman_no_outliers.png}
+				\caption{\sambe}
+				\label{fig:results:baakman1::noOUtliers:sambe}
+			\end{subfigure}	
+			\caption{Comparative plots between the true densities of dataset \baakmanOne as estimated by \subref{fig:results:baakman1:noOutliers:mbe} \mbe and \subref{fig:results:baakman1::noOUtliers:sambe} \sambe, with only the points whose density is estimated by \sambe to lie in $\left(\num{-0.07}, \num{0.07} \right)$.}
+			\label{fig:results:baakman1:noOutliers}
+		\end{figure}
 
-% Baakman 5
-\Crefrange{fig:4:results:mbe:baakman5}{fig:4:results:sambe:baakman5} compares the performance of \mbe with \sambe on data set \numberstringnum{\baakmanFiveNum}. We once again observe that the shape adaptive variant results in extreme outliers, and that the non-shape adaptive estimator approximates the known densities pretty well. 
-\todo[inline]{Extra plaatje met de outliers eruit gehaald, kijken wat het dan geeft.}
+	% Baakman 4
+		The results of data set \numberstringnum{\baakmanFourNum}, shown in \crefrange{fig:4:results:mbe:baakman1}{fig:4:results:sambe:baakman1} are comparable to those of \numberstringnum{\baakmanOneNum}: the original estimator approximates the density pretty well, the shape-adaptive variant has some extreme outliers.
+		\todo[inline]{Extra plaatje met de outliers eruit gehaald, kijken wat het dan geeft.}
+
+	% Baakman 5
+		\Crefrange{fig:4:results:mbe:baakman5}{fig:4:results:sambe:baakman5} compares the performance of \mbe with \sambe on data set \numberstringnum{\baakmanFiveNum}. We once again observe that the shape adaptive variant results in extreme outliers, and that the non-shape adaptive estimator approximates the known densities pretty well. 
+		\todo[inline]{Extra plaatje met de outliers eruit gehaald, kijken wat het dan geeft.}
+
+	% Algehele observatie voor single sphere datsets
+		In general we have found that the Modified Breiman estimator works pretty well for data sets that contain a single Gaussian, especially if the Gaussian is spherical. Since the mean square error of the \mbe is lower for dataset \baakmanFive, than for dataset \baakmanFour how elongated the sphere is does not seem to influence the performance of this estimator. 
+		%
+		The shape adaptive \mbe results in some extremely high and low values if it is used to estimate the densities of elongated Gaussians, when applied to a spherical Gaussians it overestimates the densities. The value of these extreme `densities' does not seem to be influenced by how elongated the Gaussian distribution is.
 
 
-% Algehele observatie voor single sphere datsets
-In general we have found that the Modified Breiman estimator works pretty well for data sets that contain a single Gaussian, especially if the Gaussian is spherical. Since the mean square error of the \mbe is lower for dataset \baakmanFive, than for dataset \baakmanFour how elongated the sphere is does not seem to influence the performance of this estimator. 
+% Multi Sphere Data
+	\begin{figure*}
+		\centering
+		\input{4/plots_multiSphere}
+		\caption{Comparative plots for dataset \ferdosiTwo, \ferdosiThree, \baakmanTwo, \baakmanThree.}
+		\label{fig:4:resuts:multiSphere}
+	\end{figure*}
 
-The shape adaptive \mbe results in some extremely high and low values if it is used to estimate the densities of elongated Gaussians, when applied to a spherical Gaussians it overestimates the densities. The value of these extreme `densities' does not seem to be influenced by how elongated the Gaussian distribution is.
-
-
-\begin{figure*}
-	\centering
-	\input{4/plots_multiSphere}
-	\caption{Comparative plots for dataset \ferdosiTwo, \ferdosiThree, \baakmanTwo, \baakmanThree.}
-	\label{fig:4:resuts:multiSphere}
-\end{figure*}
-
-\todo[inline]{What do we observe for dataset ferdosi 2, baakman 2, ferdosi 3, baakman 3}
+	\todo[inline]{What do we observe for dataset ferdosi 2, baakman 2, ferdosi 3, baakman 3}

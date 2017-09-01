@@ -60,6 +60,18 @@ generateResultPlot <- function(data, computedDensities, outPath){
   plot <- plotResult(plotData, outPath, distribution, limits);
 }
 
+
+baakman1 <- function(data){
+  # Remove too low densities
+  data <- data[data$sambeDensities > -0.07, ];
+  # Remove too high densities
+  data <- data[data$sambeDensities < 0.07, ];               
+  
+  # Generate plots
+  generateResultPlot(data, data$mbeDensities, "~/Desktop/results_baakman_1_60000_mbe_silverman_no_outliers.png")
+  generateResultPlot(data, data$sambeDensities, "~/Desktop/results_baakman_1_60000_sambe_silverman_no_outliers.png")
+}
+
 # Execute on Source
 data <- readResultSet(data_set_file, parzen_file, mbe_file, sambe_file)
 # generateResultPlot(data, data$sambeDensities, "~/Desktop/temp.png")
