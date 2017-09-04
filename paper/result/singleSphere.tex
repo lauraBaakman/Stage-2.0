@@ -1,16 +1,19 @@
 %!TEX root = ../paper.tex
 
-\todo[inline]{Mention MSE results}
+This section compares the performance of the Modified Breiman Estimator and a shape-adaptive variant on dataset that contain one Gaussian, \ie dataset \ferdosiOne, \baakmanOne, \baakmanFour, and \baakmanFive.
 
-\begin{figure*}[!ht]
-	\centering
-	\input{result/singleSphere_subfigs}
-	\caption{Comparative plots for dataset \ferdosiOneNum, \baakmanOneNum, \baakmanFourNum, and \baakmanFiveNum.
-	}
-	\label{fig:4:results:singleSphere}
-\end{figure*}
+%MSE
+Only on the dataset with a spherical Gaussian is the performance of the two estimators comparable, on all dataset with a single elliptical Gaussian the non-shape adaptive estimator performs significantly better than its shape-adaptive cousin.
 
 %PLOT results
+	\begin{figure*}[!ht]
+		\centering
+		\input{result/singleSphere_subfigs}
+		\caption{Comparative plots for dataset \ferdosiOneNum, \baakmanOneNum, \baakmanFourNum, and \baakmanFiveNum.
+		}
+		\label{fig:4:results:singleSphere}
+	\end{figure*}
+
 	\Cref{fig:4:results:singleSphere} presents the results of using the Modified Breiman Estimator and its shape adaptive variant to estimate the densities of the datasets in \cref{tab:3:simulated:datasets} that contain a single Gaussian distribution. 
 
 	% Ferdosi 1
