@@ -1,29 +1,37 @@
 %!TEX root = ../paper.tex
-In this section we present the results of the two estimators on dataset \ferdosiTwo, \baakmanTwo, \ferdosiThree, \baakmanThree, \ie the datasets that contain more than one Gaussian. 
+In this section we present the results of the two estimators on dataset \ferdosiTwo, \baakmanTwo, \ferdosiThree, \baakmanThree, \ie the datasets that contain more than one Gaussian.
 
-%MSE
-	The plots in \cref{fig:4:resuts:multiSphere} suggest some differences in how the two estimators handle the different components of the dataset, therefor 
+The plots in \cref{fig:4:resuts:multiSphere} suggest some differences in how the two estimators handle the different components of the dataset, therefore \cref{tab:4:results:multisphere:componentmse} presents the mean square error of the different components of the datasets that contain multiple Gaussians. 
 
 \begin{table*}
 	\centering
 	\input{result/component_mse_table}
-	\caption{The mean squared error of the known densities and the densities estimated by the Modified Breiman Estimator (\mbe) and the shape-adaptive MBE (\sambe), respectively, for the Gaussian components of the datasets with multiple Gaussians.} 	
-	\label{tab:4:results:mse}
+	\caption{The mean squared error of the known densities and the densities estimated by the Modified Breiman Estimator (\mbe) and the shape-adaptive MBE (\sambe), respectively, for the different components of the datasets with multiple Gaussians.} 	
+	\label{tab:4:results:multisphere:componentmse}
 \end{table*}
 
-	\todo[inline]{Mention MSE results}
-	\todo[inline]{MSE for the different components}
+% Ferdosi 2 & Baakman 2
+	% MSE
+	\Cref{tab:4:results:multisphere:componentmse} shows some difference in MSE between the different components of dataset \ferdosiTwo, and the elongated version of this dataset, \ie dataset \baakmanTwo: both estimators perform best on data points that were drawn from the uniform distribution, and worst on Gaussian 1, the Gaussian component with the smallest radius. Furthermore \sambe outperforms \mbe on the component named `Gaussian 2'.
 
-% PLOTS
-	\begin{figure*}
-		\centering
-		\input{result/multiSphere_subfigs}
-		\caption{Comparative plots for dataset \ferdosiTwoNum, \ferdosiThreeNum, \baakmanTwoNum, and \baakmanThreeNum.}
-		\label{fig:4:resuts:multiSphere}
-	\end{figure*}
+	% Plots
+	Comparing \cref{fig:4:results:mbe:ferdosi2,fig:4:results:mbe:baakman2,fig:4:results:sambe:ferdosi2,fig:4:simulated:datasets:sambe:baakman2} we find that on both datasets both estimators underestimate the density. Although the ranges of the densities estimated by \sambe are slightly higher than those estimated by the Modified Breiman Estimator the ranges do not differ as extremely as they did when a single non-spherical Gaussian with noise made up the dataset. 
 
-	\todo[inline]{Point to \cref{fig:4:resuts:multiSphere}}.
-	\todo[inline]{Report on \cref{fig:4:results:mbe:ferdosi2} and \cref{fig:4:results:mbe:baakman2}.} 
+% Ferdosi 3 & Baakman 3
+	% MSE
+
+	% Plots
+
 	\todo[inline]{Report on \cref{fig:4:results:mbe:ferdosi3} and \cref{fig:4:results:mbe:baakman3}.}
 
+% General
 	\todo[inline]{General observation of multi sphere datasets.}
+
+
+\begin{figure*}
+	\centering
+	\input{result/multiSphere_subfigs}
+	\caption{Comparative plots for dataset \ferdosiTwoNum, \ferdosiThreeNum, \baakmanTwoNum, and \baakmanThreeNum.}
+	\label{fig:4:resuts:multiSphere}
+\end{figure*}
+

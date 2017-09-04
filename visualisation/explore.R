@@ -68,7 +68,7 @@ mse <-function(trueDensities, estimatedDensities){
 
 componentMSE<-function(data, componentNumber){
   component1 <- data[data$component == componentNumber, ]
-  printf("Component %d:\n %s %s\n", 
+  printf("Component %d:\n %s\t& %s\n", 
          componentNumber,
          formatC(mse(component1$trueDensities, component1$mbeDensities), digits = 15, format = "e"),
          formatC(mse(component1$trueDensities, component1$sambeDensities), digits = 15, format = "e")); 
@@ -95,6 +95,20 @@ ferdosi2<-function(){
   componentMSE(data, 1);
   componentMSE(data, 2);
 }
+
+baakman2<-function(){
+  data <- readResultSet(
+    data_set_file="../data/simulated/normal/baakman_2_60000.txt", 
+    parzen_file="../results/normal/silverman/baakman_2_60000_parzen.txt", 
+    mbe_file="../results/normal/silverman/baakman_2_60000_mbe_silverman.txt", 
+    sambe_file="../results/normal/silverman/baakman_2_60000_sambe_silverman.txt"
+  )    
+  
+  componentMSE(data, 0);  
+  componentMSE(data, 1);
+  componentMSE(data, 2);
+}
+
 
 baakman5 <-function(){
   data <- readResultSet(
