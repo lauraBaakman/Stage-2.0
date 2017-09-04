@@ -60,6 +60,15 @@ generateResultPlot <- function(data, computedDensities, outPath){
   plot <- plotResult(plotData, outPath, distribution, limits);
 }
 
+ferdosi1<-function(){
+  data <- readResultSet(
+    data_set_file="../data/simulated/normal/ferdosi_1_60000.txt", 
+    parzen_file="../results/normal/silverman/ferdosi_1_60000_parzen.txt", 
+    mbe_file="../results/normal/silverman/ferdosi_1_60000_mbe_silverman.txt", 
+    sambe_file="../results/normal/silverman/ferdosi_1_60000_sambe_silverman.txt"
+  )    
+}
+
 baakman5 <-function(){
   data <- readResultSet(
     data_set_file="../data/simulated/normal/baakman_5_60000.txt", 
