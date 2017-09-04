@@ -60,6 +60,20 @@ generateResultPlot <- function(data, computedDensities, outPath){
   plot <- plotResult(plotData, outPath, distribution, limits);
 }
 
+mse <-function(trueDensities, estimatedDensities){
+  error <- trueDensities - estimatedDensities;
+  mse <- mean(error^2)
+  mse;
+}
+
+componentMSE<-function(data, componentNumber){
+  component1 <- data[data$component == componentNumber, ]
+  printf("Component %d:\n %s %s\n", 
+         componentNumber,
+         formatC(mse(component1$trueDensities, component1$mbeDensities), digits = 15, format = "e"),
+         formatC(mse(component1$trueDensities, component1$sambeDensities), digits = 15, format = "e")); 
+}
+
 ferdosi1<-function(){
   data <- readResultSet(
     data_set_file="../data/simulated/normal/ferdosi_1_60000.txt", 
@@ -67,6 +81,19 @@ ferdosi1<-function(){
     mbe_file="../results/normal/silverman/ferdosi_1_60000_mbe_silverman.txt", 
     sambe_file="../results/normal/silverman/ferdosi_1_60000_sambe_silverman.txt"
   )    
+}
+
+ferdosi2<-function(){
+  data <- readResultSet(
+    data_set_file="../data/simulated/normal/ferdosi_2_60000.txt", 
+    parzen_file="../results/normal/silverman/ferdosi_2_60000_parzen.txt", 
+    mbe_file="../results/normal/silverman/ferdosi_2_60000_mbe_silverman.txt", 
+    sambe_file="../results/normal/silverman/ferdosi_2_60000_sambe_silverman.txt"
+  )    
+  
+  componentMSE(data, 0);  
+  componentMSE(data, 1);
+  componentMSE(data, 2);
 }
 
 baakman5 <-function(){

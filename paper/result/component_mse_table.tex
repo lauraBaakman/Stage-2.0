@@ -1,13 +1,15 @@
 %!TEX root = ../paper.tex
 
-\begin{tabular}{@{}ccl*{2}{S[scientific-notation=true,round-mode=places,round-precision=1]}}
+\begin{tabular}{@{}ccl*{2}{S[scientific-notation=true,round-mode=places,round-precision=3]}}
 \toprule
-Set 			&~					& Component		& {\mbe} 	& {\sambe}\\
+~				&~					&~ 				& \multicolumn{2}{c}{Estimator}\\ \cmidrule{4-5}
+Set 			&~					& Component		& {\mbe} 				& {\sambe}\\
 \midrule
 % Ferdosi 2
 \hline
-\ferdosiTwo 	&\legendDot{blue}	& Gaussian 1	& 0.0 & 0.0\\
-~ 				&\legendDot{green}	& Gaussian 2	& 0.0 & 0.0\\
+\ferdosiTwo 	&\legendDot{blue}	& Gaussian 1	& 1.560536961708337e-07 & 2.993178935719230e-07\\
+~ 				&\legendDot{green}	& Gaussian 2	& 2.285260303722557e-09 & 8.344636264610111e-10\\
+				&\legendDot{red}	& Noise 		& 2.021379766292543e-11 & 2.363141221512672e-11\\
 % Ferdosi 3
 \hline
 \ferdosiThree	&\legendDot{blue}	& Gaussian 1	& 0.0 & 0.0\\
