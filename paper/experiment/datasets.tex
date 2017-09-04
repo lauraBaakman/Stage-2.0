@@ -5,14 +5,14 @@ The simulated datasets are a superset of a selection of the sets used by \textci
 \begin{figure*}
 	\centering
 	\beforeFinalVersion{Remove ticks and labels.}
-	\input{3/datasets_subfigs}
+	\input{experiment/datasets_subfigs}
 	\caption{Scatter plot representation of the datasets defined in \cref{tab:3:simulated:datasets}. The colors of the different components correspond to the colors used in \cref{tab:3:simulated:datasets}.}
 	\label{fig:3:simulated:datasets}
 \end{figure*}
 
 \begin{table*}
 	\centering
-	\input{3/datasets_table}
+	\input{experiment/datasets_table}
 	\caption{The datasets used to test the estimators. The column `Number' indicates for each component of the dataset how many data points are sampled from that component. \gaussDist{\varMean}{\varCovarianceMatrix} denotes a Gaussian distribution with mean \varMean and covariance matrix \varCovarianceMatrix. A diagonal matrix with the values $x_1,\, \cdots,\, x_\varDim$ on the diagonal is represented as $\diag([x_1,\,\cdots,\,x_\varDim]])$, a scalar matrix with $x$ on the diagonal is shown as $\diag(x)$. \uniformDist{a}{b} denotes a uniform distribution with its minimum and maximum set to $a$ and $b$, respectively. The colors shown in the second column correspond with the colors used for these components of the data set throughout the paper.} 	
 	\label{tab:3:simulated:datasets}
 \end{table*}
