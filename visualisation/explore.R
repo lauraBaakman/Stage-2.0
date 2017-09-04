@@ -96,6 +96,21 @@ ferdosi2<-function(){
   componentMSE(data, 2);
 }
 
+ferdosi3<-function(){
+  data <- readResultSet(
+    data_set_file="../data/simulated/normal/ferdosi_3_120000.txt", 
+    parzen_file="../results/normal/silverman/ferdosi_3_120000_parzen.txt", 
+    mbe_file="../results/normal/silverman/ferdosi_3_120000_mbe_silverman.txt", 
+    sambe_file="../results/normal/silverman/ferdosi_3_120000_sambe_silverman.txt"
+  )    
+  
+  componentMSE(data, 0);  
+  componentMSE(data, 1);
+  componentMSE(data, 2);
+  componentMSE(data, 3);
+  componentMSE(data, 4);
+}
+
 baakman2<-function(){
   data <- readResultSet(
     data_set_file="../data/simulated/normal/baakman_2_60000.txt", 
@@ -109,6 +124,20 @@ baakman2<-function(){
   componentMSE(data, 2);
 }
 
+baakman3<-function(){
+  data <- readResultSet(
+    data_set_file="../data/simulated/normal/baakman_3_120000.txt", 
+    parzen_file="../results/normal/silverman/baakman_3_120000_parzen.txt", 
+    mbe_file="../results/normal/silverman/baakman_3_120000_mbe_silverman.txt", 
+    sambe_file="../results/normal/silverman/baakman_3_120000_sambe_silverman.txt"
+  )    
+  
+  componentMSE(data, 0);  
+  componentMSE(data, 1);
+  componentMSE(data, 2);
+  componentMSE(data, 3);
+  componentMSE(data, 4);
+}
 
 baakman5 <-function(){
   data <- readResultSet(
