@@ -18,7 +18,7 @@ This section presents a visual representation of the results of the estimators t
 
 	% Baakman 1
 		% Normal Plot
-		Comparing the performance of the two estimators on dataset \numberstringnum{\baakmanOneNum} with \crefrange{fig:4:results:mbe:baakman1}{fig:4:results:sambe:baakman1} we find that the Modified Breiman Estimator outperforms the shape-adaptive variant. The second estimator has some extreme outliers, the most extreme of which are \num{1.071674654143224}, and \num{-0.506829052779317}. 
+		Comparing the performance of the two estimators on dataset \baakmanOne with \crefrange{fig:4:results:mbe:baakman1}{fig:4:results:sambe:baakman1} we find that the Modified Breiman Estimator outperforms the shape-adaptive variant. The second estimator has some extreme outliers, the most extreme of which are \num{1.071674654143224}, and \num{-0.506829052779317}. 
 		% No Outlier Plot
 		Plotting only the results where the density as estimated by \sambe are in the range $\left(\num{0.0}, \num[round-precision=1]{0.07} \right)$ results in \Cref{fig:results:baakman1:noOutliers}. Observing \cref{fig:results:baakman1::noOUtliers:sambe} we find that using \sambe results in a greater spread of densities, but that the densities within the range $\left(\num[round-precision=1]{0.0}, \num[round-precision=1]{0.07} \right)$ reasonable approximate the true density.
 		\begin{figure}[!ht]
@@ -41,7 +41,7 @@ This section presents a visual representation of the results of the estimators t
 
 	% Baakman 4
 		% Normal Plot
-		The results of data set \numberstringnum{\baakmanFourNum}, shown in \crefrange{fig:4:results:mbe:baakman1}{fig:4:results:sambe:baakman1} are comparable to those of \numberstringnum{\baakmanOneNum}: the original estimator approximates the density pretty well, the shape-adaptive variant has some extreme outliers, the densities estimated by \sambe fall in the range, $\left[\num{-4.660977565610216}, \num{0.928287124473193}\right]$, whereas the true densities all lie within $\left[\num{0.000000500000000}, \num{0.006107784664258}\right]$.
+		The results of data set \baakmanFour, shown in \crefrange{fig:4:results:mbe:baakman1}{fig:4:results:sambe:baakman1} are comparable to those of \baakmanOne: the original estimator approximates the density pretty well, the shape-adaptive variant has some extreme outliers, the densities estimated by \sambe fall in the range, $\left[\num{-4.660977565610216}, \num{0.928287124473193}\right]$, whereas the true densities all lie within $\left[\num{0.000000500000000}, \num{0.006107784664258}\right]$.
 		% No Outlier Plot
 		\Cref{fig:results:baakman4:noOutliers} presents the comparative plots for \mbe and \sambe for dataset \baakmanFour where patterns whose density was estimated to be outside the range $\left(\num{0.0}, \num[round-precision=2]{0.15} \right)$ are discarded. The results illustrated in this figure are comparable to those of \cref{fig:results:baakman1:noOutliers}: for a number of points the densities are overestimated, but otherwise the estimated densities seem reasonable.	
 
@@ -65,7 +65,7 @@ This section presents a visual representation of the results of the estimators t
 
 	% Baakman 5
 		% Normal Plot
-		\Crefrange{fig:4:results:mbe:baakman5}{fig:4:results:sambe:baakman5} compares the performance of \mbe with \sambe on data set \numberstringnum{\baakmanFiveNum}. We once again observe that the shape adaptive variant results in extreme outliers, and that the non-shape adaptive estimator approximates the known densities pretty well. Whereas the shape-adaptive estimator returns pretty extreme results with densities estimated to be as high as \num{3.827317431934174} and as low as \num{-1.133853887375073}.
+		\Crefrange{fig:4:results:mbe:baakman5}{fig:4:results:sambe:baakman5} compares the performance of \mbe with \sambe on data set \baakmanFive. We once again observe that the shape adaptive variant results in extreme outliers, and that the non-shape adaptive estimator approximates the known densities pretty well. Whereas the shape-adaptive estimator returns pretty extreme results with densities estimated to be as high as \num{3.827317431934174} and as low as \num{-1.133853887375073}.
 		%OutlierPlot
 		Removing all patterns which have a density that is estimated by \sambe to lie outside the range $\left(\num{0.0}, \num[round-precision=2]{0.3} \right)$ results in \cref{fig:results:baakman5:noOutliers}. Comparing \cref{fig:results:baakman5:noOutliers:mbe} with \cref{fig:results:baakman5:noOUtliers:sambe} leads to the same conclusion as drawn about dataset \baakmanOne and \baakmanFour.
 
