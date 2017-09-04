@@ -3,108 +3,13 @@ This section presents a visual representation of the results of the estimators t
 
 \subsubsection{Datasets with a Single Gaussian}
 	\label{s:results:plots:singleGaussian}
+	% \input{4/plots_singleSphere}
 
-	\begin{figure*}
-		\centering
-		\input{4/plots_singleSphere_subfigs}
-		\caption{Comparative plots for dataset \ferdosiOne, \baakmanOne, \baakmanFour, \baakmanFive.}
-		\label{fig:4:results:singleSphere}
-	\end{figure*}
-
-		\Cref{fig:4:results:singleSphere} presents the results of using the Modified Breiman Estimator and its shape adaptive variant to estimate the densities of the datasets in \cref{tab:3:simulated:datasets} that contain a single Gaussian distribution. 
-
-	% Ferdosi 1
-		\Cref{fig:4:results:mbe:ferdosi1} confirms our findings from \cref{s:results:mse}, namely that the Modified Breiman Estimator gives a good approximation of the densities. The estimated densities both over, and undershoot the true density. \Cref{fig:4:results:mbe:ferdosi1}, on the other hand, shows that shape adaptive \mbe consistently overshoots the true density. 
-
-	% Baakman 1
-		% Normal Plot
-		Comparing the performance of the two estimators on dataset \baakmanOne with \crefrange{fig:4:results:mbe:baakman1}{fig:4:results:sambe:baakman1} we find that the Modified Breiman Estimator outperforms the shape-adaptive variant. The second estimator has some extreme outliers, the most extreme of which are \num{1.071674654143224}, and \num{-0.506829052779317}. 
-		% No Outlier Plot
-		Plotting only the results where the density as estimated by \sambe are in the range $\left(\num{0.0}, \num[round-precision=1]{0.07} \right)$ results in \Cref{fig:results:baakman1:noOutliers}. Observing \cref{fig:results:baakman1::noOUtliers:sambe} we find that using \sambe results in a greater spread of densities, but that the densities within the range $\left(\num[round-precision=1]{0.0}, \num[round-precision=1]{0.07} \right)$ reasonable approximate the true density.
-		\begin{figure}[!ht]
-			\centering
-			\begin{subfigure}{0.6\columnwidth}
-				\centering
-				\includegraphics[width=\textwidth]{4/img/noOutliers/results_baakman_1_60000_mbe_silverman_no_outliers.png}
-				\caption{\mbe}
-				\label{fig:results:baakman1:noOutliers:mbe}
-			\end{subfigure}
-			\begin{subfigure}{0.6\columnwidth}
-				\centering
-				\includegraphics[width=\textwidth]{4/img/noOutliers/results_baakman_1_60000_sambe_silverman_no_outliers.png}
-				\caption{\sambe}
-				\label{fig:results:baakman1::noOUtliers:sambe}
-			\end{subfigure}	
-			\caption{Comparative plots between the true densities of dataset \baakmanOne as estimated by \subref{fig:results:baakman1:noOutliers:mbe} \mbe and \subref{fig:results:baakman1::noOUtliers:sambe} \sambe, with only the points whose density is estimated by \sambe to lie in $\left(\num{0.0}, \num[round-precision=1]{0.07} \right)$.}
-			\label{fig:results:baakman1:noOutliers}
-		\end{figure}
-
-	% Baakman 4
-		% Normal Plot
-		The results of data set \baakmanFour, shown in \crefrange{fig:4:results:mbe:baakman1}{fig:4:results:sambe:baakman1} are comparable to those of \baakmanOne: the original estimator approximates the density pretty well, the shape-adaptive variant has some extreme outliers, the densities estimated by \sambe fall in the range, $\left[\num{-4.660977565610216}, \num{0.928287124473193}\right]$, whereas the true densities all lie within $\left[\num{0.000000500000000}, \num{0.006107784664258}\right]$.
-		% No Outlier Plot
-		\Cref{fig:results:baakman4:noOutliers} presents the comparative plots for \mbe and \sambe for dataset \baakmanFour where patterns whose density was estimated to be outside the range $\left(\num{0.0}, \num[round-precision=2]{0.15} \right)$ are discarded. The results illustrated in this figure are comparable to those of \cref{fig:results:baakman1:noOutliers}: for a number of points the densities are overestimated, but otherwise the estimated densities seem reasonable.	
-
-		\begin{figure}
-			\centering
-			\begin{subfigure}{0.6\columnwidth}
-				\centering
-				\includegraphics[width=\textwidth]{4/img/noOutliers/results_baakman_4_60000_mbe_silverman_no_outliers.png}
-				\caption{\mbe}
-				\label{fig:results:baakman4:noOutliers:mbe}
-			\end{subfigure}
-			\begin{subfigure}{0.6\columnwidth}
-				\centering
-				\includegraphics[width=\textwidth]{4/img/noOutliers/results_baakman_4_60000_sambe_silverman_no_outliers.png}
-				\caption{\sambe}
-				\label{fig:results:baakman4:noOUtliers:sambe}
-			\end{subfigure}	
-			\caption{Comparative plots between the true densities of dataset \baakmanFour as estimated by \subref{fig:results:baakman4:noOutliers:mbe} \mbe and \subref{fig:results:baakman4:noOUtliers:sambe} \sambe, with only the points whose density is estimated by \sambe to lie in $\left(\num{0.0}, \num{0.15} \right)$.}
-			\label{fig:results:baakman4:noOutliers}
-		\end{figure}
-
-	% Baakman 5
-		% Normal Plot
-		\Crefrange{fig:4:results:mbe:baakman5}{fig:4:results:sambe:baakman5} compares the performance of \mbe with \sambe on data set \baakmanFive. We once again observe that the shape adaptive variant results in extreme outliers, and that the non-shape adaptive estimator approximates the known densities pretty well. Whereas the shape-adaptive estimator returns pretty extreme results with densities estimated to be as high as \num{3.827317431934174} and as low as \num{-1.133853887375073}.
-		%OutlierPlot
-		Removing all patterns which have a density that is estimated by \sambe to lie outside the range $\left(\num{0.0}, \num[round-precision=2]{0.3} \right)$ results in \cref{fig:results:baakman5:noOutliers}. Comparing \cref{fig:results:baakman5:noOutliers:mbe} with \cref{fig:results:baakman5:noOUtliers:sambe} leads to the same conclusion as drawn about dataset \baakmanOne and \baakmanFour.
-
-		\begin{figure}
-			\centering
-			\begin{subfigure}{0.6\columnwidth}
-				\centering
-				\includegraphics[width=\textwidth]{4/img/noOutliers/results_baakman_5_60000_mbe_silverman_no_outliers.png}
-				\caption{\mbe}
-				\label{fig:results:baakman5:noOutliers:mbe}
-			\end{subfigure}
-			\begin{subfigure}{0.6\columnwidth}
-				\centering
-				\includegraphics[width=\textwidth]{4/img/noOutliers/results_baakman_5_60000_sambe_silverman_no_outliers.png}
-				\caption{\sambe}
-				\label{fig:results:baakman5:noOUtliers:sambe}
-			\end{subfigure}	
-			\caption{Comparative plots between the true densities of dataset \baakmanFive as estimated by \subref{fig:results:baakman5:noOutliers:mbe} \mbe and \subref{fig:results:baakman5:noOUtliers:sambe} \sambe, with only the points whose density is estimated by \sambe to lie in $\left(\num{0.0}, \num{0.15} \right)$.}
-			\label{fig:results:baakman5:noOutliers}
-		\end{figure}
-
-	% Algehele observatie voor single sphere datsets
-		% MBE beter dan SAMBE
-		In general we have found that the Modified Breiman estimator works pretty well for data sets that contain a single Gaussian, especially if the Gaussian is spherical. Since the mean square error of the \mbe is lower for dataset \baakmanFive, than for dataset \baakmanFour how elongated the sphere is does not seem to influence the performance of this estimator. 
-		% Hoe elongated heeft geen invloed
-		The shape adaptive \mbe results in some extremely high and low values if it is used to estimate the densities of elongated Gaussians, when applied to a spherical Gaussians it overestimates the densities. The value of these extreme `densities' does not seem to be influenced by how elongated the Gaussian distribution is. 
-		% Removing OUtliers
 
 \subsubsection{Datasets with Multiple Gaussians}
 	\label{s:results:plots:multipleGaussians}
+	% \input{4/plots_multiSphere}
 
-	\begin{figure*}
-		\centering
-		\input{4/plots_multiSphere_subfigs}
-		\caption{Comparative plots for dataset \ferdosiTwo, \ferdosiThree, \baakmanTwo, \baakmanThree.}
-		\label{fig:4:resuts:multiSphere}
-	\end{figure*}
-
-	\todo[inline]{What do we observe in \cref{fig:4:resuts:multiSphere}.}
 
 %% General Conclusion
 \todo[inline]{General final observation.}
