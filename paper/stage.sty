@@ -46,7 +46,7 @@
 
 %Tables
 \usepackage{booktabs}
-\renewcommand{\arraystretch}{1.2}
+\renewcommand{\arraystretch}{0.7}
 
 % Citations
 % References
@@ -62,6 +62,12 @@
 \newcommand\ie{i.e\@ifnextchar.{}{.\@}\xspace}
 \newcommand\eg{e.g\@ifnextchar.{}{.\@}\xspace}
 \makeatother
+
+% Manage Float pages
+\renewcommand{\floatpagefraction}{0.99}
+\renewcommand{\topfraction}{0.99}
+\renewcommand{\bottomfraction}{0.99}
+\setlength{\textfloatsep}{0.1cm}
 
 % Other commands
 \newcommand*\justify{%
