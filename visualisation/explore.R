@@ -196,5 +196,5 @@ baakman1 <- function(){
 # Execute on Source
 # data <- readResultSet(data_set_file, parzen_file, mbe_file, sambe_file)
 # generateResultPlot(data, data$sambeDensities, "~/Desktop/temp.png")
-# formatC(min(data$sambeDensities), digits = 15, format = "f")
+# formatC(min(data$sambeDensities), digits = 15, format = "e")
 # head(data[order(data$sambeDensities, decreasing = TRUE), ], n=10)
