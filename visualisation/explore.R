@@ -37,6 +37,19 @@ readResultSet <- function(data_set_file, parzen_file, mbe_file, sambe_file){
   data;
 }
 
+addXisResults <- function(xsdata, sambe_file){
+  # read parzen file
+  # Only contains x, y, z that can also be found in sambe_file.
+  
+  # read mbe file
+  # Only contains x, y, z, local bandwidths, can also be found in sambe_file
+  
+  # read sambe file
+  xisdata = readXisData(sambe_file);
+  
+  data <- merge(xsdata, xisdata, by=c("x","y", "z"));
+}
+
 computeLimits<-function(data){
   yMin = min(data$trueDensities, data$mbeDensities, data$sambeDensities);
   yMax = max(data$trueDensities, data$mbeDensities, data$sambeDensities);
@@ -75,12 +88,18 @@ componentMSE<-function(data, componentNumber){
 }
 
 ferdosi1<-function(){
-  data <- readResultSet(
+  xsdata <- readResultSet(
     data_set_file="../data/simulated/normal/ferdosi_1_60000.txt", 
     parzen_file="../results/normal/silverman/ferdosi_1_60000_parzen.txt", 
     mbe_file="../results/normal/silverman/ferdosi_1_60000_mbe_silverman.txt", 
     sambe_file="../results/normal/silverman/ferdosi_1_60000_sambe_silverman.txt"
-  )    
+  ) 
+  data <- addXisResults(
+    xsdata = xsdata,
+    sambe_file="../results/normal/silverman/ferdosi_1_60000_sambe_silverman_xis.txt"    
+  )
+
+  data;
 }
 
 ferdosi2<-function(){
@@ -90,10 +109,16 @@ ferdosi2<-function(){
     mbe_file="../results/normal/silverman/ferdosi_2_60000_mbe_silverman.txt", 
     sambe_file="../results/normal/silverman/ferdosi_2_60000_sambe_silverman.txt"
   )    
+  data <- addXisResults(
+    xsdata = data,
+    sambe_file="../results/normal/silverman/ferdosi_2_60000_sambe_silverman_xis.txt"    
+  )
   
   componentMSE(data, 0);  
   componentMSE(data, 1);
   componentMSE(data, 2);
+  
+  data;
 }
 
 ferdosi3<-function(){
@@ -102,13 +127,20 @@ ferdosi3<-function(){
     parzen_file="../results/normal/silverman/ferdosi_3_120000_parzen.txt", 
     mbe_file="../results/normal/silverman/ferdosi_3_120000_mbe_silverman.txt", 
     sambe_file="../results/normal/silverman/ferdosi_3_120000_sambe_silverman.txt"
-  )    
+  )   
+  data <- addXisResults(
+    xsdata = data,
+    sambe_file="../results/normal/silverman/ferdosi_3_120000_sambe_silverman_xis.txt"    
+  )
+  
   
   componentMSE(data, 0);  
   componentMSE(data, 1);
   componentMSE(data, 2);
   componentMSE(data, 3);
   componentMSE(data, 4);
+  
+  data;
 }
 
 baakman2<-function(){
@@ -117,11 +149,18 @@ baakman2<-function(){
     parzen_file="../results/normal/silverman/baakman_2_60000_parzen.txt", 
     mbe_file="../results/normal/silverman/baakman_2_60000_mbe_silverman.txt", 
     sambe_file="../results/normal/silverman/baakman_2_60000_sambe_silverman.txt"
-  )    
+  )   
+  data <- addXisResults(
+    xsdata = data,
+    sambe_file="../results/normal/silverman/baakman_2_60000_sambe_silverman_xis.txt"    
+  )
+  
   
   componentMSE(data, 0);  
   componentMSE(data, 1);
   componentMSE(data, 2);
+  
+  data;
 }
 
 baakman3<-function(){
@@ -131,12 +170,18 @@ baakman3<-function(){
     mbe_file="../results/normal/silverman/baakman_3_120000_mbe_silverman.txt", 
     sambe_file="../results/normal/silverman/baakman_3_120000_sambe_silverman.txt"
   )    
+  data <- addXisResults(
+    xsdata = data,
+    sambe_file="../results/normal/silverman/baakman_3_120000_sambe_silverman_xis.txt"    
+  )
   
   componentMSE(data, 0);  
   componentMSE(data, 1);
   componentMSE(data, 2);
   componentMSE(data, 3);
   componentMSE(data, 4);
+  
+  data;
 }
 
 baakman5 <-function(){
@@ -146,15 +191,21 @@ baakman5 <-function(){
     mbe_file="../results/normal/silverman/baakman_5_60000_mbe_silverman.txt", 
     sambe_file="../results/normal/silverman/baakman_5_60000_sambe_silverman.txt"
   )  
+  data <- addXisResults(
+    xsdata = data,
+    sambe_file="../results/normal/silverman/baakman_5_60000_sambe_silverman_xis.txt"    
+  )  
   
   # Remove too low densities
-  data <- data[data$sambeDensities > 0.0, ];
+  subset = data[data$sambeDensities > 0.0, ];
   # Remove too high densities
-  data <- data[data$sambeDensities < 0.3, ];               
+  subset <- subset[subset$sambeDensities < 0.3, ];               
   
   # Generate plots
-  generateResultPlot(data, data$mbeDensities, "~/Desktop/results_baakman_5_60000_mbe_silverman_no_outliers.png")
-  generateResultPlot(data, data$sambeDensities, "~/Desktop/results_baakman_5_60000_sambe_silverman_no_outliers.png")  
+  generateResultPlot(subset, subset$mbeDensities, "~/Desktop/results_baakman_5_60000_mbe_silverman_no_outliers.png")
+  generateResultPlot(subset, subset$sambeDensities, "~/Desktop/results_baakman_5_60000_sambe_silverman_no_outliers.png")  
+  
+  data;
 }
 
 baakman4 <-function(){
@@ -164,15 +215,21 @@ baakman4 <-function(){
     mbe_file="../results/normal/silverman/baakman_4_60000_mbe_silverman.txt", 
     sambe_file="../results/normal/silverman/baakman_4_60000_sambe_silverman.txt"
   )  
+  data <- addXisResults(
+    xsdata = data,
+    sambe_file="../results/normal/silverman/baakman_4_60000_sambe_silverman_xis.txt"    
+  )    
   
   # Remove too low densities
-  data <- data[data$sambeDensities > 0.0, ];
+  subset = data[data$sambeDensities > 0.0, ];
   # Remove too high densities
-  data <- data[data$sambeDensities < 0.15, ];               
+  subset <- subset[subset$sambeDensities < 0.15, ];               
   
   # Generate plots
-  generateResultPlot(data, data$mbeDensities, "~/Desktop/results_baakman_4_60000_mbe_silverman_no_outliers.png")
-  generateResultPlot(data, data$sambeDensities, "~/Desktop/results_baakman_4_60000_sambe_silverman_no_outliers.png")  
+  generateResultPlot(subset, subset$mbeDensities, "~/Desktop/results_baakman_4_60000_mbe_silverman_no_outliers.png")
+  generateResultPlot(subset, subset$sambeDensities, "~/Desktop/results_baakman_4_60000_sambe_silverman_no_outliers.png")  
+  
+  data;
 }
 
 baakman1 <- function(){
@@ -182,15 +239,21 @@ baakman1 <- function(){
     mbe_file="../results/normal/silverman/baakman_1_60000_mbe_silverman.txt", 
     sambe_file="../results/normal/silverman/baakman_1_60000_sambe_silverman.txt"
   )
+  data <- addXisResults(
+    xsdata = data,
+    sambe_file="../results/normal/silverman/baakman_1_60000_sambe_silverman_xis.txt"    
+  )     
   
   # Remove too low densities
-  data <- data[data$sambeDensities > 0.0, ];
+  subset = data[data$sambeDensities > 0.0, ];
   # Remove too high densities
-  data <- data[data$sambeDensities < 0.07, ];               
+  subset <- subset[subset$sambeDensities < 0.07, ];               
   
   # Generate plots
-  generateResultPlot(data, data$mbeDensities, "~/Desktop/results_baakman_1_60000_mbe_silverman_no_outliers.png")
-  generateResultPlot(data, data$sambeDensities, "~/Desktop/results_baakman_1_60000_sambe_silverman_no_outliers.png")
+  generateResultPlot(subset, subset$mbeDensities, "~/Desktop/results_baakman_1_60000_mbe_silverman_no_outliers.png")
+  generateResultPlot(subset, subset$sambeDensities, "~/Desktop/results_baakman_1_60000_sambe_silverman_no_outliers.png")
+  
+  data;
 }
 
 # Execute on Source

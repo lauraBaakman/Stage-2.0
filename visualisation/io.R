@@ -49,7 +49,7 @@ readTrueDensities <- function(filePath, rows){
     header=FALSE, 
     dec='.', 
     row.names = NULL, 
-    skip=2 + rows, 
+    skip= 2 + rows, 
     nrows=rows, 
     sep=' ', 
     col.names = c('trueDensity')
@@ -87,6 +87,36 @@ readResults <- function(filePath){
     sep = " ",
     col.names = c('computedDensity', 'numUsedPatterns')
   )	
+}
+
+readXisData <- function(filePath){
+  data <- read.csv(
+    file=filePath, 
+    header=FALSE, 
+    dec=".", 
+    row.names=NULL, 
+    sep = " ",
+    comment.char="#"
+  );
+  # Parzen data
+  if (ncol(data) == 3) {
+    columnNames = c('x', 'y', 'z')
+  }
+  # MBE data
+  if (ncol(data) == 4) {
+    columnNames = c('x', 'y', 'z', 'localBandwidth')
+  }
+  # SAMBE data
+  if (ncol(data) == 17) {
+    columnNames = c("x", "y", "z", 
+                    "eigen_value_1", "eigen_value_2", "eigen_value_3", 
+                    "eigen_vector_1_x", "eigen_vector_2_x", "eigen_vector_3_x", 
+                    "eigen_vector_1_y", "eigen_vector_2_y", "eigen_vector_3_y", 
+                    "eigen_vector_1_z", "eigen_vector_2_z", "eigen_vector_3_z", 
+                    "local_bandwidth", "scaling_factor")
+  }
+  colnames(data) <- columnNames
+  data;
 }
 
 getDataSetPaths <- function(){
