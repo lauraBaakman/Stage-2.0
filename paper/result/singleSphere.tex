@@ -1,39 +1,39 @@
 %!TEX root = ../paper.tex
 
+\begin{figure*}
+	\centering
+	\input{result/singleSphere_subfigs}
+	\caption{Comparative plots for dataset \ferdosiOneNum, \baakmanOneNum, \baakmanFourNum, and \baakmanFiveNum.
+	}
+	\label{fig:results:singleSphere:comparativePlots}
+\end{figure*}
+
+\begin{table}
+	\centering
+	\input{result/singleSphere_mse_tab}
+	\caption{The mean squared error of the known densities and the densities as estimated by the Modified Breiman Estimator (\mbe) and the shape-adaptive MBE (\sambe), respectively, for the datasets containing a single Gaussian.} 	
+	\label{tab:results:singleSphere:mse}
+\end{table}
+
 This section compares the performance of the Modified Breiman Estimator and a shape-adaptive variant on dataset that contain one Gaussian, \ie dataset \ferdosiOne, \baakmanOne, \baakmanFour, and \baakmanFive.
 
-%MSE
-Only on the dataset with a spherical Gaussian is the performance of the two estimators comparable, on all dataset with a single elliptical Gaussian the non-shape adaptive estimator performs significantly better than its shape-adaptive cousin.
-
-%PLOT results
-	\begin{figure*}[!ht]
-		\centering
-		\input{result/singleSphere_subfigs}
-		\caption{Comparative plots for dataset \ferdosiOneNum, \baakmanOneNum, \baakmanFourNum, and \baakmanFiveNum.
-		}
-		\label{fig:4:results:singleSphere}
-	\end{figure*}
-
-	\Cref{fig:4:results:singleSphere} presents the results of using the Modified Breiman Estimator and its shape adaptive variant to estimate the densities of the datasets in \cref{tab:3:simulated:datasets} that contain a single Gaussian distribution. 
+\todo[inline]{Where to find table and MSE?}
 
 	% Ferdosi 1
-		\Cref{fig:4:results:mbe:ferdosi1} confirms our findings from \cref{s:results:mse}, namely that the Modified Breiman Estimator gives a good approximation of the densities of dataset \ferdosiOne. The densities estimated with the \mbe both over, and undershoot the true density. \Cref{fig:4:results:mbe:ferdosi1}, on the other hand, shows that shape adaptive \mbe nearly always overshoots the true density. 
+		\todo[inline]{Discuss MSE and Plot}
+		\todo[inline]{Difference between noise and gaussian?}
 
 	% Baakman 1
-		% Normal Plot
-		Comparing the performance of the two estimators on dataset \baakmanOne with \cref{fig:4:results:mbe:baakman1,fig:4:results:sambe:baakman1} we find that the Modified Breiman Estimator outperforms the shape-adaptive variant. The second estimator has some extreme outliers, the most extreme of which are \num{1.071674654143224}, and \num{-0.506829052779317}. 
+		\todo[inline]{Discuss MSE and Plot}
+		\todo[inline]{Difference between noise and gaussian?}
 
 	% Baakman 4
-		% Normal Plot
-		The results of data set \baakmanFour, shown in \cref{fig:4:results:mbe:baakman1,fig:4:results:sambe:baakman1} respectively, are comparable to those of \baakmanOne: the original estimator approximates the density pretty well, the shape-adaptive variant has some extreme outliers, the densities estimated by \sambe fall in the range, $\left[\num{-4.660977565610216}, \num{0.928287124473193}\right]$, whereas the true densities all lie within $\left[\num[scientific-notation=true]{0.000000500000000}, \num[scientific-notation=true]{0.006107784664258}\right]$.
-
+		\todo[inline]{Discuss MSE and Plot}
+		\todo[inline]{Difference between noise and gaussian?}
 
 	% Baakman 5
-		% Normal Plot
-		\Cref{fig:4:results:mbe:baakman5,fig:4:results:sambe:baakman5} compare the performance of respectively \mbe with \sambe on data set \baakmanFive. We once again observe that the non-shape adaptive estimator approximates the known densities pretty well. Whereas the shape-adaptive estimator returns extreme results with densities that are estimated to be as high as \num{3.827317431934174} and as low as \num{-1.133853887375073}.
+		\todo[inline]{Discuss MSE and Plot}
+		\todo[inline]{Difference between noise and gaussian?}
 
 	% Algehele observatie voor single sphere datsets
-		% MBE beter dan SAMBE
-		In general we have found that the Modified Breiman estimator works pretty well for data sets that contain a single Gaussian, especially if the Gaussian is spherical. Since the mean square error for dataset \baakmanFive is lower than the MSE of dataset \baakmanFour the ellipticalness of the distribution does not seem to influence the performance of this estimator. 
-		% Hoe elongated heeft geen invloed
-		The shape adaptive \mbe results in some extremely high and low estimated densities if used to estimate the densities of non-spherical Gaussian. \sambe overestimated some of the densities of the spherical Gaussian compared to the Modified Breiman Estimator. The range of the values estimated by the shape-adaptive estimator does not seem to be influenced by how electricalness of the Gaussian distribution. 
+		\todo[inline]{General observation}
