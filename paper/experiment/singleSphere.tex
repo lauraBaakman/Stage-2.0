@@ -1,0 +1,26 @@
+%!TEX root = ../paper.tex
+
+\begin{figure*}
+	\centering
+	\beforeFinalVersion{Remove ticks and labels.}
+	\beforeFinalVersion{Fix the length of the axis of dataset \baakmanTwoNum.}
+	\input{experiment/singleSphere_subfig}
+	\caption{Scatter plot representation of the datasets defined in \cref{tab:experiment:singlesphere:sets}. The colors of the different components correspond to the colors used in \cref{tab:experiment:singlesphere:sets}.}
+	\label{fig:experiment:singlesphere:sets}
+\end{figure*}
+
+\begin{table*}
+	\centering
+	\input{experiment/singleSphere_tab}
+	\caption{The containing a single Gaussian distribution next to uniform noise. The column `Number' indicates for each component of the dataset how many data points are sampled from that component. \gaussDist{\varMean}{\varCovarianceMatrix} denotes a Gaussian distribution with mean \varMean and covariance matrix \varCovarianceMatrix. A diagonal matrix with the values $x_1,\, \cdots,\, x_\varDim$ on the diagonal is represented as $\diag([x_1,\,\cdots,\,x_\varDim]])$, a scalar matrix with $x$ on the diagonal is shown as $\diag(x)$. \uniformDist{a}{b} denotes a uniform distribution with its minimum and maximum set to $a$ and $b$, respectively. The colors shown in the second column correspond with the colors used for these components of the data set throughout the paper.} 	
+	\label{tab:experiment:singlesphere:sets}
+\end{table*}
+
+\todo[inline]{Image of single sphere sets}
+\todo[inline]{Discuss \ferdosiOneNum}
+\todo[inline]{Discuss \baakmanOneNum}
+\todo[inline]{Discuss \baakmanFourNum}
+\todo[inline]{Discuss \baakmanFiveNum}
+
+\todo[inline]{Hypothezize on results in general}
+\todo[inline]{Hypothezize more specific}

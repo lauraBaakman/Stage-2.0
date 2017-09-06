@@ -1,0 +1,25 @@
+%!TEX root = ../paper.tex
+
+%!TEX root = ../paper.tex
+
+\begin{tabular}{@{}cclS[table-format=+1.1e+1,scientific-notation=true,round-mode=places,round-precision=1]l@{}}
+\toprule
+Set 			&~						& Component					& {Number} 	& Distribution\\
+\midrule
+% Ferdosi 1
+\ferdosiOne 	&\legendComponentOne	& Trivariate Gaussian 		& 40000		& $(x, y, z) \sim \gaussDist{[50, 50, 50]}{\diag(30)}$\\
+~ 				&\legendComponentNoise	& Uniform random background	& 20000		& $(x, y, z) \sim \uniformDist{[0, 0, 0]}{[100, 100, 100]}$\\
+% Baakman 1
+\hline
+\baakmanOne		&\legendComponentOne	& Trivariate Gaussian 		& 40000		& $(x, y, z) \sim \gaussDist{[50, 50, 50]}{\diag([9, \sqrt{3}, \sqrt{3}])}$\\
+~ 				&\legendComponentNoise	& Uniform random background	& 20000		& $(x, y, z) \sim \uniformDist{[0, 0, 0]}{[100, 100, 100]}$\\
+% Baakman 4
+\hline
+\baakmanFour	&\legendComponentOne	& Trivariate Gaussian 		& 40000		& $(x, y, z) \sim \gaussDist{[50, 50, 50]}{\diag([9, 2 * \sqrt{3}, \rfrac{1}{2} \sqrt{3}])}$\\
+~ 				&\legendComponentNoise	& Uniform random background	& 20000		& $(x, y, z) \sim \uniformDist{[0, 0, 0]}{[100, 100, 100]}$\\
+% Baakman 5
+\hline
+\baakmanFive	&\legendComponentOne	& Trivariate Gaussian 		& 40000		& $(x, y, z) \sim \gaussDist{[50, 50, 50]}{\diag([9, 3, 1])}$\\
+~ 				&\legendComponentNoise	& Uniform random background	& 20000		& $(x, y, z) \sim \uniformDist{[0, 0, 0]}{[100, 100, 100]}$\\
+\bottomrule
+\end{tabular}
