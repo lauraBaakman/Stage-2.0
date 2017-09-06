@@ -6,12 +6,21 @@ imagesOutputPath = "/Users/laura/Desktop";
 # Settings for the plots
 colours = list(
   blue   	= rgb(073, 119, 177, max = 255),
-  green   = rgb(099, 159, 058, max = 255),
   red 	  = rgb(194, 032, 034, max = 255),
   orange  = rgb(228, 126, 029, max = 255),
   purple  = rgb(096, 063, 150, max = 255),
   black   = rgb(000, 000, 000, max=255),
-  yellow  = rgb(255, 255, 157, max=255	)
+  yellow  = rgb(255, 255, 157, max=255),	
+  green   = rgb(099, 159, 058, max = 255, alpha=128)
+)
+symbols = list(
+  filledRectangle       = 15,
+  filledTriangle 	      = 17, 
+  filledDiamond         = 18, 
+  filledEightPointStar = 8,
+  filledTwelvePointStar = 20,
+  bullsEye              = 10,
+  filledCircle   	      = 16  
 )
 font.size = 10;
 # font.family ="CM Roman";
