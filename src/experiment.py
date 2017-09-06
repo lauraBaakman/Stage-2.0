@@ -24,7 +24,7 @@ else:
 
 sensitivities = {
     'silverman': lambda d: 0.5,
-    # 'breiman': lambda d: 1.0 / d
+    'breiman': lambda d: 1.0 / d
 }
 
 estimators = {
