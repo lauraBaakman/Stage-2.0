@@ -5,7 +5,7 @@
 Set 			&~						& Component					& {Number} 	& Distribution\\
 \midrule
 % Ferdosi 1
-\ferdosiOne 	&\legendComponentOne		& Trivariate Gaussian 		& 40000		& $(x, y, z) \sim \gaussDist{[50, 50, 50]}{\diag(30)}$\\
+\ferdosiOne 	&\legendComponentOne	& Trivariate Gaussian 		& 40000		& $(x, y, z) \sim \gaussDist{[50, 50, 50]}{\diag(30)}$\\
 ~ 				&\legendComponentNoise	& Uniform random background	& 20000		& $(x, y, z) \sim \uniformDist{[0, 0, 0]}{[100, 100, 100]}$\\
 % Ferdosi 2
 \hline
@@ -27,7 +27,7 @@ Set 			&~						& Component					& {Number} 	& Distribution\\
 \hline
 \baakmanTwo		&\legendComponentOne	& Trivariate Gaussian 1		& 20000		& $(x, y, z) \sim \gaussDist{[25, 25, 25]}{\diag([25, \sqrt{5}, \sqrt{5}])}$\\
 ~ 				&\legendComponentTwo	& Trivariate Gaussian 2		& 20000		& $(x, y, z) \sim \gaussDist{[65, 65, 65]}{\diag([\sqrt{20}, \sqrt{20}, 400])}$\\
-~ 				&\legendComponentNoise	& Uniform random background	& 20000		& $(x, y, z) \sim \uniformDist{[0, 0, 0]}{[150, 150, 150]}$\\
+~ 				&\legendComponentNoise	& Uniform random background	& 20000		& $(x, y, z) \sim \uniformDist{[-15, -15, -15]}{[150, 150, 150]}$\\
 % Baakman 3
 \hline
 \baakmanThree	&\legendComponentOne 	& Trivariate Gaussian 1 	& 20000		& $(x, y, z) \sim \gaussDist{[24, 10, 10]}{\diag([4, \sqrt{2}, \sqrt{2}])}$\\
