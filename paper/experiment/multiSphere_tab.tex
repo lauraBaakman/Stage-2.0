@@ -1,1 +1,32 @@
 %!TEX root = ../paper.tex
+
+\begin{tabular}{@{}cclS[table-format=+1.1e+1,scientific-notation=true,round-mode=places,round-precision=1]l@{}}
+\toprule
+Set 			&~						& Component					& {Number} 	& Distribution\\
+\midrule
+% Ferdosi 2
+\hline
+\ferdosiTwo 	&\legendComponentOne	& Trivariate Gaussian 1		& 20000		& $\gaussDist{[25, 25, 25]}{\diag(5)}$\\
+~ 				&\legendComponentTwo	& Trivariate Gaussian 2		& 20000		& $\gaussDist{[45, 45, 45]}{\diag(11)}$\\
+~ 				&\legendComponentNoise	& Uniform random background	& 20000		& $\uniformDist{[0, 0, 0]}{[100, 100, 100]}$\\
+% Baakman 2
+\hline
+\baakmanTwo		&\legendComponentOne	& Trivariate Gaussian 1		& 20000		& $\gaussDist{[25, 25, 25]}{\diag([25, \sqrt{5}, \sqrt{5}])}$\\
+~ 				&\legendComponentTwo	& Trivariate Gaussian 2		& 20000		& $\gaussDist{[45, 45, 45]}{\diag([\sqrt{11}, \sqrt{11}, 11^2])}$\\
+~ 				&\legendComponentNoise	& Uniform random background	& 20000		& $\uniformDist{[-15, -15, -15]}{[150, 150, 150]}$\\
+% Ferdosi 3
+\hline
+\ferdosiThree	&\legendComponentOne 	& Trivariate Gaussian 1 	& 20000		& $\gaussDist{[24, 10, 10]}{\diag(2)}$\\
+~ 				&\legendComponentTwo	& Trivariate Gaussian 2 	& 20000		& $\gaussDist{[33, 70, 40]}{\diag(10)}$\\
+~ 				&\legendComponentThree	& Trivariate Gaussian 3 	& 20000		& $\gaussDist{[90, 20, 80]}{\diag(1)}$\\
+~ 				&\legendComponentFour	& Trivariate Gaussian 4 	& 20000		& $\gaussDist{[60, 80, 23]}{\diag(5)}$\\
+~ 				&\legendComponentNoise	& Uniform random background	& 40000		& $\uniformDist{[0, 0, 0]}{[100, 100, 100]}$\\
+% Baakman 3
+\hline
+\baakmanThree	&\legendComponentOne 	& Trivariate Gaussian 1 	& 20000		& $\gaussDist{[24, 10, 10]}{\diag([4, \sqrt{2}, \sqrt{2}])}$\\
+~ 				&\legendComponentTwo	& Trivariate Gaussian 2 	& 20000		& $\gaussDist{[33, 70, 40]}{\diag([\sqrt{10}, \sqrt{10}, 100])}$\\
+~ 				&\legendComponentThree	& Trivariate Gaussian 3 	& 20000		& $\gaussDist{[90, 20, 80]}{\diag(1)}$\\
+~ 				&\legendComponentFour	& Trivariate Gaussian 4 	& 20000		& $\gaussDist{[60, 80, 23]}{\diag([25, \sqrt{5}, \sqrt{5}])}$\\
+~ 				&\legendComponentNoise	& Uniform random background	& 40000		& $\uniformDist{[0, 0, 0]}{[100, 100, 100]}$\\
+\bottomrule
+\end{tabular}
