@@ -1,6 +1,6 @@
 # Define paths
 dataInputPath = "../data/simulated/normal";
-dataOutputPath = "../results/normal/silverman";
+dataOutputPath = "../results/normal/";
 imagesOutputPath = "/Users/laura/Desktop";
 
 # Settings for the plots
@@ -23,7 +23,7 @@ symbols = list(
   filledCircle   	      = 16  
 )
 font.size = 10;
-# font.family ="CM Roman";
+font.family ="CM Roman";
 font.family ="Times-Roman";
 
 tex.textwidth = 14.92038; #cm
