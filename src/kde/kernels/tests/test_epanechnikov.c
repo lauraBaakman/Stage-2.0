@@ -290,7 +290,6 @@ void testShapeAdaptiveEpanechhnikovSingle(CuTest *tc){
 	kernel.allocate(dimension, numThreads);
 	kernel.computeConstants(H, pid);
 
-	double localBandwidth = 0.5;
 	gsl_vector_set(actual, 0, 
 		kernel.density(pattern, pid)
 	);

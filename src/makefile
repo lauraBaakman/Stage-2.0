@@ -28,6 +28,7 @@ TEST_SOURCES=./test_utils.c ./lib/CuTest.c ./lib/CuTestUtils.c \
 	./kde/utils/tests/test_utils.c \
 	./kde/utils/tests/test_knn.c \
 	./kde/utils/tests/test_gsl_utils.c \
+	./kde/utils/tests/test_eigenvalues.c \
 	./kde/kernels/tests/test_kernels.c \
 	./kde/kernels/tests/test_epanechnikov.c \
 	./kde/kernels/tests/test_gaussian.c 
@@ -40,6 +41,7 @@ TEST_DEPS=./test_utils.h ./lib/CuTest.h ./lib/CuTestUtils.h\
 	./kde/utils/tests/test_utils.h \
 	./kde/utils/tests/test_knn.h \
 	./kde/utils/tests/test_gsl_utils.h \
+	./kde/utils/tests/test_eigenvalues.h \
 	./kde/kernels/tests/test_kernels.h \
 	./kde/kernels/tests/test_epanechnikov.h \
 	./kde/kernels/tests/test_gaussian.h 
