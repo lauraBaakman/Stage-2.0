@@ -108,8 +108,6 @@ static PyObject *kde_shape_adaptive_mbe(PyObject *self, PyObject *args){
     gsl_matrix_view eigenVectors = pyObjectToGSLMatrixView(outEigenVectors, NPY_ARRAY_OUT_ARRAY);
     gsl_vector_view scalingFactors = pyObjectToGSLVectorView(outScalingFactors, NPY_ARRAY_OUT_ARRAY);
 
-    gsl_vector_set(&scalingFactors.vector, 0, 44);
-
     /* Do computations */
     sambe(
       &xs.matrix, &xis.matrix, 

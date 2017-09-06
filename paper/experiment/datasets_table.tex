@@ -2,46 +2,46 @@
 
 \begin{tabular}{@{}cclS[table-format=+1.1e+1,scientific-notation=true,round-mode=places,round-precision=1]l@{}}
 \toprule
-Set 			&~					& Component					& {Number} 	& Distribution\\
+Set 			&~						& Component					& {Number} 	& Distribution\\
 \midrule
 % Ferdosi 1
-\ferdosiOne 	&\legendDot{blue}	& Trivariate Gaussian 		& 40000		& $(x, y, z) \sim \gaussDist{[50, 50, 50]}{\diag(30)}$\\
-~ 				&\legendDot{green}	& Uniform random background	& 20000		& $(x, y, z) \sim \uniformDist{[0, 0, 0]}{[100, 100, 100]}$\\
+\ferdosiOne 	&\legendComponentOne	& Trivariate Gaussian 		& 40000		& $(x, y, z) \sim \gaussDist{[50, 50, 50]}{\diag(30)}$\\
+~ 				&\legendComponentNoise	& Uniform random background	& 20000		& $(x, y, z) \sim \uniformDist{[0, 0, 0]}{[100, 100, 100]}$\\
 % Ferdosi 2
 \hline
-\ferdosiTwo 	&\legendDot{blue}	& Trivariate Gaussian 1		& 20000		& $(x, y, z) \sim \gaussDist{[25, 25, 25]}{\diag(5)}$\\
-~ 				&\legendDot{green}	& Trivariate Gaussian 2		& 20000		& $(x, y, z) \sim \gaussDist{[65, 65, 65]}{\diag(20)}$\\
-~ 				&\legendDot{red}	& Uniform random background	& 20000		& $(x, y, z) \sim \uniformDist{[0, 0, 0]}{[100, 100, 100]}$\\
+\ferdosiTwo 	&\legendComponentOne	& Trivariate Gaussian 1		& 20000		& $(x, y, z) \sim \gaussDist{[25, 25, 25]}{\diag(5)}$\\
+~ 				&\legendComponentTwo	& Trivariate Gaussian 2		& 20000		& $(x, y, z) \sim \gaussDist{[65, 65, 65]}{\diag(20)}$\\
+~ 				&\legendComponentNoise	& Uniform random background	& 20000		& $(x, y, z) \sim \uniformDist{[0, 0, 0]}{[100, 100, 100]}$\\
 % Ferdosi 3
 \hline
-\ferdosiThree	&\legendDot{blue}	& Trivariate Gaussian 1 	& 20000		& $(x, y, z) \sim \gaussDist{[24, 10, 10]}{\diag(2)}$\\
-~ 				&\legendDot{green}	& Trivariate Gaussian 2 	& 20000		& $(x, y, z) \sim \gaussDist{[33, 70, 40]}{\diag(10)}$\\
-~ 				&\legendDot{red}	& Trivariate Gaussian 3 	& 20000		& $(x, y, z) \sim \gaussDist{[90, 20, 80]}{\diag(1)}$\\
-~ 				&\legendDot{orange}	& Trivariate Gaussian 4 	& 20000		& $(x, y, z) \sim \gaussDist{[60, 80, 23]}{\diag(5)}$\\
-~ 				&\legendDot{purple}	& Uniform random background	& 40000		& $(x, y, z) \sim \uniformDist{[0, 0, 0]}{[100, 100, 100]}$\\
+\ferdosiThree	&\legendComponentOne 	& Trivariate Gaussian 1 	& 20000		& $(x, y, z) \sim \gaussDist{[24, 10, 10]}{\diag(2)}$\\
+~ 				&\legendComponentTwo	& Trivariate Gaussian 2 	& 20000		& $(x, y, z) \sim \gaussDist{[33, 70, 40]}{\diag(10)}$\\
+~ 				&\legendComponentThree	& Trivariate Gaussian 3 	& 20000		& $(x, y, z) \sim \gaussDist{[90, 20, 80]}{\diag(1)}$\\
+~ 				&\legendComponentFour	& Trivariate Gaussian 4 	& 20000		& $(x, y, z) \sim \gaussDist{[60, 80, 23]}{\diag(5)}$\\
+~ 				&\legendComponentNoise	& Uniform random background	& 40000		& $(x, y, z) \sim \uniformDist{[0, 0, 0]}{[100, 100, 100]}$\\
 % Baakman 1
 \hline
-\baakmanOne		&\legendDot{blue}	& Trivariate Gaussian 		& 40000		& $(x, y, z) \sim \gaussDist{[50, 50, 50]}{\diag([9, \sqrt{3}, \sqrt{3}])}$\\
-~ 				&\legendDot{green}	& Uniform random background	& 20000		& $(x, y, z) \sim \uniformDist{[0, 0, 0]}{[100, 100, 100]}$\\
+\baakmanOne		&\legendComponentOne	& Trivariate Gaussian 		& 40000		& $(x, y, z) \sim \gaussDist{[50, 50, 50]}{\diag([9, \sqrt{3}, \sqrt{3}])}$\\
+~ 				&\legendComponentNoise	& Uniform random background	& 20000		& $(x, y, z) \sim \uniformDist{[0, 0, 0]}{[100, 100, 100]}$\\
 % Baakman 2
 \hline
-\baakmanTwo		&\legendDot{blue}	& Trivariate Gaussian 1		& 20000		& $(x, y, z) \sim \gaussDist{[25, 25, 25]}{\diag([25, \sqrt{5}, \sqrt{5}])}$\\
-~ 				&\legendDot{green}	& Trivariate Gaussian 2		& 20000		& $(x, y, z) \sim \gaussDist{[65, 65, 65]}{\diag([\sqrt{20}, \sqrt{20}, 400])}$\\
-~ 				&\legendDot{red}	& Uniform random background	& 20000		& $(x, y, z) \sim \uniformDist{[0, 0, 0]}{[150, 150, 150]}$\\
+\baakmanTwo		&\legendComponentOne	& Trivariate Gaussian 1		& 20000		& $(x, y, z) \sim \gaussDist{[25, 25, 25]}{\diag([25, \sqrt{5}, \sqrt{5}])}$\\
+~ 				&\legendComponentTwo	& Trivariate Gaussian 2		& 20000		& $(x, y, z) \sim \gaussDist{[65, 65, 65]}{\diag([\sqrt{20}, \sqrt{20}, 400])}$\\
+~ 				&\legendComponentNoise	& Uniform random background	& 20000		& $(x, y, z) \sim \uniformDist{[-15, -15, -15]}{[150, 150, 150]}$\\
 % Baakman 3
 \hline
-\baakmanThree	&\legendDot{blue}	& Trivariate Gaussian 1 	& 20000		& $(x, y, z) \sim \gaussDist{[24, 10, 10]}{\diag([4, \sqrt{2}, \sqrt{2}])}$\\
-~ 				&\legendDot{green}	& Trivariate Gaussian 2 	& 20000		& $(x, y, z) \sim \gaussDist{[33, 70, 40]}{\diag([\sqrt{10}, \sqrt{10}, 100])}$\\
-~ 				&\legendDot{red}	& Trivariate Gaussian 3 	& 20000		& $(x, y, z) \sim \gaussDist{[90, 20, 80]}{\diag(1)}$\\
-~ 				&\legendDot{orange}	& Trivariate Gaussian 4 	& 20000		& $(x, y, z) \sim \gaussDist{[60, 80, 23]}{\diag([25, \sqrt{5}, \sqrt{5}])}$\\
-~ 				&\legendDot{purple}	& Uniform random background	& 40000		& $(x, y, z) \sim \uniformDist{[0, 0, 0]}{[100, 100, 100]}$\\
+\baakmanThree	&\legendComponentOne 	& Trivariate Gaussian 1 	& 20000		& $(x, y, z) \sim \gaussDist{[24, 10, 10]}{\diag([4, \sqrt{2}, \sqrt{2}])}$\\
+~ 				&\legendComponentTwo	& Trivariate Gaussian 2 	& 20000		& $(x, y, z) \sim \gaussDist{[33, 70, 40]}{\diag([\sqrt{10}, \sqrt{10}, 100])}$\\
+~ 				&\legendComponentThree	& Trivariate Gaussian 3 	& 20000		& $(x, y, z) \sim \gaussDist{[90, 20, 80]}{\diag(1)}$\\
+~ 				&\legendComponentFour	& Trivariate Gaussian 4 	& 20000		& $(x, y, z) \sim \gaussDist{[60, 80, 23]}{\diag([25, \sqrt{5}, \sqrt{5}])}$\\
+~ 				&\legendComponentNoise	& Uniform random background	& 40000		& $(x, y, z) \sim \uniformDist{[0, 0, 0]}{[100, 100, 100]}$\\
 % Baakman 4
 \hline
-\baakmanFour	&\legendDot{blue}	& Trivariate Gaussian 		& 40000		& $(x, y, z) \sim \gaussDist{[50, 50, 50]}{\diag([9, 2 * \sqrt{3}, \rfrac{1}{2} \sqrt{3}])}$\\
-~ 				&\legendDot{green}	& Uniform random background	& 20000		& $(x, y, z) \sim \uniformDist{[0, 0, 0]}{[100, 100, 100]}$\\
+\baakmanFour	&\legendComponentOne	& Trivariate Gaussian 		& 40000		& $(x, y, z) \sim \gaussDist{[50, 50, 50]}{\diag([9, 2 * \sqrt{3}, \rfrac{1}{2} \sqrt{3}])}$\\
+~ 				&\legendComponentNoise	& Uniform random background	& 20000		& $(x, y, z) \sim \uniformDist{[0, 0, 0]}{[100, 100, 100]}$\\
 % Baakman 5
 \hline
-\baakmanFive	&\legendDot{blue}	& Trivariate Gaussian 		& 40000		& $(x, y, z) \sim \gaussDist{[50, 50, 50]}{\diag([9, 3, 1])}$\\
-~ 				&\legendDot{green}	& Uniform random background	& 20000		& $(x, y, z) \sim \uniformDist{[0, 0, 0]}{[100, 100, 100]}$\\
+\baakmanFive	&\legendComponentOne	& Trivariate Gaussian 		& 40000		& $(x, y, z) \sim \gaussDist{[50, 50, 50]}{\diag([9, 3, 1])}$\\
+~ 				&\legendComponentNoise	& Uniform random background	& 20000		& $(x, y, z) \sim \uniformDist{[0, 0, 0]}{[100, 100, 100]}$\\
 \bottomrule
 \end{tabular}

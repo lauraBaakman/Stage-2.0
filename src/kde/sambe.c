@@ -123,7 +123,7 @@ void determineKernelShape(
     /* Scale the shape matrix */
     gsl_matrix_scale(globalBandwidthMatrix, *scalingFactor);
 
-    /* Scale the eigenvalues the changes to the globalBandwidthMatrix */
+    /* Scale the eigenvalues to reflect the changes to the globalBandwidthMatrix */
     gsl_vector_scale(eigenValues, *scalingFactor);
 }
 

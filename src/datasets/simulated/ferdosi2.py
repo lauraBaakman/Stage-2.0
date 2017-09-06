@@ -19,8 +19,8 @@ class Ferdosi2(SimulatedDataSet):
             }
         self._components['trivariate gaussian 2'] = {
                 'component': components.MultivariateGaussian(
-                    mean=np.array([65, 65, 65]),
-                    covariance_matrix=np.diag(np.array([20, 20, 20]))
+                    mean=np.array([45, 45, 45]),
+                    covariance_matrix=np.diag(np.array([11, 11, 11]))
                 ),
                 'num elements': self._compute_num_elements(20000),
         }

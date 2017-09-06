@@ -27,6 +27,12 @@ class TestEig(TestCase):
     def test_eig_C_1(self):
         self.eig_test_helper_1(lambda data: eigenvalues(data, _eigenvalues_C))
 
+    def test_eig_Python_2(self):
+        self.eig_test_helper_2(lambda data: eigenvalues(data, _eigenvalues_Python))
+
+    def test_eig_C_2(self):
+        self.eig_test_helper_2(lambda data: eigenvalues(data, _eigenvalues_C))
+
     def eig_test_helper_1(self, the_function):
         data = np.array([
             [1.0000, 0.5000, 0.3333, 0.2500],
@@ -35,6 +41,17 @@ class TestEig(TestCase):
             [0.2500, 0.2000, 0.1667, 0.1429],
         ])
         expected_values = sorted(np.array([0.000096702304023, 0.006738273605761, 0.169141220221450, 1.500214280059243]))
+
+        actual_values = sorted(the_function(data))
+
+        np.testing.assert_array_almost_equal(expected_values, actual_values, decimal=4)
+
+    def eig_test_helper_2(self, the_function):
+        data = np.array([
+            [+0.081041292578536,  -0.003049670687501],
+            [-0.003049670687501,  +0.083535264541089],
+        ])
+        expected_values = sorted(np.array([0.078993515239071, 0.085583041880554]))
 
         actual_values = sorted(the_function(data))
 

@@ -21,17 +21,17 @@ class Baakman2(SimulatedDataSet):
             }
         self._components['trivariate gaussian 2'] = {
                 'component': components.MultivariateGaussian(
-                    mean=np.array([65, 65, 65]),
+                    mean=np.array([45, 45, 45]),
                     covariance_matrix=np.diag(
-                        np.array([np.sqrt(20), np.sqrt(20), 400])
+                        np.array([np.sqrt(11), np.sqrt(11), 11*11])
                     )
                 ),
                 'num elements': self._compute_num_elements(20000),
         }
         self._components['uniform random noise'] = {
                 'component': components.UniformRandomNoise(
-                    minimum_value=-15,
-                    maximum_value=150
+                    minimum_value=0,
+                    maximum_value=100
                 ),
                 'num elements': self._compute_num_elements(20000),
         }

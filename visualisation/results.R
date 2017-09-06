@@ -36,6 +36,7 @@ fancy_scientificLabels <- function(l) {
 
 plotResultOfMultipleDensityDataSet <-function(data, outputFile, distribution, limits){
   cols = generateColours(distribution);
+  symbols = generateSymbols(distribution);
   
   plot <- ggplot(data) +
     theme(
@@ -50,7 +51,7 @@ plotResultOfMultipleDensityDataSet <-function(data, outputFile, distribution, li
       
       plot.margin=unit(c(0,2.5,0,0),"mm")
     );
-  plot <- plot + geom_point(aes(x=trueDensity, y=computedDensity), size=0.7, colour=cols, shape=21, stroke=0.2);
+  plot <- plot + geom_point(aes(x=trueDensity, y=computedDensity), size=0.7, colour=cols, shape=symbols, stroke=0.2);
   plot <- plot + geom_line(aes(x=trueDensity, y=trueDensity));
   plot <- plot + 	xlab('true density') + ylab('computed density');
   plot <- plot + scale_x_continuous(labels = fancy_scientificLabels, limits = c(limits['xMin'], limits['xMax'])) 

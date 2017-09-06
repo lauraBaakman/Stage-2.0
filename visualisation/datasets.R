@@ -8,25 +8,30 @@ source("./io.R");
 # Load libraries
 library(scatterplot3d)
 
+computeAxisLimit <- function(data){
+  c(round(min(data)), round(max(data)))
+}
+
 plotDataSet <- function(data, outputFile, numberOfPatternsPerSubSet){
   if(length(colours) < length(numberOfPatternsPerSubSet)){
     message = sprintf('The number of subsets (%d) should be greater than or equal to the number of defined colours (%d).', length(numberOfPatternsPerSubSet), length(colours));
     stop(message)
   }
   patternColours = generateColours(numberOfPatternsPerSubSet);
+  patternSymbols = generateSymbols(numberOfPatternsPerSubSet);
   printf("outputFile: %s\n", outputFile)
   pdf(outputFile);
   scatterplot3d(
     x = data$x, y = data$y, z = data$z,
     xlab='x', ylab='y', zlab='z',
-    pch='.',
+    xlim = computeAxisLimit(data$x), ylim = computeAxisLimit(data$y), zlim = computeAxisLimit(data$z),
+    pch=patternSymbols,
     color=patternColours,
     grid=FALSE,
     lty.hide=4,
-    cex.lab=2.5,
-    label.tick.marks=FALSE,
     mar=c(2.4, 3, 0, 2),
-    cex.symbols = 2
+    type='p',
+    cex.symbols = 0.5
   )
   dev.off();
 }

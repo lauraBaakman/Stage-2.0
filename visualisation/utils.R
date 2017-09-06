@@ -1,14 +1,21 @@
 library(stringr)
 
 generateColours <- function(numberOfPatternsPerSubSet){
-  patternColours = list(); 
-  for (idx in 1:length(numberOfPatternsPerSubSet)) {
-    patternColours <- c(patternColours, 
-                        rep(colours[idx], numberOfPatternsPerSubSet[idx]),
-                        recursive=TRUE
-    );
+  generateXAuxilary(numberOfPatternsPerSubSet, colours);
+}
+
+generateSymbols <- function(numberOfPatternsPerSubSet){
+  generateXAuxilary(numberOfPatternsPerSubSet, symbols);
+}
+
+generateXAuxilary <- function(distribution, listToDrawFrom){
+  xList = list(); 
+  numberOfGaussianComponents = length(distribution) - 1;
+  for (idx in 1:numberOfGaussianComponents) {
+    xList <- c(xList, rep(listToDrawFrom[idx], distribution[idx]),recursive=TRUE);
   }
-  patternColours;
+  xList <- c(xList, rep(listToDrawFrom[length(listToDrawFrom)], distribution[length(distribution)]), recursive=TRUE);  
+  xList;
 }
 
 list <- structure(NA,class="result")
