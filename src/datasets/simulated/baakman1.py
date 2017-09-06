@@ -14,7 +14,7 @@ class Baakman1(SimulatedDataSet):
                 'component': components.MultivariateGaussian(
                     mean=np.array([50, 50, 50]),
                     covariance_matrix=np.diag(
-                        np.array([9, np.sqrt(3), np.sqrt(3)])
+                        np.array([11 * 11, np.sqrt(11), np.sqrt(11)])
                     )
                 ),
                 'num elements': self._compute_num_elements(40000),
