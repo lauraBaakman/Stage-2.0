@@ -16,11 +16,24 @@
 	\label{tab:experiment:singlesphere:sets}
 \end{table*}
 
-\todo[inline]{Image of single sphere sets}
-\todo[inline]{Discuss \ferdosiOneNum}
-\todo[inline]{Discuss \baakmanOneNum}
-\todo[inline]{Discuss \baakmanFourNum}
-\todo[inline]{Discuss \baakmanFiveNum}
+\Cref{fig:experiment:singlesphere:sets} shows a scatter plot representation of the datasets containing a single Gaussian distribution defined in \cref{tab:experiment:singlesphere:sets}. 
 
-\todo[inline]{Hypothezize on results in general}
-\todo[inline]{Hypothezize more specific}
+% General
+The Gaussian components of these datasets progress from a sphere, \ie dataset \ferdosiOne, to an increasingly more elongated ellipsoid. This makes it possible to investigate the influence of how strongly elongated the distribution is on the density estimate. 
+% Ferdosi One
+\todo[inline]{Discuss set \ferdosiOneNum.}
+
+% Baakman One
+Dataset \baakmanOne is created from \ferdosiOne by squaring one of the eigenvalues of the covariance matrix, and taking the square root of the other two eigenvalues, without changing the eigenvectors. The resulting covariance matrix defines an eigenellipse with the same volume as the one defined by \ferdosiOne.
+
+% Baakman Four
+\todo[inline]{Discuss set \baakmanFourNum.}
+
+% Baakman Five
+\todo[inline]{Discuss set \baakmanFiveNum.}
+
+% Hypothesis
+	% Ferdosi 1
+	We expect the Modified Breiman Estimator and its shape-adaptive cousin to perform comparably on dataset \ferdosiOne, since due to the symmetric shape of the Gaussian distribution no advantage should be gained by using a shape-adaptive kernel. 
+	% Baakman 1, 4, 5
+	As the Gaussian distribution is more and more elongated, the advantage of using \sambe should become more pronounced. 
