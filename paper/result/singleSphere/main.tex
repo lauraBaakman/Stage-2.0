@@ -14,12 +14,10 @@
 	\label{tab:results:singleSphere:mse}
 \end{table}
 
-This section compares the performance of the Modified Breiman Estimator and a shape-adaptive variant on dataset that contain one Gaussian, \ie dataset \ferdosiOne, \baakmanOne, \baakmanFour, and \baakmanFive.
-
-\todo[inline]{Where to find table and MSE?}
+This section compares the performance of the Modified Breiman Estimator and a shape-adaptive variant on datasets that contain one Gaussian, \ie dataset \ferdosiOne, \baakmanOne, \baakmanFour, and \baakmanFive. Comparing the mean squared errors of the \mbe with those of \sambe in \cref{tab:results:singleSphere:mse} we find that the two estimators perform comparably, but that the fixed-shape estimator always gives a slightly lower mean squared error. This is confirmed by the visualization of the result in \cref{fig:results:singleSphere:comparativePlots} where hardly any difference is visible between \cref{fig:results:singlesphere:mbe:ferdosi1,fig:results:singlesphere:mbe:baakman1,fig:results:singlesphere:mbe:baakman4,fig:results:singlesphere:mbe:baakman5} and \cref{fig:results:singlesphere:sambe:ferdosi1,fig:results:singlesphere:sambe:baakman1,fig:results:singlesphere:sambe:baakman4,fig:results:singlesphere:sambe:baakman5}, respectively.
 
 	% Ferdosi 1
-		\todo[inline]{Discuss MSE and Plot}
+		Comparing \cref{fig:results:singlesphere:mbe:ferdosi1} with \cref{fig:results:singlesphere:sambe:ferdosi1} we find hardly any difference between the results of the two estimators, \sambe overshoots some densities more than \mbe, but otherwise the results seem identical, which fits with the small difference in mean square error.
 		\todo[inline]{Difference between noise and gaussian?}
 
 	% Baakman 1
