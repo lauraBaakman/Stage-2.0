@@ -12,6 +12,14 @@ library(extrafont);
 library(stringr);
 library(gridExtra);
 
+add.alpha <- function(col, alpha=1){
+  if(missing(col))
+    stop("Please provide a vector of colours.")
+  apply(sapply(col, col2rgb)/255, 2, 
+        function(x) 
+          rgb(x[1], x[2], x[3], alpha=alpha))  
+}
+
 computeMSE <- function(data){
   error <- data$trueDensity - data$computedDensity;
   mse <- mean(error^2)
@@ -36,6 +44,7 @@ fancy_scientificLabels <- function(l) {
 
 plotResultOfMultipleDensityDataSet <-function(data, outputFile, distribution, limits){
   cols = generateColours(distribution);
+  cols = add.alpha(cols, alpha=1);
   symbols = generateSymbols(distribution);
   
   plot <- ggplot(data) +
