@@ -22,8 +22,8 @@ symbols = list(
   bullsEye              = 10,
   filledCircle   	      = 16  
 )
-font.size = 10;
-font.family ="CM Roman";
+font.size = 9;
+# font.family ="CM Roman";
 font.family ="Times-Roman";
 
 tex.textwidth = 14.92038; #cm
