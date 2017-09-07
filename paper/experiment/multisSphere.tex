@@ -1,0 +1,30 @@
+%!TEX root = ../paper.tex
+
+\begin{figure}
+	\centering
+	\beforeFinalVersion{Remove ticks and labels.}
+	\input{experiment/multiSphere_subfig}
+	\caption{Scatter plot representation of the datasets defined in \cref{tab:experiment:multisphere:sets}, the colors used for the different components correspond with the colors used in that table.}
+	\label{fig:experiment:multisphere:sets}
+\end{figure}
+
+\begin{table*}
+	\centering
+	\input{experiment/multiSphere_tab}
+	\caption{The datasets with multiple Gaussian distributions embedded in uniform noise. This table has the same structure as \cref{tab:experiment:singlesphere:sets}.} 	
+	\label{tab:experiment:multisphere:sets}
+\end{table*}
+
+%General
+\Cref{tab:experiment:multisphere:sets} defines the datasets that consist of uniform random noise and multiple Gaussian distributions, a scatter plot representation of the sets is shown in \cref{fig:experiment:multisphere:sets}. 
+	% Ferdosi 2
+	Dataset \ferdosiTwo consists of two Gaussian distributions embedded in noise, the first Gaussian component is significantly denser than the second. The spheres are placed in such a way that they are unlikely to overlap. 
+	% Baakman 2
+	The procedure outlined in \cref{s:experiment:singlesphere} for the creation of dataset \baakmanOne was used to derive dataset \baakmanTwo from set \ferdosiTwo.
+	% Ferdosi Three
+	Dataset \ferdosiThree embeds four Gaussians, with eigenspheres with notably differencing radii in the uniform random back ground. It is unlikely that these distributions overlap due to their placement. 
+	%Baakman 3
+	The last dataset, \baakmanThree, is a variation on \ferdosiThree, created with method that was used for the definition of dataset \baakmanTwo from \baakmanOne. 
+
+%Hypothesis
+	We expect to find hardly any difference in performance between the classifiers on dataset \ferdosiTwo and \ferdosiThree. Given the shape of the Gaussian distributions embedded in dataset \baakmanTwo and \baakmanThree we hypothesize that \sambe outperforms \mbe on these sets.

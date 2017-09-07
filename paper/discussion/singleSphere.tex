@@ -2,14 +2,6 @@
 
 The difference in results between the Modified Breiman Estimator and its shape adaptive variant on dataset \ferdosiOne, \baakmanOne, \baakmanFour, \baakmanFive raise several questions. This section attempts to answer them.
 
-% Why are the estimations on Ferdosi 1 by SAMBE so much higher than those by MBE?
-	In \cref{fig:4:results:singleSphere} we observed that \sambe overestimates the densities of dataset \ferdosiOne. This could indicate that the kernels are too small, resulting in a too high contribution to the density estimate. Since the Modified Breiman estimator uses the same general and local bandwidth as the shape adaptive version the likely culprit is the shape of the kernel.
+% General Questions
 
-% Why are some estimated densities not in [0, 1] than zero with SAMBE on Baakman1, Baakman4, Baakman5?
-Another strange result observed in \cref{fig:4:results:singleSphere} is that a large number of estimated densities were not in the expected range $[0, 1]$ when \sambe was used. Strangely this effect does not occur when the shape adaptive matrix is not used in a dataset that contains spherical data, \ie in dataset \ferdosiOne. Looking back to \cref{eq:2:parzenWithBandWidthMatrix} we find that since $\forall \varPattern\; \varKernel{\varPattern} \in[0, 1]$, $\det\left(\varBandwidthMatrix[\itXis]\right)$ must be smaller than zero for at least one \varPattern[\itXis] to cause a negative density estimate. For the same reason the density estimates that are greater than zero must be the result of $\det\left(\varBandwidthMatrix[\itXis]\right) < 1$ for some $\varBandwidthMatrix[\itXis]$. However since $varBandwidthMatrix[\itXis]$ is a scaled covariance matrix it should be positive semi definite, which is clearly not the case, since the determinant is smaller than zero. Reviewing the eigenvalues of the bandwidth matrices we find that they are near zero \
-
-% https://www.researchgate.net/post/Any_explanation_for_a_negative_value_of_the_determinant_of_the_covariance_matrix_of_a_multivariate_Gaussian_in_a_GMM_classifier
-\todo[inline]{Zijn de eigenwaarden negatife maar klein en in value -> numerike probleem en het geheel is ill conditioned zie website, eigen valuess zijn negatief en groot in value -> help ........}
-
-% Some concluding remark
-The issues above probably explain why the shape adaptive Modified Breiman Estimator does not outperform the non-shape adaptive variant on these data sets.
+% Dataset Specific Questions

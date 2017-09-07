@@ -1,9 +1,17 @@
 %!TEX root = ../paper.tex
-We compare the performance of the shape-adaptive method with that of the Modified Breiman Estimator, on simulated datasets with known density fields. This allows us to test how well the proposed method can recover simple density distributions. 
+We compare the performance of the shape-adaptive method with that of the Modified Breiman Estimator, on simulated datasets with known density fields. This allows us to test how well the proposed method can recover simple density distributions. We distinguish two types of datasets: datasets consisting of a single Gaussian distribution and noise, discussed in \cref{s:experiment:singlesphere} and datasets containing multiple Gaussian distributions next to noise, these are presented in \cref{s:experiment:multisphere}.
 
 To quantify the performance of the estimators we use the Mean Squared Error (MSE):
 \begin{equation*}
 	\varMSE{\varEstimatedDensityFunction{\bullet}} = \frac{1}{\varNumPatterns} \sum_{\itXs = 1}^{\varNumPatterns} {\left(\varEstimatedDensityFunction{\varPattern[\itXs]} - \varDensityFunction{\varPattern[\itXs]} \right)}^2.
 \end{equation*}
 
-\input{experiment/datasets}
+\subsection{Datasets with a Single Gaussian}
+\label{s:experiment:singlesphere}
+\input{experiment/singleSphere}
+
+\subsection{Datasets with Multiple Gaussians}
+\label{s:experiment:multisphere}
+\input{experiment/multisSphere}
+
+\textcite{ferdosi2011comparison} found that the Modified Breiman Estimator resulted in lower Integrated Square Error if fewer Gaussian distributions were present in the datasets. Since the presented datasets are comparable to those used by \citeauthor{ferdosi2011comparison} we expect to find the same influence of the number of distributions on the error.
