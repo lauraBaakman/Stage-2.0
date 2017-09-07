@@ -99,6 +99,9 @@ ferdosi1<-function(){
     sambe_file="../results/normal/ferdosi_1_60000_sambe_silverman_xis.txt"    
   )
 
+  # noise = data[data$component == 1, ] 
+  # gaussian=data[data$component == 0, ]
+  
   data;
 }
 
