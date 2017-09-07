@@ -10,9 +10,9 @@ source("./results.R");
 
 # FileNames
 data_set_file = "../data/simulated/normal/baakman_4_60000.txt"
-parzen_file = "../results/normal/silverman/baakman_4_60000_parzen.txt"
-mbe_file = "../results/normal/silverman/baakman_4_60000_mbe_silverman.txt"
-sambe_file = "../results/normal/silverman/baakman_4_60000_sambe_silverman.txt"
+parzen_file = "../results/normal/baakman_4_60000_parzen.txt"
+mbe_file = "../results/normal/baakman_4_60000_mbe_silverman.txt"
+sambe_file = "../results/normal/baakman_4_60000_sambe_silverman.txt"
 
 readResultSet <- function(data_set_file, parzen_file, mbe_file, sambe_file){
   # read dataset file
@@ -90,13 +90,13 @@ componentMSE<-function(data, componentNumber){
 ferdosi1<-function(){
   xsdata <- readResultSet(
     data_set_file="../data/simulated/normal/ferdosi_1_60000.txt", 
-    parzen_file="../results/normal/silverman/ferdosi_1_60000_parzen.txt", 
-    mbe_file="../results/normal/silverman/ferdosi_1_60000_mbe_silverman.txt", 
-    sambe_file="../results/normal/silverman/ferdosi_1_60000_sambe_silverman.txt"
+    parzen_file="../results/normal/ferdosi_1_60000_parzen.txt",
+    mbe_file="../results/normal/ferdosi_1_60000_mbe_silverman.txt", 
+    sambe_file="../results/normal/ferdosi_1_60000_sambe_silverman.txt"
   ) 
   data <- addXisResults(
     xsdata = xsdata,
-    sambe_file="../results/normal/silverman/ferdosi_1_60000_sambe_silverman_xis.txt"    
+    sambe_file="../results/normal/ferdosi_1_60000_sambe_silverman_xis.txt"    
   )
 
   data;
@@ -105,13 +105,13 @@ ferdosi1<-function(){
 ferdosi2<-function(){
   data <- readResultSet(
     data_set_file="../data/simulated/normal/ferdosi_2_60000.txt", 
-    parzen_file="../results/normal/silverman/ferdosi_2_60000_parzen.txt", 
-    mbe_file="../results/normal/silverman/ferdosi_2_60000_mbe_silverman.txt", 
-    sambe_file="../results/normal/silverman/ferdosi_2_60000_sambe_silverman.txt"
+    parzen_file="../results/normal/ferdosi_2_60000_parzen.txt",
+    mbe_file="../results/normal/ferdosi_2_60000_mbe_silverman.txt", 
+    sambe_file="../results/normal/ferdosi_2_60000_sambe_silverman.txt"
   )    
   data <- addXisResults(
     xsdata = data,
-    sambe_file="../results/normal/silverman/ferdosi_2_60000_sambe_silverman_xis.txt"    
+    sambe_file="../results/normal/ferdosi_2_60000_sambe_silverman_xis.txt"    
   )
   
   componentMSE(data, 0);  
@@ -124,13 +124,13 @@ ferdosi2<-function(){
 ferdosi3<-function(){
   data <- readResultSet(
     data_set_file="../data/simulated/normal/ferdosi_3_120000.txt", 
-    parzen_file="../results/normal/silverman/ferdosi_3_120000_parzen.txt", 
-    mbe_file="../results/normal/silverman/ferdosi_3_120000_mbe_silverman.txt", 
-    sambe_file="../results/normal/silverman/ferdosi_3_120000_sambe_silverman.txt"
+    parzen_file="../results/normal/ferdosi_3_120000_parzen.txt",
+    mbe_file="../results/normal/ferdosi_3_120000_mbe_silverman.txt", 
+    sambe_file="../results/normal/ferdosi_3_120000_sambe_silverman.txt"
   )   
   data <- addXisResults(
     xsdata = data,
-    sambe_file="../results/normal/silverman/ferdosi_3_120000_sambe_silverman_xis.txt"    
+    sambe_file="../results/normal/ferdosi_3_120000_sambe_silverman_xis.txt"    
   )
   
   
@@ -146,13 +146,13 @@ ferdosi3<-function(){
 baakman2<-function(){
   data <- readResultSet(
     data_set_file="../data/simulated/normal/baakman_2_60000.txt", 
-    parzen_file="../results/normal/silverman/baakman_2_60000_parzen.txt", 
-    mbe_file="../results/normal/silverman/baakman_2_60000_mbe_silverman.txt", 
-    sambe_file="../results/normal/silverman/baakman_2_60000_sambe_silverman.txt"
+    parzen_file="../results/normal/baakman_2_60000_parzen.txt",
+    mbe_file="../results/normal/baakman_2_60000_mbe_silverman.txt", 
+    sambe_file="../results/normal/baakman_2_60000_sambe_silverman.txt"
   )   
   data <- addXisResults(
     xsdata = data,
-    sambe_file="../results/normal/silverman/baakman_2_60000_sambe_silverman_xis.txt"    
+    sambe_file="../results/normal/baakman_2_60000_sambe_silverman_xis.txt"    
   )
   
   
@@ -166,13 +166,13 @@ baakman2<-function(){
 baakman3<-function(){
   data <- readResultSet(
     data_set_file="../data/simulated/normal/baakman_3_120000.txt", 
-    parzen_file="../results/normal/silverman/baakman_3_120000_parzen.txt", 
-    mbe_file="../results/normal/silverman/baakman_3_120000_mbe_silverman.txt", 
-    sambe_file="../results/normal/silverman/baakman_3_120000_sambe_silverman.txt"
+    parzen_file="../results/normal/baakman_3_120000_parzen.txt",
+    mbe_file="../results/normal/baakman_3_120000_mbe_silverman.txt", 
+    sambe_file="../results/normal/baakman_3_120000_sambe_silverman.txt"
   )    
   data <- addXisResults(
     xsdata = data,
-    sambe_file="../results/normal/silverman/baakman_3_120000_sambe_silverman_xis.txt"    
+    sambe_file="../results/normal/baakman_3_120000_sambe_silverman_xis.txt"    
   )
   
   componentMSE(data, 0);  
@@ -187,13 +187,13 @@ baakman3<-function(){
 baakman5 <-function(){
   data <- readResultSet(
     data_set_file="../data/simulated/normal/baakman_5_60000.txt", 
-    parzen_file="../results/normal/silverman/baakman_5_60000_parzen.txt", 
-    mbe_file="../results/normal/silverman/baakman_5_60000_mbe_silverman.txt", 
-    sambe_file="../results/normal/silverman/baakman_5_60000_sambe_silverman.txt"
+    parzen_file="../results/normal/baakman_5_60000_parzen.txt",
+    mbe_file="../results/normal/baakman_5_60000_mbe_silverman.txt", 
+    sambe_file="../results/normal/baakman_5_60000_sambe_silverman.txt"
   )  
   data <- addXisResults(
     xsdata = data,
-    sambe_file="../results/normal/silverman/baakman_5_60000_sambe_silverman_xis.txt"    
+    sambe_file="../results/normal/baakman_5_60000_sambe_silverman_xis.txt"    
   )  
   
   # Remove too low densities
@@ -211,13 +211,13 @@ baakman5 <-function(){
 baakman4 <-function(){
   data <- readResultSet(
     data_set_file="../data/simulated/normal/baakman_4_60000.txt", 
-    parzen_file="../results/normal/silverman/baakman_4_60000_parzen.txt", 
-    mbe_file="../results/normal/silverman/baakman_4_60000_mbe_silverman.txt", 
-    sambe_file="../results/normal/silverman/baakman_4_60000_sambe_silverman.txt"
+    parzen_file="../results/normal/baakman_4_60000_parzen.txt",
+    mbe_file="../results/normal/baakman_4_60000_mbe_silverman.txt", 
+    sambe_file="../results/normal/baakman_4_60000_sambe_silverman.txt"
   )  
   data <- addXisResults(
     xsdata = data,
-    sambe_file="../results/normal/silverman/baakman_4_60000_sambe_silverman_xis.txt"    
+    sambe_file="../results/normal/baakman_4_60000_sambe_silverman_xis.txt"    
   )    
   
   # Remove too low densities
@@ -235,13 +235,13 @@ baakman4 <-function(){
 baakman1 <- function(){
   data <- readResultSet(
     data_set_file="../data/simulated/normal/baakman_1_60000.txt", 
-    parzen_file="../results/normal/silverman/baakman_1_60000_parzen.txt", 
-    mbe_file="../results/normal/silverman/baakman_1_60000_mbe_silverman.txt", 
-    sambe_file="../results/normal/silverman/baakman_1_60000_sambe_silverman.txt"
+    parzen_file="../results/normal/baakman_1_60000_parzen.txt",
+    mbe_file="../results/normal/baakman_1_60000_mbe_silverman.txt", 
+    sambe_file="../results/normal/baakman_1_60000_sambe_silverman.txt"
   )
   data <- addXisResults(
     xsdata = data,
-    sambe_file="../results/normal/silverman/baakman_1_60000_sambe_silverman_xis.txt"    
+    sambe_file="../results/normal/baakman_1_60000_sambe_silverman_xis.txt"    
   )     
   
   # Remove too low densities
