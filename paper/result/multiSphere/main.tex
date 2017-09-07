@@ -20,21 +20,35 @@
 	\label{tab:results:multiSphere:mse}
 \end{table}
 
-In this section we present the results of the two estimators on dataset \ferdosiTwo, \baakmanTwo, \ferdosiThree, \baakmanThree.
+%Introduction
+	In this section we present the results of the two estimators on dataset \ferdosiTwo, \baakmanTwo, \ferdosiThree, \baakmanThree.
 
-% Ferdosi 2 & Baakman 2
-	% MSE
-	\todo[inline]{Discuss MSE and Plot}
-	\todo[inline]{Difference between noise and gaussians?}	
+% Ferdosi 2
+	% General difference
+	Comparing \cref{fig:results:multisphere:mbe:ferdosi2} with \cref{fig:results:multisphere:sambe:ferdosi2} we find that both estimators underestimate the density and that the densities estimated by the \sambe are spread out more than those estimated by \mbe. In spite of this the difference in \mse between the two estimators is small enough to be insignificant. 
+	% Components
+	The same holds for the \mse of the individual components.
 
-	% Plots
+% Baakman 2
+	% General difference
+	\Cref{fig:results:multisphere:mbe:baakman2,fig:results:multisphere:sambe:baakman2} show the same general trend as \cref{fig:results:multisphere:mbe:ferdosi2,fig:results:multisphere:sambe:ferdosi2}: both estimators underestimate, the shape-adaptive estimator less so than the symmetric estimator, but the differences between the two estimators are small. 
+	% Components
+	The differences in \MSE within the difference components between the estimators are negligible. 
+	% Contrast to Ferdosi 2
+	Comparing the performance of the estimators between datasets \ferdosiTwo and \baakmanTwo we find that the performance of both estimators hardly suffers from the elongation of the Gaussians. 
 
-% Ferdosi 3 & Baakman 3
-	% MSE
-	\todo[inline]{Discuss MSE and Plot}
-	\todo[inline]{Difference between noise and gaussians?}	
+% Ferdosi 3
+	% General Differnce
 
-	% Plots
+	% Components
+
+% Baakman 3
+	% General Differnce
+
+	% Components
+
+	% Constrast to Ferdosi 3
+
 
 % General
 	\todo[inline]{General observation?}

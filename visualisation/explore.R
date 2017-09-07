@@ -81,7 +81,7 @@ mse <-function(trueDensities, estimatedDensities){
 
 componentMSE<-function(data, componentNumber){
   component1 <- data[data$component == componentNumber, ]
-  printf("Component %d:\n %s\t& %s\n", 
+  printf("Component %d (MBE, SAMBE):\n %s\t& %s\n", 
          componentNumber,
          formatC(mse(component1$trueDensities, component1$mbeDensities), digits = 15, format = "e"),
          formatC(mse(component1$trueDensities, component1$sambeDensities), digits = 15, format = "e")); 
