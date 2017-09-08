@@ -8,7 +8,8 @@
 % Images
 \RequirePackage{graphicx}
 \RequirePackage[hang, small,labelfont=bf,up,textfont=it,up]{caption}
-\RequirePackage{subcaption}
+\RequirePackage[labelformat=simple]{subcaption}
+\renewcommand\thesubfigure{(\alph{subfigure})}
 
 % Numbers
 \RequirePackage{fmtcount}
