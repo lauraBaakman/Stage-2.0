@@ -226,7 +226,7 @@ def process_xis_data(dataset_meta):
     def collect_all_xis_data(dataset_meta):
         baseline_xis, header = read_baseline_xis(dataset_meta)
 
-        if not baseline_xis:
+        if baseline_xis is None:
             return None, None
 
         data = baseline_xis
