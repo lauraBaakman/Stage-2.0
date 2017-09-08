@@ -7,6 +7,7 @@ source("./io.R");
 source("./results.R");
 
 # Load libraries
+library(scatterplot3d)
 
 # FileNames
 data_set_file = "../data/simulated/normal/baakman_4_60000.txt"
@@ -129,7 +130,9 @@ ferdosi1<-function(){
   data$mbeSambeDiff = data$mbeDensities - data$sambeDensities;
   data$meanEigDiff = distanceToEigenValueMean(data);
 
-  generateMBEvsSAMBEPlot(data, "~/Desktop/ferdsoi_1_60000_mbe_sambe.png");
+  generateMBEvsSAMBEPlot(data, "../paper/discussion/img/ferdosi_1_60000_mbe_sambe.png")
+  plotShapeAdaptedData(data, "../paper/discussion/img/ferdosi_1_60000_pointsWithShapeAdaptedKernels.pdf", minDifference = 1.5)
+  
   componentMSE(data, 0);
   componentMSE(data, 1);
 
@@ -236,11 +239,44 @@ baakman5 <-function(){
   data$mbeSambeDiff = data$mbeDensities - data$sambeDensities;
   data$meanEigDiff = distanceToEigenValueMean(data);
   
-  generateMBEvsSAMBEPlot(data, "~/Desktop/baakman_5_60000_mbe_sambe.png");
+  generateMBEvsSAMBEPlot(data, "../paper/discussion/img/baakman_5_60000_mbe_sambe.png")
+  # plotShapeAdaptedData(data, "../paper/discussion/img/baakman_5_60000_pointsWithShapeAdaptedKernels.pdf")
+  
   componentMSE(data, 0);
   componentMSE(data, 1); 
   
   data;
+}
+
+plotShapeAdaptedData <- function(allData, outputFile='~/Desktop/shapeAdapted.pdf', minDifference = 0.8){
+  data <- allData[(allData$eigen_value_1 - allData$eigen_value_2) > minDifference | 
+                  (allData$eigen_value_1 - allData$eigen_value_2) > minDifference |
+                  (allData$eigen_value_2 - allData$eigen_value_3) > minDifference, ]
+  # Plot The Actual Data
+  allData = allData[order(allData$component, decreasing = FALSE), ]
+  distribution = table(allData$component);
+  theColors = add.alpha(generateColours(distribution), alpha = 0.15);
+  pdf(outputFile);
+  s3d <- scatterplot3d(
+    x = allData$x, y = allData$y, z = allData$z,
+    xlab='x', ylab='y', zlab='z',
+    pch=16,
+    color=theColors,
+    grid=FALSE,
+    lty.hide=4,
+    mar=c(2.4, 3, 0, 2),
+    type='p',
+    cex.symbols = 0.4
+  )  
+  # Plot the points of interest
+  data = data[order(data$component, decreasing = FALSE), ]
+  distribution = table(data$component);
+  theColors = add.alpha(generateColours(distribution), alpha = 0.5);  
+  s3d$points3d(x=data$x, y=data$y, z=data$z,
+    pch=16,
+    col=theColors
+  );
+  dev.off();
 }
 
 baakman4 <-function(){
