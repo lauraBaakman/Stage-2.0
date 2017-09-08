@@ -162,6 +162,17 @@ ferdosi2<-function(){
     outputFile = "../paper/discussion/img/ferdosi_2_abs_error_mbeSmallerThansambe.pdf"
   )
   
+  compareCompareComponent(
+    data=data,
+    componentNumber = 0,
+    25, 25, 25
+  )
+  compareCompareComponent(
+    data=data,
+    componentNumber = 1,
+    45, 45, 45
+  )  
+  
   componentMSE(data, 0);  
   componentMSE(data, 1);
   componentMSE(data, 2);
@@ -194,6 +205,27 @@ ferdosi3<-function(){
   componentMSE(data, 3);
   componentMSE(data, 4);
   
+  compareCompareComponent(
+    data=data,
+    componentNumber = 0,
+    24, 10, 10
+  )
+  compareCompareComponent(
+    data=data,
+    componentNumber = 1,
+    33, 70, 40
+  )   
+  compareCompareComponent(
+    data=data,
+    componentNumber = 2,
+    90, 20, 80
+  )  
+  compareCompareComponent(
+    data=data,
+    componentNumber = 3,
+    60, 80, 23
+  )  
+  
   data;
 }
 
@@ -216,11 +248,34 @@ baakman2<-function(){
     outputFile = "../paper/discussion/img/baakman_2_abs_error_mbeSmallerThansambe.pdf"
   )  
   
+  compareCompareComponent(
+    data=data,
+    componentNumber = 0,
+    25, 25, 25
+  )
+  compareCompareComponent(
+    data=data,
+    componentNumber = 1,
+    45, 45, 45
+  )
+  
   componentMSE(data, 0);  
   componentMSE(data, 1);
   componentMSE(data, 2);
   
   data;
+}
+
+compareCompareComponent<-function(data, componentNumber, mean.x, mean.y, mean.z){
+    component = data[data$component == componentNumber, ]
+    component$distanceToMean = sqrt((component$x - mean.x)^2 + (component$y - mean.y)^2 + (component$z - mean.z)^2);
+    sambeBest = component[(abs(component$trueDensities - component$sambeDensities) < abs(component$trueDensities - component$mbeDensities)), ]  
+    mbeBest = component[(abs(component$trueDensities - component$mbeDensities) < abs(component$trueDensities - component$sambeDensities)), ] 
+    
+    printf("Component %d:\n\tMBE best mean distance to mean: %s\n\tSAMBE best mean distance to mean: %s\n", 
+           componentNumber,
+           formatC(mean(mbeBest$distanceToMean), digits = 15, format = "e"),
+           formatC(mean(sambeBest$distanceToMean), digits = 15, format = "e")); 
 }
 
 baakman3<-function(){
@@ -242,6 +297,26 @@ baakman3<-function(){
     outputFile = "../paper/discussion/img/baakman_3_abs_error_mbeSmallerThansambe.pdf"
   )  
   
+  compareCompareComponent(
+    data=data,
+    componentNumber = 0,
+    24, 10, 10
+  )
+  compareCompareComponent(
+    data=data,
+    componentNumber = 1,
+    33, 70, 40
+  )   
+  compareCompareComponent(
+    data=data,
+    componentNumber = 2,
+    90, 20, 80
+  )  
+  compareCompareComponent(
+    data=data,
+    componentNumber = 3,
+    60, 80, 23
+  )   
   
   componentMSE(data, 0);  
   componentMSE(data, 1);
