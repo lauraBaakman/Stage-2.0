@@ -153,6 +153,14 @@ ferdosi2<-function(){
     xsdata = data,
     sambe_file="../results/normal/ferdosi_2_60000_sambe_silverman_xis.txt"    
   )
+  generateMBEvsSAMBEPlot(data, "../paper/discussion/img/ferdosi_2_60000_mbe_sambe.png")
+  
+  # MBE better than SAMBE
+  plotSubsetOverlay(
+    allData=data, 
+    overlay=data[(abs(data$trueDensities - data$mbeDensities) < abs(data$trueDensities - data$sambeDensities)), ],
+    outputFile = "../paper/discussion/img/ferdosi_2_abs_error_mbeSmallerThansambe.pdf"
+  )
   
   componentMSE(data, 0);  
   componentMSE(data, 1);
@@ -195,6 +203,12 @@ baakman2<-function(){
     sambe_file="../results/normal/baakman_2_60000_sambe_silverman_xis.txt"    
   )
   
+  generateMBEvsSAMBEPlot(data, "../paper/discussion/img/baakman_2_60000_mbe_sambe.png")
+  plotSubsetOverlay(
+    allData=data, 
+    overlay=data[(abs(data$trueDensities - data$mbeDensities) < abs(data$trueDensities - data$sambeDensities)), ],
+    outputFile = "../paper/discussion/img/baakman_2_abs_error_mbeSmallerThansambe.pdf"
+  )  
   
   componentMSE(data, 0);  
   componentMSE(data, 1);
@@ -214,6 +228,8 @@ baakman3<-function(){
     xsdata = data,
     sambe_file="../results/normal/baakman_3_120000_sambe_silverman_xis.txt"    
   )
+  
+  
   
   componentMSE(data, 0);  
   componentMSE(data, 1);
@@ -275,6 +291,33 @@ plotShapeAdaptedData <- function(allData, outputFile='~/Desktop/shapeAdapted.pdf
   s3d$points3d(x=data$x, y=data$y, z=data$z,
     pch=16,
     col=theColors
+  );
+  dev.off();
+}
+
+plotSubsetOverlay <- function(allData, overlay, outputFile='~/Desktop/overaly.pdf'){
+  # Plot ALLdata
+  distribution = table(allData$component);
+  theColors = add.alpha(generateColours(distribution), alpha = 0.15);
+  pdf(outputFile);
+  s3d <- scatterplot3d(
+    x = allData$x, y = allData$y, z = allData$z,
+    xlab='x', ylab='y', zlab='z',
+    pch=16,
+    color=theColors,
+    grid=FALSE,
+    lty.hide=4,
+    mar=c(2.4, 3, 0, 2),
+    type='p',
+    cex.symbols = 0.4
+  )  
+  # Plot the points of interest
+  overlay = overlay[order(overlay$component, decreasing = FALSE), ]
+  distribution = table(overlay$component);
+  theColors = add.alpha(generateColours(distribution), alpha = 0.5);  
+  s3d$points3d(x=overlay$x, y=overlay$y, z=overlay$z,
+               pch=16,
+               col=theColors
   );
   dev.off();
 }
