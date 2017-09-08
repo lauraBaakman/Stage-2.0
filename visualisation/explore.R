@@ -280,14 +280,11 @@ baakman1 <- function(){
     sambe_file="../results/normal/baakman_1_60000_sambe_silverman_xis.txt"    
   )     
   
-  # Remove too low densities
-  subset = data[data$sambeDensities > 0.0, ];
-  # Remove too high densities
-  subset <- subset[subset$sambeDensities < 0.07, ];               
+  data$meanEigDiff = distanceToEigenValueMean(data);
   
-  # Generate plots
-  generateResultPlot(subset, subset$mbeDensities, "~/Desktop/results_baakman_1_60000_mbe_silverman_no_outliers.png")
-  generateResultPlot(subset, subset$sambeDensities, "~/Desktop/results_baakman_1_60000_sambe_silverman_no_outliers.png")
+  generateMBEvsSAMBEPlot(data, "~/Desktop/baakman_1_60000_mbe_sambe.png");
+  componentMSE(data, 0);
+  componentMSE(data, 1);  
   
   data;
 }
@@ -297,3 +294,5 @@ baakman1 <- function(){
 # generateResultPlot(data, data$sambeDensities, "~/Desktop/temp.png")
 # formatC(min(data$sambeDensities), digits = 15, format = "e")
 # head(data[order(data$sambeDensities, decreasing = TRUE), ], n=10)
+# head(data[order(data$mbeDensities - data$sambeDensities, decreasing=TRUE), ], 10)
+# head(data[order(data$meanEigDiff, decreasing = TRUE), ], n = 10)
