@@ -315,7 +315,9 @@ baakman1 <- function(){
   data$mbeSambeDiff = data$mbeDensities - data$sambeDensities;
   data$meanEigDiff = distanceToEigenValueMean(data);
   
-  generateMBEvsSAMBEPlot(data, "~/Desktop/baakman_1_60000_mbe_sambe.png");
+  generateMBEvsSAMBEPlot(data, "../paper/discussion/img/baakman_1_60000_mbe_sambe.png")
+  # plotShapeAdaptedData(data, "../paper/discussion/img/baakman_1_60000_pointsWithShapeAdaptedKernels.pdf")
+  
   componentMSE(data, 0);
   componentMSE(data, 1);  
   
