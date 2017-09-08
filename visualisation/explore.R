@@ -61,6 +61,14 @@ computeLimits<-function(data){
     yMin = yMin, yMax = yMax);
 }
 
+computeLimits2<-function(data){
+  minimum = min(data$mbeDensities, data$sambeDensities);
+  maximum = max(data$mbeDensities, data$sambeDensities);
+  
+  c(xMin = minimum, xMax = maximum,
+    yMin = minimum, yMax = maximum);  
+}
+
 generateResultPlot <- function(data, computedDensities, outPath){
   plotData <- data.frame(
     points.x=data$x, points.y=data$y, points.z=data$z,
@@ -71,6 +79,17 @@ generateResultPlot <- function(data, computedDensities, outPath){
   limits <- computeLimits(data);
   
   plot <- plotResult(plotData, outPath, distribution, limits);
+}
+
+generateMBEvsSAMBEPlot <- function(data, outPath){
+  plotData <- data.frame(
+    points.x=data$x, points.y=data$y, points.z=data$z,
+    trueDensity=data$mbeDensities, computedDensity=data$sambeDensities);
+  
+  distribution <- table(data$component);  
+  limits <- computeLimits2(data);
+  
+  plot <- plotResult(plotData, outPath, distribution, limits, xlabel='MBE', ylabel='SAMBE', addMSE = FALSE);
 }
 
 mse <-function(trueDensities, estimatedDensities){
@@ -99,6 +118,7 @@ ferdosi1<-function(){
     sambe_file="../results/normal/ferdosi_1_60000_sambe_silverman_xis.txt"    
   )
 
+  generateMBEvsSAMBEPlot(data, "~/Desktop/ferdsoi_1_60000_mbe_sambe.png");
   # noise = data[data$component == 1, ] 
   # gaussian=data[data$component == 0, ]
   
