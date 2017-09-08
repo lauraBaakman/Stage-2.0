@@ -42,7 +42,7 @@ fancy_scientificLabels <- function(l) {
 }
 
 
-plotResultOfMultipleDensityDataSet <-function(data, outputFile, distribution, limits){
+plotResultOfMultipleDensityDataSet <-function(data, outputFile, distribution, limits, xlabel, ylabel){
   cols = generateColours(distribution);
   cols = add.alpha(cols, alpha=1);
   symbols = generateSymbols(distribution);
@@ -62,7 +62,7 @@ plotResultOfMultipleDensityDataSet <-function(data, outputFile, distribution, li
     );
   plot <- plot + geom_point(aes(x=trueDensity, y=computedDensity), size=0.7, colour=cols, shape=symbols, stroke=0.2);
   plot <- plot + geom_line(aes(x=trueDensity, y=trueDensity));
-  plot <- plot + 	xlab('true density') + ylab('computed density');
+  plot <- plot + 	xlab(xlabel) + ylab(ylabel);
   plot <- plot + scale_x_continuous(labels = fancy_scientificLabels, limits = c(limits['xMin'], limits['xMax'])) 
   plot <- plot + scale_y_continuous(labels = fancy_scientificLabels, limits = c(limits['yMin'], limits['yMax']));
   plot <- plot + ggtitle(sprintf("MSE = %.7e", computeMSE(data)));
@@ -82,11 +82,11 @@ plotResultOfSingleDensityDataSet <-function(trueDensities, computedDensities, ou
   printf("Plotting %s as single denisty\n", outputFile);
 }
 
-plotResult <- function(data, outputFile, distribution, limits){
+plotResult <- function(data, outputFile, distribution, limits, xlabel='true density', ylabel='estimated density'){
   if(isSingleDensityDataSet(data$trueDensity)){
     plotResultOfSingleDensityDataSet(data, outputFile, distribution)
   } else{
-    plotResultOfMultipleDensityDataSet(data, outputFile, distribution, limits)
+    plotResultOfMultipleDensityDataSet(data, outputFile, distribution, limits, xlabel, ylabel)
   }
 }
 
