@@ -1,9 +1,39 @@
 %!TEX root = ../paper.tex
 
-The difference in results between the Modified Breiman Estimator and its shape adaptive variant on dataset \ferdosiOne, \baakmanOne, \baakmanFour, \baakmanFive raise several questions. This section attempts to answer them.
+%General Discussion
+	%Small difference between two estimators
+	The most striking observation of \cref{s:results:singleGaussian} is the small difference between the densities approximated by the two estimators. 
 
-% General Questions
-\todo[inline]{Why are the differences between mbe and sambe so small? What do the eigenvalues/ scaling factors indicate?}
+		%Explanation: difference are hidden by mean and occlusion in plots: 
+		%	Review by plotting SAMBE as a funtion of MBE.
+		%Explanation: the kernels are not really shape adaptive
+		%	Review by looking at eigenvectors and eigenvalues of the kernels.
+
+		% Ferdosi 1
+			% Plot
+			% Nearly all points lie on the diagonal -> truly hardly any differences. 
+
+			% Paraview
+			% Reviewing the eigenvaleus we find harldy any differences, largest difference: pattern #268 -> all kernels are near spherical. 
+
+		% Baakman 1
+			% Plot
+
+			% Paraview
+
+		% Baakman 4
+			% Plot
+
+			% Paraview
+
+		% Baakman 5
+			% Plot
+
+			% Paraview
 
 % Dataset Specific Questions
+	%Ferdosi 1
+	The points that have the largest difference in estimated density in dataset \ferdosiOne all lie near the mean of the Gaussian distribution. Compared to both the true density and the density estimated by the symmetric kernel the shape adaptive kernel severely underestimates the density. Comparing the number of patterns used to estimate the density the densities of these points reveals that \mbe uses approximately twice as many patterns as the shape-adaptive estimator. Which suggests that the domain of the kernels of the nearby points is not large enough. 
+	\todo[inline]{How to solve the problem of the to small kernels?}
+
 

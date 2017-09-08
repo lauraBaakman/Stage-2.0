@@ -106,6 +106,15 @@ componentMSE<-function(data, componentNumber){
          formatC(mse(component1$trueDensities, component1$sambeDensities), digits = 15, format = "e")); 
 }
 
+distanceToEigenValueMean<-function(data){
+  meanEigenValue = (data$eigen_value_1 + data$eigen_value_2 + data$eigen_value_3) / 3;
+  meanDifferences = (
+    (data$eigen_value_1 - meanEigenValue) + 
+      (data$eigen_value_2 - meanEigenValue) + 
+      (data$eigen_value_3 - meanEigenValue)
+    ) / 3;
+}
+
 ferdosi1<-function(){
   xsdata <- readResultSet(
     data_set_file="../data/simulated/normal/ferdosi_1_60000.txt", 
@@ -117,6 +126,7 @@ ferdosi1<-function(){
     xsdata = xsdata,
     sambe_file="../results/normal/ferdosi_1_60000_sambe_silverman_xis.txt"    
   )
+  data$meanEigDiff = distanceToEigenValueMean(data);
 
   generateMBEvsSAMBEPlot(data, "~/Desktop/ferdsoi_1_60000_mbe_sambe.png");
   componentMSE(data, 0);
