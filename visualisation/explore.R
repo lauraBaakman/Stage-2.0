@@ -293,7 +293,9 @@ baakman4 <-function(){
   data$mbeSambeDiff = data$mbeDensities - data$sambeDensities;
   data$meanEigDiff = distanceToEigenValueMean(data);
   
-  generateMBEvsSAMBEPlot(data, "~/Desktop/baakman_4_60000_mbe_sambe.png");
+  plotShapeAdaptedData(data, "../paper/discussion/img/baakman_4_60000_pointsWithShapeAdaptedKernels.pdf")
+  generateMBEvsSAMBEPlot(data, "../paper/discussion/img/baakman_4_60000_mbe_sambe.png")
+  
   componentMSE(data, 0);
   componentMSE(data, 1);  
   
@@ -316,7 +318,7 @@ baakman1 <- function(){
   data$meanEigDiff = distanceToEigenValueMean(data);
   
   generateMBEvsSAMBEPlot(data, "../paper/discussion/img/baakman_1_60000_mbe_sambe.png")
-  # plotShapeAdaptedData(data, "../paper/discussion/img/baakman_1_60000_pointsWithShapeAdaptedKernels.pdf")
+  plotShapeAdaptedData(data, "../paper/discussion/img/baakman_1_60000_pointsWithShapeAdaptedKernels.pdf")
   
   componentMSE(data, 0);
   componentMSE(data, 1);  
