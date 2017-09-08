@@ -181,6 +181,12 @@ ferdosi3<-function(){
     sambe_file="../results/normal/ferdosi_3_120000_sambe_silverman_xis.txt"    
   )
   
+  generateMBEvsSAMBEPlot(data, "../paper/discussion/img/ferdosi_3_120000_mbe_sambe.png")
+  plotSubsetOverlay(
+    allData=data, 
+    overlay=data[(abs(data$trueDensities - data$mbeDensities) < abs(data$trueDensities - data$sambeDensities)), ],
+    outputFile = "../paper/discussion/img/ferdosi_3_abs_error_mbeSmallerThansambe.pdf"
+  )  
   
   componentMSE(data, 0);  
   componentMSE(data, 1);
@@ -229,6 +235,12 @@ baakman3<-function(){
     sambe_file="../results/normal/baakman_3_120000_sambe_silverman_xis.txt"    
   )
   
+  generateMBEvsSAMBEPlot(data, "../paper/discussion/img/baakman_3_120000_mbe_sambe.png")
+  plotSubsetOverlay(
+    allData=data, 
+    overlay=data[(abs(data$trueDensities - data$mbeDensities) < abs(data$trueDensities - data$sambeDensities)), ],
+    outputFile = "../paper/discussion/img/baakman_3_abs_error_mbeSmallerThansambe.pdf"
+  )  
   
   
   componentMSE(data, 0);  
