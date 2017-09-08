@@ -126,6 +126,7 @@ ferdosi1<-function(){
     xsdata = xsdata,
     sambe_file="../results/normal/ferdosi_1_60000_sambe_silverman_xis.txt"    
   )
+  data$mbeSambeDiff = data$mbeDensities - data$sambeDensities;
   data$meanEigDiff = distanceToEigenValueMean(data);
 
   generateMBEvsSAMBEPlot(data, "~/Desktop/ferdsoi_1_60000_mbe_sambe.png");
@@ -232,14 +233,12 @@ baakman5 <-function(){
     sambe_file="../results/normal/baakman_5_60000_sambe_silverman_xis.txt"    
   )  
   
-  # Remove too low densities
-  subset = data[data$sambeDensities > 0.0, ];
-  # Remove too high densities
-  subset <- subset[subset$sambeDensities < 0.3, ];               
+  data$mbeSambeDiff = data$mbeDensities - data$sambeDensities;
+  data$meanEigDiff = distanceToEigenValueMean(data);
   
-  # Generate plots
-  generateResultPlot(subset, subset$mbeDensities, "~/Desktop/results_baakman_5_60000_mbe_silverman_no_outliers.png")
-  generateResultPlot(subset, subset$sambeDensities, "~/Desktop/results_baakman_5_60000_sambe_silverman_no_outliers.png")  
+  generateMBEvsSAMBEPlot(data, "~/Desktop/baakman_5_60000_mbe_sambe.png");
+  componentMSE(data, 0);
+  componentMSE(data, 1); 
   
   data;
 }
@@ -255,7 +254,7 @@ baakman4 <-function(){
     xsdata = data,
     sambe_file="../results/normal/baakman_4_60000_sambe_silverman_xis.txt"    
   )    
-  
+  data$mbeSambeDiff = data$mbeDensities - data$sambeDensities;
   data$meanEigDiff = distanceToEigenValueMean(data);
   
   generateMBEvsSAMBEPlot(data, "~/Desktop/baakman_4_60000_mbe_sambe.png");
@@ -277,6 +276,7 @@ baakman1 <- function(){
     sambe_file="../results/normal/baakman_1_60000_sambe_silverman_xis.txt"    
   )     
   
+  data$mbeSambeDiff = data$mbeDensities - data$sambeDensities;
   data$meanEigDiff = distanceToEigenValueMean(data);
   
   generateMBEvsSAMBEPlot(data, "~/Desktop/baakman_1_60000_mbe_sambe.png");
@@ -291,5 +291,6 @@ baakman1 <- function(){
 # generateResultPlot(data, data$sambeDensities, "~/Desktop/temp.png")
 # formatC(min(data$sambeDensities), digits = 15, format = "e")
 # head(data[order(data$sambeDensities, decreasing = TRUE), ], n=10)
-# head(data[order(data$mbeDensities - data$sambeDensities, decreasing=TRUE), c('x', 'y', 'z', 'component', 'trueDensities', 'mbeDensities', 'mbeNumUsedPatterns', 'sambeDensities', 'sambeNumUsedPatterns')], 20)
-# head(data[order(data$meanEigDiff, decreasing = TRUE), ], n = 10)
+
+# head(data[order(data$meanEigDiff, decreasing = TRUE), c('x', 'y', 'z','eigen_value_1', 'eigen_value_2', 'eigen_value_3', 'local_bandwidth', 'scaling_factor')], n = 10)
+# head(data[order(abs(data$mbeSambeDiff), decreasing=TRUE), c('x', 'y', 'z', 'component', 'trueDensities', 'mbeDensities', 'mbeNumUsedPatterns', 'sambeDensities', 'sambeNumUsedPatterns', 'mbeSambeDiff')], 20)
