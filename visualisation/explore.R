@@ -119,7 +119,10 @@ ferdosi1<-function(){
   )
 
   generateMBEvsSAMBEPlot(data, "~/Desktop/ferdsoi_1_60000_mbe_sambe.png");
-  # noise = data[data$component == 1, ] 
+  componentMSE(data, 0);
+  componentMSE(data, 1);
+
+    # noise = data[data$component == 1, ] 
   # gaussian=data[data$component == 0, ]
   
   data;
