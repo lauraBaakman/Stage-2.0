@@ -42,10 +42,16 @@ fancy_scientificLabels <- function(l) {
 }
 
 
-plotResultOfMultipleDensityDataSet <-function(data, outputFile, distribution, limits, xlabel, ylabel){
+plotResultOfMultipleDensityDataSet <-function(data, outputFile, distribution, limits, xlabel, ylabel, addMSE){
   cols = generateColours(distribution);
   cols = add.alpha(cols, alpha=1);
   symbols = generateSymbols(distribution);
+  
+  if (addMSE){
+    margin = c(0,2.5,0,0)
+  } else {
+    margin = c(0, 0, 0, 0)
+  }
   
   plot <- ggplot(data) +
     theme(
@@ -58,14 +64,16 @@ plotResultOfMultipleDensityDataSet <-function(data, outputFile, distribution, li
       panel.grid.minor = element_blank(),
       panel.background = element_blank(),
       
-      plot.margin=unit(c(0,2.5,0,0),"mm")
+      plot.margin=unit(margin, "mm")
     );
   plot <- plot + geom_point(aes(x=trueDensity, y=computedDensity), size=0.7, colour=cols, shape=symbols, stroke=0.2);
   plot <- plot + geom_line(aes(x=trueDensity, y=trueDensity));
   plot <- plot + 	xlab(xlabel) + ylab(ylabel);
   plot <- plot + scale_x_continuous(labels = fancy_scientificLabels, limits = c(limits['xMin'], limits['xMax'])) 
   plot <- plot + scale_y_continuous(labels = fancy_scientificLabels, limits = c(limits['yMin'], limits['yMax']));
-  plot <- plot + ggtitle(sprintf("MSE = %.7e", computeMSE(data)));
+  if (addMSE){
+    plot <- plot + ggtitle(sprintf("MSE = %.7e", computeMSE(data)));  
+  }
   # print(plot)
   ggsave(
     outputFile,
@@ -82,11 +90,11 @@ plotResultOfSingleDensityDataSet <-function(trueDensities, computedDensities, ou
   printf("Plotting %s as single denisty\n", outputFile);
 }
 
-plotResult <- function(data, outputFile, distribution, limits, xlabel='true density', ylabel='estimated density'){
+plotResult <- function(data, outputFile, distribution, limits, xlabel='true density', ylabel='estimated density', addMSE=TRUE){
   if(isSingleDensityDataSet(data$trueDensity)){
     plotResultOfSingleDensityDataSet(data, outputFile, distribution)
   } else{
-    plotResultOfMultipleDensityDataSet(data, outputFile, distribution, limits, xlabel, ylabel)
+    plotResultOfMultipleDensityDataSet(data, outputFile, distribution, limits, xlabel, ylabel, addMSE)
   }
 }
 
