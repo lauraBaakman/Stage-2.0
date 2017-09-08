@@ -307,10 +307,14 @@ plotShapeAdaptedData <- function(allData, outputFile='~/Desktop/shapeAdapted.pdf
   dev.off();
 }
 
-plotSubsetOverlay <- function(allData, overlay, outputFile='~/Desktop/overaly.pdf'){
+plotSubsetOverlay <- function(allData, overlay, outputFile='~/Desktop/overaly.pdf', color=NULL){
   # Plot ALLdata
-  distribution = table(allData$component);
-  theColors = add.alpha(generateColours(distribution), alpha = 0.15);
+  if(is.null(color)){
+    distribution = table(allData$component);
+    theColors = add.alpha(generateColours(distribution), alpha = 0.15);    
+  } else {
+    theColors = color;
+  }
   pdf(outputFile);
   s3d <- scatterplot3d(
     x = allData$x, y = allData$y, z = allData$z,
@@ -325,8 +329,12 @@ plotSubsetOverlay <- function(allData, overlay, outputFile='~/Desktop/overaly.pd
   )  
   # Plot the points of interest
   overlay = overlay[order(overlay$component, decreasing = FALSE), ]
-  distribution = table(overlay$component);
-  theColors = add.alpha(generateColours(distribution), alpha = 0.5);  
+  if(is.null(color)){
+    distribution = table(overlay$component);
+    theColors = add.alpha(generateColours(distribution), alpha = 0.5);  
+  } else {
+    theColors = color;
+  }  
   s3d$points3d(x=overlay$x, y=overlay$y, z=overlay$z,
                pch=16,
                col=theColors
