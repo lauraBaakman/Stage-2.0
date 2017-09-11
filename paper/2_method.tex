@@ -1,15 +1,15 @@
 %!TEX root = paper.tex
 
 %General Idea
-	We use shape adaptive kernels in combination with the Modified Breiman Estimator introduced by \textcite{wilkinson1995dataplot}, the resulting estimator is henceforth also referred to as the shape-adaptive Modified Breiman Estimator (\sambe). 
+	We use shape adaptive kernels in combination with the Modified Breiman Estimator introduced by \textcite{wilkinson1995dataplot}, the resulting estimator is henceforth referred to as the shape-adaptive Modified Breiman Estimator (\sambe). 
 	%General bandwidth
-	For its lower computational complexity we use the method introduced by \textcite{ferdosi2011comparison}, defined in \cref{eq:1:ferdosiGeneralBandwidth}, to compute the general bandwidth. 
+	For its low computational complexity we use the method defined in \cref{eq:1:ferdosiGeneralBandwidth} to compute the general bandwidth. 
 	% Pilot Densities
 	Pilot densities are computed according to \cref{eq:1:parzen}, with an Epanechnikov kernel.
 	%Local bandwidths
-	Since using $\varMBESensitivityParam = \rfrac{1}{2}$ in \cref{eq:1:localBandwidth} results in a final density approximation with a lower \mse than using $\varMBESensitivityParam = \rfrac{1}{\varDim}$. We use the first when computing the local bandwidths. 
+	Since using $\varMBESensitivityParam = \rfrac{1}{2}$ instead of $\varMBESensitivityParam = \rfrac{1}{\varDim}$ results in a final density approximation with a lower \mse for most of our datasets we use the first.
 	%Final densities
-	The final density estimate is computed according to:
+	We compute the final density estimate according to:
 	\begin{equation}\label{eq:2:parzenWithBandWidthMatrix}
 		\varEstimatedDensityFunction{\varPattern} = \frac{1}{\varNumPatterns}\sum_{\itXis = 1}^{\varNumPatterns} \frac{1}{\det\left(\varBandwidthMatrix[\itXis]\right)}\varKernel[\varEpan]{\varBandwidthMatrix[\itXis]^{-1}\left(\varPattern - \varPattern[\itXis]\right)}.
 	\end{equation}
@@ -37,12 +37,12 @@
 			\KNNK = \max\left(\left\lfloor \sqrt{\varNumPatterns} \right\rceil,\, \varDim \right) + 1.	
 		\end{equation*}			
 		% The KD-tree
-		Using a KD-tree for the \KNNK-nearest neighbors search instead of the naive implementation, significantly improves the time complexity of finding \varBandwidthMatrix[\itXis]. The downside of using a space partitioning tree is that \varNeighborhood{\varPattern[\itXis]} is an approximation of the actual neighborhood, as long as \KNNK is rather large the use of an approximation instead of the exact \KNNK-nearest neighbors should not impact the final kernel result strongly. 
+		Using a KD-tree for the \KNNK-nearest neighbors search instead of the naive implementation, significantly improves the time complexity of finding \varBandwidthMatrix[\itXis]. The downside of using a space partitioning tree is that \varNeighborhood{\varPattern[\itXis]} is an approximation of the actual neighborhood, as long as \KNNK is rather large the use of an approximation instead of the exact \KNNK-nearest neighbors should not impact the final kernel result too strongly. 
 		% Why do we use KNN instead of fixed-radius
 		We use \KNN rather than a fixed-radius neighborhood to ensure that, independent of the sparsity of the data, the kernel shape is always based on a reasonable number of data points. 
 
 	%  Discuss step 2
-		The basis shape of the kernel is determined in step \ref{it:1:bandwidthmatrix:initialBandwidthMatrix}. The covariance matrix ensures that the major axis of the kernel has the same direction as the maximum variance of the data.
+		The basic shape of the kernel is determined in step \ref{it:1:bandwidthmatrix:initialBandwidthMatrix}. The covariance matrix ensures that the major axis of the kernel has the same direction as the maximum variance of the data.
 
 	% 	Discuss step 3
 		The scaling factor computed in step \ref{it:1:bandwidthmatrix:scaleBandwidhtMatrix} ensures that the kernels used in the density estimation of different patterns have a comparable domain. \Cref{eq:method:scalingFactor} scales the bandwidth matrix in such a way that the volume of the ellipsoid defined by the eigenvectors and values of \varBandwidthMatrix[\itXis] is equal to that of the eigenellipsoid of the bandwidth matrix that is implicitly used in \cref{eq:1:adaptiveKernelEstimateWithLocalBandwidths}. 
