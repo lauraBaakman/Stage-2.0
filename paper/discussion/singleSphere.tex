@@ -130,39 +130,36 @@ The scatter plots of the datasets with a single Gaussian in \cref{fig:discussion
 	Near the mean of this component we also find the biggest differences in estimated densities between the two estimators. 
 
 	%Baakman 5
-	
-	\todo[inline]{Wat zien we in het plotje?}
-	\todo[inline]{Iets over de vorm van de kernels.}
-	\todo[inline]{What is the influence of the distance to the mean?}
+	% Component -1
+	% MSE(MBE, SAMBE):
+	%  5.587052323057813e-08	& 5.600040277292591e-08
+
+	% SAMBE better than MBE: 1.935100000000000e+04 (3.234006283842503e+01 percent)
+	% MBE better than SAMBE: 1.933100000000000e+04 (3.230663814426098e+01 percent)
+	% MBE equal to SAMBE: 2.115400000000000e+04 (3.535329901731399e+01 percent)
+
+	% Component 0
+	% MSE(MBE, SAMBE):
+	%  8.350875457323442e-08	& 8.370053660739159e-08
+	% SAMBE better than MBE: 1.892300000000000e+04 (4.730750000000000e+01 percent)
+	% MBE better than SAMBE: 1.884700000000000e+04 (4.711750000000000e+01 percent)
+	% MBE equal to SAMBE: 2.230000000000000e+03 (5.575000000000000e+00 percent)
+
+
+	% Component 1
+	% MSE(MBE, SAMBE):
+	%  1.370460322391959e-10	& 1.420969966289269e-10
+	% SAMBE better than MBE: 4.280000000000000e+02 (2.157693083282920e+00 percent)
+	% MBE better than SAMBE: 4.840000000000000e+02 (2.440008066142367e+00 percent)
+	% MBE equal to SAMBE: 1.892400000000000e+04 (9.540229885057471e+01 percent)	
+
+	% Overlay plot
+	The effect of how elongated the Gaussian component is on how well the density of the noise is estimated is even strong in dataset \baakmanFive, as illustrated in \cref{fig:discussion:singleSphere:mbeLowerError:baakman5}. The density estimate of the two estimates is the same for \num{9.540229885057471e+01}\% of the points drawn from the uniform distribution, contrastingly this is only the case for \num{5.575000000000000e+00}\% of the points from the Gaussian component. 
+	% Shape of the Kernels
+	As in dataset \baakmanFour the shape of the kernels is most strongly influenced by the data near the boundaries of the dataset and the Gaussian component.
+	% Largest differences in estimated values between estimators
+	The largest differences between the result of the two estimators are, comparable to what we observed in dataset \baakmanFour, found near the mean of the Gaussian component. 
 
 % General observations 
-\todo[inline]{Waarom sambe zoveel beter op randen, zo veel slechter in de buurt van de mean van de distributie? Seems to be a general problem, not a single sphere problem.}
-\todo[inline]{Near the mean: very little shape adaption, but large difference in estimated densites: strong effect of small change due to high density of points?}
 \todo[inline]{Near the boundaries: a lot of shape adaption: relatively small differences in estimated densites: effect not a astrong due to lower density of the points. }
-
-
-
-\oldStuff
-
-%General Discussion
-	%Small difference between two estimators
-		% Confirm with plots
-		The most striking observation of \cref{s:results:singleGaussian} is the small difference between the densities approximated by the two estimators. To investigate what caused these differences, we first verified if the differences in \mse were caused by a select group of points, to that end we compared the density estimations of the individual points by plotting the results of \sambe as a function of \mbe. These plots do not indicate a specific group of points that causes the difference in \MSE between the two estimators within datasets.
-		
-		% Investigate the points with the largest differences
-		Investigating the points that result in the biggest difference in estimated density between estimators we find that in the datasets with a single Gaussian they all lie near the mean of the Gaussian distribution. Furthermore the density of these points are both over and underestimated by the shape-adaptive estimator, if the first is the case generally fewer points have contributed to the \mbe density than to the \sambe density. If the shape-adaptive estimator underestimates densities it generally uses far less points to base its approximation on than the symmetric estimator uses for that same point. This suggest that some of the kernels near the mean of the Gaussian our to big, allowing a contribution to some points that they should not contribute to, and conversely that some are too small. 
-
-		% Investigate the kernels.
-		Reviewing the shape of the kernels used by the shape-adaptive estimator we find some differences between the datasets. 
-			% Ferdosi 1
-			In dataset \ferdosiOne, as expected due to the spherical Gaussian, the three eigenvalues of the kernels hardly differ, indicating that the kernels are near spherical. 
-			% Baakman 1
-			In the elongated version of this dataset, a couple of points have ellipsoidal kernels, as indicated by the eigenvalues of their covariance matrices. Since all these points are positioned in corners of the dataset we contribute the shape of these kernels to their position, instead of to any influence from the Gaussian distribution. This problem could possibly be solved by taking a larger neighborhood into account when determining the kernel shape. 
-			% Baakman 4
-			In dataset \baakmanFour numerous points have strongly ellipsoidal kernels, a lot of these points can be found at the boundaries of the datasets. However a lot of these point are also placed in and around the Gaussian distribution. 
-			% Baakman 5
-			The same holds for dataset \baakmanFive.
-		%Some general blaat
-		\todo[inline]{This is wrong! SAMBE works better at the boundaries for multisphere sets, quite likely also the case for single sphere.}	
-		There is no way for the kernel determination algorithm to distinguish between points that lie at the edge of a dataset, or a point that lies at the boundary of the distribution. If the density of interest lies in large area of irrelevant points one could discard the estimated densities at the boundaries, since these suffer from this boundary-effect.
-			
+\todo[inline]{Near the mean: very little shape adaption, but large difference in estimated densities, if gaussian component strongly elongated: strong effect of small change due to high density of points?}
