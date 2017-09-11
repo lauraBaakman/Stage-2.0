@@ -99,9 +99,14 @@ mse <-function(trueDensities, estimatedDensities){
   mse;
 }
 
-componentMSE<-function(data, componentNumber){
-  component1 <- data[data$component == componentNumber, ]
-  printf("Component %d (MBE, SAMBE):\n %s\t& %s\n", 
+componentMSE<-function(data, componentNumber=NULL){
+  if (is.null(componentNumber)){
+    component1 = data
+    componentNumber = -1
+  } else {
+    component1 <- data[data$component == componentNumber, ]  
+  }
+  printf("\n\nComponent %d\nMSE(MBE, SAMBE):\n %s\t& %s\n", 
          componentNumber,
          formatC(mse(component1$trueDensities, component1$mbeDensities), digits = 15, format = "e"),
          formatC(mse(component1$trueDensities, component1$sambeDensities), digits = 15, format = "e")); 
@@ -110,15 +115,15 @@ componentMSE<-function(data, componentNumber){
   mbeBetter = component1[(abs(component1$trueDensities - component1$mbeDensities) < abs(component1$trueDensities - component1$sambeDensities)), ]
   equal = component1[(abs(component1$trueDensities - component1$sambeDensities) == abs(component1$trueDensities - component1$mbeDensities)), ]
   
-  printf("\nSAMBE > MBE: %s (%s percent)\n", 
+  printf("\nSAMBE better than MBE: %s (%s percent)\n", 
          formatC(nrow(sambeBetter), digits = 15, format = "e"),
          formatC(nrow(sambeBetter) / nrow(component1) * 100, digits = 15, format = "e")
   );
-  printf("MBE > SAMBE: %s (%s percent)\n", 
+  printf("MBE better than SAMBE: %s (%s percent)\n", 
          formatC(nrow(mbeBetter), digits = 15, format = "e"),
          formatC(nrow(mbeBetter) / nrow(component1) * 100, digits = 15, format = "e")
   );  
-  printf("MBE == SAMBE: %s (%s percent)\n", 
+  printf("MBE equal to SAMBE: %s (%s percent)\n", 
          formatC(nrow(equal), digits = 15, format = "e"),
          formatC(nrow(equal) / nrow(component1) * 100, digits = 15, format = "e")
   );    
