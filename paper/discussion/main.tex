@@ -1,5 +1,5 @@
 %!TEX root = ../paper.tex
-This section is discusses the difference in performance between the two estimators within datasets. \Cref{s:discussion:singleGaussian} focuses on datasets containing a single Gaussian, whereas \cref{s:discussion:multipleGaussians} is concerned with the other four datasets.
+This section is concerned with the difference in performance between the two estimators within datasets. \Cref{s:discussion:singleGaussian} focuses on datasets containing a single Gaussian, whereas \cref{s:discussion:multipleGaussians} discusses the four other datasets.
 
 \subsection{Datasets with a Single Gaussian}
 	\label{s:discussion:singleGaussian}
@@ -12,4 +12,4 @@ This section is discusses the difference in performance between the two estimato
 
 %General Discussion
 % Kernels are strongly shaped near the boundaries of the datasets
-In all datasets we have found a large difference in the shape of the kernels near the boundaries of the dataset. We expect a kernel associated with a point near an edge of the dataset cube to have its shortest minor axis in the same direction as that edge, to account for the lack of data points in the direction perpendicular to the edge. This boundary effect did improved the density estimate in our case, as it allowed a sufficient number of patterns to contribute to the density estimate of points near the boundaries of the dataset. In contrast to the symmetric estimator, which underestimated densities near the boundary due. However if the noise was not sampled from a uniform distribution the effect might not be as benign. 
+In all datasets we have found a large difference in the shape of the kernels near the boundaries of the dataset. Kernels of a point near an edge of the dataset cube have their shortest minor axis perpendicular to the direction of the edge, to account for the lack of data points in that direction. This boundary effect improves the density estimate in our case, as it allowed a sufficient number of patterns to contribute to the density estimate of points near the boundaries of the dataset. In contrast to the symmetric estimator, which underestimated densities near the boundary due to a lack of contributing points. 
