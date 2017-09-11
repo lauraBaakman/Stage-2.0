@@ -62,11 +62,11 @@ The scatter plots of the datasets with a single Gaussian in \cref{fig:discussion
 
 
 		% The overlay plot
-		\Cref{fig:discussion:singleSphere:mbeLowerError:ferdosi1} shows that the shape-adaptive estimator results outperforms the symmetric estimators on most points near the boundary of the dataset. It also seems to illustrate that that \mbe results in a lower error than \sambe on the other points, however the raw data shows that on \num{5.272411257436994e+01}\% of the full dataset, and on \num{5.565750000000001e+01} \% of the Gaussian component the symmetric estimator results in a lower absolute error.
+		\Cref{fig:discussion:singleSphere:mbeLowerError:ferdosi1} shows that the shape-adaptive estimator results outperforms the symmetric estimators on most points near the boundary of the dataset. It also seems to illustrate that that \mbe results in a lower error than \sambe on the other points, however the raw data shows that on \SI{5.272411257436994e+01}{\percent} of the full dataset, and on \SI{5.565750000000001e+01}{\percent} of the Gaussian component the symmetric estimator results in a lower absolute error.
 		% The shape of the kernels
 		Reviewing the shape of the kernels used for the points in dataset \ferdosiOne we find that the used kernels are all near spherical. The kernels with the largest differences between their eigenvalues are associated with points near the boundary of the dataset. 
 		% Largest differnces in estimated values between kernels. 
-		The largest differences in error between the two estimators can be found near the center of the Gaussian component, where the shape-adaptive kernels are relatively spherical. The difference between the two estimators at these points is caused by the number of points used to estimate the density, for most of these points \sambe uses too many points which results in an overestimated density. 
+		The largest differences in error between the two estimators can be found near the mean of the Gaussian component, where the shape-adaptive kernels are relatively spherical. We think it likely that the difference between the two estimators at these points is caused by the difference in physical density at that location in the dataset, which ensures that a kernel that is slightly elliptical has a result that differs strongly from that of a spherical kernel. This is confirmed by the large differences in the number of patterns that are used in the density estimate of the points near the mean of the Gaussian component between the two estimators. 
 
 	% Baakman 1
 		% Component -1
@@ -91,11 +91,11 @@ The scatter plots of the datasets with a single Gaussian in \cref{fig:discussion
 		% MBE equal to SAMBE: 7.803000000000000e+03 (3.933756805807623e+01 percent)
 
 		% Overlay plot
-		The results in \cref{fig:discussion:singleSphere:mbeLowerError:baakman1} are comparable to those in \cref{fig:experiment:singlesphere:ferdosi1}, however there seem to be fewer points of the noise component where the absolute error of using the symmetric-kernel is lower than using a shape-adaptive kernel. Reviewing the raw data shows that this difference is primarily caused by the \num{7.803000000000000e+03} points for which both estimators estimate the same density. Due to the elongated shape of the distribution its shape influences the kernel of fewer shapes of the noise component resulting in more spherical kernels, which results in the same density estimate for a larger number of points. 
+		The results in \cref{fig:discussion:singleSphere:mbeLowerError:baakman1} are comparable to those in \cref{fig:experiment:singlesphere:ferdosi1}, however fewer points of the noise component seem to emphasized in the former. This would mean that the absolute error for most points of the noise component is lower when using symmetric kernels instead of shape-adaptive kernels. Reviewing the raw data shows that this difference is primarily caused by the \num{7.803000000000000e+03} points for which both estimators estimate the same density. We expect that this is due to the elongated shape of the distribution, as its shape influences the kernel of fewer points of the noise component, resulting in more spherical kernels, which causes the estimators to give the same estimate.
 		% The shape of the kernels
 		As in dataset \ferdosiOne the points with the most ellipsoidal kernels are positioned near the boundaries of the dataset, where \sambe outperforms \mbe. 
 		% Largest differences in estiamted values between estimators
-		The points whose differences in estimated densities are largest are, as in dataset \ferdosiOne, found near the mean of the Gaussian distribution. At first this seems counterintuitive since the kernels are relatively spherical near the Gaussian component, however we expect that due to the high density of points in that area a small change to the shape of the kernel has a large effect. This is confirmed by the large differences in the number of patterns that are used in the density estimate of the points near the mean of the Gaussian component between the two estimators. 
+		The points whose differences in estimated densities are largest are, as in dataset \ferdosiOne, found near the mean of the Gaussian distribution. We hypothesize that this is occurs in this dataset for the same reason as it occurs in dataset \ferdosiOne.
 
 	%Baakman 4
 		% Component -1
@@ -123,11 +123,11 @@ The scatter plots of the datasets with a single Gaussian in \cref{fig:discussion
 		% MBE equal to SAMBE: 1.703700000000000e+04 (8.588929219600726e+01 percent)	
 	
 		% Overlay Plot
-		In \cref{fig:discussion:singleSphere:mbeLowerError:baakman4} we observe that the \mbe outperforms \sambe on very few points in dataset \baakmanFour, to be exact on \num{92.7051824965} percent of the points the absolute error of the shape-adaptive estimator was at least as low as the error of the symmetric estimator. Once again we attribute this difference in performance to the elongated shape of the Gaussian component. 
+		In \cref{fig:discussion:singleSphere:mbeLowerError:baakman4} we observe that the \mbe outperforms \sambe on very few points in dataset \baakmanFour, to be exact on \num{92.7051824965} percent of the points the absolute error of the shape-adaptive estimator was at least as low as that of the symmetric estimator. We expect that the effect of the Gaussian component is stronger than in dataset \baakmanOne since it is more elongated.
 		% Shape of the kernels
-		Reviewing the shape of the kernel we find kernels with a strongly adapted shape both near the boundary of the dataset, where \sambe outperforms \mbe, and near the Gaussian component.
+		Reviewing the shape of the kernels we find kernels with large differences between their eigenvalues both near the boundary of the dataset, where \sambe outperforms \mbe, and near the Gaussian component. We expect that the last occurs in this dataset and not in set \baakmanOne due to how much more elongated the Gaussian component is. 
 		% Largest differences in estimated values between estimators
-		Near the mean of this component we also find the biggest differences in estimated densities between the two estimators. 
+		Near the mean of this component we also find the biggest differences in estimated densities between the two estimators.
 
 	%Baakman 5
 		% Component -1
@@ -154,11 +154,11 @@ The scatter plots of the datasets with a single Gaussian in \cref{fig:discussion
 		% MBE equal to SAMBE: 1.892400000000000e+04 (9.540229885057471e+01 percent)	
 
 		% Overlay plot
-		The effect of how elongated the Gaussian component is on how well the density of the noise is estimated is even strong in dataset \baakmanFive, as illustrated in \cref{fig:discussion:singleSphere:mbeLowerError:baakman5}. The density estimate of the two estimates is the same for \num{9.540229885057471e+01}\% of the points drawn from the uniform distribution, contrastingly this is only the case for \num{5.575000000000000e+00}\% of the points from the Gaussian component. 
+		The effect of how elongated the Gaussian component is on how well the density of the noise is estimated is stronger in dataset \baakmanFive, as illustrated in \cref{fig:discussion:singleSphere:mbeLowerError:baakman5}. The density estimate of the two estimates is the same for \SI{9.540229885057471e+01}{\percent} of the points drawn from the uniform distribution, contrastingly this is only the case for \SI{5.575000000000000e+00}{\percent} of the points from the Gaussian component. 
 		% Shape of the Kernels
 		As in dataset \baakmanFour the shape of the kernels is most strongly influenced by the data near the boundaries of the dataset and the Gaussian component.
 		% Largest differences in estimated values between estimators
-		The largest differences between the result of the two estimators are, comparable to what we observed in dataset \baakmanFour, found near the mean of the Gaussian component. 
+		The largest differences between the results of the two estimators are, comparable to what we observed in dataset \baakmanFour, found near the mean of the Gaussian component. 
 
 % General observations 
 % Strong difference in kernel shape near the Gaussian in baakman 4 and 5
