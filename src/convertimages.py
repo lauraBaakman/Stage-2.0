@@ -7,6 +7,7 @@ import coloredlogs
 from argparseActions import InputDirectoryAction, OutputDirectoryAction
 
 _default_input_path = Path('../paper')
+_default_exception_list = [Path('../paper/paper.pdf')]
 args = None
 
 def get_parser():
@@ -28,7 +29,7 @@ def get_parser():
     parser.add_argument('-e','--files-to-skip',
                         nargs='*',
                         help='PDF files that should not be converted',
-                        default=list(),
+                        default=_default_exception_list,
                         required=False)
     return parser
 
@@ -41,9 +42,7 @@ def find_pdf_files(directory):
         return not(file in args.files_to_skip)
 
     file_filter = lambda x : is_pdf_file(x) and is_not_in_exception_list(x)
-
-    for file in directory.walk(filter=file_filter):
-        print(file)
+    return list(directory.walk(filter=file_filter))
 
 
 if __name__ == '__main__':
@@ -52,6 +51,11 @@ if __name__ == '__main__':
 
     coloredlogs.install()
     logging.getLogger().setLevel(logging.INFO if args.verbose else logging.ERROR)
-    logging.info('Running in verbose mode')
+    logging.info(
+        'Skipping:\n{}'.format(
+            '\n'.join(args.files_to_skip)
+        )
+    )
 
-    find_pdf_files(args.image_directory)
+    files = find_pdf_files(args.image_directory)
+    # print(files)
