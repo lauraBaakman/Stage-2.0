@@ -105,6 +105,23 @@ componentMSE<-function(data, componentNumber){
          componentNumber,
          formatC(mse(component1$trueDensities, component1$mbeDensities), digits = 15, format = "e"),
          formatC(mse(component1$trueDensities, component1$sambeDensities), digits = 15, format = "e")); 
+  
+  sambeBetter = component1[(abs(component1$trueDensities - component1$sambeDensities) < abs(component1$trueDensities - component1$mbeDensities)), ]
+  mbeBetter = component1[(abs(component1$trueDensities - component1$mbeDensities) < abs(component1$trueDensities - component1$sambeDensities)), ]
+  equal = component1[(abs(component1$trueDensities - component1$sambeDensities) == abs(component1$trueDensities - component1$mbeDensities)), ]
+  
+  printf("\nSAMBE > MBE: %s (%s percent)\n", 
+         formatC(nrow(sambeBetter), digits = 15, format = "e"),
+         formatC(nrow(sambeBetter) / nrow(component1) * 100, digits = 15, format = "e")
+  );
+  printf("MBE > SAMBE: %s (%s percent)\n", 
+         formatC(nrow(mbeBetter), digits = 15, format = "e"),
+         formatC(nrow(mbeBetter) / nrow(component1) * 100, digits = 15, format = "e")
+  );  
+  printf("MBE == SAMBE: %s (%s percent)\n", 
+         formatC(nrow(equal), digits = 15, format = "e"),
+         formatC(nrow(equal) / nrow(component1) * 100, digits = 15, format = "e")
+  );    
 }
 
 distanceToEigenValueMean<-function(data){
@@ -503,7 +520,7 @@ baakman1 <- function(){
     componentNumber = 0,
     50, 50, 50
   )    
-  
+
   componentMSE(data, 0);
   componentMSE(data, 1);  
   
