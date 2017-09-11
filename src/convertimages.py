@@ -45,6 +45,19 @@ def find_pdf_files(directory):
     return list(directory.walk(filter=file_filter))
 
 
+def convert_pdf_file(file):
+    def build_png_path(file):
+        return None
+
+    png_path = build_png_path(file)
+    logging.info(
+        'Converting {pdf_file} to {png_file}.'.format(
+            pdf_file=file,
+            png_file=png_path
+        )
+    )
+
+
 if __name__ == '__main__':
     parser = get_parser()
     args = parser.parse_args()
@@ -58,4 +71,5 @@ if __name__ == '__main__':
     )
 
     files = find_pdf_files(args.image_directory)
-    # print(files)
+    for file in files:
+        convert_pdf_file(file)
