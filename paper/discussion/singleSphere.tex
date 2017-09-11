@@ -37,12 +37,14 @@
 
 % Introduction
 The scatter plots of the datasets with a single Gaussian in \cref{fig:discussion:singleSphere:mbeLowerError} emphasize the points where the absolute error of the symmetric estimator is smaller than that of the shape-adaptive estimator. 
-\todo[inline]{Klein versschil, die plotjes, grote verschillen tussen plots, discussie datasets 1 voor 1}
 
 	%Ferdosi 1
-	\todo[inline]{Wat zien we in het plotje?}
-	\todo[inline]{Iets over de vorm van de kernels.}
-	\todo[inline]{What is the influence of the distance to the mean?}
+		% The overlay plot
+		\Cref{fig:discussion:singleSphere:mbeLowerError:ferdosi1} shows that the shape-adaptive estimator results outperforms the symmetric estimators on most points near the boundary of the dataset. It also seems to to illustrate that that \mbe results in a lower error than \sambe on the other points, however the raw data shows that on \num{52.72411}\% of the full dataset, and on \num{55.6575} \% of the Gaussian component the symmetric estimator results in a lower absolute error.
+		% The shape of the kernels
+		Reviewing the shape of the kernels used for the points in dataset \ferdosiOne we find that the used kernels are all near spherical. The kernels with the largest differences between their eigenvalues are associated with points near the boundary of the dataset. 
+		% Largest differnces in estimated values between kernels. 
+		The largest differences in error between the two estimators can be found near the center of the Gaussian component, where the shape-adaptive kernels are relatively spherical. The difference between the two estimators at these points is caused by the number of points used to estimate the density, for most of these points \sambe uses too many points which results in an overestimated density. 
 
 	%Baakman 1
 	\todo[inline]{Wat zien we in het plotje?}
