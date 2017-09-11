@@ -3,7 +3,6 @@ import logging
 import subprocess
 
 from unipath import Path
-import coloredlogs
 
 from argparseActions import InputDirectoryAction, OutputDirectoryAction
 
@@ -23,11 +22,15 @@ def get_parser():
     parser.add_argument('-v', '--verbose',
                         action='store_true',
                         default=False,
-                        help="increase output verbosity")
+                        help="Increase the output verbosity.")
     parser.add_argument('-r', '--replace-existing',
                         action='store_true',
                         default=False,
                         help="Overwrite existing png files.")
+    parser.add_argument('--dry-run',
+                        action='store_true',
+                        default=False,
+                        help="Perform a dry run, it is helpful to increase the output verbosity as well.")
     parser.add_argument('-e','--files-to-skip',
                         nargs='*',
                         help='PDF files that should not be converted',
@@ -68,6 +71,10 @@ def convert_pdf_file(file):
             png_file=png_path
         )
     )
+
+    if  args.dry_run:
+        return
+
     # convert -density 150 -antialias ~/Desktop/overlay.pdf -resize 1024x -quality 100 ~/Desktop/temp.png
     cli_args = [
         'convert', '-density', '150', '-antialias', file,
@@ -80,11 +87,12 @@ if __name__ == '__main__':
     parser = get_parser()
     args = parser.parse_args()
 
-    coloredlogs.install()
     logging.getLogger().setLevel(logging.INFO if args.verbose else logging.ERROR)
+    if args.dry_run:
+        logging.info('This is dry run!')
     logging.info(
-        'Skipping:\n{}'.format(
-            '\n'.join(args.files_to_skip)
+        'Skipping:\n\t{}'.format(
+            '\n\t'.join(args.files_to_skip)
         )
     )
 
