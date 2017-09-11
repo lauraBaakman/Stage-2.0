@@ -25,7 +25,26 @@ def get_parser():
                         action='store_true',
                         default=False,
                         help="Overwrite existing png files.")
+    parser.add_argument('-e','--files-to-skip',
+                        nargs='*',
+                        help='PDF files that should not be converted',
+                        default=list(),
+                        required=False)
     return parser
+
+
+def find_pdf_files(directory):
+    def is_pdf_file(file):
+        return file.ext == Path(u'.pdf')
+
+    def is_not_in_exception_list(file):
+        return not(file in args.files_to_skip)
+
+    file_filter = lambda x : is_pdf_file(x) and is_not_in_exception_list(x)
+
+    for file in directory.walk(filter=file_filter):
+        print(file)
+
 
 if __name__ == '__main__':
     parser = get_parser()
@@ -34,3 +53,5 @@ if __name__ == '__main__':
     coloredlogs.install()
     logging.getLogger().setLevel(logging.INFO if args.verbose else logging.ERROR)
     logging.info('Running in verbose mode')
+
+    find_pdf_files(args.image_directory)
