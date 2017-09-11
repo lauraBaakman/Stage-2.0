@@ -47,7 +47,8 @@ def find_pdf_files(directory):
 
 def convert_pdf_file(file):
     def build_png_path(file):
-        return None
+        return file.parent.child('{}.png'.format(file.stem))
+        # return file.parent.child('{}.png'.format(file.stem)
 
     png_path = build_png_path(file)
     logging.info(
