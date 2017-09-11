@@ -1,10 +1,5 @@
 %!TEX root = ../paper.tex
-We contrast the performance of the shape-adaptive and the symmetric Modified Breiman Estimator on simulated datasets with known density fields. This allows us to test how well the proposed method can recover simple density distributions in comparison to an existing method. We distinguish two types of datasets: datasets consisting of a single Gaussian distribution and noise, defined in \cref{s:experiment:singlesphere} and datasets containing multiple Gaussian distributions embed in noise, these sets are presented in \cref{s:experiment:multisphere}.
-
-To quantify the performance of the estimators we use the \mse (\MSE):
-\begin{equation*}
-	\varMSE{\varEstimatedDensityFunction{\bullet}} = \frac{1}{\varNumPatterns} \sum_{\itXs = 1}^{\varNumPatterns} {\left(\varEstimatedDensityFunction{\varPattern[\itXs]} - \varDensityFunction{\varPattern[\itXs]} \right)}^2.
-\end{equation*}
+We contrast the performance of the shape-adaptive and the symmetric Modified Breiman Estimator on simulated datasets with known density fields. This allows us to test how well the proposed method recovers simple density distributions in comparison to an existing method. The \mse (\MSE) is used to quantify the performance of the estimators. We distinguish two types of datasets: datasets consisting of a single Gaussian distribution and noise, defined in \cref{s:experiment:singlesphere} and datasets containing multiple Gaussian distributions embed in noise, these sets are presented in \cref{s:experiment:multisphere}.
 
 \subsection{Datasets with a Single Gaussian}
 \label{s:experiment:singlesphere}
