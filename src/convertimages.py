@@ -5,6 +5,7 @@ import subprocess
 from unipath import Path
 
 from argparseActions import InputDirectoryAction, OutputDirectoryAction
+import inputoutput.utils as ioUtils
 
 _default_input_path = Path('../paper')
 _default_exception_list = [Path('../paper/paper.pdf')]
@@ -62,13 +63,13 @@ def convert_pdf_file(file):
     png_path = build_png_path(file)
 
     if not(args.replace_existing) and png_path.exists():
-        logging.info('A png file alread exists for {pdf_file}'.format(pdf_file=file))
+        logging.info('A png file alread exists for {pdf_file}'.format(pdf_file=ioUtils.partial_path(file)))
         return
 
     logging.info(
-        'Converting {pdf_file} to {png_file}.'.format(
-            pdf_file=file,
-            png_file=png_path
+        'Converting ...{pdf_file} to ...{png_file}.'.format(
+            pdf_file=ioUtils.partial_path(file),
+            png_file=ioUtils.partial_path(png_path)
         )
     )
 
@@ -92,7 +93,7 @@ if __name__ == '__main__':
         logging.info('This is dry run!')
     logging.info(
         'Skipping:\n\t{}'.format(
-            '\n\t'.join(args.files_to_skip)
+            '\n\t'.join([ioUtils.partial_path(file) for file in args.files_to_skip])
         )
     )
 
