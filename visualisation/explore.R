@@ -132,6 +132,18 @@ ferdosi1<-function(){
 
   generateMBEvsSAMBEPlot(data, "../paper/discussion/img/ferdosi_1_60000_mbe_sambe.png")
   plotShapeAdaptedData(data, "../paper/discussion/img/ferdosi_1_60000_pointsWithShapeAdaptedKernels.pdf", minDifference = 1.5)
+  # MBE better than SAMBE
+  plotSubsetOverlay(
+    allData=data, 
+    overlay=data[(abs(data$trueDensities - data$mbeDensities) < abs(data$trueDensities - data$sambeDensities)), ],
+    outputFile = "../paper/discussion/img/ferdosi_1_abs_error_mbeSmallerThansambe.pdf"
+  )  
+  
+  compareCompareComponent(
+    data=data,
+    componentNumber = 0,
+    50, 50, 50
+  )  
   
   componentMSE(data, 0);
   componentMSE(data, 1);
@@ -344,6 +356,18 @@ baakman5 <-function(){
   
   generateMBEvsSAMBEPlot(data, "../paper/discussion/img/baakman_5_60000_mbe_sambe.png")
   # plotShapeAdaptedData(data, "../paper/discussion/img/baakman_5_60000_pointsWithShapeAdaptedKernels.pdf")
+  # MBE better than SAMBE
+  plotSubsetOverlay(
+    allData=data, 
+    overlay=data[(abs(data$trueDensities - data$mbeDensities) < abs(data$trueDensities - data$sambeDensities)), ],
+    outputFile = "../paper/discussion/img/baakman_5_abs_error_mbeSmallerThansambe.pdf"
+  )
+  
+  compareCompareComponent(
+    data=data,
+    componentNumber = 0,
+    50, 50, 50
+  )    
   
   componentMSE(data, 0);
   componentMSE(data, 1); 
@@ -433,6 +457,17 @@ baakman4 <-function(){
   
   plotShapeAdaptedData(data, "../paper/discussion/img/baakman_4_60000_pointsWithShapeAdaptedKernels.pdf")
   generateMBEvsSAMBEPlot(data, "../paper/discussion/img/baakman_4_60000_mbe_sambe.png")
+  plotSubsetOverlay(
+    allData=data, 
+    overlay=data[(abs(data$trueDensities - data$mbeDensities) < abs(data$trueDensities - data$sambeDensities)), ],
+    outputFile = "../paper/discussion/img/baakman_4_abs_error_mbeSmallerThansambe.pdf"
+  )  
+  
+  compareCompareComponent(
+    data=data,
+    componentNumber = 0,
+    50, 50, 50
+  )    
   
   componentMSE(data, 0);
   componentMSE(data, 1);  
@@ -457,6 +492,17 @@ baakman1 <- function(){
   
   generateMBEvsSAMBEPlot(data, "../paper/discussion/img/baakman_1_60000_mbe_sambe.png")
   plotShapeAdaptedData(data, "../paper/discussion/img/baakman_1_60000_pointsWithShapeAdaptedKernels.pdf")
+  plotSubsetOverlay(
+    allData=data, 
+    overlay=data[(abs(data$trueDensities - data$mbeDensities) < abs(data$trueDensities - data$sambeDensities)), ],
+    outputFile = "../paper/discussion/img/baakman_1_abs_error_mbeSmallerThansambe.pdf"
+  )  
+  
+  compareCompareComponent(
+    data=data,
+    componentNumber = 0,
+    50, 50, 50
+  )    
   
   componentMSE(data, 0);
   componentMSE(data, 1);  
