@@ -11,4 +11,5 @@ This section is discusses the difference in performance between the two estimato
 	\input{discussion/multiSphere}
 
 %General Discussion
-\todo[inline]{General Discussion}
+% Kernels are strongly shaped near the boundaries of the datasets
+In all datasets we have found a large difference in the shape of the kernels near the boundaries of the dataset. We expect a kernel associated with a point near an edge of the dataset cube to have its shortest minor axis in the same direction as that edge, to account for the lack of data points in the direction perpendicular to the edge. This boundary effect did improved the density estimate in our case, as it allowed a sufficient number of patterns to contribute to the density estimate of points near the boundaries of the dataset. In contrast to the symmetric estimator, which underestimated densities near the boundary due. However if the noise was not sampled from a uniform distribution the effect might not be as benign. 
