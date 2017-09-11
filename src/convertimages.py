@@ -1,5 +1,6 @@
 import argparse
 import logging
+import subprocess
 
 from unipath import Path
 import coloredlogs
@@ -8,6 +9,7 @@ from argparseActions import InputDirectoryAction, OutputDirectoryAction
 
 _default_input_path = Path('../paper')
 _default_exception_list = [Path('../paper/paper.pdf')]
+
 args = None
 
 def get_parser():
@@ -45,18 +47,33 @@ def find_pdf_files(directory):
     return list(directory.walk(filter=file_filter))
 
 
+def convert_to_absolute_paths(files):
+    files = [file.absolute() for file in files]
+    return files
+
+
 def convert_pdf_file(file):
     def build_png_path(file):
         return file.parent.child('{}.png'.format(file.stem))
-        # return file.parent.child('{}.png'.format(file.stem)
 
     png_path = build_png_path(file)
+
+    if not(args.replace_existing) and png_path.exists():
+        logging.info('A png file alread exists for {pdf_file}'.format(pdf_file=file))
+        return
+
     logging.info(
         'Converting {pdf_file} to {png_file}.'.format(
             pdf_file=file,
             png_file=png_path
         )
     )
+    # convert -density 150 -antialias ~/Desktop/overlay.pdf -resize 1024x -quality 100 ~/Desktop/temp.png
+    cli_args = [
+        'convert', '-density', '150', '-antialias', file,
+        '-resize', '1024x', '-quality', '100', png_path
+    ]
+    subprocess.call(cli_args)
 
 
 if __name__ == '__main__':
@@ -72,5 +89,6 @@ if __name__ == '__main__':
     )
 
     files = find_pdf_files(args.image_directory)
+    files = convert_to_absolute_paths(files)
     for file in files:
         convert_pdf_file(file)
