@@ -532,6 +532,9 @@ baakman1 <- function(){
   data;
 }
 
+# Exectue all
+# ferdosi1(); ferdosi2(); ferdosi3(); baakman1(); baakman2(); baakman3(); baakman4(); baakman5();
+
 # Execute on Source
 # data <- readResultSet(data_set_file, parzen_file, mbe_file, sambe_file)
 # generateResultPlot(data, data$sambeDensities, "~/Desktop/temp.png")
