@@ -13,13 +13,14 @@ colours = list(
   yellow  = rgb(255, 255, 157, max=255),	
   green   = rgb(099, 159, 058, max = 255, alpha=128)
 )
+# Quick hack to get back to bullets for everything
 symbols = list(
-  filledRectangle       = 15,
-  filledTriangle 	      = 17, 
-  filledDiamond         = 18, 
-  filledEightPointStar = 8,
-  filledTwelvePointStar = 20,
-  bullsEye              = 10,
+  filledRectangle       = 16,
+  filledTriangle 	      = 16, 
+  filledDiamond         = 16, 
+  filledEightPointStar  = 16,
+  filledTwelvePointStar = 16,
+  bullsEye              = 16,
   filledCircle   	      = 16  
 )
 font.size = 9;
