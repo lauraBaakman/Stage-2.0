@@ -3,7 +3,7 @@
 \begin{figure*}
 	\centering
 	\input{result/singleSphere/subfigs}
-	\caption{Plot of the estimated density as a function of the known density of the datasets with a single Gaussian by \subref{fig:results:singlesphere:mbe:ferdosi1}-\subref{fig:results:singlesphere:mbe:baakman5} \mbe and \subref{fig:results:singlesphere:sambe:ferdosi1}-\subref{fig:results:singlesphere:sambe:baakman5} \sambe.}
+	\caption{Plot of the density as estimated by \subref{fig:results:singlesphere:mbe:ferdosi1}-\subref{fig:results:singlesphere:mbe:baakman5} \mbe and \subref{fig:results:singlesphere:sambe:ferdosi1}-\subref{fig:results:singlesphere:sambe:baakman5} \sambe as a function of the known density of the datasets with a single Gaussian.}
 	\label{fig:results:singleSphere:comparativePlots}
 \end{figure*}
 
@@ -14,27 +14,30 @@
 	\label{tab:results:singleSphere:mse}
 \end{table}
 
-This section compares the performance of the Modified Breiman Estimator and a shape-adaptive variant on datasets that contain one Gaussian, \ie dataset \ferdosiOne, \baakmanOne, \baakmanFour, and \baakmanFive. Comparing the mean squared errors of the \mbe with those of \sambe in \cref{tab:results:singleSphere:mse} we find that the two estimators perform comparably, but that the fixed-shape estimator always gives a slightly lower mean squared error. This is confirmed by the visualization of the result in \cref{fig:results:singleSphere:comparativePlots} where hardly any difference is visible between \cref{fig:results:singlesphere:mbe:ferdosi1,fig:results:singlesphere:mbe:baakman1,fig:results:singlesphere:mbe:baakman4,fig:results:singlesphere:mbe:baakman5} and \cref{fig:results:singlesphere:sambe:ferdosi1,fig:results:singlesphere:sambe:baakman1,fig:results:singlesphere:sambe:baakman4,fig:results:singlesphere:sambe:baakman5}, respectively.
+This section compares the performance of the Modified Breiman Estimator with symmetric and shape-adaptive kernels on datasets that contain one Gaussian. Comparing the mean squared errors of the \mbe with those of \sambe in \cref{tab:results:singleSphere:mse} we find that the two estimators perform comparably, but that the fixed-shape estimator always gives a slightly lower mean squared error. This is confirmed by the visualization of the results in \cref{fig:results:singleSphere:comparativePlots} where hardly any difference is visible between \cref{fig:results:singlesphere:mbe:ferdosi1,fig:results:singlesphere:mbe:baakman1,fig:results:singlesphere:mbe:baakman4,fig:results:singlesphere:mbe:baakman5}, and \cref{fig:results:singlesphere:sambe:ferdosi1,fig:results:singlesphere:sambe:baakman1,fig:results:singlesphere:sambe:baakman4,fig:results:singlesphere:sambe:baakman5}, respectively.
 
 	% Ferdosi 1
 		Comparing \cref{fig:results:singlesphere:mbe:ferdosi1} with \cref{fig:results:singlesphere:sambe:ferdosi1} we find hardly any difference between the results of the two estimators, \sambe overshoots some densities more than \mbe, but otherwise the results seem identical, which fits with the small difference in mean square error. 
 		% Difference between components ?
-		Reviewing the mean squared errors of the components of this dataset we find that \mbe slightly outperforms \sambe on both datasets.
+		Reviewing the mean squared errors of the components of this dataset we find that \mbe slightly outperforms \sambe on both components.
 
 	% Baakman 1
-		\Cref{fig:results:singlesphere:mbe:baakman1,fig:results:singlesphere:sambe:baakman1} confirm what the MSE already told us, there is hardly any difference in performance between the two estimators. 
+		\Cref{fig:results:singlesphere:mbe:baakman1,fig:results:singlesphere:sambe:baakman1} confirm the conclusion drawn from the \MSE, there is hardly any difference in performance between the two estimators. 
 		% Difference between components ?
-		There is no difference within the estimators between components. 
+		Nor is there any difference between them within components.
 
 	% Baakman 4
 		Based on the differences between \cref{fig:results:singlesphere:mbe:baakman4,fig:results:singlesphere:sambe:baakman4} we can at best conclude that the shape-adaptive estimator overestimates the densities slightly more than the fixed-shape estimator. 
 		% Difference between noise and gaussian?
-		The differences between estimators within components are not significantly large.
+		The differences between estimators within components are not significant.
 
 	% Baakman 5
-		\Cref{fig:results:singlesphere:mbe:baakman5,fig:results:singlesphere:sambe:baakman5} supports the MSE in that there hardly any difference in estimated densities between the two estimators on dataset \baakmanFive. 
+		\Cref{fig:results:singlesphere:mbe:baakman5,fig:results:singlesphere:sambe:baakman5} supports the \MSE in that hardly any difference in estimated densities between the two estimators on dataset \baakmanFive exists. 
 		% Difference between noise and gaussian?
 		Furthermore within components the differences between the estimators are also negligible. 
 
 	% Algehele observatie voor single sphere datsets
-		We have found no direct correlation between the length of largest minor axis of the eigenellipse and the performance of the estimators, \eg the \MSE of \baakmanFour is lower than that of \baakmanOne. Comparing the performance of both estimators on between dataset \ferdosiOne and \baakmanFive suggest that lengthening the major axes has a negative influence on the performance of the estimator. 
+		% Length of the minor axis
+		We have found no direct correlation between the length of largest minor axis of the eigenellipse and the performance of the estimators, \eg the \MSE of \baakmanFour is lower than that of \baakmanOne. 
+		% Length of the major axis
+		Comparing the performance of both estimators on between dataset \ferdosiOne and \baakmanFive suggest that lengthening the major axes has a negative influence on the performance of the estimator. 
