@@ -12,7 +12,7 @@ library(extrafont);
 library(stringr);
 library(gridExtra);
 
-global.exponent = NA
+global.exponent = -4
 
 add.alpha <- function(col, alpha=1){
   if(missing(col))
@@ -33,12 +33,12 @@ isSingleDensityDataSet <- function(trueDensities){
 }
 
 fancy_scientificLabels <- function(breaks) {
-  # turn in to character string in scientific notation
-  l <- format(breaks, scientific = TRUE)
-  # Find the all exponents
-  exponents <- unlist(sapply(str_match_all(l, "e([+,-][0-9]+)"), function(x) x[,2]))
-  min_exponent = min(as.numeric(exponents))
-  global.exponent <<- min_exponent
+  # # turn in to character string in scientific notation
+  # l <- format(breaks, scientific = TRUE)
+  # # Find the all exponents
+  # exponents <- unlist(sapply(str_match_all(l, "e([+,-][0-9]+)"), function(x) x[,2]))
+  # min_exponent = min(as.numeric(exponents))
+  min_exponent = global.exponent
   # Multiply everyone with the smallest exponent
   new_breaks <- (breaks * 1/(10^(min_exponent)))
   # Call format again
