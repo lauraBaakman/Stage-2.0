@@ -12,6 +12,8 @@ library(extrafont);
 library(stringr);
 library(gridExtra);
 
+global.exponent = NA
+
 add.alpha <- function(col, alpha=1){
   if(missing(col))
     stop("Please provide a vector of colours.")
@@ -36,6 +38,7 @@ fancy_scientificLabels <- function(breaks) {
   # Find the all exponents
   exponents <- unlist(sapply(str_match_all(l, "e([+,-][0-9]+)"), function(x) x[,2]))
   min_exponent = min(as.numeric(exponents))
+  global.exponent <<- min_exponent
   # Multiply everyone with the smallest exponent
   new_breaks <- (breaks * 1/(10^(min_exponent)))
   # Call format again
@@ -43,7 +46,6 @@ fancy_scientificLabels <- function(breaks) {
   # return this as an expression
   parse(text=l)
 }
-
 
 plotResultOfMultipleDensityDataSet <-function(data, outputFile, distribution, limits, xlabel, ylabel, addMSE){
   cols = generateColours(distribution);
