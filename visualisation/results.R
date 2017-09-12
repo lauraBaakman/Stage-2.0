@@ -30,13 +30,16 @@ isSingleDensityDataSet <- function(trueDensities){
   length(unique(trueDensities)) <= 5;
 }
 
-fancy_scientificLabels <- function(l) {
+fancy_scientificLabels <- function(breaks) {
   # turn in to character string in scientific notation
-  l <- format(l, scientific = TRUE)
-  # quote the part before the exponent to keep all the digits
-  l <- gsub("^(.*)e", "'\\1'e", l)
-  # turn the 'e+' into plotmath format
-  l <- gsub("e", "%*%10^", l)
+  l <- format(breaks, scientific = TRUE)
+  # Find the all exponents
+  exponents <- unlist(sapply(str_match_all(l, "e([+,-][0-9]+)"), function(x) x[,2]))
+  min_exponent = min(as.numeric(exponents))
+  # Multiply everyone with the smallest exponent
+  new_breaks <- (breaks * 1/(10^(min_exponent)))
+  # Call format again
+  l <- format(new_breaks)
   # return this as an expression
   parse(text=l)
 }
