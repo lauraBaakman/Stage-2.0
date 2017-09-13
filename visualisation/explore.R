@@ -428,8 +428,9 @@ plotShapeAdaptedData <- function(allData, outputFile='~/Desktop/shapeAdapted.pdf
   dev.off();
 }
 
-plotSubsetOverlay <- function(allData, overlay, outputFile='~/Desktop/overaly.pdf', color=NULL){
+plotSubsetOverlay <- function(allData, overlay, outputFile='~/Desktop/overlay.pdf', color=NULL){
   # Plot ALLdata
+  allData = allData[order(allData$component, decreasing = FALSE), ]
   if(is.null(color)){
     distribution = table(allData$component);
     theColors = add.alpha(generateColours(distribution), alpha = 0.15);    
