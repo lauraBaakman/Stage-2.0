@@ -415,16 +415,16 @@ plotAnisotropy <- function(data, outputFile='~/Desktop/anisotropy', percentage=0
   
   subset <- head(data[order(data$anisotropy, decreasing=TRUE), ], n=round(nrow(data) * percentage))
 
-  printf("Distribution of components over subset:");
+  printf("\nDistribution of components over subset:\n");
   table(subset$component)
   
-  printf("Dataset Mean Anisotropy: %s (sd = %s), range [%s, %s]", 
+  printf("Dataset Mean Anisotropy: %s (sd = %s), range [%s, %s]\n", 
          formatC(mean(data$anisotropy), digits=15, format="e"), 
          formatC(sd(data$anisotropy), digits=15, format="e"),
          formatC(min(data$anisotropy), digits=15, format="e"), 
          formatC(max(data$anisotropy), digits=15, format="e")         
   );
-  printf("Subset Mean Anisotropy: %s (sd = %s), range [%s, %s]", 
+  printf("Subset Mean Anisotropy: %s (sd = %s), range [%s, %s]\n", 
          formatC(mean(subset$anisotropy), digits=15, format="e"), 
          formatC(sd(subset$anisotropy), digits=15, format="e"),
          formatC(min(subset$anisotropy), digits=15, format="e"), 
