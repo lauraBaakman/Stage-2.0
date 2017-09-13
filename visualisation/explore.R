@@ -1,5 +1,5 @@
 # Remove al existing variables
-# rm(list = ls())
+rm(list = ls())
 
 # Load external methods and variables
 source("./header.R");
@@ -130,13 +130,10 @@ componentMSE<-function(data, componentNumber=NULL){
   );    
 }
 
-distanceToEigenValueMean<-function(data){
-  meanEigenValue = (data$eigen_value_1 + data$eigen_value_2 + data$eigen_value_3) / 3;
-  meanDifferences = (
-    (data$eigen_value_1 - meanEigenValue) + 
-      (data$eigen_value_2 - meanEigenValue) + 
-      (data$eigen_value_3 - meanEigenValue)
-    ) / 3;
+anisotropy<-function(data){
+  minEigenValues = apply(data[, c("eigen_value_1", "eigen_value_2", "eigen_value_3")], 1, min)
+  maxEigenValues = apply(data[, c("eigen_value_1", "eigen_value_2", "eigen_value_3")], 1, max)
+  anisotropy = maxEigenValues / minEigenValues;
 }
 
 ferdosi1<-function(){
@@ -152,7 +149,7 @@ ferdosi1<-function(){
     sambe_file="../results/normal/ferdosi_1_60000_sambe_silverman_xis.txt"    
   )
   data$mbeSambeDiff = data$mbeDensities - data$sambeDensities;
-  data$meanEigDiff = distanceToEigenValueMean(data);
+  data$anisotropy = anisotropy(data);
 
   generateMBEvsSAMBEPlot(data, "../paper/discussion/img/ferdosi_1_60000_mbe_sambe.png")
   plotAnisotropy(data, "../paper/discussion/img/ferdosi_1_60000_anisotropy.pdf")
@@ -190,6 +187,7 @@ ferdosi2<-function(){
     xsdata = data,
     sambe_file="../results/normal/ferdosi_2_60000_sambe_silverman_xis.txt"    
   )
+  data$anisotropy = anisotropy(data);
   generateMBEvsSAMBEPlot(data, "../paper/discussion/img/ferdosi_2_60000_mbe_sambe.png")
   plotAnisotropy(data, "../paper/discussion/img/ferdosi_2_60000_anisotropy.pdf")
   
@@ -230,6 +228,7 @@ ferdosi3<-function(){
     xsdata = data,
     sambe_file="../results/normal/ferdosi_3_120000_sambe_silverman_xis.txt"    
   )
+  data$anisotropy = anisotropy(data);
   
   generateMBEvsSAMBEPlot(data, "../paper/discussion/img/ferdosi_3_120000_mbe_sambe.png")
   plotSubsetOverlay(
@@ -281,6 +280,7 @@ baakman2<-function(){
     xsdata = data,
     sambe_file="../results/normal/baakman_2_60000_sambe_silverman_xis.txt"    
   )
+  data$anisotropy = anisotropy(data);
   
   generateMBEvsSAMBEPlot(data, "../paper/discussion/img/baakman_2_60000_mbe_sambe.png")
   plotAnisotropy(data, "../paper/discussion/img/baakman_2_60000_anisotropy.pdf")
@@ -332,6 +332,7 @@ baakman3<-function(){
     xsdata = data,
     sambe_file="../results/normal/baakman_3_120000_sambe_silverman_xis.txt"    
   )
+  data$anisotropy = anisotropy(data);
   
   plotAnisotropy(data, "../paper/discussion/img/baakman_3_60000_anisotropy.pdf")
   generateMBEvsSAMBEPlot(data, "../paper/discussion/img/baakman_3_120000_mbe_sambe.png")
@@ -385,7 +386,7 @@ baakman5 <-function(){
   )  
   
   data$mbeSambeDiff = data$mbeDensities - data$sambeDensities;
-  data$meanEigDiff = distanceToEigenValueMean(data);
+  data$anisotropy = anisotropy(data);
   
   plotAnisotropy(data, "../paper/discussion/img/baakman_5_60000_anisotropy.pdf")
   generateMBEvsSAMBEPlot(data, "../paper/discussion/img/baakman_5_60000_mbe_sambe.png")
@@ -409,10 +410,6 @@ baakman5 <-function(){
 }
 
 plotAnisotropy <- function(data, outputFile='~/Desktop/anisotropy', percentage=0.1){
-  minEigenValues = apply(data[, c("eigen_value_1", "eigen_value_2", "eigen_value_3")], 1, min)
-  maxEigenValues = apply(data[, c("eigen_value_1", "eigen_value_2", "eigen_value_3")], 1, max)
-  data$anisotropy = maxEigenValues / minEigenValues;
-  
   subset <- head(data[order(data$anisotropy, decreasing=TRUE), ], n=round(nrow(data) * percentage))
   
   printf("Dataset Mean Anisotropy: %s (sd = %s), range [%s, %s]\n", 
@@ -485,7 +482,7 @@ baakman4 <-function(){
     sambe_file="../results/normal/baakman_4_60000_sambe_silverman_xis.txt"    
   )    
   data$mbeSambeDiff = data$mbeDensities - data$sambeDensities;
-  data$meanEigDiff = distanceToEigenValueMean(data);
+  data$anisotropy = anisotropy(data);
   
   plotAnisotropy(data, "../paper/discussion/img/baakman_4_60000_anisotropy.pdf")
   generateMBEvsSAMBEPlot(data, "../paper/discussion/img/baakman_4_60000_mbe_sambe.png")
@@ -521,7 +518,7 @@ baakman1 <- function(){
   )     
   
   data$mbeSambeDiff = data$mbeDensities - data$sambeDensities;
-  data$meanEigDiff = distanceToEigenValueMean(data);
+  data$anisotropy = anisotropy(data);
   
   plotAnisotropy(data, "../paper/discussion/img/baakman_1_60000_anisotropy.pdf")
   generateMBEvsSAMBEPlot(data, "../paper/discussion/img/baakman_1_60000_mbe_sambe.png")
@@ -544,7 +541,7 @@ baakman1 <- function(){
 }
 
 # Exectue all
-# f1 <- ferdosi1(); f2 <- ferdosi2(); f3 <- ferdosi3(); b1 <- baakman1(); b2 <- baakman2(); b3 <- baakman3(); b4 <- baakman4(); b5 <- baakman5();
+# f1 <- ferdosi1(); b1 <- baakman1(); b4 <- baakman4(); b5 <- baakman5(); f2 <- ferdosi2(); f3 <- ferdosi3(); b2 <- baakman2(); b3 <- baakman3();
 
 # Execute on Source
 # data <- readResultSet(data_set_file, parzen_file, mbe_file, sambe_file)
@@ -552,5 +549,5 @@ baakman1 <- function(){
 # formatC(min(data$sambeDensities), digits = 15, format = "e")
 # head(data[order(data$sambeDensities, decreasing = TRUE), ], n=10)
 
-# head(data[order(data$meanEigDiff, decreasing = TRUE), c('x', 'y', 'z','eigen_value_1', 'eigen_value_2', 'eigen_value_3', 'local_bandwidth', 'scaling_factor')], n = 10)
+# head(data[order(data$anisotropy, decreasing = TRUE), c('x', 'y', 'z','eigen_value_1', 'eigen_value_2', 'eigen_value_3', 'local_bandwidth', 'scaling_factor')], n = 10)
 # head(data[order(abs(data$mbeSambeDiff), decreasing=TRUE), c('x', 'y', 'z', 'component', 'trueDensities', 'mbeDensities', 'mbeNumUsedPatterns', 'sambeDensities', 'sambeNumUsedPatterns', 'mbeSambeDiff')], 20)
