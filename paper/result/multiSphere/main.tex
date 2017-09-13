@@ -28,19 +28,37 @@
 \end{table*}
 
 % What does the section do
-
+In this section we present the results of the two estimators on dataset \ferdosiTwo, \baakmanTwo, \ferdosiThree, and \baakmanThree.
 % MSE
 	% GENERAL
-
-	% FERDOSI 2
-
+	Based on the small differences between the \mses of the estimators in \cref{tab:results:multiSphere:mse} the estimators perform comparably on these datasets. 
+	% FERDOSI 2 
+		% COMPONENT 1 MBE MSE 1.385919090205819e-07 SAMBE MSE 1.384478742850174e-07
+		% COMPONENT 2 MBE MSE 1.313643043640668e-08 SAMBE MSE 1.302177563181053e-08
+		% NOISE  	  MBE MSE 2.293851560028409e-11 SAMBE MSE 2.329767921658432e-11
 	% BAAKMAN 2
-
+		% COMPONENT 1 MBE MSE 1.407069060886291e-07 SAMBE MSE 1.412169246599802e-07
+		% COMPONENT 2 MBE MSE 1.367299679831388e-08 SAMBE MSE 1.378034105739574e-08
+		% NOISE 	  MBE MSE 3.497662493386784e-11 SAMBE MSE 3.920943401183576e-11	
 	% FERDOSI 3	
-
+		% COMPONENT 1 MBE MSE 2.390294620096452e-06 SAMBE MSE 2.466705633403533e-06
+		% COMPONENT 2 MBE MSE 1.188881378312256e-08 SAMBE MSE 1.231201873705999e-08
+		% COMPONENT 3 MBE MSE 2.373920131423336e-05 SAMBE MSE 2.418690791957957e-05
+		% COMPONENT 4 MBE MSE 1.113882923683008e-07 SAMBE MSE 1.152633135516966e-07
+		% NOISE 	  MBE MSE 4.320565280514733e-10 SAMBE MSE 4.461773022571117e-10
 	% BAAKMAN 3
-
+		% COMPONENT 1 MBE MSE 2.329212432941902e-06 SAMBE MSE 2.391586354071871e-06
+		% COMPONENT 2 MBE MSE 1.748202359601445e-08 SAMBE MSE 1.764561034215026e-08
+		% COMPONENT 3 MBE MSE 2.265532341806348e-05 SAMBE MSE 2.316257978616503e-05
+		% COMPONENT 4 MBE MSE 1.312379885278773e-07 SAMBE MSE 1.339883658098755e-07
+		% NOISE 	  MBE MSE 3.916881734521594e-10 SAMBE MSE 4.028048478164317e-10
 	% FOCUS ON COMPONENTS
+	Comparing the \MSE between components within the data sets between estimators yields no differences. However within data sets the difference in \mses are quite large.
+	% FERDOSI 2 & BAAKMAN 2
+	Within dataset \ferdosiTwo and \baakmanTwo both estimators perform significantly better on the more sparse component `Trivariate Gaussian 2'.
+	% FERDOSI 3 & BAAKMAN 3
+	Both estimators show the same positive correlation between the density of the Gaussian components and the \MSE within the components of the datasets with four Gaussians.
+
 
 % PLOTS
 	% GENERAL
@@ -69,7 +87,7 @@
 	% FOCUS ON COMPONENTS
 
 % SUMMAR/CONCLUSION
-	%GENERAL
+	%GENERAL - SOMETHING ON THE HYPOTHESES
 
 	%FOCUS ON COMPONENTS
 
