@@ -1,6 +1,11 @@
 %!TEX root = ../../paper.tex
 
-\begin{tabular}{l*{2}{S[scientific-notation=true, round-mode=places,round-precision=3]}}
+\sisetup{
+	table-format=1.3e+1,
+	scientific-notation=true, 
+	table-number-alignment=center
+}
+\begin{tabular}{l*{2}{S}}
 \toprule
 ~ 				& \multicolumn{2}{c}{Estimator}\\ \cmidrule{2-3}
 Set				& {\mbe}					& {\sambe}	\\
