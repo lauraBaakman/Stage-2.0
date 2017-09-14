@@ -30,6 +30,7 @@ One of the most striking observations from \cref{s:results} is that the differen
 			}
 			\label{fig:discussion:performance:two:mbevssambe}
 		\end{figure}
+		
 		% Ferdosi 3 / Baakman 3
 		\Cref{fig:discussion:performance:four:mbevssambe} shows the opposite effect; the densities estimated by \sambe for dataset \ferdosiThree and \baakmanThree are generally lower than those estimated by \mbe. Reviewing the raw data shows that the points with the greatest differences between the two estimators lie near the mean of the `Trivariate Gaussian 3' in both dataset \ferdosiThree and \baakmanThree. The number of points used in the density estimate by \sambe is consistently lower and than those used by the fixed-shape estimator. Given the relatively high anisotropy of the kernels in that area we expect that this is due to the kernels reflecting fine local structures, that are not relevant to the more global neighborhood. 
 		%	
@@ -49,9 +50,9 @@ One of the most striking observations from \cref{s:results} is that the differen
 			\end{subfigure}	
 			\caption{Plots of the density estimated by \sambe as a function of those estimated by \mbe for dataset %
 				\subref{fig:discussion:performance:mbevssambe:ferdosi3} % 
-				\ferdosiTwo and %
+				\ferdosiThree and %
 				\subref{fig:discussion:performance:mbevssambe:baakman3} %
-				\baakmanTwo.
+				\baakmanThree.
 			}
 			\label{fig:discussion:performance:four:mbevssambe}
 		\end{figure}
@@ -69,7 +70,11 @@ One of the most striking observations from \cref{s:results} is that the differen
 		%Baakman 4 (2.989838892974129e+01 percent)
 		%Baakman 5 (3.535329901731399e+01 percent)
 		As the Gaussian component becomes more anisotropic there are more points whose local neighborhood consists only of uniform noise. On average the covariance matrix of neighborhoods that contain primarily points sampled from the noise component should be scalar. Consequently the shape-adaptive kernels of a large number of points sampled from the noise component are symmetric, resulting in points where the estimators give the same approximated density.
-	%
+	
+	% Multi Sphere
+	The points where using symmetric kernels results in a smaller error in datasets \ferdosiTwo through \baakmanThree are emphasized in
+	\cref{fig:discussion:performance:multisphere:mbeLowerError}. We contribute the boundary effect in these datasets to the same cause as the boundary effects in the datasets with a single Gaussian component. Interestingly the points dataset \ferdosiThree and \baakmanThree where the absolute error of \mbe is lower approximate a sphere, contrary to the cube they define for dataset \ferdosiTwo and \baakmanTwo. It is our expectation that this is caused by smaller distance between the means of the Gaussian components and the boundary of the dataset. 
+
 	\begin{figure}
 		\centering
 		\begin{subfigure}{0.23\textwidth}
@@ -119,12 +124,6 @@ One of the most striking observations from \cref{s:results} is that the differen
 			\caption{Dataset \baakmanTwo}
 			\label{fig:discussion:performance:mbeLowerError:baakman2}
 		\end{subfigure}	
-		\caption{Low opacity scatter plot of dataset \subref{fig:discussion:performance:mbeLowerError:ferdosi2} \ferdosiTwo and \subref{fig:discussion:performance:mbeLowerError:baakman2} \baakmanTwo with an overlay of high opacity larger points where the absolute error of \mbe is smaller than that of \sambe.}
-		\label{fig:discussion:performance:two:mbeLowerError}
-	\end{figure}	
-
-	\begin{figure}
-		\centering
 		\begin{subfigure}{0.23\textwidth}
 			\centering
 			\includegraphics[keepaspectratio=true, width=\textwidth, height=0.23\textheight]{discussion/img/ferdosi_3_abs_error_mbeSmallerThansambe}
@@ -136,12 +135,15 @@ One of the most striking observations from \cref{s:results} is that the differen
 			\includegraphics[keepaspectratio=true, width=\textwidth, height=0.23\textheight]{discussion/img/baakman_3_abs_error_mbeSmallerThansambe}
 			\caption{Dataset \baakmanThree}
 			\label{fig:discussion:performance:mbeLowerError:baakman3}
-		\end{subfigure}	
-		\caption{Low opacity scatter plot of dataset 			\subref{fig:discussion:performance:mbeLowerError:ferdosi3} % 
-			\ferdosiTwo and \subref{fig:discussion:performance:mbeLowerError:baakman3} \baakmanTwo with the points where the absolute error of \mbe is smaller than the absolute error of \sambe emphasized.
-		}
-		\label{fig:discussion:performance:four:mbeLowerError}
-	\end{figure}	
+		\end{subfigure}			
+		\caption{Low opacity scatter plot of dataset %
+			\subref{fig:discussion:performance:mbeLowerError:ferdosi2} \ferdosiTwo, %
+			\subref{fig:discussion:performance:mbeLowerError:baakman2} \baakmanTwo, %
+			\subref{fig:discussion:performance:mbeLowerError:ferdosi3} \ferdosiThree, and %
+			\subref{fig:discussion:performance:mbeLowerError:baakman3} \baakmanThree %
+			with an overlay of high opacity larger points where the absolute error of \mbe is smaller than that of \sambe.}
+		\label{fig:discussion:performance:multisphere:mbeLowerError}
+	\end{figure}		
 
 
 	% IN SOME NEIGHBOURHOODS THE SHAPE ADAPTIVE KERNELS HELP! IN OTHERS THEY SCREW THINGS UP.
