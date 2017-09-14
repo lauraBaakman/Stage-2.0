@@ -59,22 +59,6 @@ One of the most striking observations from \cref{s:results} is that the differen
 
 	% Where are the differences largest -> plots
 	% Single Sphere
-	The plots in \cref{fig:discussion:performance:singleSphere:mbeLowerError} emphasizes the points in dataset \ferdosiOne through \baakmanOne where the absolute error of \mbe is smaller than that of \sambe. These plots show that the shape-adaptive kernels outperforms the symmetric kernels near the borders of the datasets.
-		% Why the boundary effect
-		We expect that the boundary effect is due to the strong anisotropy of the local neighborhood of the points near the boundaries. After all these neighborhoods all point strongly towards the dataset. Consequently the domain of the shape-adaptive kernels extends less outside of the boundaries dataset than the domains of the symmetric kernels. This is results in less underestimating of densities near the boundary of the dataset if shape-adaptive kernels are used.
-		% Why is it stonger of the Gaussian is more anisotropic
-		Furthermore the strength of the boundary effect seems to increase as the Gaussian component of the dataset is more anisotropic. However the seemingly better performance of \sambe is due to an increase in the number of points where the density estimated by \sambe equals that estimated by \mbe. In dataset \ferdosiOne the density estimates of the two estimators differ on all points, however this percentage increases as the anisotropy of the Gaussian component increases, to \SI{3.535329901731399e+01}{\percent} in dataset \baakmanFive. 
-		%SAMBE == MBE
-		%Ferdosi 1 (0.000000000000000e+00 percent)
-		%Baakman 1 (1.327294605254362e+01 percent)
-		%Baakman 4 (2.989838892974129e+01 percent)
-		%Baakman 5 (3.535329901731399e+01 percent)
-		As the Gaussian component becomes more anisotropic there are more points whose local neighborhood consists only of uniform noise. On average the covariance matrix of neighborhoods that contain primarily points sampled from the noise component should be scalar. Consequently the shape-adaptive kernels of a large number of points sampled from the noise component are symmetric, resulting in points where the estimators give the same approximated density.
-	
-	% Multi Sphere
-	The points where using symmetric kernels results in a smaller error in datasets \ferdosiTwo through \baakmanThree are emphasized in
-	\cref{fig:discussion:performance:multisphere:mbeLowerError}. We contribute the boundary effect in these datasets to the same cause as the boundary effects in the datasets with a single Gaussian component. Interestingly the points dataset \ferdosiThree and \baakmanThree where the absolute error of \mbe is lower approximate a sphere, contrary to the cube they define for dataset \ferdosiTwo and \baakmanTwo. It is our expectation that this is caused by smaller distance between the means of the Gaussian components and the boundary of the dataset. 
-
 	\begin{figure}
 		\centering
 		\begin{subfigure}{0.23\textwidth}
@@ -109,7 +93,20 @@ One of the most striking observations from \cref{s:results} is that the differen
 			with an overlay of larger colored points where the absolute error of \sambe is larger than the absolute error of \mbe.}
 		\label{fig:discussion:performance:singleSphere:mbeLowerError}
 	\end{figure}
+	%	
+	The plots in \cref{fig:discussion:performance:singleSphere:mbeLowerError} emphasizes the points in dataset \ferdosiOne through \baakmanOne where the absolute error of \mbe is smaller than that of \sambe. These plots show that the shape-adaptive kernels outperforms the symmetric kernels near the borders of the datasets.
+		% Why the boundary effect
+		We expect that the boundary effect is due to the strong anisotropy of the local neighborhood of the points near the boundaries. After all these neighborhoods all point strongly towards the dataset. Consequently the domain of the shape-adaptive kernels extends less outside of the boundaries dataset than the domains of the symmetric kernels. This is results in less underestimating of densities near the boundary of the dataset if shape-adaptive kernels are used.
+		% Why is it stonger of the Gaussian is more anisotropic
+		Furthermore the strength of the boundary effect seems to increase as the Gaussian component of the dataset is more anisotropic. However the seemingly better performance of \sambe is due to an increase in the number of points where the density estimated by \sambe equals that estimated by \mbe. In dataset \ferdosiOne the density estimates of the two estimators differ on all points, however this percentage increases as the anisotropy of the Gaussian component increases, to \SI{3.535329901731399e+01}{\percent} in dataset \baakmanFive. 
+		%SAMBE == MBE
+		%Ferdosi 1 (0.000000000000000e+00 percent)
+		%Baakman 1 (1.327294605254362e+01 percent)
+		%Baakman 4 (2.989838892974129e+01 percent)
+		%Baakman 5 (3.535329901731399e+01 percent)
+		As the Gaussian component becomes more anisotropic there are more points whose local neighborhood consists only of uniform noise. On average the covariance matrix of neighborhoods that contain primarily points sampled from the noise component should be scalar. Consequently the shape-adaptive kernels of a large number of points sampled from the noise component are symmetric, resulting in points where the estimators give the same approximated density.
 	
+	% Multi Sphere
 	\begin{figure}
 		\centering
 		\begin{subfigure}{0.23\textwidth}
@@ -143,9 +140,10 @@ One of the most striking observations from \cref{s:results} is that the differen
 			\subref{fig:discussion:performance:mbeLowerError:baakman3} \baakmanThree %
 			with an overlay of high opacity larger points where the absolute error of \mbe is smaller than that of \sambe.}
 		\label{fig:discussion:performance:multisphere:mbeLowerError}
-	\end{figure}		
+	\end{figure}	
+	The points where using symmetric kernels results in a smaller error in datasets \ferdosiTwo through \baakmanThree are emphasized in
+	\cref{fig:discussion:performance:multisphere:mbeLowerError}. We contribute the boundary effect in these datasets to the same cause as the boundary effects in the datasets with a single Gaussian component. Interestingly the points dataset \ferdosiThree and \baakmanThree where the absolute error of \mbe is lower approximate a sphere, contrary to the cube they define for dataset \ferdosiTwo and \baakmanTwo. It is our expectation that this is caused by smaller distance between the means of the Gaussian components and the boundary of the dataset. To test this we define dataset \ferdosiThree', in this dataset the uniform random background of \ferdosiThree is replaced with $\uniformDist{[-100, -100, -100]}{[200, 200, 200]}$. To ensure that the density of that components is equal to that of the noise of \ferdosiThree we adjust the number of points of the component. 
+	\todo[inline]{Build the sambe vs mbe plot for this dataset and discuss}		
 
-
-	% IN SOME NEIGHBOURHOODS THE SHAPE ADAPTIVE KERNELS HELP! IN OTHERS THEY SCREW THINGS UP.
-	% Suggest increasing K, what did ur small experiment with increasing K show?
-	% Suggest not always using a shape-adaptive kernel
+% Some conclusion
+To conclude, by investigating the differences in performance between the two estimators on various datasets we have found that shape-adaptive kernels definitely improve performance in some cases, \eg near the boundary of the datasets and near the mean of some Gaussian components. Unfortunately in other cases the anisotropic kernels are detrimental, the difference in \mse between the two estimators show that on these datasets using symmetric kernels is slightly advantageous. 
