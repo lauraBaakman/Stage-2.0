@@ -1,15 +1,10 @@
 %!TEX root = ../paper.tex
-This section is concerned with the difference in performance between the two estimators within datasets. \Cref{s:discussion:singleGaussian} focuses on datasets containing a single Gaussian, whereas \cref{s:discussion:multipleGaussians} discusses the four other datasets.
+This section discusses the results presented in \cref{s:results}. We consider the lack of difference in performance between the estimators in \cref{s:discussion:performance}. The next section discusses the anisotropy of the kernels used by the shape-adaptive estimators. 
 
-\subsection{Datasets with a Single Gaussian}
-	\label{s:discussion:singleGaussian}
-	\input{discussion/singleSphere}
+\subsection{Performance}
+\label{s:discussion:performance}
+\input{discussion/performance}
 
-
-\subsection{Datasets with Multiple Gaussians}
-	\label{s:discussion:multipleGaussians}
-	\input{discussion/multiSphere}
-
-%General Discussion
-% Kernels are strongly shaped near the boundaries of the datasets
-In all datasets we have found a large difference in the shape of the kernels near the boundaries of the dataset. Kernels of a point near an edge of the dataset cube have their shortest minor axis perpendicular to the direction of the edge, to account for the lack of data points in that direction. This boundary effect improves the density estimate in our case, as it allowed a sufficient number of patterns to contribute to the density estimate of points near the boundaries of the dataset. In contrast to the symmetric estimator, which underestimated densities near the boundary due to a lack of contributing points. 
+\subsection{Kernel Anisotropy}
+\label{s:discussion:anisotropy}
+\input{discussion/anisotropy}
