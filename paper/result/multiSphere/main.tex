@@ -77,76 +77,31 @@ In this section we present the results of the two estimators on dataset \ferdosi
 		\caption{The mean (\mean) and standard deviation (\SD) of the anisotropy of the kernels used for points from the datasets with multiple Gaussians, split per component and for the full dataset.} 	
 		\label{tab:results:multiSphere:anisotropy}
 	\end{table*}
+	% What are we looking at
 	\Cref{tab:results:multiSphere:anisotropy} presents the mean and standard deviation of the anisotropy of the kernels used for the points from dataset \ferdosiTwo through \baakmanThree and from their components. 
+	% Small differences in anisotropy between F2/F3 and B2/B3
+	Although the anisotropy of the kernels used for the datasets with anisotropic Gaussian components is higher on average and more varied than the anisotropy of the kernels used for dataset \ferdosiTwo and \ferdosiThree, the differences are small. 
+	% Noise has largest anisotropy
+	As in \cref{tab:results:singleSphere:anisotropy} the kernels associated with the points sampled from the component `Uniform random background` have the highest anisotropy, and vary the most in how anisotropic they are. 
 	% Positve correlation between mean anisotropy of the kernels and anisotropy of the gaussian components.
-	% Largest anisotropy and difference in anisotropy can be found in the points sampled from the noise. 
-	
-	% GENERAL: TWO SPHERES
-
-		% FERDOSI 2
-
-		% BAAKMAN 2	
-		% Positve correlation between sd of anistorpy of the kernels and the anisotropy of the gaussian components.	
-
-		% FOCUS ON COMPONENTS
-
-	% GENERAL: FOUR SPHERES
-		% ANISOTROPY of kernels close, higher and more varied for B3 than for F3. 
-		% ANISOTROPY OF M3 and M4 seems equal for Gaussian 3, is that really the case? 
-
-		% FERDOSI 3	
-		% No
-
-		% BAAKMAN 3
-		% No positve correlation between sd of anistorpy of the kernels and the anisotropy of the gaussian components.
-
-		% FOCUS ON COMPONENTS
+	Contrasting the mean anisotropy of the kernels used for points drawn from the different components we find a positive correlation between the mean anisotropy of the kernel and the anisotropy of the Gaussian components. 
+	% Positive correlation between anisotropy SD and kernel anisotropy
+		% exists for B2
+		In the kernels used for dataset \baakmanTwo we observe the same positive correlation between the variation of the anisotropy of the kernels and the anisotropy of the associated kernel as we observed in dataset \baakmanOne, \baakmanFour, and \baakmanFive. 
+		% does not occur in B3
+		Comparing the standard deviation of the anisotropy of the kernels used for the points sampled from the components of dataset \baakmanThree does not reveal this relation: the densest component, Trivariate Gaussian 3, does not have the highest variation in kernel anisotropy. 
+	% ANISOTROPY OF M3 and M4 seems equal for Gaussian 3, is that really the case? 
+	One thing that stands out when comparing dataset \ferdosiThree and \baakmanThree in \cref{tab:results:multiSphere:anisotropy} is the lack of difference in the mean and standard deviation in the anisotropy of the kernels associated with the component `Trivariate Gaussian 3'. Reviewing the raw data reveals that the largest difference in anisotropy between any point drawn from that component is \num{3.108624e-15}.
 
 % SUMMARY/CONCLUSION
-	%GENERAL - SOMETHING ON THE HYPOTHESES
-	% SAMBE results in a larger spread of densities than MBE. 
-	% Small differences between the two datasets
-	% Both perform better on denser gaussian components
+	% Small differences in MSE between the two datasets
+	To summarize the results of the datasets with multiple Gaussian components: we have found that the differences in performance are very small between the two estimators, although \sambe underestimates less than \mbe, the later performs slightly better.
+	% Both estimators perform better on denser gaussian components
+	Furthermore both estimators show a positive correlation between the density of the Gaussian component and their performance on that component.
 	% Differences in anisotropy of the kernels between the F1/F2 and B1/B2 are small. 
-
-	%FOCUS ON COMPONENTS
-
-
-
-
-
-\oldStuff
-
-%Introduction
-	In this section we present the results of the two estimators on dataset \ferdosiTwo, \baakmanTwo, \ferdosiThree, \baakmanThree.
-
-% Ferdosi 2
-	% General difference
-	Comparing \cref{fig:results:multisphere:mbe:ferdosi2} with \cref{fig:results:multisphere:sambe:ferdosi2} we find that both estimators underestimate the density and that the densities estimated by the \sambe are spread out more than those estimated by \mbe. In spite of this the difference in \mse between the two estimators is small enough to be insignificant. 
-	% Components
-	The same holds for the \mse of the individual components.
-
-% Baakman 2
-	% General difference
-	\Cref{fig:results:multisphere:mbe:baakman2,fig:results:multisphere:sambe:baakman2} show the same general trend as \cref{fig:results:multisphere:mbe:ferdosi2,fig:results:multisphere:sambe:ferdosi2}: both estimators underestimate, the shape-adaptive estimator less so than the symmetric estimator, but the differences between the two estimators are small. 
-	% Components
-	The differences in \MSE within the difference components between the estimators are negligible. 
-	% Contrast to Ferdosi 2
-	Comparing the performance of the estimators between datasets \ferdosiTwo and \baakmanTwo we find that the performance of both estimators hardly suffers from the elongation of the Gaussians. 
-
-% Ferdosi 3
-	% General Differnence
-	\Cref{fig:results:multisphere:mbe:ferdosi3,fig:results:multisphere:sambe:ferdosi3} clearly show that both estimators significantly underestimate the true density, \sambe more so than \mbe. 
-	% Components
-	Comparing the \mse of the different components we find that both estimators performed worst on the densest component, and best on the component with the highest value on the diagonal of its covariance. There is no significant difference between the estimators within the different components. 
-
-% Baakman 3
-	% General Difference
-	\Cref{fig:results:multisphere:mbe:baakman3,fig:results:multisphere:sambe:baakman3} shows the same underestimating of densities as the plot of the plots associated with datasets \ferdosiThree. Compared to densities estimated for that dataset the range of densities estimated by both estimators for dataset \baakmanThree is greater. The difference in \mse within both the complete set and 
-	% Components
-	its components between the two estimators is negligible. 
-	% Constrast to Ferdosi 3
-	Contrary to our expectations both estimators perform better on the elongated dataset, \ie \ferdosiThree, than on the spherical set. 
-
-% General
-	In general we have found that the number of Gaussian distributions embed in the noise negatively influences the performance of both estimators. Furthermore the denser a Gaussian distribution is, the more difficulty the estimators have with correctly approximating the density of the points sampled from it. 
+	Regarding the anisotropy of the kernels we have found only a small increase between dataset with spherical kernels and dataset \b
+	aakmanTwo and \baakmanThree. 
+	% Anisotropy is storngest on noise component
+	Zeroing in on the components we have observed that the anisotropy of kernels associated with points drawn from the noise is strongest.
+	% Positve correlation between mean anisotropy of kernels and anisotropy of the gaussian comonent
+	Lastly a positive correlation between the mean anisotropy of the kernels of the points sampled from a component and the anisotropy of the Gaussian those points were drawn from was found. 

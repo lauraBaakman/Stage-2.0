@@ -24,5 +24,11 @@ We compare the performance of the two estimators on each dataset with the \mse a
 \input{result/multiSphere/main}
 
 %Some final general observation for all sets
-\todo[inline]{Some observations that hold for both sets.}
-By comparing the \mse of the different components of the datasets we have also found that both estimators are better at estimating the density of points sample from uniform random noise than points sampled from a Gaussian distribution.
+	% Small differences in MSE between the two datasets
+	In conclusion for all datasets we have found very small differences in \mse between the two estimators. 
+	% Both estimators perform better on denser gaussian components
+	Furthermore both estimators perform better on points drawn from Gaussian components with a smaller eigensphere. 
+	% Anisotropy is storngest on noise component
+	Concerning the anisotropy of the kernels we have observed that in all datasets this statistic is highest for the noise component. 
+	% Positve correlation between mean anisotropy of kernels and anisotropy of the gaussian comonent
+	Comparing the mean anisotropy of the kernels of the points drawn from the Gaussian components showed a positive correlation with the anisotropy of the component the point was sampled from. 
