@@ -1,5 +1,5 @@
 %!TEX root = ../paper.tex
-This section discusses the results presented in \cref{s:results}. We consider the lack of difference in performance between the estimators in \cref{s:discussion:performance}. The next section discusses the anisotropy of the kernels used by the shape-adaptive estimators. 
+This section discusses the results presented in \cref{s:results}. We consider the lack of difference in performance between the estimators in \cref{s:discussion:performance}. The next section discusses the anisotropy of the kernels used by the shape-adaptive estimators. Finally we offer some directions research into solving the identified issues might take.
 
 \subsection{Performance}
 \label{s:discussion:performance}
@@ -9,11 +9,12 @@ This section discusses the results presented in \cref{s:results}. We consider th
 \label{s:discussion:anisotropy}
 \input{discussion/anisotropy}
 
-\todo[inline]{Suggest increasing K: which problems would that solve, discuss experiment with K10}
-% Detection of fine spurious strucre in the noise, might also help with lack of anisotorpy high density areas. May be with some control parameter that depends on the local physical density.
+We have found that near low density Gaussian components the kernels are too isotropic, whereas in the uniform random background fine structures are detected that result in too anisotropic kernels. Both of these problems might be solved by increasing the value of \KNNK. 
+% Effect on noise:
+We expect that in a larger local neighborhood fewer fine structures are detected, resulting in more isotropic kernels for points that lie in the uniform background.
+% Effect on low density gaussians: 
+Furthermore increasing the size of the local neighborhood might also allow the kernels to adapt to their shape to nearby low density Gaussian components. Increasing the \KNNK computed in \cref{eq:method:k} resulted in \sambe outperforming \mbe on dataset \baakmanFive. Furthermore the increased \KNNK also improved the performance on dataset \ferdosiThree, \baakmanThree and those with a single Gaussian, whereas the performance on dataset \ferdosiTwo and \baakmanTwo decreased. This suggest that blindly increasing the size of the local neighborhood will not consistently improve the performance of the estimator, but that same adaptive increase of \KNNK is required.
 
-\todo[inline]{Suggest not always using a shape-adaptive kernel, only if the local neighbourhood has an anistropy that is greater than x. Which problems might that solve?}
-% Influence of the density of the gaussian. 
-% Would not solve noise problems, as those areas clearly have a anisotorpy that is quite high.
+Another solution to the too anisotropic kernels in the noise might be too only use shape-adaptive kernels if the neighborhood is sufficiently anisotropic. One might even consider using a kernel-shape that is somewhere between the isotropic and the fully anisotropic kernel depending on the anisotropy of the local neighborhood. A difficulty with this approach is detecting the isotropy of the local neighborhood. As the obvious solution, the covariance matrix, has proven sensitive to fine structures in the noise. 
 
-\todo[inline]{Influence of density suggest on the performance of both estimators suggests that the local bandwidth computation is far from ideal}
+Finally the correlation between the performance of the estimators and the density of the Gaussian component suggests that the method used to compute the  local bandwidths is far from ideal. 

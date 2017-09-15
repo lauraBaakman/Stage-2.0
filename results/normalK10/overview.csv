@@ -1,0 +1,17 @@
+sensitivity,dataset,size,MSE (MBE),MSE (SAMBE),Difference (MBE - SAMBE)
+silverman,baakman_1,60000,1.490E-08,1.490E-08,-1.14E-11
+silverman,baakman_2,60000,5.150E-08,5.210E-08,-6.06E-10
+silverman,baakman_3,120000,4.190E-06,4.390E-06,-2.01E-07
+silverman,baakman_4,60000,2.940E-08,2.940E-08,-4.73E-11
+silverman,baakman_5,60000,5.570E-08,5.530E-08,4.32E-10
+silverman,ferdosi_1,60000,8.310E-09,8.390E-09,-8.35E-11
+silverman,ferdosi_2,60000,5.060E-08,5.150E-08,-9.53E-10
+silverman,ferdosi_3,120000,4.370E-06,4.560E-06,-1.85E-07
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,
+,,,,,
