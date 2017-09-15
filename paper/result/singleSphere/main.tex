@@ -1,27 +1,27 @@
 %!TEX root = ../../paper.tex
 
-This section compares the performance of the Modified Breiman Estimator with symmetric and shape-adaptive kernels on datasets that contain one Gaussian. 
+This section compares the performance of the Modified Breiman Estimator with symmetric and shape-adaptive kernels on datasets that contain one Gaussian component. 
 %MSE
 	\begin{table}
 		\centering
 		\input{result/singleSphere/mse_tab}
-		\caption{Performance of the Modified Breiman Estimator with fixed-shaped and shape-adaptive kernels on the datasets with a single Gaussian.} 	
+		\caption{Performance of the Modified Breiman Estimator with fixed-shaped and shape-adaptive kernels on the datasets with a single Gaussian component.} 	
 		\label{tab:results:singleSphere:mse}
 	\end{table}
 	%
-	Comparing the mean squared errors of the \mbe with those of \sambe in \cref{tab:results:singleSphere:mse} we find that the two estimators perform comparably, but that the fixed-shape estimator always gives a slightly lower mean squared error. 
+	Comparing the \mses of the \mbe with those of \sambe in \cref{tab:results:singleSphere:mse} we find that the two estimators perform comparably, but that the fixed-shape estimator consistently gives a slightly lower \mse. 
 
 %PLOTS
 	\begin{figure*}
 		\centering
 		\input{result/singleSphere/subfigs}
-		\caption{Plot of the density as estimated by \subref{fig:results:singlesphere:mbe:ferdosi1}-\subref{fig:results:singlesphere:mbe:baakman5} \mbe and \subref{fig:results:singlesphere:sambe:ferdosi1}-\subref{fig:results:singlesphere:sambe:baakman5} \sambe as a function of the known density of the datasets with a single Gaussian.}
+		\caption{The density as estimated by \subref{fig:results:singlesphere:mbe:ferdosi1}-\subref{fig:results:singlesphere:mbe:baakman5} \mbe and \subref{fig:results:singlesphere:sambe:ferdosi1}-\subref{fig:results:singlesphere:sambe:baakman5} \sambe as a function of the known density of datasets \ferdosiOne through \baakmanFive.}
 		\label{fig:results:singleSphere:comparativePlots}
 	\end{figure*}
 	%
 	This is confirmed by the visualization of the results in \cref{fig:results:singleSphere:comparativePlots} where hardly any difference is visible between \cref{fig:results:singlesphere:mbe:ferdosi1,fig:results:singlesphere:mbe:baakman1,fig:results:singlesphere:mbe:baakman4,fig:results:singlesphere:mbe:baakman5}, and \cref{fig:results:singlesphere:sambe:ferdosi1,fig:results:singlesphere:sambe:baakman1,fig:results:singlesphere:sambe:baakman4,fig:results:singlesphere:sambe:baakman5}, respectively. 
 		%Ferdosi 1
-		Comparing the plots associated with dataset \ferdosiOne we find that the shape-adaptive estimators tends to overestimate densities more than the symmetric observation. 
+		Comparing the plots associated with dataset \ferdosiOne we find that the shape-adaptive estimator tends to overestimate densities more than the symmetric estimator if the Gaussian component is spherical.
 		% Baakman 4
 		Based on \cref{fig:results:singlesphere:mbe:baakman4,fig:results:singlesphere:sambe:baakman4} the same holds for dataset \baakmanFour. 
 	% Focus on components
@@ -41,4 +41,4 @@ This section compares the performance of the Modified Breiman Estimator with sym
 	Reviewing these statistics of the components of the datasets reveals that the increase in average anisotropy is primarily caused by an increase in anisotropy op kernels of points sampled from the Gaussian component. The mean anisotropy of the noise component stays relatively constant. Furthermore as the Gaussian component is more anisotropic the variation in anisotropy of the kernels increases.
 
 %Summary
-To summarize; in spite of differences in anisotropy of the used kernels we have observed very few differences between two estimators. Using shape-adaptive kernels did not yield the expected gain in performance. We did find the expected influence of the anisotropy of the Gaussian components on that of the kernels. 
+To summarize; in spite of differences in anisotropy of the used kernels we have observed very few differences between two estimators. Using shape-adaptive kernels did not yield the expected gain in performance. We did find the expected influence of the anisotropy of the Gaussian components on the shape of the kernels. 
