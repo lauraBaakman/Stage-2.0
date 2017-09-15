@@ -1,7 +1,7 @@
 %!TEX root = ../paper.tex
 
 % Small differences in anisotropy  
-In \cref{s:results} some differences in anisotropy of the kernels were observed, however these differences were relatively small. This section investigates the anisotropy of the kernels. 
+	In \cref{s:results} some differences in anisotropy of the kernels were observed, however these differences were relatively small. This section investigates the anisotropy of the kernels. 
 	
 		% Single Sphere
 			\begin{figure}
@@ -108,13 +108,12 @@ In \cref{s:results} some differences in anisotropy of the kernels were observed,
 					% G1/G3 are placed near the  border of the dataset, contrast with results of F3Noise?
 					\Cref{fig:discussion:ferdosi3Noise:anisotropy} shows that distance to the boundaries do not explain the difference in anisotropy of the kernel as in that figure the first and third component of \ferdosiThreeNoise have more anisotropic kernels than the other components.
 					% G1/G3 have lower covariance:
-					The first possible explanation fits with the observations from \cref{s:results} that components with a higher density have a higher anisotropy.
-
+					The first explanation fits with the observations from \cref{s:results} that components with a higher density have a higher anisotropy.
 			% Baakman 3
-				% Any difference between G1/G3 and G2/G4?
+				In dataset \baakmanThree we observe the same effect as in \ferdosiThree but stronger; from the points with the most anisotropic kernels more are sampled from the two densest Gaussian component than from the others. 
 
 		% Some general conclusion
-		Lastly in all datasets a large number of points sampled from the background have a high anisotropy. We expect that this is caused by fine structures in the noise that overwhelm the local neighborhood.
+		\Cref{fig:discussion:anisotropy:singleSphere,fig:discussion:anisotropy:multisphere} show that the overwhelming majority of the points with a relative highly anisotropic kernel are sampled from the `Uniform random background'. We contribute this to the covariance detecting fine, random structures in the noise, that give the impression of anisotropy where there is none.
 
 % Denser component -> higher anisotropy of kernels
 % AND Higher anistropy in component -> higer anisotropy in associated kernels
