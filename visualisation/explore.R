@@ -603,8 +603,8 @@ ferdosi3Noise <- function(){
   
   data$mbeSambeDiff = data$mbeDensities - data$sambeDensities;
   data$anisotropy = anisotropy(data);
-  
-  plotAnisotropy(data, "../paper/discussion/img/ferdosi_3_more_noise_anisotropy.pdf")
+
+    plotAnisotropy(data, "../paper/discussion/img/ferdosi_3_more_noise_anisotropy.pdf", percentage = 0.05)
   generateMBEvsSAMBEPlot(data, "../paper/discussion/img/ferdosi_3_more_noise_mbe_sambe.png")
   plotSubsetOverlay(
     allData=data, 
