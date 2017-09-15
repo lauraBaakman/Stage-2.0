@@ -103,11 +103,12 @@ In \cref{s:results} some differences in anisotropy of the kernels were observed,
 				Interestingly in dataset \ferdosiThree, two of the four spherical Gaussians, \ie `Trivariate Gaussian ' are associated with respectively \percentage{1.404095} and \percentage{2.223151} of the highly anisotropic kernels.
 				% Relate to results: components with highest sd, lowest means, lower density -> larger variation in anisotropy
 				Comparing the mean kernel anisotropy in \cref{tab:results:multiSphere:anisotropy} we find that compared to the other Gaussian components in \ferdosiThree, these two component have a relatively low mean. However their standard deviations are higher, suggesting that in these denser components some kernels are extremely anisotropic, whereas others are near to isotropic. We contribute this difference within the points sampled from a Gaussian component to difference in physical density of the data points nearer and father away from the mean as we did for dataset \ferdosiOne and \baakmanOne.
-
 				% Why G1 and G3 and not G2 and G4? 
+				Component one and four of dataset \ferdosiThree differ from the other Gaussian components in two aspects: firstly they have a relatively dense and secondly they are placed near the boundaries of the dataset. 
 					% G1/G3 are placed near the  border of the dataset, contrast with results of F3Noise?
-
+					\Cref{fig:discussion:ferdosi3Noise:anisotropy} shows that distance to the boundaries do not explain the difference in anisotropy of the kernel as in that figure the first and third component of \ferdosiThreeNoise have more anisotropic kernels than the other components.
 					% G1/G3 have lower covariance:
+					The first possible explanation fits with the observations from \cref{s:results} that components with a higher density have a higher anisotropy.
 
 			% Baakman 3
 				% Any difference between G1/G3 and G2/G4?
