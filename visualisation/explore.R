@@ -29,6 +29,8 @@ readResultSet <- function(data_set_file, parzen_file, mbe_file, sambe_file){
   data$sambeDensities = sambe_data$computedDensity;
   data$sambeNumUsedPatterns = sambe_data$numUsedPatterns;  
   
+  data$component = as.factor(data$component)
+  
   data;
 }
 
