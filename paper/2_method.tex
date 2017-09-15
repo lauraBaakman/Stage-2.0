@@ -33,9 +33,9 @@
 		Step \ref{it:1:bandwidthmatrix:findNeighbours} determines the local neighborhood of \varPattern[\itXis] with a \KNNK-nearest neighbors search in a KD-tree \cite{Bentley1975Multidimensional}, with Euclidean distance as the distance metric. 
 		% How do we choose K
 		We follow \citeauthor{silverman1986density}'s \cite{silverman1986density} recommendation of choosing $k = \sqrt{\varNumPatterns}$. To ensure that \varCovarianceMatrix is nonsingular we also need $\KNNK > \varDim$, therefore
-		\begin{equation*}
+		\begin{equation}\label{eq:method:k}
 			\KNNK = \max\left(\left\lfloor \sqrt{\varNumPatterns} \right\rceil,\, \varDim \right) + 1.	
-		\end{equation*}			
+		\end{equation}			
 		% The KD-tree
 		Using a KD-tree for the \KNNK-nearest neighbors search instead of the naive implementation, significantly improves the time complexity of finding \varBandwidthMatrix[\itXis]. The downside of using a space partitioning tree is that \varNeighborhood{\varPattern[\itXis]} is an approximation of the actual neighborhood, as long as \KNNK is rather large the use of an approximation instead of the exact \KNNK-nearest neighbors should not impact the final kernel result too strongly. 
 		% Why do we use KNN instead of fixed-radius
