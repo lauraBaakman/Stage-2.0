@@ -29,6 +29,9 @@ readResultSet <- function(data_set_file, parzen_file, mbe_file, sambe_file){
   data$sambeDensities = sambe_data$computedDensity;
   data$sambeNumUsedPatterns = sambe_data$numUsedPatterns;  
   
+  data$mbeSquaredError = (data$trueDensities - data$mbeDensities)^2
+  data$sambeSquaredError = (data$trueDensities - data$sambeDensities)^2
+  
   data$component = as.factor(data$component)
   
   data;
@@ -534,7 +537,6 @@ baakman1 <- function(){
   
   data;
 }
-
 
 anisotropy1 <- function(){
   printf("--ANISOTROPY 1--")
