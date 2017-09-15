@@ -40,8 +40,8 @@ class Ferdosi3MoreNoise(SimulatedDataSet):
         }
         self._components['uniform random noise'] = {
                 'component': components.UniformRandomNoise(
-                    minimum_value=-100,
-                    maximum_value=200
+                    minimum_value=-20,
+                    maximum_value=120
                 ),
-                'num elements': self._compute_num_elements(40000 * 27),
+                'num elements': self._compute_num_elements(40000 * 2.744),
         }
