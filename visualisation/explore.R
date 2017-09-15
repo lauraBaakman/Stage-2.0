@@ -9,13 +9,6 @@ source("./results.R");
 # Load libraries
 library(scatterplot3d)
 
-# FileNames
-data_set_file = "../data/simulated/normal/baakman_4_60000.txt"
-parzen_file = "../results/normal/baakman_4_60000_parzen.txt"
-mbe_file = "../results/normal/baakman_4_60000_mbe_silverman.txt"
-sambe_file = "../results/normal/baakman_4_60000_sambe_silverman.txt"
-xis_file = "../results/normal/baakman_4_60000_sambe_silverman_xis.txt"
-
 readResultSet <- function(data_set_file, parzen_file, mbe_file, sambe_file){
   # read dataset file
   list[data , trueDensities, ] = readDataSet(data_set_file);
