@@ -540,8 +540,89 @@ baakman1 <- function(){
   data;
 }
 
+
+anisotropy1 <- function(){
+  printf("--ANISOTROPY 1--")
+  data <- readResultSet(
+    data_set_file="../data/simulated/normal/anisotropy_1_60000.txt", 
+    parzen_file="../results/normal/anisotropy_1_60000_parzen.txt",
+    mbe_file="../results/normal/anisotropy_1_60000_mbe_silverman.txt", 
+    sambe_file="../results/normal/anisotropy_1_60000_sambe_silverman.txt"
+  )
+  data <- addXisResults(
+    xsdata = data,
+    sambe_file="../results/normal/anisotropy_1_60000_sambe_silverman_xis.txt"    
+  )     
+  
+  data$mbeSambeDiff = data$mbeDensities - data$sambeDensities;
+  data$anisotropy = anisotropy(data);
+  
+  plotAnisotropy(data, "../paper/discussion/img/anisotropy_1_60000_anisotropy.pdf")
+  generateMBEvsSAMBEPlot(data, "../paper/discussion/img/anisotropy_1_60000_mbe_sambe.png")
+  plotSubsetOverlay(
+    allData=data, 
+    overlay=data[(abs(data$trueDensities - data$mbeDensities) < abs(data$trueDensities - data$sambeDensities)), ],
+    outputFile = "../paper/discussion/img/anisotropy_1_abs_error_mbeSmallerThansambe.pdf"
+  )  
+  data;
+}
+
+anisotropy2 <- function(){
+  printf("--ANISOTROPY 2--")
+  data <- readResultSet(
+    data_set_file="../data/simulated/normal/anisotropy_2_60000.txt", 
+    parzen_file="../results/normal/anisotropy_2_60000_parzen.txt",
+    mbe_file="../results/normal/anisotropy_2_60000_mbe_silverman.txt", 
+    sambe_file="../results/normal/anisotropy_2_60000_sambe_silverman.txt"
+  )
+  data <- addXisResults(
+    xsdata = data,
+    sambe_file="../results/normal/anisotropy_2_60000_sambe_silverman_xis.txt"    
+  )     
+  
+  data$mbeSambeDiff = data$mbeDensities - data$sambeDensities;
+  data$anisotropy = anisotropy(data);
+  
+  plotAnisotropy(data, "../paper/discussion/img/anisotropy_2_60000_anisotropy.pdf")
+  generateMBEvsSAMBEPlot(data, "../paper/discussion/img/anisotropy_2_60000_mbe_sambe.png")
+  plotSubsetOverlay(
+    allData=data, 
+    overlay=data[(abs(data$trueDensities - data$mbeDensities) < abs(data$trueDensities - data$sambeDensities)), ],
+    outputFile = "../paper/discussion/img/anisotropy_2_abs_error_mbeSmallerThansambe.pdf"
+  )  
+  data;
+}
+
+ferdosi3Noise <- function(){
+  printf("--FERDOSI 3 NOISE--")
+  data <- readResultSet(
+    data_set_file="../data/simulated/normal/ferdosi_3_more_noise_189760.txt", 
+    parzen_file="../results/normal/ferdosi_3_more_noise_189760_parzen.txt",
+    mbe_file="../results/normal/ferdosi_3_more_noise_189760_mbe_silverman.txt",
+    sambe_file="../results/normal/ferdosi_3_more_noise_189760_sambe_silverman.txt"
+  )
+  data <- addXisResults(
+    xsdata = data,
+    sambe_file="../results/normal/ferdosi_3_more_noise_189760_sambe_silverman_xis.txt"    
+  )     
+  
+  data$mbeSambeDiff = data$mbeDensities - data$sambeDensities;
+  data$anisotropy = anisotropy(data);
+  
+  plotAnisotropy(data, "../paper/discussion/img/ferdosi_3_more_noise_anisotropy.pdf")
+  generateMBEvsSAMBEPlot(data, "../paper/discussion/img/ferdosi_3_more_noise_mbe_sambe.png")
+  plotSubsetOverlay(
+    allData=data, 
+    overlay=data[(abs(data$trueDensities - data$mbeDensities) < abs(data$trueDensities - data$sambeDensities)), ],
+    outputFile = "../paper/discussion/img/ferdosi_3_more_noise_abs_error_mbeSmallerThansambe.pdf"
+  )  
+  data;
+}
+
 # Exectue all
-# f1 <- ferdosi1(); b1 <- baakman1(); b4 <- baakman4(); b5 <- baakman5(); f2 <- ferdosi2(); f3 <- ferdosi3(); b2 <- baakman2(); b3 <- baakman3();
+# f1 <- ferdosi1(); b1 <- baakman1(); b4 <- baakman4(); b5 <- baakman5();
+# f2 <- ferdosi2(); f3 <- ferdosi3(); b2 <- baakman2(); b3 <- baakman3(); 
+# a1 <-anisotropy1(); a2 <-anisotropy2(); f3Noise <- ferdosi3Noise();
 
 # Execute on Source
 # data <- readResultSet(data_set_file, parzen_file, mbe_file, sambe_file)
