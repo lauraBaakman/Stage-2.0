@@ -66,12 +66,13 @@ def convert_pdf_file(file):
 
     png_path = build_png_path(file)
 
-    if not(args.replace_all_existing) and png_path.exists():
-        if args.replace_newer and file.ctime() < png_path.ctime():
-            logging.info('An up-to-date png file alread exists for ...{pdf_file}'.format(
-                pdf_file=ioUtils.partial_path(file))
-            )
-            return
+    if not(args.replace_all_existing) and args.replace_newer and file.ctime() < png_path.ctime():
+        logging.info('An up-to-date png file alread exists for ...{pdf_file}'.format(
+            pdf_file=ioUtils.partial_path(file))
+        )
+        return
+
+    if not(args.replace_all_existing) and not(args.replace_newer) and png_path.exists():
         logging.info('A png file alread exists for ...{pdf_file}'.format(
             pdf_file=ioUtils.partial_path(file))
         )
