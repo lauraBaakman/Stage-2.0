@@ -142,8 +142,33 @@ One of the most striking observations from \cref{s:results} is that the differen
 		\label{fig:discussion:performance:multisphere:mbeLowerError}
 	\end{figure}	
 	The points where using symmetric kernels results in a smaller error in datasets \ferdosiTwo through \baakmanThree are emphasized in
-	\cref{fig:discussion:performance:multisphere:mbeLowerError}. We contribute the boundary effect in these datasets to the same cause as the boundary effects in the datasets with a single Gaussian component. Interestingly the points dataset \ferdosiThree and \baakmanThree where the absolute error of \mbe is lower approximate a sphere, contrary to the cube they define for dataset \ferdosiTwo and \baakmanTwo. It is our expectation that this is caused by smaller distance between the means of the Gaussian components and the boundary of the dataset. To test this we define dataset \ferdosiThree', in this dataset the uniform random background of \ferdosiThree is replaced with $\uniformDist{[-20, -20, -20]}{[120, 120, 120]}$. To ensure that the density of that components is equal to that of the noise of \ferdosiThree we adjust the number of points of the component. 
-	\todo[inline]{Build the sambe vs mbe plot for this dataset and discuss}		
+	\cref{fig:discussion:performance:multisphere:mbeLowerError}. We contribute the boundary effect in these datasets to the same cause as the boundary effects in the datasets with a single Gaussian component. Interestingly the points dataset \ferdosiThree and \baakmanThree where the absolute error of \mbe is lower approximate a sphere, contrary to the cube they define for dataset \ferdosiTwo and \baakmanTwo. It is our expectation that this is caused by smaller distance between the means of the Gaussian components and the boundary of the dataset. 
+		% Define Ferdosi 3 Noise
+		To test this we define dataset \ferdosiThreeNoise, this dataset replaces the uniform random background of \ferdosiThree with $\uniformDist{[-20, -20, -20]}{[120, 120, 120]}$. To ensure that the density of that components is equal to that of the noise of \ferdosiThree we adjust the number of points of the component. 
+		% Is there any effect on the MSE
+		\todo[inline]{Is there any effect on the MSE of the dataset? Or its components?}		
+		% Did the distance to the boundaries explain it?
+		\todo[inline]{Build the sambe vs mbe error plot for this dataset and discuss}		
+		% The Plots of Ferdosi 3 Noise
+		\begin{figure}
+			\centering
+			\begin{subfigure}{0.23\textwidth}
+				\centering
+				\includegraphics[keepaspectratio=true, width=\textwidth, height=0.23\textheight]{img/missingfigure.png}
+				\caption{Absolute Error}
+				\label{fig:discussion:ferdosi3Noise:mbeLowerError}
+			\end{subfigure}		
+			\begin{subfigure}{0.23\textwidth}
+				\centering
+				\includegraphics[keepaspectratio=true, width=\textwidth, height=0.23\textheight]{img/missingfigure.png}
+				\caption{Anisotropy}
+				\label{fig:discussion:ferdosi3Noise:anisotropy}
+			\end{subfigure}			
+			\caption{Low opacity scatter plot of dataset \ferdosiThreeNoise with %
+				\subref{fig:discussion:ferdosi3Noise:mbeLowerError} points where the absolute error of \mbe is lower than that of \sambe and %
+				\subref{fig:discussion:ferdosi3Noise:anisotropy} points whose kernel anisotropy falls in the \nth{90} percentile emphasized.}
+			\label{fig:discussion:ferdosi3Noise}
+		\end{figure}		
 
 % Some conclusion
 To conclude, by investigating the differences in performance between the two estimators on various datasets we have found that shape-adaptive kernels definitely improve performance in some cases, \eg near the boundary of the datasets and near the mean of some Gaussian components. Unfortunately in other cases the anisotropic kernels are detrimental, the difference in \mse between the two estimators show that on these datasets using symmetric kernels is slightly advantageous. 
