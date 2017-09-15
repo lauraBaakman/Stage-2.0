@@ -116,11 +116,36 @@
 		\Cref{fig:discussion:anisotropy:singleSphere,fig:discussion:anisotropy:multisphere} show that the overwhelming majority of the points with a relative highly anisotropic kernel are sampled from the `Uniform random background'. We contribute this to the covariance detecting fine, random structures in the noise, that give the impression of anisotropy where there is none.
 
 % Denser component -> higher anisotropy of kernels
-% AND Higher anistropy in component -> higer anisotropy in associated kernels
-% AND Denser comonent -> lower MSE
-	% Introduce the dataset A1 and A2, same anisotropy different density, what do we observe, what does it say about this correlation.
-% Refer back to the difference between G1/G3 versus G2/G4 in F3.
-
-% Lack of difference in anisotropy between F3 and B3 in orange (‘Trivariate Gaussian 3’) component. 
+	In \cref{s:results} we observed that both the density and the anisotropy of the Gaussian component influenced the anisotropy of the kernels. To test if the difference was caused by the anisotropy or the density of the dataset we introduce two datasets, \anisotropyOne and \anisotropyTwo, with the same anisotropy but the same density. To create dataset \anisotropyOne the covarianceMatrix used in \ferdosiOne was replaced by $\diag([4, 3, 1]$, dataset \anisotropyTwo is the same as set \anisotropyOne but uses $3 \cdot \diag([4, 3, 1]$.
+	% Influence of density on MSE
+	%
+	\begin{table}
+		\centering
+		\input{discussion/mse_tab}
+		\caption{Performance of the Modified Breiman Estimator with fixed-shaped and shape-adaptive kernels on the datasets \anisotropyOne and \anisotropyTwo.} 	
+		\label{tab:discussion:anisotropy:mse}
+	\end{table}
+	%
+	The \mses of the two estimators on dataset \anisotropyOne and \anisotropyTwo are shown in \cref{tab:discussion:anisotropy:mse}, clearly both estimators perform better on the dataset with higher values on the diagonal of the covariance matrix of the Gaussian component.
+	% Influence of density on Anisotropy
+	\Cref{fig:discussion:anisotropy:anisotropy} illustrates the influence of the density of the Gaussian component  on the anisotropy of the kernels near the Gaussian component. \percentage{6.233289} of the points with a highly anisotropic kernel in dataset \anisotropyOne is sampled from the Gaussian component, in dataset \anisotropyTwo this is \percentage{4.161096}. Although the difference is small, this does illustrate that the density of a component, irrespective of its anisotropy, influences the anisotropy of the kernels. 
+	% THE PLOT
+	\begin{figure}
+		\centering
+		\begin{subfigure}{0.23\textwidth}
+			\centering
+			\includegraphics[keepaspectratio=true, width=\textwidth, height=0.23\textheight]{discussion/img/anisotropy_1_60000_anisotropy.png}
+			\caption{\anisotropyOne}
+			\label{fig:discussion:anisotropy:anisotropy1}
+		\end{subfigure}
+		\begin{subfigure}{0.23\textwidth}
+			\centering
+			\includegraphics[keepaspectratio=true, width=\textwidth, height=0.23\textheight]{discussion/img/anisotropy_2_60000_anisotropy.png}
+			\caption{\anisotropyTwo}
+			\label{fig:discussion:anisotropy:anisotropy2}
+		\end{subfigure}	
+		\caption{Scatter plot of the data sets \subref{fig:discussion:anisotropy:anisotropy1} \anisotropyOne and \subref{fig:discussion:anisotropy:anisotropy2} \anisotropyTwo with emphasized the points whose kernels with anisotropy in the \nth{90} percentile.}
+		\label{fig:discussion:anisotropy:anisotropy}
+	\end{figure}
 
 % Some conclusion
