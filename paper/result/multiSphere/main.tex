@@ -1,9 +1,8 @@
 %!TEX root = ../../paper.tex
-\todo[inline]{HIER VERDER MET REVIEWEN!}
 \begin{table}
 	\centering
 	\input{result/multiSphere/mse_tab}
-	\caption{Performance of the symmetric and the shape-adaptive Modified Breiman Estimator on the datasets containing multiple Gaussian distributions.} 	
+	\caption{Performance of the symmetric and the shape-adaptive Modified Breiman Estimator on dataset \ferdosiTwo through \baakmanThree.} 	
 	\label{tab:results:multiSphere:mse}
 \end{table}
 
@@ -11,7 +10,7 @@
 In this section we present the results of the two estimators on dataset \ferdosiTwo, \baakmanTwo, \ferdosiThree, and \baakmanThree.
 % MSE
 	% GENERAL
-	Based on the small differences between the \mses of the estimators in \cref{tab:results:multiSphere:mse} the estimators perform comparably on these datasets. 
+	Based on the small differences between the \mses of the estimators in \cref{tab:results:multiSphere:mse} they perform comparably. 
 	% FERDOSI 2 
 		% COMPONENT 1 MBE MSE 1.385919090205819e-07 (            ) SAMBE MSE 1.384478742850174e-07 (            )
 		% COMPONENT 2 MBE MSE 1.313643043640668e-08 (1.629142e-08) SAMBE MSE 1.302177563181053e-08 (1.742749e-08)
@@ -33,11 +32,11 @@ In this section we present the results of the two estimators on dataset \ferdosi
 		% COMPONENT 4 MBE MSE 1.312379885278773e-07 SAMBE MSE 1.339883658098755e-07
 		% NOISE 	  MBE MSE 3.916881734521594e-10 SAMBE MSE 4.028048478164317e-10
 	% FOCUS ON COMPONENTS
-	Comparing the \MSE between components within the data sets between estimators yields no differences. However within data sets the difference in \mses are quite large.
+	Comparing the \MSE between components and estimators within data sets yields no differences. However within data sets the differences in \mses between components are quite large.
 	% FERDOSI 2 & BAAKMAN 2
-	Within dataset \ferdosiTwo and \baakmanTwo both estimators perform significantly better on the more sparse component `Trivariate Gaussian 2'.
+	Within dataset \ferdosiTwo and \baakmanTwo both estimators perform significantly better on the component with higher values on the diagonal of its covariance matrix, \ie `Trivariate Gaussian 2'.
 	% FERDOSI 3 & BAAKMAN 3
-	Both estimators show the same positive correlation between the density of the Gaussian components and the \MSE between the components of dataset \ferdosiThree and \baakmanThree. Additionally contrary to our expectation both estimators performed slightly better on dataset \baakmanThree than on the set it was derived from. 
+	In data set \ferdosiThree and \baakmanThree both estimators show a negative correlation between the eigenvalues of the covariance matrix of that component and the \MSE of points sampled from that component. Additionally, contrary to our expectation the symmetric estimator performed better on dataset \baakmanThree, than on the symmetric set it was derived from.
 
 % PLOTS
 	% GENERAL: TWO SPHERES
@@ -48,29 +47,29 @@ In this section we present the results of the two estimators on dataset \ferdosi
 		\label{fig:results:multiSphere:two:comparativePlots}
 	\end{figure}
 	%
-	\Cref{fig:results:multiSphere:two:comparativePlots} shows the estimated density as a function of the known density for both estimators and both datasets with two Gaussians. These plots show that both estimators underestimate the density, \mbe more than \sambe. Furthermore the shape-adaptive estimator shows more variation in the densities it estimates than the symmetric estimator. 
+	\Cref{fig:results:multiSphere:two:comparativePlots} shows the estimated density as a function of the known density for both estimators for the datasets with two Gaussian components. These plots show that irrespective of the type of kernel used the density is underestimated, \mbe more so than \sambe. Furthermore using shape-adaptive kernels results in a larger variation in estimated densities than the use of symmetric kernels. 
 	% FERDOSI 2
 	% BAAKMAN 2	
 	% FOCUS ON COMPONENTS
 		% SAMBE seems better on red comonent
-		Comparing \cref{fig:results:multisphere:mbe:ferdosi2,fig:results:multisphere:mbe:baakman2} with \cref{fig:results:multisphere:sambe:ferdosi2,fig:results:multisphere:sambe:ferdosi2} suggest that \sambe hardly underestimates the densities of the most anisotropic component, \ie `Trivariate Gaussian 2' in bot dataset \ferdosiTwo and \baakmanTwo. However the difference in \mse of this component between \mbe and \sambe is pretty small, a large difference in standard deviation of the squared error suggests that the seemingly better performance of the shape-adaptive estimator in \cref{fig:results:multisphere:sambe:ferdosi2,fig:results:multisphere:sambe:ferdosi2} is mostly due to the higher spread of densities estimated by the shape-adaptive estimator. 
+		Comparing the results of \sambe with those of \mbe in \cref{fig:results:multiSphere:three:comparativePlots} suggest that \sambe hardly underestimates the densities of the most anisotropic component, \ie `Trivariate Gaussian 2' in dataset \ferdosiTwo and \baakmanTwo. However the difference in \mse of this component between \mbe and \sambe is pretty small. The large difference in standard deviation of the squared error between estimators on this component suggests that the seemingly better performance of the shape-adaptive estimator is due to its higher spread of estimated densities.
 		% Better performance on 
-		Furthermore the difference in \mse between components within estimators and dataset \ferdosiTwo and \baakmanTwo shows that both estimators perform worse on the denser Gaussian component, \ie `Trivariate Gaussian 1'.
+		Furthermore the \mses of the individual components of dataset \ferdosiTwo and \baakmanThree show that both estimators perform worse on components with covariance matrices that have low eigenvalues, \eg `Trivariate Gaussian 1'.
 	%		
 	% GENERAL: FOUR SPHERES
 	\begin{figure}
 		\centering
 		\input{result/multiSphere/fourSpheres_subfig}
-		\caption{The estimated density plotted as a function of the true density for datasets \ferdosiThree and \baakmanThree for \mbe and \sambe.}
+		\caption{The estimated density as a function of the true density for dataset \ferdosiThree and \baakmanThree, for both \mbe and \sambe.}
 		\label{fig:results:multiSphere:three:comparativePlots}
 	\end{figure}
 	%
-	The plots in \cref{fig:results:multiSphere:three:comparativePlots} confirm the large difference in performance of both estimators between datasets with two and four Gaussian components. Moreover they show that both \mbe and \sambe underestimate densities, especially on the points with a high density. \Cref{fig:results:multiSphere:three:comparativePlots} also shows that the spread of the densities estimated by \sambe is higher than of those estimated by \mbe. 
+	The plots in \cref{fig:results:multiSphere:three:comparativePlots} confirm the large difference in performance between datasets with two and four Gaussian components observed in \cref{tab:results:multiSphere:mse}. Moreover they show that both \mbe and \sambe underestimate densities, especially on the points whose known density is high. In \cref{fig:results:multiSphere:three:comparativePlots} we also observe the larger spread of densities estimated by \sambe, compared to those estimated by \mbe.
 	% FERDOSI 3	
 	% BAAKMAN 3
 	% FOCUS ON COMPONENTS
 
-
+\todo[inline]{hier verder gaan met reviews}
 % ANISOTROPY
 	\begin{table*}
 		\centering
