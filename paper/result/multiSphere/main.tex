@@ -69,38 +69,37 @@ In this section we present the results of the two estimators on dataset \ferdosi
 	% BAAKMAN 3
 	% FOCUS ON COMPONENTS
 
-\todo[inline]{hier verder gaan met reviews}
 % ANISOTROPY
 	\begin{table*}
 		\centering
 		\input{result/multiSphere/anisotropy_tab}
-		\caption{The mean (\mean) and standard deviation (\SD) of the anisotropy of the kernels used for points from the datasets with multiple Gaussians, split per component and for the full dataset.} 	
+		\caption{The mean (\mean) and standard deviation (\SD) of the anisotropy of the kernels used for points from the datasets with multiple Gaussian components, for each component separately and for the full dataset.} 	
 		\label{tab:results:multiSphere:anisotropy}
 	\end{table*}
 	% What are we looking at
-	\Cref{tab:results:multiSphere:anisotropy} presents the mean and standard deviation of the anisotropy of the kernels used for the points from dataset \ferdosiTwo through \baakmanThree and from their components. 
+	\Cref{tab:results:multiSphere:anisotropy} presents the mean and standard deviation of the anisotropy of the kernels used for the points from dataset \ferdosiTwo through \baakmanThree.
 	% Small differences in anisotropy between F2/F3 and B2/B3
-	Although the anisotropy of the kernels used for the datasets with anisotropic Gaussian components is higher on average and more varied than the anisotropy of the kernels used for dataset \ferdosiTwo and \ferdosiThree, the differences are small. 
+	The mean and standard deviation of the anisotropy of the kernels used for datasets with anisotropic components is slightly higher than for dataset \ferdosiTwo and \ferdosiThree.
 	% Noise has largest anisotropy
 	As in \cref{tab:results:singleSphere:anisotropy} the kernels associated with the points sampled from the component `Uniform random background` have the highest anisotropy, and vary the most in how anisotropic they are. 
 	% Positve correlation between mean anisotropy of the kernels and anisotropy of the gaussian components.
-	Contrasting the mean anisotropy of the kernels used for points drawn from the different components we find a positive correlation between the mean anisotropy of the kernel and the anisotropy of the Gaussian components. 
+	Contrasting the mean anisotropy of the kernels used for points drawn from the different components, we find a positive correlation between the mean anisotropy of the kernel and the anisotropy of the Gaussian components. 
 	% Positive correlation between anisotropy SD and kernel anisotropy
 		% exists for B2
 		In the kernels used for dataset \baakmanTwo we observe the same positive correlation between the variation of the anisotropy of the kernels and the anisotropy of the associated kernel as we observed in dataset \baakmanOne, \baakmanFour, and \baakmanFive. 
 		% does not occur in B3
-		Comparing the standard deviation of the anisotropy of the kernels used for the points sampled from the components of dataset \baakmanThree does not reveal this relation: the densest component, Trivariate Gaussian 3, does not have the highest variation in kernel anisotropy. 
+		Comparing the standard deviation of the anisotropy of the kernels used for the points sampled from the components of dataset \baakmanThree does not reveal this relation: the component with the lowest value on the diagonal of its covariance matrix,  Trivariate Gaussian 3, does not have the highest variation in kernel anisotropy. 
 	% ANISOTROPY OF M3 and M4 seems equal for Gaussian 3, is that really the case? 
 	One thing that stands out when comparing dataset \ferdosiThree and \baakmanThree in \cref{tab:results:multiSphere:anisotropy} is the lack of difference in the mean and standard deviation in the anisotropy of the kernels associated with the component `Trivariate Gaussian 3'. Reviewing the raw data reveals that the largest difference in anisotropy between any point drawn from that component is \num{3.108624e-15}.
 
 % SUMMARY/CONCLUSION
 	% Small differences in MSE between the two datasets
-	To summarize the results of the datasets with multiple Gaussian components: we have found that the differences in performance are very small between the two estimators, although \sambe underestimates less than \mbe, the later performs slightly better.
+	To summarize the results of the datasets with multiple Gaussian components: we have found that the differences in performance between the two estimators are very small. Although \sambe tends to underestimate densities less than \mbe, the later performs slightly better on all datasets.
 	% Both estimators perform better on denser gaussian components
-	Furthermore both estimators show a positive correlation between the density of the Gaussian component and their performance on that component.
+	Furthermore both estimators show a negative correlation between the values on the diagonal of the covariance matrix of the Gaussian component and their performance on that component.
 	% Differences in anisotropy of the kernels between the F1/F2 and B1/B2 are small. 
-	Regarding the anisotropy of the kernels we have found only a small increase between dataset with spherical kernels and dataset \baakmanTwo and \baakmanThree. 
-	% Anisotropy is storngest on noise component
+	Regarding the anisotropy of the kernels we have found only a small increase in anisotropy between datasets with spherical kernels and dataset \baakmanTwo and \baakmanThree. 
+	% Anisotropy is strongest on noise component
 	Zeroing in on the components we have observed that the anisotropy of kernels associated with points drawn from the noise is strongest.
 	% Positve correlation between mean anisotropy of kernels and anisotropy of the gaussian comonent
-	Lastly a positive correlation between the mean anisotropy of the kernels of the points sampled from a component and the anisotropy of the Gaussian those points were drawn from was found. 
+	Lastly a positive correlation between the mean anisotropy of the kernels and the anisotropy of the Gaussian the associated points were drawn from was found. 
