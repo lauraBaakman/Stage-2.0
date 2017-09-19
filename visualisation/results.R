@@ -50,7 +50,7 @@ fancy_scientificLabels <- function(breaks) {
 buildLabel <- function(labelText, exponent){
   library(latex2exp)
   TeX(
-    sprintf("%s $\\left( \\times 10^{%d} \\right)$", labelText, exponent * -1)
+    sprintf("%s $( \\times 10^{%d})$", labelText, exponent * -1)
   )
 }
 
@@ -81,8 +81,8 @@ plotResultOfMultipleDensityDataSet <-function(data, outputFile=NULL, distributio
   plot <- plot + geom_point(aes(x=trueDensity, y=computedDensity), size=0.7, colour=cols, shape=symbols, stroke=0.2);
   plot <- plot + geom_line(aes(x=trueDensity, y=trueDensity));
   plot <- plot + xlab(buildLabel(xlabel, global.exponent)) + ylab(buildLabel(ylabel, global.exponent));
-  plot <- plot + scale_x_continuous(labels = fancy_scientificLabels, limits = c(limits['xMin'], limits['xMax'])) 
-  plot <- plot + scale_y_continuous(labels = fancy_scientificLabels, limits = c(limits['yMin'], limits['yMax']));
+  plot <- plot + scale_x_continuous(labels = fancy_scientificLabels, expand = c(0, 0), limits = c(limits['xMin'], limits['xMax'])) 
+  plot <- plot + scale_y_continuous(labels = fancy_scientificLabels, expand = c(0, 0), limits = c(limits['yMin'], limits['yMax']));
 
   if (addMSE){
     plot <- plot + ggtitle(sprintf("MSE = %.4e", computeMSE(data)));  
@@ -179,7 +179,6 @@ mainResults <- function(){
     for (i in seq(1, length(data))){
       plotResult(data[[i]], outputFiles[[i]], distribution, limits);
     }
-    
   }
   
   write.csv(file=overviewFilePath(resultPath), x=overview);
