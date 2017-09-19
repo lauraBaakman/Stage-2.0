@@ -51,7 +51,7 @@ buildLabel <- function(labelText, exponent){
   bquote(.(labelText)~(x~10^{.(exponent)}))
 }
 
-plotResultOfMultipleDensityDataSet <-function(data, outputFile, distribution, limits, xlabel, ylabel, addMSE){
+plotResultOfMultipleDensityDataSet <-function(data, outputFile=NULL, distribution, limits, xlabel="true density", ylabel='estimated density', addMSE=TRUE){
   cols = generateColours(distribution);
   cols = add.alpha(cols, alpha=1);
   symbols = generateSymbols(distribution);
@@ -83,14 +83,17 @@ plotResultOfMultipleDensityDataSet <-function(data, outputFile, distribution, li
   if (addMSE){
     plot <- plot + ggtitle(sprintf("MSE = %.4e", computeMSE(data)));  
   }
-  # print(plot)
-  ggsave(
-    outputFile,
-    plot,
-    width=(tex.textwidth/2) - 1, height=(tex.textwidth/2) - 1, unit="cm"
-  )
-  # Sys.setenv(R_GSCMD = "/usr/local/bin/gs");
-  # embed_fonts(outputFile);
+  print(plot)
+  if (!is.null(outputFile)){
+    ggsave(
+      outputFile,
+      plot,
+      width=(tex.textwidth/2) - 1, height=(tex.textwidth/2) - 1, unit="cm"
+    )
+    # Sys.setenv(R_GSCMD = "/usr/local/bin/gs");
+    # embed_fonts(outputFile);    
+  }
+
   
   plot;
 }
