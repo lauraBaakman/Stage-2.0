@@ -47,6 +47,18 @@ fancy_scientificLabels <- function(breaks) {
   parse(text=l)
 }
 
+buildLabel <- function(labelText, exponent){
+  # expression(
+  #   paste(
+  #     labelText,
+  #     "(", 
+  #     10^{exponent}, 
+  #     ")"
+  #   )
+  # )
+  bquote(.(labelText)~(x~10^{.(exponent)}))
+}
+
 plotResultOfMultipleDensityDataSet <-function(data, outputFile, distribution, limits, xlabel, ylabel, addMSE){
   cols = generateColours(distribution);
   cols = add.alpha(cols, alpha=1);
@@ -73,7 +85,7 @@ plotResultOfMultipleDensityDataSet <-function(data, outputFile, distribution, li
     );
   plot <- plot + geom_point(aes(x=trueDensity, y=computedDensity), size=0.7, colour=cols, shape=symbols, stroke=0.2);
   plot <- plot + geom_line(aes(x=trueDensity, y=trueDensity));
-  plot <- plot + 	xlab(xlabel) + ylab(ylabel);
+  plot <- plot + xlab(buildLabel(xlabel, global.exponent)) + ylab(buildLabel(ylabel, global.exponent));
   plot <- plot + scale_x_continuous(labels = fancy_scientificLabels, limits = c(limits['xMin'], limits['xMax'])) 
   plot <- plot + scale_y_continuous(labels = fancy_scientificLabels, limits = c(limits['yMin'], limits['yMax']));
   if (addMSE){
