@@ -89,7 +89,7 @@ plotResultOfMultipleDensityDataSet <-function(data, outputFile, distribution, li
   plot <- plot + scale_x_continuous(labels = fancy_scientificLabels, limits = c(limits['xMin'], limits['xMax'])) 
   plot <- plot + scale_y_continuous(labels = fancy_scientificLabels, limits = c(limits['yMin'], limits['yMax']));
   if (addMSE){
-    plot <- plot + ggtitle(sprintf("MSE = %.7e", computeMSE(data)));  
+    plot <- plot + ggtitle(sprintf("MSE = %.4e", computeMSE(data)));  
   }
   # print(plot)
   ggsave(
