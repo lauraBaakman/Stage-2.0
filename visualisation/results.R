@@ -182,5 +182,19 @@ mainResults <- function(){
   print(overview)
 }
 
+test.N = 100
+test.data <- data.frame(
+  points.x = runif(test.N, 0, 100), points.y = runif(test.N, 0, 100), points.z = runif(test.N, 0, 100),
+  trueDensity = runif(test.N, 0, 1.0), computedDensity = runif(test.N, 0, 1.0),
+  points.component = round(runif(test.N, 0, 2))
+)
+test.data <- test.data[order(test.data$points.component), ]
+test.distribution <- table(test.data$points.component)
+test.limits <- c(xMin = min(test.data$trueDensity), xMax = max(test.data$trueDensity), 
+                 yMin = min(test.data$computedDensity), yMax = max(test.data$computedDensity));
+
+
+
 # mainResults()
+plotResultOfMultipleDensityDataSet(data=test.data, distribution = test.distribution, limits = test.limits)
 
