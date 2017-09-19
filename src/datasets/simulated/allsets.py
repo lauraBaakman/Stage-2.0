@@ -8,6 +8,9 @@ from datasets.simulated.baakman2 import Baakman2
 from datasets.simulated.baakman3 import Baakman3
 from datasets.simulated.baakman4 import Baakman4
 from datasets.simulated.baakman5 import Baakman5
+from datasets.simulated.anisotropy1 import Anisotropy1
+from datasets.simulated.anisotropy2 import Anisotropy2
+from datasets.simulated.ferdosi3MoreNoise import Ferdosi3MoreNoise
 
 sets = {
     'ferdosi 1': Ferdosi1,
@@ -20,4 +23,7 @@ sets = {
     'baakman 3': Baakman3,
     'baakman 4': Baakman4,
     'baakman 5': Baakman5,
+    'anisotropy 1': Anisotropy1,
+    'anisotropy 2': Anisotropy2,
+    'ferdosi 3 more noise': Ferdosi3MoreNoise,
 }

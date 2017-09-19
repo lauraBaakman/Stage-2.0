@@ -1,7 +1,13 @@
 %!TEX root = paper.tex
 
-In conclusion we have found that the shape-adaptive Modified Breiman Estimator gives results comparable to those of the symmetric Modified Breiman Estimator. 
-% Boundary Effect
-The former is better in estimating the density of points near the boundary of the dataset, especially if the dataset has multiple Gaussian components. Further research is required to determine if this boundary effect also occurs if the data points near th boundaries are not sampled from a uniform random distribution. 
-% Does not work for too dense Gaussian components
-Furthermore shape-adaptive kernels are outperformed by symmetric kernels in areas where the physical density of points is high. To counteract this one could consider making the value of \KNNK adaptive. A quick survey showed that increasing \KNNK with a factor ten significantly improved the performance of \sambe on some datasets, however it also caused a drop in performance for the remaining dataset. To counteract this one could consider a \KNNK that is adaptive based on the physical density of its neighborhood. 
+We have found that the shape-adaptive Modified Breiman Estimator gives results comparable to those of the symmetric Modified Breiman Estimator. Especially near the boundary of the datasets anisotropic kernels prove advantageous. Reviewing the raw data shows that using anisotropic kernels is definitely advantageous. However the number of points where the kernel is too isotropic, or too anisotropic for its local neighborhood negate this advantage. 
+% High anisotropy of kernels in noise
+One of the main problems is that fine structures in the background result in kernels with a relatively high anisotropy, where the data are not anisotropic.
+% High anistropy with high density
+Whereas Gaussian components are surrounded by points with highly anisotropic kernels, the shape of components with an eigensphere with a large volume is hardly detected. Resulting in too isotropic kernels. 
+
+% Further research
+These issues might be addressed by (adaptively) increasing the size of the local neighborhood. Another possible improvement could be to decide how anisotropic the kernel should be based on the local neighborhood of the associated data point.
+
+% Conclusion
+In conclusion shape-adaptive kernels are a promising idea that definitely warrants the research needed to work out the kinks identified in this paper.

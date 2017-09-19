@@ -1,12 +1,20 @@
 %!TEX root = ../paper.tex
-We contrast the performance of the shape-adaptive and the symmetric Modified Breiman Estimator on simulated datasets with known density fields. This allows us to test how well the proposed method recovers simple density distributions in comparison to an existing method. The \mse (\MSE) is used to quantify the performance of the estimators. We distinguish two types of datasets: datasets consisting of a single Gaussian distribution and noise, defined in \cref{s:experiment:singlesphere} and datasets containing multiple Gaussian distributions embed in noise, these sets are presented in \cref{s:experiment:multisphere}.
+We contrast the performance of the Modified Breiman Estimator with isotropic and anisotropic kernels on simulated datasets with known density fields. This allows us to test how well the shape-adaptive method recovers simple density distributions in comparison to the fixed-shape method. 
+% Which metrices do we use
+The \mse (\MSE) is used to quantify the performance of the estimators. We use
+\begin{equation*}\label{eq:experiment:anisotropicmetric}
+	\frac{\max\left(\varEigenValue_1, \cdots, \varEigenValue_\varDim \right)}{\min\left(\varEigenValue_1, \cdots, \varEigenValue_\varDim \right)}
+\end{equation*}
+where $\varEigenValue_1, \cdots, \varEigenValue_\varDim$ are the eigenvalues of the bandwidth matrix, to express how anisotropic a kernel is.
+%Quickly introduce the datasets
+We use two different types of datasets: datasets consisting of a single Gaussian distribution and noise, defined in \cref{s:experiment:singlesphere} and datasets containing multiple Gaussian distributions embedded in noise, these sets are presented in \cref{s:experiment:multisphere}.
 
 \subsection{Datasets with a Single Gaussian}
 \label{s:experiment:singlesphere}
-\input{experiment/singleSphere}
+\input{experiment/singlesphere/main}
 
 \subsection{Datasets with Multiple Gaussians}
 \label{s:experiment:multisphere}
-\input{experiment/multisSphere}
+\input{experiment/multisphere/main}
 
 \textcite{ferdosi2011comparison} found that the Modified Breiman Estimator resulted in lower integrated squared errors if fewer Gaussian distributions were present in the datasets. Since the presented datasets are comparable to those used by \citeauthor{ferdosi2011comparison} we expect to find the same influence of the number of distributions on the error.

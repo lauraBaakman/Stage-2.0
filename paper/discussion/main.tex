@@ -1,15 +1,20 @@
 %!TEX root = ../paper.tex
-This section is concerned with the difference in performance between the two estimators within datasets. \Cref{s:discussion:singleGaussian} focuses on datasets containing a single Gaussian, whereas \cref{s:discussion:multipleGaussians} discusses the four other datasets.
+This section discusses the results presented in \cref{s:results}. We consider the lack of difference in performance between the estimators in \cref{s:discussion:performance}. The next section discusses the anisotropy of the kernels used by the shape-adaptive estimators. Finally we offer some directions research into solving the identified issues might take.
 
-\subsection{Datasets with a Single Gaussian}
-	\label{s:discussion:singleGaussian}
-	\input{discussion/singleSphere}
+\subsection{Performance}
+\label{s:discussion:performance}
+\input{discussion/performance}
 
+\subsection{Kernel Anisotropy}
+\label{s:discussion:anisotropy}
+\input{discussion/anisotropy}
 
-\subsection{Datasets with Multiple Gaussians}
-	\label{s:discussion:multipleGaussians}
-	\input{discussion/multiSphere}
+We have found that near Gaussian components with a high volume eigensphere the kernels are too isotropic, whereas in the uniform random background fine structures are detected that result in too anisotropic kernels. Both of these problems might be solved by increasing the value of \KNNK. 
+% Effect on noise:
+We expect that increasing the size of the local neighborhood will decrease the number of detected fine structures. Which results in more isotropic kernels for points that lie in the uniform background.
+% Effect on low density gaussians: 
+Furthermore increasing the size of the local neighborhood might also allow the kernels to adapt their shape to nearby Gaussian components whose eigensphere has a high volume. Multiplying the \KNNK computed in \cref{eq:method:k} by ten, resulted in \sambe outperforming \mbe on dataset \baakmanFive. Furthermore the increased \KNNK also improved the performance on dataset \ferdosiThree, \baakmanThree and the datasets with a single Gaussian components. Whereas the performance of \sambe on dataset \ferdosiTwo and \baakmanTwo decreased. This suggest that blindly increasing the size of the local neighborhood will not consistently improve the performance of the estimator, but that same adaptive increase of \KNNK is required.
 
-%General Discussion
-% Kernels are strongly shaped near the boundaries of the datasets
-In all datasets we have found a large difference in the shape of the kernels near the boundaries of the dataset. Kernels of a point near an edge of the dataset cube have their shortest minor axis perpendicular to the direction of the edge, to account for the lack of data points in that direction. This boundary effect improves the density estimate in our case, as it allowed a sufficient number of patterns to contribute to the density estimate of points near the boundaries of the dataset. In contrast to the symmetric estimator, which underestimated densities near the boundary due to a lack of contributing points. 
+Another solution to the too anisotropic kernels in the noise might be to only use shape-adaptive kernels if the neighborhood is sufficiently anisotropic. One might even consider using a kernel-shape that is somewhere between the isotropic and the fully anisotropic kernel depending on the anisotropy of the local neighborhood. A difficulty with this approach is detecting the isotropy of the local neighborhood. As the obvious solution, the covariance matrix, has proven sensitive to fine structures within the noise. 
+
+Finally the correlation between the performance of the estimators and the volume of the eigensphere of the Gaussian component suggests that the method used to compute the local bandwidths is far from ideal. 

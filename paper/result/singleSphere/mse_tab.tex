@@ -1,9 +1,14 @@
 %!TEX root = ../../paper.tex
-
-\begin{tabular}{l*{2}{S[scientific-notation=true, round-mode=places,round-precision=3]}}
+\small
+\sisetup{
+	table-format=1.3e+1,
+	scientific-notation=true, 
+	table-number-alignment=center
+}
+\begin{tabular}{l*{2}{S}}
 \toprule
 ~ 				& \multicolumn{2}{c}{Estimator}\\ \cmidrule{2-3}
-Set				& {\mbe}					& {\sambe}	\\
+				& {\mbe}					& {\sambe}	\\
 \midrule
 \ferdosiOne		& 8.30580618349064E-09		&  8.9087329457441E-09 \\
 \baakmanOne		& 1.49022877061299E-08		&  1.5398737157543E-08 \\	

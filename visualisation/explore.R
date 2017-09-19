@@ -9,12 +9,6 @@ source("./results.R");
 # Load libraries
 library(scatterplot3d)
 
-# FileNames
-data_set_file = "../data/simulated/normal/baakman_4_60000.txt"
-parzen_file = "../results/normal/baakman_4_60000_parzen.txt"
-mbe_file = "../results/normal/baakman_4_60000_mbe_silverman.txt"
-sambe_file = "../results/normal/baakman_4_60000_sambe_silverman.txt"
-
 readResultSet <- function(data_set_file, parzen_file, mbe_file, sambe_file){
   # read dataset file
   list[data , trueDensities, ] = readDataSet(data_set_file);
@@ -34,6 +28,11 @@ readResultSet <- function(data_set_file, parzen_file, mbe_file, sambe_file){
   sambe_data = readResults(sambe_file);
   data$sambeDensities = sambe_data$computedDensity;
   data$sambeNumUsedPatterns = sambe_data$numUsedPatterns;  
+  
+  data$mbeSquaredError = (data$trueDensities - data$mbeDensities)^2
+  data$sambeSquaredError = (data$trueDensities - data$sambeDensities)^2
+  
+  data$component = as.factor(data$component)
   
   data;
 }
@@ -129,16 +128,14 @@ componentMSE<-function(data, componentNumber=NULL){
   );    
 }
 
-distanceToEigenValueMean<-function(data){
-  meanEigenValue = (data$eigen_value_1 + data$eigen_value_2 + data$eigen_value_3) / 3;
-  meanDifferences = (
-    (data$eigen_value_1 - meanEigenValue) + 
-      (data$eigen_value_2 - meanEigenValue) + 
-      (data$eigen_value_3 - meanEigenValue)
-    ) / 3;
+anisotropy<-function(data){
+  minEigenValues = apply(data[, c("eigen_value_1", "eigen_value_2", "eigen_value_3")], 1, min)
+  maxEigenValues = apply(data[, c("eigen_value_1", "eigen_value_2", "eigen_value_3")], 1, max)
+  anisotropy = maxEigenValues / minEigenValues;
 }
 
 ferdosi1<-function(){
+  printf("--FERDOSI 1--")
   xsdata <- readResultSet(
     data_set_file="../data/simulated/normal/ferdosi_1_60000.txt", 
     parzen_file="../results/normal/ferdosi_1_60000_parzen.txt",
@@ -150,10 +147,10 @@ ferdosi1<-function(){
     sambe_file="../results/normal/ferdosi_1_60000_sambe_silverman_xis.txt"    
   )
   data$mbeSambeDiff = data$mbeDensities - data$sambeDensities;
-  data$meanEigDiff = distanceToEigenValueMean(data);
+  data$anisotropy = anisotropy(data);
 
   generateMBEvsSAMBEPlot(data, "../paper/discussion/img/ferdosi_1_60000_mbe_sambe.png")
-  plotShapeAdaptedData(data, "../paper/discussion/img/ferdosi_1_60000_pointsWithShapeAdaptedKernels.pdf", minDifference = 1.5)
+  plotAnisotropy(data, "../paper/discussion/img/ferdosi_1_60000_anisotropy.pdf")
   # MBE better than SAMBE
   plotSubsetOverlay(
     allData=data, 
@@ -177,6 +174,7 @@ ferdosi1<-function(){
 }
 
 ferdosi2<-function(){
+  printf("--FERDOSI 2--")
   data <- readResultSet(
     data_set_file="../data/simulated/normal/ferdosi_2_60000.txt", 
     parzen_file="../results/normal/ferdosi_2_60000_parzen.txt",
@@ -187,7 +185,9 @@ ferdosi2<-function(){
     xsdata = data,
     sambe_file="../results/normal/ferdosi_2_60000_sambe_silverman_xis.txt"    
   )
+  data$anisotropy = anisotropy(data);
   generateMBEvsSAMBEPlot(data, "../paper/discussion/img/ferdosi_2_60000_mbe_sambe.png")
+  plotAnisotropy(data, "../paper/discussion/img/ferdosi_2_60000_anisotropy.pdf")
   
   # MBE better than SAMBE
   plotSubsetOverlay(
@@ -215,6 +215,7 @@ ferdosi2<-function(){
 }
 
 ferdosi3<-function(){
+  printf("--FERDOSI 3--")
   data <- readResultSet(
     data_set_file="../data/simulated/normal/ferdosi_3_120000.txt", 
     parzen_file="../results/normal/ferdosi_3_120000_parzen.txt",
@@ -225,6 +226,7 @@ ferdosi3<-function(){
     xsdata = data,
     sambe_file="../results/normal/ferdosi_3_120000_sambe_silverman_xis.txt"    
   )
+  data$anisotropy = anisotropy(data);
   
   generateMBEvsSAMBEPlot(data, "../paper/discussion/img/ferdosi_3_120000_mbe_sambe.png")
   plotSubsetOverlay(
@@ -232,6 +234,7 @@ ferdosi3<-function(){
     overlay=data[(abs(data$trueDensities - data$mbeDensities) < abs(data$trueDensities - data$sambeDensities)), ],
     outputFile = "../paper/discussion/img/ferdosi_3_abs_error_mbeSmallerThansambe.pdf"
   )  
+  plotAnisotropy(data, "../paper/discussion/img/ferdosi_3_120000_anisotropy.pdf")
   
   componentMSE(data, 0);  
   componentMSE(data, 1);
@@ -264,6 +267,7 @@ ferdosi3<-function(){
 }
 
 baakman2<-function(){
+  printf("--BAAKMAN 2--")
   data <- readResultSet(
     data_set_file="../data/simulated/normal/baakman_2_60000.txt", 
     parzen_file="../results/normal/baakman_2_60000_parzen.txt",
@@ -274,8 +278,10 @@ baakman2<-function(){
     xsdata = data,
     sambe_file="../results/normal/baakman_2_60000_sambe_silverman_xis.txt"    
   )
+  data$anisotropy = anisotropy(data);
   
   generateMBEvsSAMBEPlot(data, "../paper/discussion/img/baakman_2_60000_mbe_sambe.png")
+  plotAnisotropy(data, "../paper/discussion/img/baakman_2_60000_anisotropy.pdf")
   plotSubsetOverlay(
     allData=data, 
     overlay=data[(abs(data$trueDensities - data$mbeDensities) < abs(data$trueDensities - data$sambeDensities)), ],
@@ -313,6 +319,7 @@ compareCompareComponent<-function(data, componentNumber, mean.x, mean.y, mean.z)
 }
 
 baakman3<-function(){
+  printf("--BAAKMAN 3--")
   data <- readResultSet(
     data_set_file="../data/simulated/normal/baakman_3_120000.txt", 
     parzen_file="../results/normal/baakman_3_120000_parzen.txt",
@@ -323,7 +330,9 @@ baakman3<-function(){
     xsdata = data,
     sambe_file="../results/normal/baakman_3_120000_sambe_silverman_xis.txt"    
   )
+  data$anisotropy = anisotropy(data);
   
+  plotAnisotropy(data, "../paper/discussion/img/baakman_3_60000_anisotropy.pdf")
   generateMBEvsSAMBEPlot(data, "../paper/discussion/img/baakman_3_120000_mbe_sambe.png")
   plotSubsetOverlay(
     allData=data, 
@@ -362,6 +371,7 @@ baakman3<-function(){
 }
 
 baakman5 <-function(){
+  printf("--BAAKMAN 5--")
   data <- readResultSet(
     data_set_file="../data/simulated/normal/baakman_5_60000.txt", 
     parzen_file="../results/normal/baakman_5_60000_parzen.txt",
@@ -374,10 +384,10 @@ baakman5 <-function(){
   )  
   
   data$mbeSambeDiff = data$mbeDensities - data$sambeDensities;
-  data$meanEigDiff = distanceToEigenValueMean(data);
+  data$anisotropy = anisotropy(data);
   
+  plotAnisotropy(data, "../paper/discussion/img/baakman_5_60000_anisotropy.pdf")
   generateMBEvsSAMBEPlot(data, "../paper/discussion/img/baakman_5_60000_mbe_sambe.png")
-  # plotShapeAdaptedData(data, "../paper/discussion/img/baakman_5_60000_pointsWithShapeAdaptedKernels.pdf")
   # MBE better than SAMBE
   plotSubsetOverlay(
     allData=data, 
@@ -397,45 +407,39 @@ baakman5 <-function(){
   data;
 }
 
-plotShapeAdaptedData <- function(allData, outputFile='~/Desktop/shapeAdapted.pdf', minDifference = 0.8){
-  data <- allData[(allData$eigen_value_1 - allData$eigen_value_2) > minDifference | 
-                  (allData$eigen_value_1 - allData$eigen_value_2) > minDifference |
-                  (allData$eigen_value_2 - allData$eigen_value_3) > minDifference, ]
-  # Plot The Actual Data
-  allData = allData[order(allData$component, decreasing = FALSE), ]
-  distribution = table(allData$component);
-  theColors = add.alpha(generateColours(distribution), alpha = 0.15);
-  pdf(outputFile);
-  s3d <- scatterplot3d(
-    x = allData$x, y = allData$y, z = allData$z,
-    xlab='x', ylab='y', zlab='z',
-    pch=16,
-    color=theColors,
-    grid=FALSE,
-    lty.hide=4,
-    mar=c(2.4, 3, 0, 2),
-    type='p',
-    cex.symbols = 0.4
-  )  
-  # Plot the points of interest
-  data = data[order(data$component, decreasing = FALSE), ]
-  distribution = table(data$component);
-  theColors = add.alpha(generateColours(distribution), alpha = 0.5);  
-  s3d$points3d(x=data$x, y=data$y, z=data$z,
-    pch=16,
-    col=theColors
+plotAnisotropy <- function(data, outputFile='~/Desktop/anisotropy', percentage=0.1){
+  subset <- head(data[order(data$anisotropy, decreasing=TRUE), ], n=round(nrow(data) * percentage))
+  
+  printf("Dataset Mean Anisotropy: %s (sd = %s), range [%s, %s]\n", 
+         formatC(mean(data$anisotropy), digits=15, format="e"), 
+         formatC(sd(data$anisotropy), digits=15, format="e"),
+         formatC(min(data$anisotropy), digits=15, format="e"), 
+         formatC(max(data$anisotropy), digits=15, format="e")         
   );
-  dev.off();
+  printf("Subset Mean Anisotropy: %s (sd = %s), range [%s, %s]\n", 
+         formatC(mean(subset$anisotropy), digits=15, format="e"), 
+         formatC(sd(subset$anisotropy), digits=15, format="e"),
+         formatC(min(subset$anisotropy), digits=15, format="e"), 
+         formatC(max(subset$anisotropy), digits=15, format="e")         
+  );  
+  for (component_name in as.data.frame(table(data$component))$Var1){
+    component <- data[data$component == as.integer(component_name), ]
+    printf("Component %s Mean Anisotropy: %s (sd = %s), range [%s, %s]\n", 
+           component_name,
+           formatC(mean(component$anisotropy), digits=15, format="e"), 
+           formatC(sd(component$anisotropy), digits=15, format="e"),
+           formatC(min(component$anisotropy), digits=15, format="e"), 
+           formatC(max(component$anisotropy), digits=15, format="e")         
+    );    
+  }
+  
+  plotSubsetOverlay(data, subset, outputFile=outputFile);
 }
 
-plotSubsetOverlay <- function(allData, overlay, outputFile='~/Desktop/overaly.pdf', color=NULL){
+plotSubsetOverlay <- function(allData, overlay, outputFile='~/Desktop/overlay.pdf', color=NULL){
   # Plot ALLdata
-  if(is.null(color)){
-    distribution = table(allData$component);
-    theColors = add.alpha(generateColours(distribution), alpha = 0.15);    
-  } else {
-    theColors = color;
-  }
+  allData = allData[order(allData$component, decreasing = FALSE), ]
+  theColors = add.alpha(colours$black, alph=0.2)
   pdf(outputFile);
   s3d <- scatterplot3d(
     x = allData$x, y = allData$y, z = allData$z,
@@ -464,6 +468,7 @@ plotSubsetOverlay <- function(allData, overlay, outputFile='~/Desktop/overaly.pd
 }
 
 baakman4 <-function(){
+  printf("--BAAKMAN 4--")
   data <- readResultSet(
     data_set_file="../data/simulated/normal/baakman_4_60000.txt", 
     parzen_file="../results/normal/baakman_4_60000_parzen.txt",
@@ -475,9 +480,9 @@ baakman4 <-function(){
     sambe_file="../results/normal/baakman_4_60000_sambe_silverman_xis.txt"    
   )    
   data$mbeSambeDiff = data$mbeDensities - data$sambeDensities;
-  data$meanEigDiff = distanceToEigenValueMean(data);
+  data$anisotropy = anisotropy(data);
   
-  plotShapeAdaptedData(data, "../paper/discussion/img/baakman_4_60000_pointsWithShapeAdaptedKernels.pdf")
+  plotAnisotropy(data, "../paper/discussion/img/baakman_4_60000_anisotropy.pdf")
   generateMBEvsSAMBEPlot(data, "../paper/discussion/img/baakman_4_60000_mbe_sambe.png")
   plotSubsetOverlay(
     allData=data, 
@@ -498,6 +503,7 @@ baakman4 <-function(){
 }
 
 baakman1 <- function(){
+  printf("--BAAKMAN 1--")
   data <- readResultSet(
     data_set_file="../data/simulated/normal/baakman_1_60000.txt", 
     parzen_file="../results/normal/baakman_1_60000_parzen.txt",
@@ -510,10 +516,10 @@ baakman1 <- function(){
   )     
   
   data$mbeSambeDiff = data$mbeDensities - data$sambeDensities;
-  data$meanEigDiff = distanceToEigenValueMean(data);
+  data$anisotropy = anisotropy(data);
   
+  plotAnisotropy(data, "../paper/discussion/img/baakman_1_60000_anisotropy.pdf")
   generateMBEvsSAMBEPlot(data, "../paper/discussion/img/baakman_1_60000_mbe_sambe.png")
-  plotShapeAdaptedData(data, "../paper/discussion/img/baakman_1_60000_pointsWithShapeAdaptedKernels.pdf")
   plotSubsetOverlay(
     allData=data, 
     overlay=data[(abs(data$trueDensities - data$mbeDensities) < abs(data$trueDensities - data$sambeDensities)), ],
@@ -532,8 +538,88 @@ baakman1 <- function(){
   data;
 }
 
+anisotropy1 <- function(){
+  printf("--ANISOTROPY 1--")
+  data <- readResultSet(
+    data_set_file="../data/simulated/normal/anisotropy_1_60000.txt", 
+    parzen_file="../results/normal/anisotropy_1_60000_parzen.txt",
+    mbe_file="../results/normal/anisotropy_1_60000_mbe_silverman.txt", 
+    sambe_file="../results/normal/anisotropy_1_60000_sambe_silverman.txt"
+  )
+  data <- addXisResults(
+    xsdata = data,
+    sambe_file="../results/normal/anisotropy_1_60000_sambe_silverman_xis.txt"    
+  )     
+  
+  data$mbeSambeDiff = data$mbeDensities - data$sambeDensities;
+  data$anisotropy = anisotropy(data);
+  
+  plotAnisotropy(data, "../paper/discussion/img/anisotropy_1_60000_anisotropy.pdf")
+  generateMBEvsSAMBEPlot(data, "../paper/discussion/img/anisotropy_1_60000_mbe_sambe.png")
+  plotSubsetOverlay(
+    allData=data, 
+    overlay=data[(abs(data$trueDensities - data$mbeDensities) < abs(data$trueDensities - data$sambeDensities)), ],
+    outputFile = "../paper/discussion/img/anisotropy_1_abs_error_mbeSmallerThansambe.pdf"
+  )  
+  data;
+}
+
+anisotropy2 <- function(){
+  printf("--ANISOTROPY 2--")
+  data <- readResultSet(
+    data_set_file="../data/simulated/normal/anisotropy_2_60000.txt", 
+    parzen_file="../results/normal/anisotropy_2_60000_parzen.txt",
+    mbe_file="../results/normal/anisotropy_2_60000_mbe_silverman.txt", 
+    sambe_file="../results/normal/anisotropy_2_60000_sambe_silverman.txt"
+  )
+  data <- addXisResults(
+    xsdata = data,
+    sambe_file="../results/normal/anisotropy_2_60000_sambe_silverman_xis.txt"    
+  )     
+  
+  data$mbeSambeDiff = data$mbeDensities - data$sambeDensities;
+  data$anisotropy = anisotropy(data);
+  
+  plotAnisotropy(data, "../paper/discussion/img/anisotropy_2_60000_anisotropy.pdf")
+  generateMBEvsSAMBEPlot(data, "../paper/discussion/img/anisotropy_2_60000_mbe_sambe.png")
+  plotSubsetOverlay(
+    allData=data, 
+    overlay=data[(abs(data$trueDensities - data$mbeDensities) < abs(data$trueDensities - data$sambeDensities)), ],
+    outputFile = "../paper/discussion/img/anisotropy_2_abs_error_mbeSmallerThansambe.pdf"
+  )  
+  data;
+}
+
+ferdosi3Noise <- function(){
+  printf("--FERDOSI 3 NOISE--")
+  data <- readResultSet(
+    data_set_file="../data/simulated/normal/ferdosi_3_more_noise_189760.txt", 
+    parzen_file="../results/normal/ferdosi_3_more_noise_189760_parzen.txt",
+    mbe_file="../results/normal/ferdosi_3_more_noise_189760_mbe_silverman.txt",
+    sambe_file="../results/normal/ferdosi_3_more_noise_189760_sambe_silverman.txt"
+  )
+  data <- addXisResults(
+    xsdata = data,
+    sambe_file="../results/normal/ferdosi_3_more_noise_189760_sambe_silverman_xis.txt"    
+  )     
+  
+  data$mbeSambeDiff = data$mbeDensities - data$sambeDensities;
+  data$anisotropy = anisotropy(data);
+
+    plotAnisotropy(data, "../paper/discussion/img/ferdosi_3_more_noise_anisotropy.pdf", percentage = 0.05)
+  generateMBEvsSAMBEPlot(data, "../paper/discussion/img/ferdosi_3_more_noise_mbe_sambe.png")
+  plotSubsetOverlay(
+    allData=data, 
+    overlay=data[(abs(data$trueDensities - data$mbeDensities) < abs(data$trueDensities - data$sambeDensities)), ],
+    outputFile = "../paper/discussion/img/ferdosi_3_more_noise_abs_error_mbeSmallerThansambe.pdf"
+  )  
+  data;
+}
+
 # Exectue all
-# ferdosi1(); ferdosi2(); ferdosi3(); baakman1(); baakman2(); baakman3(); baakman4(); baakman5();
+# f1 <- ferdosi1(); b1 <- baakman1(); b4 <- baakman4(); b5 <- baakman5();
+# f2 <- ferdosi2(); f3 <- ferdosi3(); b2 <- baakman2(); b3 <- baakman3(); 
+# a1 <-anisotropy1(); a2 <-anisotropy2(); f3Noise <- ferdosi3Noise();
 
 # Execute on Source
 # data <- readResultSet(data_set_file, parzen_file, mbe_file, sambe_file)
@@ -541,5 +627,5 @@ baakman1 <- function(){
 # formatC(min(data$sambeDensities), digits = 15, format = "e")
 # head(data[order(data$sambeDensities, decreasing = TRUE), ], n=10)
 
-# head(data[order(data$meanEigDiff, decreasing = TRUE), c('x', 'y', 'z','eigen_value_1', 'eigen_value_2', 'eigen_value_3', 'local_bandwidth', 'scaling_factor')], n = 10)
+# head(data[order(data$anisotropy, decreasing = TRUE), c('x', 'y', 'z','eigen_value_1', 'eigen_value_2', 'eigen_value_3', 'local_bandwidth', 'scaling_factor')], n = 10)
 # head(data[order(abs(data$mbeSambeDiff), decreasing=TRUE), c('x', 'y', 'z', 'component', 'trueDensities', 'mbeDensities', 'mbeNumUsedPatterns', 'sambeDensities', 'sambeNumUsedPatterns', 'mbeSambeDiff')], 20)

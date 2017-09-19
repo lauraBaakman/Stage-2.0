@@ -24,10 +24,14 @@ def get_parser():
                         action='store_true',
                         default=False,
                         help="Increase the output verbosity.")
-    parser.add_argument('-r', '--replace-existing',
+    parser.add_argument('-r', '--replace-all-existing',
                         action='store_true',
                         default=False,
-                        help="Overwrite existing png files.")
+                        help="Overwrite all existing png files.")
+    parser.add_argument('-n', '--replace-newer',
+                        action='store_true',
+                        default=True,
+                        help="Overwrite existing png files if the pdf file is newer.")
     parser.add_argument('--dry-run',
                         action='store_true',
                         default=False,
@@ -62,8 +66,16 @@ def convert_pdf_file(file):
 
     png_path = build_png_path(file)
 
-    if not(args.replace_existing) and png_path.exists():
-        logging.info('A png file alread exists for {pdf_file}'.format(pdf_file=ioUtils.partial_path(file)))
+    if not(args.replace_all_existing) and args.replace_newer and file.ctime() < png_path.ctime():
+        logging.info('An up-to-date png file alread exists for ...{pdf_file}'.format(
+            pdf_file=ioUtils.partial_path(file))
+        )
+        return
+
+    if not(args.replace_all_existing) and not(args.replace_newer) and png_path.exists():
+        logging.info('A png file alread exists for ...{pdf_file}'.format(
+            pdf_file=ioUtils.partial_path(file))
+        )
         return
 
     logging.info(
