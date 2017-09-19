@@ -50,7 +50,7 @@ fancy_scientificLabels <- function(breaks) {
 buildLabel <- function(labelText, exponent){
   library(latex2exp)
   TeX(
-    sprintf("%s $\\left( \\times 10^{%d} \\right)$", labelText, exponent)
+    sprintf("%s $\\left( \\times 10^{%d} \\right)$", labelText, exponent * -1)
   )
 }
 
