@@ -83,6 +83,7 @@ plotResultOfMultipleDensityDataSet <-function(data, outputFile=NULL, distributio
   plot <- plot + xlab(buildLabel(xlabel, global.exponent)) + ylab(buildLabel(ylabel, global.exponent));
   plot <- plot + scale_x_continuous(labels = fancy_scientificLabels, limits = c(limits['xMin'], limits['xMax'])) 
   plot <- plot + scale_y_continuous(labels = fancy_scientificLabels, limits = c(limits['yMin'], limits['yMax']));
+
   if (addMSE){
     plot <- plot + ggtitle(sprintf("MSE = %.4e", computeMSE(data)));  
   }
@@ -185,19 +186,18 @@ mainResults <- function(){
   print(overview)
 }
 
-test.N = 100
-test.data <- data.frame(
-  points.x = runif(test.N, 0, 100), points.y = runif(test.N, 0, 100), points.z = runif(test.N, 0, 100),
-  trueDensity = runif(test.N, 0, 1.0), computedDensity = runif(test.N, 0, 1.0),
-  points.component = round(runif(test.N, 0, 2))
-)
-test.data <- test.data[order(test.data$points.component), ]
-test.distribution <- table(test.data$points.component)
-test.limits <- c(xMin = min(test.data$trueDensity), xMax = max(test.data$trueDensity), 
-                 yMin = min(test.data$computedDensity), yMax = max(test.data$computedDensity));
-
-
+testMainResults <- function(){
+  test.N = 100
+  test.data <- data.frame(
+    points.x = runif(test.N, 0, 100), points.y = runif(test.N, 0, 100), points.z = runif(test.N, 0, 100),
+    trueDensity = runif(test.N, 0, 1.0), computedDensity = runif(test.N, 0, 1.0),
+    points.component = round(runif(test.N, 0, 2))
+  )
+  test.data <- test.data[order(test.data$points.component), ]
+  test.distribution <- table(test.data$points.component)
+  test.limits <- c(xMin = min(test.data$trueDensity), xMax = max(test.data$trueDensity), 
+                   yMin = min(test.data$computedDensity), yMax = max(test.data$computedDensity));
+  plotResultOfMultipleDensityDataSet(data=test.data, distribution = test.distribution, limits = test.limits)  
+}
 
 # mainResults()
-plotResultOfMultipleDensityDataSet(data=test.data, distribution = test.distribution, limits = test.limits)
-
