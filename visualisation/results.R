@@ -48,14 +48,6 @@ fancy_scientificLabels <- function(breaks) {
 }
 
 buildLabel <- function(labelText, exponent){
-  # expression(
-  #   paste(
-  #     labelText,
-  #     "(", 
-  #     10^{exponent}, 
-  #     ")"
-  #   )
-  # )
   bquote(.(labelText)~(x~10^{.(exponent)}))
 }
 
