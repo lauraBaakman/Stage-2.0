@@ -48,7 +48,10 @@ fancy_scientificLabels <- function(breaks) {
 }
 
 buildLabel <- function(labelText, exponent){
-  bquote(.(labelText)~(x~10^{.(exponent)}))
+  library(latex2exp)
+  TeX(
+    sprintf("%s $\\left( \\times 10^{%d} \\right)$", labelText, exponent)
+  )
 }
 
 plotResultOfMultipleDensityDataSet <-function(data, outputFile=NULL, distribution, limits, xlabel="true density", ylabel='estimated density', addMSE=TRUE){
