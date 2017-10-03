@@ -37,7 +37,7 @@
 			\KNNK = \max\left(\left\lfloor \sqrt{\varNumPatterns} \right\rceil,\, \varDim \right) + 1.	
 		\end{equation}			
 		% The KD-tree
-		Using a KD-tree for the \KNNK-nearest neighbors search instead of the naive implementation, significantly improves the time complexity of finding \varBandwidthMatrix[\itXis]. The downside of using a space partitioning tree is that \varNeighborhood{\varPattern[\itXis]} is an approximation of the actual neighborhood, as long as \KNNK is rather large the use of an approximation instead of the exact \KNNK-nearest neighbors should not impact the final kernel result too strongly. 
+		Using a KD-tree for the \KNNK-nearest neighbors search instead of the naive implementation, significantly improves the time complexity of finding \varBandwidthMatrix[\itXis]. The downside of our implementation of the space partitioning tree is that \varNeighborhood{\varPattern[\itXis]} is an approximation of the actual neighborhood. As long as \KNNK is rather large the use of an approximation instead of the exact \KNNK-nearest neighbors should not impact the final kernel result too strongly. 
 		% Why do we use KNN instead of fixed-radius
 		We use \KNN rather than a fixed-radius neighborhood to ensure that, independent of the sparsity of the data, the kernel shape is always based on a reasonable number of data points. 
 
