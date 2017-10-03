@@ -1,12 +1,11 @@
 %!TEX root = ../paper.tex
 
-
 This section presents the results of the experiments described in \cref{s:experiment}. 
 %MSE
-We compare the performance of the two estimators on each dataset with the \mse and visually with plots. Furthermore how well the shape of the kernels is adapted to the local neighborhood is investigated with its anisotropy.
+We compare the performance of the two estimators on each dataset with the \mse and visually with plots. Furthermore how well the shape of the kernels is adapted to the local neighborhood is investigated with their anisotropy.
 % Plots
 	% Axes
-	All two-dimensional plots associated with a single dataset have the same domain and range, to allow for easy comparison of the results within a dataset. The horizontal axis is used to represent the known densities, its range is such that each known density can be shown. The estimated densities are shown on the vertical axis, the length of these axes is such that they are long enough to represent every estimated density for that dataset, independent of the used estimator. 
+	All two-dimensional plots associated with a single dataset have the same domain and range, to allow for easy comparison of the results within a dataset. The horizontal axis is used to represent the known densities, its range is such that each known density can be shown. The estimated densities are shown on the vertical axis, we have ensured that the domain of these axes is such that they are long enough to represent every estimated density for that dataset, independent of the used estimator. 
 	% Perfect performance line
 	The black line in the two-dimensional plots illustrates the line all points would lie on if a perfect estimator was used.
 	% Colors
@@ -25,10 +24,10 @@ We compare the performance of the two estimators on each dataset with the \mse a
 
 %Some final general observation for all sets
 	% Small differences in MSE between the two datasets
-	In conclusion for all datasets we have found very small differences in \mse between the two estimators. 
+	In conclusion for all datasets we have only found very small differences in \mse between the two estimators. 
 	% Both estimators perform better on denser gaussian components
 	Furthermore both estimators perform better on points drawn from Gaussian components with a smaller eigensphere. 
 	% Anisotropy is storngest on noise component
 	Concerning the anisotropy of the kernels we have observed that in all datasets this statistic is highest for the noise component. 
 	% Positve correlation between mean anisotropy of kernels and anisotropy of the gaussian comonent
-	Comparing the mean anisotropy of the kernels of the points drawn from the Gaussian components showed a positive correlation with the anisotropy of the component the point was sampled from. 
+	Comparing the means of the anisotropies of the kernels associated with the points drawn from the Gaussian components showed a positive correlation with the anisotropy of the component the point was sampled from. 
