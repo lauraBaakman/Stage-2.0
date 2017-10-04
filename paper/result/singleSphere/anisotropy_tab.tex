@@ -8,26 +8,10 @@
 	round-mode=figures,
 	round-precision=4
 }
-
-% \begin{tabular}{@{}cS[table-format=1.3, scientific-notation=fixed, fixed-exponent=0]S@{}}
-% \toprule
-% Set 			& {\mean}					& {\SD} \\	
-% \midrule
-% %
-% \ferdosiOne		& 1.481660376019799e+00 	& 5.207168971324737e-01 \\
-% \baakmanOne 	& 1.572715105221782e+00 	& 5.530922703447394e-01 \\
-% \baakmanFour 	& 1.641110534113758e+00 	& 5.857110734143017e-01 \\
-% \baakmanFive 	& 1.800615543126814e+00 	& 6.982359144460546e-01 \\
-% \bottomrule
-% \end{tabular}
-
-
-
-% % WITH COMPONENTS
 \small
 \begin{tabular}{@{}c*{6}{S}@{}}
 \toprule
-			& \multicolumn{2}{c}{~} 	& \multicolumn{2}{c}{\legendComponentOne Gaussian} 	& \multicolumn{2}{c}{\legendComponentNoise Noise} \\
+			& \multicolumn{2}{c}{~} 	& \multicolumn{2}{c}{\legendComponentOne Gaussian} 	& \multicolumn{2}{c}{\legendComponentNoise Background} \\
 										\cmidrule(lr){4-5}													\cmidrule(lr){6-7}
 ~			& {\mean}	& {\SD}	& {\mean}				& {\SD}								& {\mean}				& {\SD}\\
 \midrule
@@ -39,17 +23,3 @@
 %
 \bottomrule
 \end{tabular}
-
-% Mean and SD in single column
-% \begin{tabular}{@{}c*{3}{c}@{}}
-% \toprule
-% ~			& Full Set 												& \legendComponentOne Gaussian 							& \legendComponentNoise Noise \\
-% \midrule
-% %
-% \ferdosiOne	& \meanSD{1.481660376019799e+00}{5.207168971324737e-01} & \meanSD{1.292149530196978e+00}{1.356253162841883e-01} & \meanSD{1.863815741663720e+00}{ 7.499196683375390e-01} \\
-% \baakmanOne & \meanSD{1.572715105221782e+00}{5.530922703447394e-01} & \meanSD{1.406535983691825e+00}{2.892051679378371e-01} & \meanSD{1.907821218409839e+00}{ 7.656134196334038e-01} \\
-% \baakmanFour& \meanSD{1.641110534113758e+00}{5.857110734143017e-01} & \meanSD{1.505873601402432e+00}{4.034845878788980e-01} & \meanSD{1.913820622259202e+00}{ 7.715718262079235e-01} \\
-% \baakmanFive& \meanSD{1.800615543126814e+00}{6.982359144460546e-01} & \meanSD{1.737112446921335e+00}{6.384146778474488e-01} & \meanSD{1.928671796818039e+00}{ 7.901093786701995e-01} \\
-% %
-% \bottomrule
-% \end{tabular}
