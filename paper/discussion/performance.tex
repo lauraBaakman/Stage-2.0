@@ -10,13 +10,13 @@ One of the most striking observations from \cref{s:results} is that the differen
 		%
 		\begin{figure}
 			\centering
-			\begin{subfigure}{0.23\textwidth}
+			\begin{subfigure}{0.3\textwidth}
 				\centering
 				\includegraphics[keepaspectratio=true, width=\textwidth, height=0.23\textheight]{discussion/img/ferdosi_2_60000_mbe_sambe.png}
 				\caption{Dataset \ferdosiTwo}
 				\label{fig:discussion:performance:mbevssambe:ferdosi2}
 			\end{subfigure}
-			\begin{subfigure}{0.23\textwidth}
+			\begin{subfigure}{0.3\textwidth}
 				\centering
 				\includegraphics[keepaspectratio=true, width=\textwidth, height=0.23\textheight]{discussion/img/baakman_2_60000_mbe_sambe.png}
 				\caption{Dataset \baakmanTwo}
@@ -36,13 +36,13 @@ One of the most striking observations from \cref{s:results} is that the differen
 		%	
 		\begin{figure}
 			\centering
-			\begin{subfigure}{0.23\textwidth}
+			\begin{subfigure}{0.3\textwidth}
 				\centering
 				\includegraphics[keepaspectratio=true, width=\textwidth, height=0.23\textheight]{discussion/img/ferdosi_3_120000_mbe_sambe.png}
 				\caption{Dataset \ferdosiThree}
 				\label{fig:discussion:performance:mbevssambe:ferdosi3}
 			\end{subfigure}
-			\begin{subfigure}{0.23\textwidth}
+			\begin{subfigure}{0.3\textwidth}
 				\centering
 				\includegraphics[keepaspectratio=true, width=\textwidth, height=0.23\textheight]{discussion/img/baakman_3_120000_mbe_sambe.png}
 				\caption{Dataset \baakmanThree}
@@ -96,7 +96,7 @@ One of the most striking observations from \cref{s:results} is that the differen
 		%	
 		The plots in \cref{fig:discussion:performance:singleSphere:mbeLowerError} emphasize the points in dataset \ferdosiOne through \baakmanOne where the absolute error of \mbe is smaller than that of \sambe. These plots show that the shape-adaptive kernels outperform symmetric kernels near the borders of the datasets.
 			% Why the boundary effect
-			We expect that the boundary effect is due to the strong anisotropy of the local neighborhood of the points near the boundaries. Consequently the domain of the shape-adaptive kernels extends less outside of the boundaries dataset than the domains of the symmetric kernels. This results in less underestimating of densities near the boundary of the dataset, if shape-adaptive kernels are used.
+			We expect that the boundary effect is due to the strong anisotropy of the local neighborhood of the points near the boundaries. Consequently the domain of the shape-adaptive kernels extends less outside of the boundaries dataset than the domains of the symmetric kernels. This results in less underestimation of densities near the boundary of the dataset, if shape-adaptive kernels are used.
 			% Why is it stonger of the Gaussian is more anisotropic
 			Furthermore the strength of the boundary effect seems to increase as the Gaussian component of the dataset is more anisotropic. However the seemingly better performance of \sambe is due to an increase in the number of points where the density estimated by \sambe equals the density estimated by \mbe. In dataset \ferdosiOne the density estimates of the two estimators differ on all points, in dataset \baakmanOne the estimators agree on the density of \percentage{1.327294605254362e+01} of the points, this increases to \percentage{3.535329901731399e+01} in dataset \baakmanFive.
 			%SAMBE == MBE
