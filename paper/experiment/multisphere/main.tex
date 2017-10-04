@@ -4,27 +4,27 @@
 	\centering
 	\beforeFinalVersion{Remove ticks and labels.}
 	\input{experiment/multisphere/subfig}
-	\caption{Scatter plot representation of the datasets defined in \cref{tab:experiment:multisphere:sets}, the colors used for the different components correspond to those in \cref{tab:experiment:multisphere:sets}.}
+	\caption{Scatter plot representation of the data sets defined in \cref{tab:experiment:multisphere:sets}, the colors used for the different components correspond to those in \cref{tab:experiment:multisphere:sets}.}
 	\label{fig:experiment:multisphere:sets}
 \end{figure}
 
 \begin{table*}
 	\centering
 	\input{experiment/multisphere/dataset_tab}
-	\caption{The datasets with multiple Gaussian distributions embedded in uniform noise. This table has the same structure and uses the same notation as \cref{tab:experiment:singlesphere:sets}.} 	
+	\caption{The data sets with multiple Gaussian distributions embedded in uniform noise. This table has the same structure and uses the same notation as \cref{tab:experiment:singlesphere:sets}.} 	
 	\label{tab:experiment:multisphere:sets}
 \end{table*}
 
 %General
-\Cref{tab:experiment:multisphere:sets} defines the datasets that consist of uniform random noise and multiple Gaussian distributions, a scatter plot representation of these sets is shown in \cref{fig:experiment:multisphere:sets}. 
+\Cref{tab:experiment:multisphere:sets} defines the data sets that consist of uniform random noise and multiple Gaussian distributions, a scatter plot representation of these sets is shown in \cref{fig:experiment:multisphere:sets}. 
 	% Ferdosi 2
-	Dataset \ferdosiTwo consists of two Gaussian distributions, that are unlikely to overlap, embedded in noise. The first Gaussian component is significantly denser than the second. 
+	Data set \ferdosiTwo consists of two Gaussian distributions, that are unlikely to overlap, embedded in noise. The first Gaussian component is significantly denser than the second. 
 	% Baakman 2
-	The procedure outlined in \cref{s:experiment:singlesphere} for the creation of dataset \baakmanOne was used to derive dataset \baakmanTwo from \ferdosiTwo.
+	The procedure outlined in \cref{s:experiment:singlesphere} for the creation of data set \baakmanOne was used to derive data set \baakmanTwo from \ferdosiTwo.
 	% Ferdosi Three
-	Dataset \ferdosiThree embeds four non-overlapping Gaussians, with eigenspheres with notably different radii, in the uniform random background. 
+	Data set \ferdosiThree embeds four non-overlapping Gaussians, with eigenspheres with notably different radii, in the uniform random background. 
 	%Baakman 3
-	The last dataset, \baakmanThree, is a variation on \ferdosiThree, created with the method that was used for the definition of dataset \baakmanOne from \ferdosiOne. 
+	The last data set, \baakmanThree, is a variation on \ferdosiThree, created with the method that was used for the definition of data set \baakmanOne from \ferdosiOne. 
 
 %Hypothesis
-	Due to the spherical nature of the Gaussian components we expect hardly any difference in performance between the estimators on dataset \ferdosiTwo and \ferdosiThree. Given the shape of the Gaussian distributions embedded in dataset \baakmanTwo and \baakmanThree we hypothesize that \sambe outperforms \mbe on these sets.
+	Due to the spherical nature of the Gaussian components we expect hardly any difference in performance between the estimators on data set \ferdosiTwo and \ferdosiThree. Given the shape of the Gaussian distributions embedded in data set \baakmanTwo and \baakmanThree we hypothesize that \sambe outperforms \mbe on these sets.

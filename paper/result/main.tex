@@ -2,32 +2,32 @@
 
 This section presents the results of the experiments described in \cref{s:experiment}. 
 %MSE
-We compare the performance of the two estimators on each dataset with the \mse and visually with plots. Furthermore how well the shape of the kernels is adapted to the local neighborhood is investigated with their anisotropy.
+We compare the performance of the two estimators on each data set with the \mse and visually with plots. Furthermore how well the shape of the kernels is adapted to the local neighborhood is investigated with their anisotropy.
 % Plots
 	% Axes
-	All two-dimensional plots associated with a single dataset have the same domain and range, to allow for easy comparison of the results within a dataset. The horizontal axis is used to represent the known densities, its range is such that each known density can be shown. The estimated densities are shown on the vertical axis, we have ensured that the domain of these axes is such that they are long enough to represent every estimated density for that dataset, independent of the used estimator. 
+	All two-dimensional plots associated with a single data set have the same domain and range, to allow for easy comparison of the results within a data set. The horizontal axis is used to represent the known densities, its range is such that each known density can be shown. The estimated densities are shown on the vertical axis, we have ensured that the domain of these axes is such that they are long enough to represent every estimated density for that data set, independent of the used estimator. 
 	% Perfect performance line
 	The black line in the two-dimensional plots illustrates the line all points would lie on if a perfect estimator was used.
 	% Colors
-	The colors of the points in these plot correspond to the colors of the elements of the datasets in \cref{tab:experiment:singlesphere:sets,tab:experiment:multisphere:sets}.
+	The colors of the points in these plot correspond to the colors of the elements of the data sets in \cref{tab:experiment:singlesphere:sets,tab:experiment:multisphere:sets}.
 
 % Structure of the section
-	\Cref{s:results:singleGaussian} presents the results of the datasets that contain a single Gaussian, in \cref{s:results:multipleGaussian} the results of datasets that consist of noise and multiple Gaussian distributions are presented. 
+	\Cref{s:results:singleGaussian} presents the results of the data sets that contain a single Gaussian, in \cref{s:results:multipleGaussian} the results of data sets that consist of noise and multiple Gaussian distributions are presented. 
 
-\subsection{Datasets with a Single Gaussian}
+\subsection{Data sets with a Single Gaussian}
 \label{s:results:singleGaussian}
 \input{result/singleSphere/main}
 
-\subsection{Datasets with Multiple Gaussians}
+\subsection{Data sets with Multiple Gaussians}
 \label{s:results:multipleGaussian}
 \input{result/multiSphere/main}
 
 %Some final general observation for all sets
 	% Small differences in MSE between the two datasets
-	In conclusion for all datasets we have only found very small differences in \mse between the two estimators. 
+	In conclusion for all data sets we have only found very small differences in \mse between the two estimators. 
 	% Both estimators perform better on denser gaussian components
 	Furthermore both estimators perform better on points drawn from Gaussian components with a smaller eigensphere. 
 	% Anisotropy is storngest on noise component
-	Concerning the anisotropy of the kernels we have observed that in all datasets this statistic is highest for the noise component. 
+	Concerning the anisotropy of the kernels we have observed that in all data sets this statistic is highest for the noise component. 
 	% Positve correlation between mean anisotropy of kernels and anisotropy of the gaussian comonent
-	Comparing the means of the anisotropies of the kernels associated with the points drawn from the Gaussian components showed a positive correlation with the anisotropy of the component the point was sampled from. It should be noted that this relation has not been observed between the anisotropy of the Gaussian components in the datasets with a single Gaussian and the anisotropy of the kernels of points sampled from the uniform random background.
+	Comparing the means of the anisotropies of the kernels associated with the points drawn from the Gaussian components showed a positive correlation with the anisotropy of the component the point was sampled from. It should be noted that this relation has not been observed between the anisotropy of the Gaussian components in the data sets with a single Gaussian and the anisotropy of the kernels of points sampled from the uniform random background.
