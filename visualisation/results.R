@@ -60,7 +60,7 @@ plotResultOfMultipleDensityDataSet <-function(data, outputFile=NULL, distributio
   symbols = generateSymbols(distribution);
   
   if (addMSE){
-    margin = c(0,2.5,0,0)
+    margin = c(0,2.5,-0.8,0)
   } else {
     margin = c(0, 0, 0, 0)
   }
