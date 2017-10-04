@@ -89,7 +89,7 @@ generateMBEvsSAMBEPlot <- function(data, outPath){
   distribution <- table(data$component);  
   limits <- computeLimits2(data);
   
-  plot <- plotResult(plotData, outPath, distribution, limits, xlabel='MBE', ylabel='SAMBE', addMSE = FALSE);
+  plot <- plotResult(plotData, outPath, distribution, limits, xlabel='MBE', ylabel='saMBE', addMSE = FALSE);
 }
 
 mse <-function(trueDensities, estimatedDensities){
