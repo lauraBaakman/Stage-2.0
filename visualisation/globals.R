@@ -23,7 +23,7 @@ symbols = list(
   bullsEye              = 16,
   filledCircle   	      = 16  
 )
-font.size = 9;
+font.size = 10;
 # font.family ="CM Roman";
 font.family ="Times-Roman";
 
