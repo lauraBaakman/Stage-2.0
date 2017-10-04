@@ -92,7 +92,7 @@ plotResultOfMultipleDensityDataSet <-function(data, outputFile=NULL, distributio
     ggsave(
       outputFile,
       plot,
-      width=(0.3 * tex.textwidth), height=(0.23 * tex.textheight), unit="cm"
+      width=(0.3 * tex.textwidth), height=(0.3 * tex.textwidth), unit="cm"
     )
     # Sys.setenv(R_GSCMD = "/usr/local/bin/gs");
     # embed_fonts(outputFile);    
