@@ -1,13 +1,13 @@
 %!TEX root = paper.tex
 
 %General Idea
-	We use shape adaptive kernels in combination with the Modified Breiman Estimator introduced by \textcite{wilkinson1995dataplot}, the resulting estimator is henceforth referred to as the shape-adaptive Modified Breiman Estimator (\sambe). 
+	We use shape adaptive kernels in combination with the Modified Breiman Estimator introduced by \textcite{wilkinson1995dataplot}. The resulting estimator is henceforth referred to as the shape-adaptive Modified Breiman Estimator (\sambe). 
 	%General bandwidth
-	For its low computational complexity we use the method defined in \cref{eq:1:ferdosiGeneralBandwidth} to compute the general bandwidth. 
+	For its low computational complexity we use the method introduced by \citeauthor{ferdosi2011comparison}, defined in \cref{eq:1:ferdosiGeneralBandwidth}, to compute the general bandwidth. 
 	% Pilot Densities
-	Pilot densities are computed according to \cref{eq:1:parzen}, with an Epanechnikov kernel.
+	Pilot densities are computed according to the Parzen method, see \cref{eq:1:parzen}, with an Epanechnikov kernel.
 	%Local bandwidths
-	Since using $\varMBESensitivityParam = \rfrac{1}{2}$ instead of $\varMBESensitivityParam = \rfrac{1}{\varDim}$ results in a final density approximation with a lower \mse for most of our data sets we use the first.
+	Since experiments indicated that using $\varMBESensitivityParam = \rfrac{1}{2}$ instead of $\varMBESensitivityParam = \rfrac{1}{\varDim}$ results in a final density approximation with a lower \mse for most of our data sets, we use the first.
 	%Final densities
 	We compute the final density estimate according to:
 	\begin{equation}\label{eq:2:parzenWithBandWidthMatrix}
@@ -22,22 +22,22 @@
 			\item \label{it:1:bandwidthmatrix:initialBandwidthMatrix}
 				Compute \varCovarianceMatrix, the unbiased covariance matrix of the local neighborhood \varNeighborhood{\varPattern[\itXis]}.
 			\item \label{it:1:bandwidthmatrix:scaleBandwidhtMatrix}
-				Determine \varBandwidthMatrix[\itXis] by scaling \varCovarianceMatrix with
+				Determine \varBandwidthMatrix[\itXis] by multiplying \varCovarianceMatrix with a scaling factor:
 				\begin{equation}\label{eq:method:scalingFactor}
-					\varScalingFactor = \varBandwidth \cdot \varLocalBandwidth{\itXis} 
-				 \left( \displaystyle\prod_{\itDim = 1}^{\varDim} \varEigenValue_\itDim \right)^{-\frac{1}{\varDim}}
+					\varBandwidthMatrix[\itXis] = \varBandwidth \cdot \varLocalBandwidth{\itXis} 
+				 \left( \displaystyle\prod_{\itDim = 1}^{\varDim} \varEigenValue_\itDim \right)^{-\frac{1}{\varDim}} \cdot \varCovarianceMatrix
 				\end{equation}
 				where $\varEigenValue_1,\, \cdots,\, \varEigenValue_\varDim$ are the eigenvalues of \varCovarianceMatrix.  
 		\end{enumerate}	
 	% Discuss step 1
-		Step \ref{it:1:bandwidthmatrix:findNeighbours} determines the local neighborhood of \varPattern[\itXis] with a \KNNK-nearest neighbors search in a KD-tree \cite{Bentley1975Multidimensional}, with Euclidean distance as the distance metric. 
+		Step \ref{it:1:bandwidthmatrix:findNeighbours} determines the local neighborhood of \varPattern[\itXis]. We take Euclidean distance as the distance metric. 
 		% How do we choose K
 		We follow \citeauthor{silverman1986density}'s \cite{silverman1986density} recommendation of choosing $k = \sqrt{\varNumPatterns}$. To ensure that \varCovarianceMatrix is nonsingular we also need $\KNNK > \varDim$, therefore
 		\begin{equation}\label{eq:method:k}
 			\KNNK = \max\left(\left\lfloor \sqrt{\varNumPatterns} \right\rceil,\, \varDim \right) + 1.	
 		\end{equation}			
 		% The KD-tree
-		Using a KD-tree for the \KNNK-nearest neighbors search instead of the naive implementation, significantly improves the time complexity of finding \varBandwidthMatrix[\itXis]. The downside of our implementation of the space partitioning tree is that \varNeighborhood{\varPattern[\itXis]} is an approximation of the actual neighborhood. As long as \KNNK is rather large the use of an approximation instead of the exact \KNNK-nearest neighbors should not impact the final kernel result too strongly. 
+		To reduce the time complexity of computing \varBandwidthMatrix[\itXis]we use a KD-tree for the \KNNK-nearest neighbors search\cite{Bentley1975Multidimensional}. The downside of our implementation of the space partitioning tree is that \varNeighborhood{\varPattern[\itXis]} is an approximation of the actual neighborhood. As long as \KNNK is rather large, the use of an approximation instead of the exact \KNNK-nearest neighbors should not impact the final kernel result too strongly. 
 		% Why do we use KNN instead of fixed-radius
 		We use \KNN rather than a fixed-radius neighborhood to ensure that, independent of the sparsity of the data, the kernel shape is always based on a reasonable number of data points. 
 
