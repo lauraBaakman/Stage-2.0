@@ -31,7 +31,7 @@ plotDataSet <- function(data, outputFile, numberOfPatternsPerSubSet){
     lty.hide=4,
     mar=c(2.4, 3, 0, 2),
     type='p',
-    cex.symbols = 0.5
+    cex.symbols = 0.5, cex.lab = 3
   )
   dev.off();
 }
