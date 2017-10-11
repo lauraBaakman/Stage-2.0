@@ -255,23 +255,23 @@ function(x, y = NULL, z = NULL, color = par("col"), pch = par("pch"),
         
         ## axis and labels
         mytext2 <- function(lab, side, line, at)
-            mtext(lab, side = side, line = line, at = at, col = col.lab,
-                  cex = cex.lab, font = font.axis, las = 1)
+            # mtext(lab, side = side, line = line, at = at, col = col.lab,
+            #       cex = cex.lab, font = font.axis, las = 1)
         ## X
         lines(c(x.min, x.max), c(z.min, z.min), col = col.axis, lty = lty.axis)
         if(!is.na(asp)) {
             mytext2(xlab, 1, line = (usr[3] - z.min)/lheight2 + 1.5, at = mean(x.range))
         } else {
-            mytext2(xlab, 1, line = -0.5, at = mean(x.range))
+            mytext2(xlab, 1, line = -0.2, at = mean(x.range))
         }
         ## Y
         lines(xx[1] + c(0, y.max * yx.f), c(z.min, y.max * yz.f + z.min),
               col = col.axis, lty = lty.axis)
         # mytext2(ylab, if(angle.1) 2 else 4, line = linepad + 1, at = z.min + y.max * yz.f)
-        mytext2(ylab, if(angle.1) 2 else 4, line = -6.8, at = 1)
+        mytext2(ylab, if(angle.1) 2 else 4, line = -6, at = 1)
         ## Z
         lines(xx[c(2,2)], c(z.min, z.max), col = col.axis, lty = lty.axis)
-        mytext2(zlab, if(angle.1) 4 else 2, line = -1, at = mean(z.range))
+        mytext2(zlab, if(angle.1) 4 else 2, line = -0.5, at = mean(z.range))
         if(box) {
             if(is.null(lty.hide)) lty.hide <- lty.axis
             ## X
