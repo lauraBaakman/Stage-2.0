@@ -68,7 +68,7 @@ Formally the aim of density estimation is to find the probability density functi
 		\end{equation}
 	where \varPercentile{20}{\itDim} and \varPercentile{80}{\itDim} are the twentieth and eightieth percentile of the data in dimension \itDim, respectively. The global bandwidth, \varBandwidth, is defined as the minimum of these intermediate bandwidths.
 
-% Shape Adaptive Kernel Density Estimation
+% Shape-adaptive Kernel Density Estimation
 	Although the widths of the kernels of the discussed adaptive-width methods are sensitive to the data, the shape of a kernel depends only on its definition, and is thus the same for all \varPattern[\itXis]. To further increase the responsiveness of the estimator to the data, we propose the use of shape-adaptive kernels. Not only the width, but also the shape of these kernels is steered by the local neighborhood of the data.
 
 	A possible disadvantage of these shape-adaptive kernels is that in regions where the density of sample points is low, the number of data points is insufficient to reliably compute the shape of the kernel. Therefore we let the amount of influence exerted by the local data on the shape of the kernel depend on the number of data points in the local neighborhood.
