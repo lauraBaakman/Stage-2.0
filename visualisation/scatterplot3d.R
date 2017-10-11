@@ -19,8 +19,6 @@ function(x, y = NULL, z = NULL, color = par("col"), pch = par("pch"),
     ##
     ## For MANY ideas and improvements thanks to Martin Maechler!!!
     ## Parts of the help files are stolen from the standard plotting functions in R.
-
-    printf('HI!!');
   
     mem.par <- par(mar = mar)
 #    on.exit(par(mem.par))
