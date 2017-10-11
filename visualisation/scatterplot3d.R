@@ -265,7 +265,7 @@ function(x, y = NULL, z = NULL, color = par("col"), pch = par("pch"),
         if(!is.na(asp)) {
             mytext2(xlab, 1, line = (usr[3] - z.min)/lheight2 + 1.5, at = mean(x.range))
         } else {
-            mytext2(xlab, 1, line = 1.5, at = mean(x.range))
+            mytext2(xlab, 1, line = -1, at = mean(x.range))
         }
         ## Y
         lines(xx[1] + c(0, y.max * yx.f), c(z.min, y.max * yz.f + z.min),
