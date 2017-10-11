@@ -270,10 +270,10 @@ function(x, y = NULL, z = NULL, color = par("col"), pch = par("pch"),
         lines(xx[1] + c(0, y.max * yx.f), c(z.min, y.max * yz.f + z.min),
               col = col.axis, lty = lty.axis)
         # mytext2(ylab, if(angle.1) 2 else 4, line = linepad + 1, at = z.min + y.max * yz.f)
-        mytext2(ylab, if(angle.1) 2 else 4, line = -5, at = 1)
+        mytext2(ylab, if(angle.1) 2 else 4, line = -6.8, at = 1)
         ## Z
         lines(xx[c(2,2)], c(z.min, z.max), col = col.axis, lty = lty.axis)
-        mytext2(zlab, if(angle.1) 4 else 2, line = linepad + 2, at = mean(z.range))
+        mytext2(zlab, if(angle.1) 4 else 2, line = -1, at = mean(z.range))
         if(box) {
             if(is.null(lty.hide)) lty.hide <- lty.axis
             ## X
