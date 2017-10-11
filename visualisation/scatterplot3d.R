@@ -253,6 +253,8 @@ function(x, y = NULL, z = NULL, color = par("col"), pch = par("pch"),
             }
         }
 
+        linepad = -0.5;
+        
         ## axis and labels
 
         mytext2 <- function(lab, side, line, at)

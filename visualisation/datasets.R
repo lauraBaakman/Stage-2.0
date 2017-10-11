@@ -27,7 +27,7 @@ plotDataSet <- function(data, outputFile, numberOfPatternsPerSubSet){
     xlim = computeAxisLimit(data$x), ylim = computeAxisLimit(data$y), zlim = computeAxisLimit(data$z),
     pch=patternSymbols,
     color=patternColours,
-    grid=FALSE,
+    grid=FALSE, axis=TRUE, tick.marks=FALSE, label.tick.marks = FALSE,
     lty.hide=4,
     mar=c(2.4, 3, 0, 2),
     type='p',
