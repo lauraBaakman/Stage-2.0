@@ -9,7 +9,7 @@
 	%Local bandwidths
 	Since experiments indicated that using $\varMBESensitivityParam = \rfrac{1}{2}$ instead of $\varMBESensitivityParam = \rfrac{1}{\varDim}$ results in a final density approximation with a lower \mse for most of our data sets, we use the first.
 	%Final densities
-	We compute the final density estimate according to:
+	The final density estimate is computed according to:
 	\begin{equation}\label{eq:2:parzenWithBandWidthMatrix}
 		\varEstimatedDensityFunction{\varPattern} = \frac{1}{\varNumPatterns}\sum_{\itXis = 1}^{\varNumPatterns} \frac{1}{\det\left(\varBandwidthMatrix[\itXis]\right)}\varKernel[\varEpan]{\varBandwidthMatrix[\itXis]^{-1}\left(\varPattern - \varPattern[\itXis]\right)}.
 	\end{equation}
@@ -27,7 +27,7 @@
 					\varBandwidthMatrix[\itXis] = \varBandwidth \cdot \varLocalBandwidth{\itXis} 
 				 \left( \displaystyle\prod_{\itDim = 1}^{\varDim} \varEigenValue_\itDim \right)^{-\frac{1}{\varDim}} \cdot \varCovarianceMatrix
 				\end{equation}
-				where $\varEigenValue_1,\, \cdots,\, \varEigenValue_\varDim$ are the eigenvalues of \varCovarianceMatrix.  
+				where $\varEigenValue_1,\, \dotsc,\, \varEigenValue_\varDim$ are the eigenvalues of \varCovarianceMatrix.  
 		\end{enumerate}	
 	% Discuss step 1
 		Step \ref{it:1:bandwidthmatrix:findNeighbours} determines the local neighborhood of \varPattern[\itXis]. We take Euclidean distance as the distance metric. 

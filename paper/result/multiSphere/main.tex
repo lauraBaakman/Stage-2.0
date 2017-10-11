@@ -7,7 +7,7 @@
 \end{table}
 
 % What does the section do
-In this section we present the results of the two estimators on data set \ferdosiTwo, \baakmanTwo, \ferdosiThree, and \baakmanThree.
+In this section we present the results of the two estimators on data set \ferdosiTwo through \baakmanThree.
 % MSE
 	% GENERAL
 	Based on the small differences between the \mses of the estimators in \cref{tab:results:multiSphere:mse} they perform comparably. 
@@ -16,7 +16,7 @@ In this section we present the results of the two estimators on data set \ferdos
 	% FERDOSI 2 & BAAKMAN 2
 	Within data set \ferdosiTwo and \baakmanTwo both estimators perform significantly better on the component with higher values on the diagonal of its covariance matrix, \eg `Trivariate Gaussian 2'.
 	% FERDOSI 3 & BAAKMAN 3
-	In data set \ferdosiThree and \baakmanThree both estimators show a negative correlation between the eigenvalues of the covariance matrix of that component and the \MSE of points sampled from that component. Additionally, contrary to our expectation, the symmetric estimator performed better on data set \baakmanThree, than on the symmetric set it was derived from.
+	In data set \ferdosiThree and \baakmanThree both estimators show a negative correlation between the length of the major axis of the eigenellipsoid of the component and the \MSE of points sampled from that component. Additionally, contrary to our expectation, the symmetric estimator performed better on data set \baakmanThree, than on the symmetric set that \baakmanThree was derived from.
 
 % PLOTS
 	% GENERAL: TWO SPHERES
@@ -61,7 +61,7 @@ In this section we present the results of the two estimators on data set \ferdos
 	% Small differences in anisotropy between F2/F3 and B2/B3
 	The mean and standard deviation of the anisotropy of the kernels used for data sets with anisotropic components is slightly higher than for data set \ferdosiTwo and \ferdosiThree.
 	% Noise has largest anisotropy
-	As in \cref{tab:results:singleSphere:anisotropy} the kernels associated with the points sampled from the component `uniform random background` have the highest anisotropy, and vary the most in how anisotropic they are. 
+	As in \cref{tab:results:singleSphere:anisotropy} the kernels associated with the points sampled from the component `uniform random background' have the highest anisotropy, and vary the most in how anisotropic they are. 
 	% Positve correlation between mean anisotropy of the kernels and anisotropy of the gaussian components.
 	Contrasting the mean anisotropy of the kernels used for points drawn from the different components, we find a positive correlation between the mean anisotropy of the kernel and the anisotropy of the Gaussian component. 
 	% Positive correlation between anisotropy SD and kernel anisotropy
@@ -74,11 +74,11 @@ In this section we present the results of the two estimators on data set \ferdos
 
 % SUMMARY/CONCLUSION
 	% Small differences in MSE between the two datasets
-	To summarize the results of the data sets with multiple Gaussian components: we have found that the differences in performance between the two estimators are very small. Although \sambe tends to underestimate densities less than \mbe, the later performs slightly better on all data sets.
+	To summarize the results of the data sets with multiple Gaussian components: we have found that the differences in performance between the two estimators are very small. Although \sambe tends to underestimate densities less than \mbe, the later has a slightly better average performance on all data sets.
 	% Both estimators perform better on denser gaussian components
 	Furthermore both estimators show a negative correlation between the values on the diagonal of the covariance matrix of the Gaussian component and their performance on that component.
 	% Differences in anisotropy of the kernels between the F1/F2 and B1/B2 are small. 
-	Regarding the anisotropy of the kernels, we have found only a small increase in anisotropy between data sets with spherical kernels and data set \baakmanTwo and \baakmanThree. 
+	Regarding the anisotropy of the kernels, we have found only a small increase in anisotropy between data sets with spherical components and data sets with elongated components. 
 	% Anisotropy is strongest on noise component
 	Zeroing in on the components we have observed that the anisotropy of kernels associated with points drawn from the noise is strongest.
 	% Positve correlation between mean anisotropy of kernels and anisotropy of the gaussian comonent

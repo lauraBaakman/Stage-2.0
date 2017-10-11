@@ -44,9 +44,9 @@
 				% Ferdosi 1 & Baakman 1
 				Hardly any differences are visible between the plots of data set \ferdosiOne and \baakmanOne. 
 					% Very few points from Gaussian comonent
-					In \cref{fig:discussion:anisotropy:ferdosi1,fig:discussion:anisotropy:baakman1} \percentage{5.180481283422460e-01} and \percentage{1.174799465240642e+01}, respectively, of the emphasized points are sampled from the Gaussian component of the data sets. This shows that the kernels in data set \baakmanOne are influenced by the increase in anisotropy compared to the anisotropy of the Gaussian component used in data set \ferdosiOne.
+					In \cref{fig:discussion:anisotropy:ferdosi1,fig:discussion:anisotropy:baakman1} \percentage{5.180481283422460e-01} and \percentage{1.174799465240642e+01}, respectively, of the emphasized points are sampled from the Gaussian component of the data sets. This shows that the kernels in data set \baakmanOne are influenced by the increase in anisotropy compared to the isotropy of the Gaussian component in data set \ferdosiOne.
 					% Shell of points sampled from the noise around the Gaussian comonent
-					Furthermore a shell of points sampled from the noise with kernels whose anisotropy is relatively high surrounds the Gaussian component. It is quite likely that the shape of these kernels is influenced by that component. 
+					Furthermore a shell of points sampled from the noise with kernels whose anisotropy is relatively high surrounds the Gaussian component. It is quite likely that the shape of these kernels is influenced by the Gaussian component.
 					% Explanation: high density -> anisotropy detection fails
 					We expect that nearer to the mean of the Gaussian component fewer kernels are influenced by its anisotropy as the physical density of points is quite high in that area. Consequently the volume of the local neighborhood is quite low and thus possibly insufficient to represent the shape of the Gaussian.
 				% Baakman 4 and 5
@@ -99,7 +99,7 @@
 			We contribute the difference in the number of highly anisotropic kernels associated with data points sampled from the two Gaussian components to the difference in the volume of the their eigenspheres.
 		% Baakman 2
 			% More points near the Gaussian anisotropic
-			Comparing \cref{fig:discussion:anisotropy:ferdosi2,fig:discussion:anisotropy:baakman2} we find that the increase in anisotropy of the components causes \percentage{4.328209} and \percentage{8.656417} of the kernels with high anisotropy to be associated with a point sampled from `Trivariate Gaussian 1' and 2, respectively. 
+			For \cref{fig:discussion:anisotropy:baakman2} we find that the increase in anisotropy of the components causes \percentage{4.328209} and \percentage{8.656417} of the kernels with high anisotropy to be associated with a point sampled from `Trivariate Gaussian 1' and 2, respectively. 
 		% Ferdosi 3
 			% G1 and G3 have anisotropic kernels. 
 			Interestingly in data set \ferdosiThree, two of the four spherical Gaussians, `Trivariate Gaussian 1' and 3, are associated with respectively \percentage{1.404095} and \percentage{2.223151} of the highly anisotropic kernels. Whereas no point sampled from `Trivariate Gaussian 2' or 4 has a kernel with high anisotropy.
@@ -110,17 +110,17 @@
 				% G1/G3 are placed near the  border of the data set, contrast with results of F3Noise?
 				\Cref{fig:discussion:ferdosi3Noise:anisotropy} shows that the distance to the limits of the background does not explain the difference in anisotropy of the kernel, as in that figure the first and third component of \ferdosiThreeNoise have more anisotropic kernels than the other components, even though they are farther away from the boundary of the data set.
 				% G1/G3 have lower covariance:
-				The first explanation fits with the observations from \cref{s:results} that components with eigensphere with a larger volume, have kernels that have a higher anisotropy.
+				The first explanation fits with the observations from \cref{s:results} that components with eigenspheres with larger volumes, have kernels that have a higher anisotropy.
 		% Baakman 3
 			In data set \baakmanThree we observe the same effect as in \ferdosiThree but stronger; from the points with the most anisotropic kernels more are sampled from the two densest Gaussian component than from the other components. 
 
 	% Some general conclusion
-	\Cref{fig:discussion:anisotropy:singleSphere,fig:discussion:anisotropy:multisphere} show that the overwhelming majority of the points with a relative highly anisotropic kernel are sampled from the `Uniform random background'. We contribute this to the covariance matrix detecting fine, random structures in the noise, that give the impression of anisotropy in the data where there is none.
+	\Cref{fig:discussion:anisotropy:singleSphere,fig:discussion:anisotropy:multisphere} show that the overwhelming majority of the points with a relative highly anisotropic kernel are sampled from the `Uniform random background'. We contribute this to the covariance matrix being sensitive to fine, random structures in the noise, that give the impression of anisotropy in the data where there is none.
 
 % Denser component -> higher anisotropy of kernels
 	In \cref{s:results} we observed that both the volume of the eigensphere and the anisotropy of the Gaussian component influenced the anisotropy of the kernels. To test which factor is responsible for the difference in anisotropy we introduce two new data sets: \anisotropyOne and \anisotropyTwo.
 	% Definition
-	To create data set \anisotropyOne the covariance matrix used in \ferdosiOne was replaced by $\diag([4, 3, 1])$, data set \anisotropyTwo is the same as \anisotropyOne but uses $3 \cdot \diag([4, 3, 1]$.
+	To create data set \anisotropyOne the covariance matrix used in \ferdosiOne was replaced by $\diag([4, 3, 1])$, data set \anisotropyTwo is the same as \anisotropyOne but uses $3 \cdot \diag([4, 3, 1])$.
 	% Same anisotropy, different eigensphere volume
 	Consequently the Gaussian components of \anisotropyOne and \anisotropyTwo have the same anisotropy, but the volumes of the eigenspheres of their covariance matrices differ.
 	% Influence of density on MSE

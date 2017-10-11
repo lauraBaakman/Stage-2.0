@@ -3,11 +3,11 @@ We compare the performance of the Modified Breiman Estimator with isotropic and 
 % Which metrices do we use
 The \mse (\MSE) is used to quantify the performance of the estimators. We use
 \begin{equation*}\label{eq:experiment:anisotropicmetric}
-	\frac{\max\left(\varEigenValue_1, \cdots, \varEigenValue_\varDim \right)}{\min\left(\varEigenValue_1, \cdots, \varEigenValue_\varDim \right)}
+	\frac{\max\left(\varEigenValue_1, \dotsc, \varEigenValue_\varDim \right)}{\min\left(\varEigenValue_1, \dotsc, \varEigenValue_\varDim \right)}
 \end{equation*}
-where $\varEigenValue_1, \cdots, \varEigenValue_\varDim$ are the eigenvalues of the bandwidth matrix, to express how anisotropic a kernel is.
+where $\varEigenValue_1, \dotsc, \varEigenValue_\varDim$ are the eigenvalues of the bandwidth matrix, to express how anisotropic a kernel is.
 %Quickly introduce the datasets
-We use two different types of data sets: data sets consisting of a single Gaussian distribution and noise, defined in \cref{s:experiment:singlesphere},  and data sets containing multiple Gaussian distributions embedded in an uniform distribution as background, which are presented in \cref{s:experiment:multisphere}.
+We use two different types of data sets: data sets consisting of a single Gaussian distribution and noise, defined in \cref{s:experiment:singlesphere},  and data sets containing multiple Gaussian distributions embedded in an uniform distribution, which are presented in \cref{s:experiment:multisphere}.
 
 \subsection{Data sets with a Single Gaussian}
 \label{s:experiment:singlesphere}
