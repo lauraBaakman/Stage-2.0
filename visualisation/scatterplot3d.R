@@ -258,7 +258,7 @@ function(x, y = NULL, z = NULL, color = par("col"), pch = par("pch"),
         ## axis and labels
         mytext2 <- function(lab, side, line, at)
             mtext(lab, side = side, line = line, at = at, col = col.lab,
-                  cex = cex.lab, font = font.axis, las = 0)
+                  cex = cex.lab, font = font.axis, las = 1)
         ## X
         lines(c(x.min, x.max), c(z.min, z.min), col = col.axis, lty = lty.axis)
         if(!is.na(asp)) {
