@@ -90,7 +90,7 @@ def convert_pdf_file(file):
 
     # convert -density 150 -antialias ~/Desktop/overlay.pdf -quality 100 ~/Desktop/temp.png
     cli_args = [
-        'convert', '-density', '150', '-antialias', file,
+        'convert', '-trim', '-density', '150', '-antialias', file,
         '-quality', '100', png_path
     ]
     subprocess.call(cli_args)
