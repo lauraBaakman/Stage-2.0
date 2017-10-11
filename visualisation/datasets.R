@@ -6,7 +6,7 @@ source("./header.R");
 source("./io.R");
 
 # Load libraries
-library(scatterplot3d)
+source('./scatterplot3d.R')
 
 computeAxisLimit <- function(data){
   c(round(min(data)), round(max(data)))
