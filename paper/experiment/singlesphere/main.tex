@@ -2,7 +2,6 @@
 
 \begin{figure*}
 	\centering
-	\beforeFinalVersion{Remove ticks and labels.}
 	\input{experiment/singlesphere/subfig}
 	\caption{Scatter plot representation of the data sets defined in \cref{tab:experiment:singlesphere:sets}. The used colors correspond to those associated with the different components in \cref{tab:experiment:singlesphere:sets}.}
 	\label{fig:experiment:singlesphere:sets}
@@ -18,18 +17,18 @@
 \Cref{fig:experiment:singlesphere:sets} shows a scatter plot representation of the data sets defined in \cref{tab:experiment:singlesphere:sets}. 
 
 % General
-The Gaussian components of these data sets progress from a sphere, \ie data set \ferdosiOne, to an increasingly more elongated ellipsoid. This makes it possible to investigate the influence of how strongly elongated the distribution is, on the density estimate. 
+The Gaussian components of these data sets progress from a sphere, \ie data set \ferdosiOne, to an increasingly elongated ellipsoid. This makes it possible to investigate the influence of how strongly elongated the distribution is, on the density estimate. 
 	% Ferdosi One
-	The first data set is a simple spherical Gaussian distribution centered in a uniform random background. 
+	The first data set is a spherical Gaussian distribution centered in a uniform random background. 
 	% Baakman One
 	The covariance matrix of the Gaussian component in \baakmanOne is created from \ferdosiOne by squaring one of the eigenvalues of the covariance matrix, and taking the square root of the other two eigenvalues, without changing the eigenvectors. The resulting covariance matrix defines an eigenellipse with the same volume as the one defined by \ferdosiOne.
 	% Baakman Four
-	The Gaussian component of data set \baakmanFour changes the shape of the eigenellipse of the Gaussian component by lengthening one of the minor axes, and shortening the other.
+	The Gaussian component of data set \baakmanFour changes the shape of the eigenellipse of the Gaussian component in set \ferdosiOne by lengthening one of the minor axes, and shortening the other.
 	% Baakman Five
 	In data set \baakmanFive the Gaussian component is spread out more along the y-axis and less along the z-axis, than the Gaussian component in data set \baakmanFour.
 
 % Hypothesis
 	% Ferdosi 1
-	We expect the Modified Breiman Estimator and its shape-adaptive cousin to perform comparably on data set \ferdosiOne, since due to the symmetric shape of the Gaussian distribution no advantage should be gained by using a shape-adaptive kernel and nor it should do much steering. 
+	We expect the Modified Breiman Estimator and its shape-adaptive cousin to perform comparably on data set \ferdosiOne, since the symmetric shape of the Gaussian distribution means no advantage should be gained by using a shape-adaptive kernel and nor it should do much steering. 
 	% Baakman 1, 4, 5
 	As the Gaussian distribution is more and more elongated, the advantages of using \sambe should become more pronounced. 
