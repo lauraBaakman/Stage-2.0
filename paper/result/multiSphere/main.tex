@@ -1,5 +1,5 @@
 %!TEX root = ../../paper.tex
-\begin{table}
+\begin{table}[b!]
 	\centering
 	\input{result/multiSphere/mse_tab}
 	\caption{Performance of the symmetric and the shape-adaptive Modified Breiman Estimator on data set \ferdosiTwo through \baakmanThree.} 	
@@ -20,12 +20,6 @@ In this section we present the results of the two estimators on data set \ferdos
 
 % PLOTS
 	% GENERAL: TWO SPHERES
-	\begin{figure*}
-		\centering
-		\input{result/multiSphere/twoSpheres_subfig}
-		\caption{Plots of the true versus estimated density of data sets \ferdosiTwo and \baakmanTwo for the shape-adaptive and the symmetric Modified Breiman Estimator.}
-		\label{fig:results:multiSphere:two:comparativePlots}
-	\end{figure*}
 	%
 	\Cref{fig:results:multiSphere:two:comparativePlots} shows the estimated density as a function of the known density for both estimators for the data sets with two Gaussian components. These plots show that irrespective of the type of kernel used the density is underestimated, more so by \mbe than by \sambe. Furthermore using shape-adaptive kernels results in a larger variation in estimated densities than the use of symmetric kernels. 
 	% FERDOSI 2
@@ -37,12 +31,6 @@ In this section we present the results of the two estimators on data set \ferdos
 		Furthermore the \mses of the individual components of data set \ferdosiTwo and \baakmanThree show that both estimators perform worse on components with covariance matrices that have low eigenvalues, \eg `Trivariate Gaussian 1' in \ferdosiTwo and \baakmanThree.
 	%		
 	% GENERAL: FOUR SPHERES
-	\begin{figure*}
-		\centering
-		\input{result/multiSphere/fourSpheres_subfig}
-		\caption{The estimated density as a function of the true density for data set \ferdosiThree and \baakmanThree, for both \mbe and \sambe.}
-		\label{fig:results:multiSphere:three:comparativePlots}
-	\end{figure*}
 	%
 	The plots in \cref{fig:results:multiSphere:three:comparativePlots} confirm the large difference in performance between data sets with two and four Gaussian components observed in \cref{tab:results:multiSphere:mse}. Moreover they show that both \mbe and \sambe underestimate densities, especially on the points whose known density is high. In \cref{fig:results:multiSphere:three:comparativePlots} we also observe the larger spread of densities estimated by \sambe, compared to those estimated by \mbe.
 	% FERDOSI 3	
@@ -50,12 +38,6 @@ In this section we present the results of the two estimators on data set \ferdos
 	% FOCUS ON COMPONENTS
 
 % ANISOTROPY
-	\begin{table*}
-		\centering
-		\input{result/multiSphere/anisotropy_tab}
-		\caption{The mean (\mean) and standard deviation (\SD) of the anisotropy of the kernels used for points from the data sets with multiple Gaussian components, for each component separately and for the full data set.} 	
-		\label{tab:results:multiSphere:anisotropy}
-	\end{table*}
 	% What are we looking at
 	\Cref{tab:results:multiSphere:anisotropy} presents the mean and standard deviation of the anisotropy of the kernels used for the points from data set \ferdosiTwo through \baakmanThree.
 	% Small differences in anisotropy between F2/F3 and B2/B3
