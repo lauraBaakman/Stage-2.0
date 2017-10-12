@@ -5,9 +5,7 @@ rm(list = ls())
 source("./header.R");
 source("./io.R");
 source("./results.R");
-
-# Load libraries
-library(scatterplot3d)
+source('./scatterplot3d.R')
 
 readResultSet <- function(data_set_file, parzen_file, mbe_file, sambe_file){
   # read dataset file
@@ -149,7 +147,7 @@ ferdosi1<-function(){
   data$mbeSambeDiff = data$mbeDensities - data$sambeDensities;
   data$anisotropy = anisotropy(data);
 
-  generateMBEvsSAMBEPlot(data, "../paper/discussion/img/ferdosi_1_60000_mbe_sambe.png")
+  # generateMBEvsSAMBEPlot(data, "../paper/discussion/img/ferdosi_1_60000_mbe_sambe.png")
   plotAnisotropy(data, "../paper/discussion/img/ferdosi_1_60000_anisotropy.pdf")
   # MBE better than SAMBE
   plotSubsetOverlay(
@@ -446,12 +444,13 @@ plotSubsetOverlay <- function(allData, overlay, outputFile='~/Desktop/overlay.pd
     xlab='x', ylab='y', zlab='z',
     pch=16,
     color=theColors,
-    grid=FALSE,
+    grid=FALSE, axis=TRUE, tick.marks=FALSE, label.tick.marks = FALSE,
     lty.hide=4,
     mar=c(2.4, 3, 0, 2),
     type='p',
     cex.symbols = 0.4
-  )  
+  ) 
+  
   # Plot the points of interest
   overlay = overlay[order(overlay$component, decreasing = FALSE), ]
   if(is.null(color)){
