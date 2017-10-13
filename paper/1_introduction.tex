@@ -1,7 +1,7 @@
 %!TEX root = paper.tex
 Kernel density estimation is a popular method to approximate probability densities. In medicine it has been used to predict dose-volume histograms, which are instrumental in determining radiation dosages~\cite{SkarpmanDose2015}. Ecologists have applied it to explore the habitats of seabirds~\cite{lees2016using}. \textcite{ferdosi2011comparison} have described it as ``a critical first step in making progress in many areas of astronomy."  Within this discipline  density estimation is, among other things, used to estimate the density of the cosmic density field, which is required for the reconstruction of the large-scale structure of the universe.
 
-Formally the aim of density estimation is to find the probability density function \varDensityFunction{\varPattern} in the \varDim-dimensional Euclidean space underlying \varNumPatterns points $\varPattern[1], \dotsc, \varPattern[\varNumPatterns]$, that have been selected independently from \varDensityFunction{\varPattern}. Kernel density estimation methods approximate this function by placing bumps, referred to as kernels, on the different observations, and summing these bumps to arrive at a final density estimate. This paper is concerned with a method to make the shape of the kernels adaptive to their local neighborhood. Before introducing the process used to determine the shape of the kernel we first review different symmetric kernel density estimation methods.
+Formally the aim of density estimation is to find the probability density function \varDensityFunction{\varPattern} in the \varDim-dimensional Euclidean space underlying \varNumPatterns points $\varPattern[1], \dotsc,\, \varPattern[\varNumPatterns]$, that have been selected independently from \varDensityFunction{\varPattern}. Kernel density estimation methods approximate this function by placing bumps, referred to as kernels, on the different observations, and summing these bumps to arrive at a final density estimate. This paper is concerned with a method to make the shape of the kernels adaptive to their local neighborhood. Before introducing the process used to determine the shape of the kernel we first review different symmetric kernel density estimation methods.
 
 % Parzen
 	A good example of a symmetric kernel density estimator is the Parzen approach~\cite{parzen1962estimation}. It approximates the density of some pattern \varPattern according to:
@@ -30,7 +30,7 @@ Formally the aim of density estimation is to find the probability density functi
 			\item \label{it:1:pilotdensities:localbandwidths}
 				Define local bandwidths $\varLocalBandwidth{i}$ as
 				\begin{equation}\label{eq:1:localBandwidth}
-					\varLocalBandwidth{\itXis} = \left( \frac{\varPilotDensityFunction{\varPattern[\itXis]}}{\varGeometricMeanFunction{\varPilotDensityFunction{\varPattern[1]}, \dotsc, \varPilotDensityFunction{\varPattern[\varNumPatterns]}}}  \right)^{- \varMBESensitivityParam},
+					\varLocalBandwidth{\itXis} = \left( \frac{\varPilotDensityFunction{\varPattern[\itXis]}}{\varGeometricMeanFunction{\varPilotDensityFunction{\varPattern[1]}, \dotsc,\, \varPilotDensityFunction{\varPattern[\varNumPatterns]}}}  \right)^{- \varMBESensitivityParam},
 				\end{equation}
 				where $\varGeometricMeanFunction{}$ denotes the geometric mean, and the sensitivity parameter \varMBESensitivityParam must lie in the range $\left[0, 1\right]$.
 			\item \label{it:1:pilotdensities:finaldensities}
@@ -64,7 +64,7 @@ Formally the aim of density estimation is to find the probability density functi
 % Ferdosi
 	\textcite{ferdosi2011comparison} consider the estimation of densities of large data sets. They use the \mbe, but introduce a computationally less complex method to estimate the global bandwidth. First an intermediate bandwidth, $\varBandwidth_\itDim$, for each dimension $l$ of the data is computed according to
 	\begin{equation}\label{eq:1:ferdosiGeneralBandwidth}
-			\varBandwidth_\itDim = \frac{\varPercentile{80}{\itDim} - \varPercentile{20}{\itDim}}{\log \varNumPatterns}, \, \itDim = 1, \dotsc, \varDim,
+			\varBandwidth_\itDim = \frac{\varPercentile{80}{\itDim} - \varPercentile{20}{\itDim}}{\log \varNumPatterns}, \, \itDim = 1, \dotsc,\, \varDim,
 		\end{equation}
 	where \varPercentile{20}{\itDim} and \varPercentile{80}{\itDim} are the twentieth and eightieth percentile of the data in dimension \itDim, respectively. The global bandwidth, \varBandwidth, is defined as the minimum of these intermediate bandwidths.
 
