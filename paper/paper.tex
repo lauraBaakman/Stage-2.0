@@ -16,7 +16,7 @@
 		\begin{abstract}
 			\input{0_abstract}
 		\end{abstract}
-		\vspace{4em}
+		\vspace{2em}
   \end{@twocolumnfalse}
 ]
 
@@ -27,7 +27,7 @@
 \begin{table*}[th!]
 	\centering
 	\input{experiment/singlesphere/dataset_tab}
-	\caption{The data sets containing a single Gaussian distribution embedded in uniform noise. The column `Number' indicates for each component the number of patterns sampled from it. \gaussDist{\varMean}{\varCovarianceMatrix} denotes a Gaussian distribution with mean \varMean and covariance matrix \varCovarianceMatrix. A diagonal matrix with the values $x_1,\, \dotsc,\, x_\varDim$ on the diagonal is represented as $\diag([x_1,\,\dotsc,\,x_\varDim]])$, a scalar matrix with $x$ on the diagonal is shown as $\diag(x)$. \uniformDist{a}{b} denotes a uniform distribution with its minimum and maximum set to $a$ and $b$, respectively. The second column presents the symbol used to represent this component in plots throughout the paper.} 	
+	\caption{The data sets containing a single Gaussian distribution embedded in an uniform random background. The column `Samples' indicates for each component the number of patterns sampled from it. \gaussDist{\varMean}{\varCovarianceMatrix} denotes a Gaussian distribution with mean \varMean, and covariance matrix \varCovarianceMatrix. A diagonal matrix with the values $x_1,\, \dotsc,\, x_\varDim$ on the diagonal is represented as $\diag([x_1,\,\dotsc,\,x_\varDim]])$, a scalar matrix with $x$ on the diagonal is shown as $\diag(x)$. \uniformDist{a}{b} denotes a uniform distribution with its minimum and maximum set to $a$ and $b$, respectively. The second column presents the color used to represent this component in plots throughout the paper.}
 	\label{tab:experiment:singlesphere:sets}
 \end{table*}
 
@@ -51,7 +51,7 @@
 \label{s:conclusion}
 \input{conclusion}
 
-	
+
 \printbibliography
 
 \end{document}

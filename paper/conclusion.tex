@@ -2,12 +2,12 @@
 
 We have found that the shape-adaptive Modified Breiman Estimator gives results comparable to those of the symmetric version of the estimator.
 % Where SAMBE outperforms MBE
-Anisotropic kernels have proven advantageous near the borders of the data sets. However this positive effect is negated by the number of points where the kernel is too isotropic, or too anisotropic for its local neighborhood. 
+Anisotropic kernels have proven advantageous near the borders of the data sets. However this positive effect is negated by the number of points where the kernel is too isotropic, or too anisotropic for its local neighborhood.
 % Problems with SAMBE
 	% High anisotropy of kernels in noise
-	Kernels that are too anisotropic for their neighborhood occur mostly in the uniform random noise, due to the covariance matrix being sensitive to spurious, fine structures in the background, where the data is isotropic. 
+	Kernels that are too anisotropic for their neighborhood occur mostly in the uniform random background, due to the covariance matrix being sensitive to spurious, fine structures in the background, where the data is isotropic.
 	% High anistropy with high density
-	Overly isotropic kernels occur mostly for points near the mean of Gaussian components that are defined by a covariance matrix which has a large eigensphere. 
+	Overly isotropic kernels occur mostly for points near the mean of Gaussian components that are defined by a covariance matrix which has a large eigenellipsoid.
 
 % Further research
 Both cases show that the estimator has problems with detecting the shape of the local neighborhood. One way of addressing this problem may be to (adaptively) increase the size of the local neighborhood. Another possible improvement could be to decide how anisotropic the kernel should be based on its local neighborhood.

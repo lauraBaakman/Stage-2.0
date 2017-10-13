@@ -1,5 +1,5 @@
 %!TEX root = ../paper.tex
-We compare the performance of the Modified Breiman Estimator with isotropic and anisotropic kernels on simulated data sets with known density fields. This allows us to test how well the shape-adaptive method recovers simple density distributions in comparison to the fixed-shape method. 
+We compare the performance of the Modified Breiman Estimator with isotropic and anisotropic kernels on simulated data sets with known density fields. This allows us to test how well the shape-adaptive method recovers simple density distributions in comparison to the fixed-shape method.
 % Which metrices do we use
 The \mse (\MSE) is used to quantify the performance of the estimators. We use
 \begin{equation*}\label{eq:experiment:anisotropicmetric}
@@ -7,19 +7,19 @@ The \mse (\MSE) is used to quantify the performance of the estimators. We use
 \end{equation*}
 where $\varEigenValue_1, \dotsc, \varEigenValue_\varDim$ are the eigenvalues of the bandwidth matrix, to express how anisotropic a kernel is.
 %Quickly introduce the datasets
-We use two different types of data sets: data sets consisting of a single Gaussian distribution and noise, defined in \cref{s:experiment:singlesphere},  and data sets containing multiple Gaussian distributions embedded in an uniform distribution, which are presented in \cref{s:experiment:multisphere}.
+Two different types of data sets are used: data sets consisting of a single Gaussian distribution with an uniform random background, defined in \cref{s:experiment:singlesphere},  and data sets containing multiple Gaussian distributions embedded in an uniform distribution, which are presented in \cref{s:experiment:multisphere}.
 
 \begin{figure*}
 	\centering
 	\input{experiment/singlesphere/dataset_subfig}
-	\caption{Scatter plot representation of the data sets defined in \cref{tab:experiment:singlesphere:sets}. The used colors correspond to those associated with the different components in \cref{tab:experiment:singlesphere:sets}.}
+	\caption{Scatter plot representation of the data sets with a single Gaussian, defined in \cref{tab:experiment:singlesphere:sets}. The used colors correspond to those associated with the different components in \cref{tab:experiment:singlesphere:sets}.}
 	\label{fig:experiment:singlesphere:sets}
 \end{figure*}
 
 \begin{table*}
 	\centering
 	\input{experiment/multisphere/dataset_tab}
-	\caption{The data sets with multiple Gaussian distributions embedded in uniform noise. This table has the same structure and uses the same notation as \cref{tab:experiment:singlesphere:sets}.} 	
+	\caption{The data sets with multiple Gaussian distributions embedded in uniform random background. This table has the same structure and uses the same notation as \cref{tab:experiment:singlesphere:sets}.}
 	\label{tab:experiment:multisphere:sets}
 \end{table*}
 
@@ -31,4 +31,4 @@ We use two different types of data sets: data sets consisting of a single Gaussi
 \label{s:experiment:multisphere}
 \input{experiment/multisphere/main}
 
-\textcite{ferdosi2011comparison} found that the \mbe resulted in lower integrated squared errors if fewer Gaussian distributions were present in the data sets. Since the presented data sets are comparable to those used by \citeauthor{ferdosi2011comparison} we expect to find the same influence of the number of distributions on the error.
+\textcite{ferdosi2011comparison} found that the \mbe resulted in lower integrated squared errors if fewer Gaussian distributions were present in the data sets. Since the presented data sets are comparable to those used by \citeauthor{ferdosi2011comparison} we expect to find the same influence on the \mse.

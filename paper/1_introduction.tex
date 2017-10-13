@@ -1,5 +1,5 @@
 %!TEX root = paper.tex
-Kernel density estimation is a popular method to approximate probability densities. In medicine it has been used to predict dose-volume histograms, which are instrumental in determining radiation dosages \cite{SkarpmanDose2015}. Ecologists have applied it to explore the habitats of seabirds \cite{lees2016using}. \textcite{ferdosi2011comparison} have described it as ``a critical first step in making progress in many areas of astronomy."  Within this discipline  density estimation is, among other things, used to estimate the density of the cosmic density field, which is required for the reconstruction of the large-scale structure of the universe.
+Kernel density estimation is a popular method to approximate probability densities. In medicine it has been used to predict dose-volume histograms, which are instrumental in determining radiation \mbox{dosages \cite{SkarpmanDose2015}}. Ecologists have applied it to explore the habitats of seabirds \cite{lees2016using}. \textcite{ferdosi2011comparison} have described it as ``a critical first step in making progress in many areas of astronomy."  Within this discipline  density estimation is, among other things, used to estimate the density of the cosmic density field, which is required for the reconstruction of the large-scale structure of the universe.
 
 Formally the aim of density estimation is to find the probability density function \varDensityFunction{\varPattern} in the \varDim-dimensional Euclidean space underlying \varNumPatterns points $\varPattern[1], \dotsc, \varPattern[\varNumPatterns]$, that have been selected independently from \varDensityFunction{\varPattern}. Kernel density estimation methods approximate this function by placing bumps, referred to as kernels, on the different observations, and summing these bumps to arrive at a final density estimate. This paper is concerned with a method to make the shape of the kernels adaptive to their local neighborhood. Before introducing the process used to determine the shape of the kernel we first review different symmetric kernel density estimation methods.
 
@@ -8,24 +8,24 @@ Formally the aim of density estimation is to find the probability density functi
 	\begin{equation}\label{eq:1:parzen}
 		\varEstimatedDensityFunction{\varPattern} = \frac{1}{\varNumPatterns}\sum_{\itXis = 1}^{\varNumPatterns} \varBandwidth^{-\varDim}\varKernel{\frac{\varPattern - \varPattern[\itXis]}{\varBandwidth}}.
 	\end{equation}
-	The shape of the bumps used is determined by the kernel function \varKernel{\bullet}; their width by the bandwidth \varBandwidth. The Parzen approach requires the kernel to be a probability density function, \ie $\varKernel{\bullet} \geq 0$ and $\int \varKernel{\bullet} = 1$ \cite{silverman1986density}. 
+	The shape of the used bumps is determined by the kernel function \varKernel{\bullet}; their width by the bandwidth \varBandwidth. The Parzen approach requires the kernel to be a probability density function, \ie $\varKernel{\bullet} \geq 0$, and $\int \varKernel{\bullet} = 1$ \cite{silverman1986density}.
 	%
 	The bandwidth directly influences the result of the density estimation process; a bandwidth that is too low results in a narrow kernel, which can lead to a density estimate with spurious fine structures, whereas kernels that are too wide can oversmooth the density estimate. Kernel density estimators, such as the Parzen approach, that use kernels of the same width for all \varPattern[\itXis], are called fixed-width estimators.
 
 % Breiman, Meisel, Purcell
-	One downside of these methods is that the height of the peak of the kernel is not data-responsive. Consequently, in low density regions the density estimate will be higher than expected at those sample points, and be too low elsewhere. In areas with high density, the Parzen estimate is spread out, as the sample points are more densely packed together \cite{breiman1977variable}. Adaptive-width methods address this disadvantage by allowing the width of the kernel to vary per data point. For example the Breiman estimator introduced by \textcite{breiman1977variable} uses the distance between \varPattern[\itXis] and its \KNNK-th nearest neighbor, denoted by \varKNNDistance{\itXis}{\KNNK}, to determine the width of the kernel:
+	One downside of these methods is that the height of the peak of the kernel is not data-responsive. Consequently, in low density regions the density estimate will be higher than expected at those sample points, and be too low elsewhere. In areas with high density, the Parzen estimate is spread out, as the sample points are more densely packed \mbox{together \cite{breiman1977variable}}. Adaptive-width methods address this disadvantage by allowing the width of the kernel to vary per data point. For example the Breiman estimator introduced by \textcite{breiman1977variable} uses the distance between \varPattern[\itXis], and its \KNNK-th nearest neighbor, denoted by \varKNNDistance{\itXis}{\KNNK}, to determine the kernel's width:
 	%
 	\begin{equation}\label{eq:1:BML}
 	 	\varEstimatedDensityFunction{\varPattern} = \frac{1}{\varNumPatterns} \sum_{\itXis = 1}^{\varNumPatterns} (\varBMLconstant \cdot \varKNNDistance{\itXis}{k})^{-\varDim} \varKernel[\varGaussian]{\frac{\varPattern - \varPattern[\itXis]}{\varBMLconstant \cdot \varKNNDistance{\itXis}{k}}}.
-	\end{equation} 
+	\end{equation}
 	%
-	In this equation \varKernel[\varGaussian]{} is a Gaussian kernel, and \varBMLconstant is a multiplicative constant. The values of both \varBMLconstant and \KNNK can be determined by using a minimization algorithm on a goodness of fit statistic. In the Breiman estimator, the bandwidth of the kernel is $\varBMLconstant \cdot \varKNNDistance{\itXis}{k}$, comparing this to the constant bandwidth \varBandwidth of Parzen you can see that the bandwidth depends on the factor \varKNNDistance{\itXis}{\KNNK}, which depends on the local neighborhood of \varPattern[\itXis]. In low density regions this factor is large, and the kernel spreads out due to its high bandwidth. In areas with relatively many data points the converse occurs.
+	In this equation \varKernel[\varGaussian]{} is a Gaussian kernel, and \varBMLconstant is a multiplicative constant. The values of both \varBMLconstant, and \KNNK can be determined by using a minimization algorithm on a goodness of fit statistic. In the Breiman estimator, the bandwidth of the kernel is $\varBMLconstant \cdot \varKNNDistance{\itXis}{k}$, comparing this to the constant bandwidth \varBandwidth of Parzen in \cref{eq:1:parzen} it is clear that the bandwidth depends on the factor \varKNNDistance{\itXis}{\KNNK}, which depends on the local neighborhood of \varPattern[\itXis]. In low density regions this factor is large, and the kernel spreads out due to its high bandwidth. In areas with relatively many data points the converse occurs.
 
 % Introduce Pilot Densities
 	\textcite{silverman1986density} shows that the minimization procedure used by \citeauthor{breiman1977variable} implicitly uses a \KNN pilot estimate. If we explicitly use pilot estimates,  denoted by \varPilotDensityFunction{\bullet}, the density estimation process becomes:
 		\begin{enumerate}[labelindent=0ex]
 			\item \label{it:1:pilotdensities:pilotdensities}
-				Compute pilot densities with some estimator that ensures that $\forall \itXis \; \varPilotDensityFunction{\varPattern[\itXis]} > 0$. 
+				Compute pilot densities with some estimator that ensures that $\forall \itXis \; \varPilotDensityFunction{\varPattern[\itXis]} > 0$.
 
 			\item \label{it:1:pilotdensities:localbandwidths}
 				Define local bandwidths $\varLocalBandwidth{i}$ as
@@ -33,36 +33,36 @@ Formally the aim of density estimation is to find the probability density functi
 					\varLocalBandwidth{\itXis} = \left( \frac{\varPilotDensityFunction{\varPattern[\itXis]}}{\varGeometricMeanFunction{\varPilotDensityFunction{\varPattern[1]}, \dotsc, \varPilotDensityFunction{\varPattern[\varNumPatterns]}}}  \right)^{- \varMBESensitivityParam},
 				\end{equation}
 				where $\varGeometricMeanFunction{}$ denotes the geometric mean, and the sensitivity parameter \varMBESensitivityParam must lie in the range $\left[0, 1\right]$.
-			\item \label{it:1:pilotdensities:finaldensities} 
+			\item \label{it:1:pilotdensities:finaldensities}
 				Compute the adaptive kernel estimate as
 				\begin{equation}\label{eq:1:adaptiveKernelEstimateWithLocalBandwidths}
 					\varEstimatedDensityFunction{\varPattern} = \frac{1}{\varNumPatterns} \sum_{\itXis = 1}^{\varNumPatterns} \left(\varBandwidth \cdot \varLocalBandwidth{\itXis}\right)^{-\varDim} \varKernel{\frac{\varPattern - \varPattern[\itXis]}{\varBandwidth \cdot  \varLocalBandwidth{\itXis}}}
 				\end{equation}
-				with \varKernel{} integrating to unity. 
+				with \varKernel{} integrating to unity.
 		\end{enumerate}
 	% Discuss step 1
 	Since the final estimated densities are not sensitive to the fine detail of the pilot estimates, a convenient method, \eg the Parzen approach, can be used in step \ref{it:1:pilotdensities:pilotdensities}.
 	% Discuss step 2
 	The local bandwidths, computed in step \ref{it:1:pilotdensities:localbandwidths}, depend on the exponent \varMBESensitivityParam. The higher this value is, the more sensitive the local bandwidths are to variations in the pilot densities. Choosing $\varMBESensitivityParam = 0$ reduces \cref{eq:1:adaptiveKernelEstimateWithLocalBandwidths} to a fixed-width method.
 		%Which value of \varMBESensitivityParam
-		In the literature, two values of \varMBESensitivityParam are prevalent. \textcite{breiman1977variable} argue that choosing $\varMBESensitivityParam = \rfrac{1}{\varDim}$ ensures that the number of observations covered by the kernel will approximately be the same in all areas of the data, whereas \textcite{silverman1986density} favors $\varMBESensitivityParam = \rfrac{1}{2}$ independent of the dimension of the data, as this value results in a bias that can be shown to be of a smaller order than that of the fixed-width kernel estimate.
+		In the literature, two values of \varMBESensitivityParam are prevalent. \textcite{breiman1977variable} argue that choosing $\varMBESensitivityParam = \rfrac{1}{\varDim}$ ensures that the number of observations covered by the kernel will approximately be the same in all areas of the data, whereas \textcite{silverman1986density} favors \mbox{$\varMBESensitivityParam = \rfrac{1}{2}$} independent of the dimension of the data, as this value results in a bias that can be shown to be of a smaller order than that of the fixed-width kernel estimate.
 	% Discuss step 3
 
 % Wilkinson and Meijer
-	One disadvantage of the Breiman estimator is its computational complexity. This is partially due to the use of a Gaussian kernel. Because of the infinite base of this kernel, an exponential function has to be evaluated \varNumPatterns times to estimate the density of one data point. 
+	One disadvantage of the Breiman estimator is its computational complexity. This is partially due to the use of a Gaussian kernel. Because of the infinite base of this kernel, an exponential function has to be evaluated \varNumPatterns times to estimate the density of one data point.
 	% First Change
-	\textcite{wilkinson1995dataplot} address this in their Modified Breiman Estimator (\mbe) by replacing the Gaussian kernel with a spherical Epanechnikov kernel in both the computation of the pilot densities and the final density estimate. This kernel is defined as
+	\textcite{wilkinson1995dataplot} address this in their Modified Breiman Estimator (\mbe) by replacing the Gaussian kernel with a spherical Epanechnikov kernel in both the computation of the pilot densities, and the final density estimate. This kernel is defined as
 	\begin{equation}\label{eq:1:epanechnikovKernelNoCovarianceMatrix}
-		\varKernel[\varEpan]{\varPattern} = 
+		\varKernel[\varEpan]{\varPattern} =
 		\begin{cases}
-			\frac{\varDim + 2}{2\varUnitSphere{\varDim}} \left( 1 - \varPattern \cdot \varPattern \right) & \text{if } \varPattern \cdot \varPattern < 1\\
+			\frac{\varDim + 2}{2\cdot\varUnitSphere{\varDim}} \left( 1 - \varPattern \cdot \varPattern \right) & \text{if } \varPattern \cdot \varPattern < 1\\
 			0 & \text{otherwise}
 		\end{cases}
 	\end{equation}
-	 where \varUnitSphere{\varDim} denotes the volume of the \varDim-dimensional unit sphere \cite{epanechnikov1969non}. It should be noted that the kernel defined in \cref{eq:1:epanechnikovKernelNoCovarianceMatrix} does not have unit variance. This can be corrected by multiplying the bandwidth, \varBandwidth, with the square root of the variance of \varKernel[\varEpan]{}, \ie $\sqrt{5}$. There are two advantages to using this kernel. Firstly it is computationally much less expensive than the Gaussian kernel. Secondly it is optimal in the sense of the Mean Integrated Square Error (MISE) \cite{epanechnikov1969non}. A downside of this kernel is that it is not continuously differentiable. This is irrelevant when computing the pilot densities, for the final densities however one has to choose between a continuously differentiable density estimate and a density estimator that has a low computational complexity.
+	 where \varUnitSphere{\varDim} denotes the volume of the \varDim-dimensional unit sphere \cite{epanechnikov1969non}. It should be noted that the kernel defined in \cref{eq:1:epanechnikovKernelNoCovarianceMatrix} does not have unit variance. This can be corrected by multiplying the bandwidth \varBandwidth with the square root of the variance of the kernel, \mbox{\ie $\sqrt{5}$}. There are two advantages to using this kernel. Firstly it is computationally significantly cheaper than the Gaussian kernel. Secondly it is optimal in the sense of the Mean Integrated Square Error (MISE) \cite{epanechnikov1969non}. A downside of this kernel is that it is not continuously differentiable. This is irrelevant when computing the pilot densities, for the final densities however one has to choose between a continuously differentiable density estimate, and a density estimator that has a low computational complexity.
 
 % Ferdosi
-	\textcite{ferdosi2011comparison} consider the application of density estimation on large data sets. They use the \mbe, but introduce a computationally less complex method to estimate the global bandwidth. First an intermediate bandwidth, $\varBandwidth_\itDim$, for each dimension $l$ of the data is computed according to		
+	\textcite{ferdosi2011comparison} consider the application of density estimation on large data sets. They use the \mbe, but introduce a computationally less complex method to estimate the global bandwidth. First an intermediate bandwidth, $\varBandwidth_\itDim$, for each dimension $l$ of the data is computed according to
 	\begin{equation}\label{eq:1:ferdosiGeneralBandwidth}
 			\varBandwidth_\itDim = \frac{\varPercentile{80}{\itDim} - \varPercentile{20}{\itDim}}{\log \varNumPatterns}, \, \itDim = 1, \dotsc, \varDim,
 		\end{equation}

@@ -1,10 +1,10 @@
 \newcommand{\oldStuff}{%
-	\vspace{10ex}%	
+	\vspace{10ex}%
 	\noindent%
 	\rule[0.5ex]{0.4\linewidth}{2pt}%
 	\makebox[0.2\linewidth]{\textit{old}}%
 	\rule[0.5ex]{0.4\linewidth}{2pt}%
-	\vspace{2ex}%	
+	\vspace{2ex}%
 }
 
 %Iterators
@@ -47,12 +47,12 @@
 \makeatletter
 \def\varKernel{\@ifnextchar[{\@with}{\@without}}
 \def\@with[#1]#2{
-	\ifthenelse{\isempty{#2}}% 
+	\ifthenelse{\isempty{#2}}%
 	{\ensuremath{K_{#1}}\xspace}% #2 is empty
 	{\ensuremath{K_{#1}\!\left( #2 \right)}\xspace}% #2 is not empty
 }
 \def\@without#1{
-	\ifthenelse{\isempty{#1}}% 
+	\ifthenelse{\isempty{#1}}%
 	{\ensuremath{K}\xspace}% #1 is empty
 	{\ensuremath{K\!\left( #1 \right)}\xspace}% #1 is not empty
 }
@@ -123,9 +123,9 @@
 
 % MSE
 \newcommand{\mse}{mean squared error\xspace}
-\newcommand{\Mse}{Mean Squared Error\xspace}
+\newcommand{\Mse}{Mean squared error\xspace}
 \newcommand{\mses}{mean squared errors\xspace}
-\newcommand{\Mses}{Mean Squared Errors\xspace}
+\newcommand{\Mses}{Mean squared errors\xspace}
 \newcommand{\MSE}{MSE\xspace}
 
 % Mean and SD
