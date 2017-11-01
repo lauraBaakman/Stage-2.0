@@ -9,7 +9,7 @@
 	%Local bandwidths
 	Since experiments indicated that using $\varMBESensitivityParam = \rfrac{1}{2}$ instead of $\varMBESensitivityParam = \rfrac{1}{\varDim}$ results in a final density approximation with a lower \MSE for most of our data sets, we use the first.
 	%Final densities
-	The final density estimate is computed according to:
+	The final density estimate is computed according to
 	\begin{equation}\label{eq:2:parzenWithBandWidthMatrix}
 		\varEstimatedDensityFunction{\varPattern} = \frac{1}{\varNumPatterns}\sum_{\itXis = 1}^{\varNumPatterns} \frac{1}{\det\left(\varBandwidthMatrix[\itXis]\right)}\varKernel[\varEpan]{\varBandwidthMatrix[\itXis]^{-1}\left(\varPattern - \varPattern[\itXis]\right)}.
 	\end{equation}
@@ -22,7 +22,7 @@
 			\item \label{it:1:bandwidthmatrix:initialBandwidthMatrix}
 				Compute \varCovarianceMatrix, the unbiased covariance matrix of the local neighborhood \varNeighborhood{\varPattern[\itXis]}.
 			\item \label{it:1:bandwidthmatrix:scaleBandwidhtMatrix}
-				Determine \varBandwidthMatrix[\itXis] by multiplying \varCovarianceMatrix with a scaling factor:
+				Determine \varBandwidthMatrix[\itXis] by multiplying \varCovarianceMatrix with a scaling factor
 				\begin{equation}\label{eq:method:scalingFactor}
 					\varBandwidthMatrix[\itXis] = \varBandwidth \cdot \varLocalBandwidth{\itXis}
 				 \left( \displaystyle\prod_{\itDim = 1}^{\varDim} \varEigenValue_\itDim \right)^{-\frac{1}{\varDim}} \cdot \varCovarianceMatrix
